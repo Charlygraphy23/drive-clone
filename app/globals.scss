@@ -1,2 +1,10 @@
+@use "./styles/variable.scss" as color;
+
 :root {
+}
+
+body {
+	background-color: color.$secondary-color;
+	min-height: 100vh;
+	min-height: 100svh;
 }
