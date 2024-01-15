@@ -1,7 +1,16 @@
 .home {
 	min-height: inherit;
 
-	.sidebar__wrapper {
+	.home__wrapper {
 		min-height: inherit;
+
+		.sidebar__wrapper {
+			max-width: 300px;
+		}
+
+		.body__wrapper {
+			flex: 1;
+			padding: 2rem;
+		}
 	}
 }

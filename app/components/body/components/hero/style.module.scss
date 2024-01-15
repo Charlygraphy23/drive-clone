@@ -1,0 +1,30 @@
+@use "../../../../styles/variable.scss" as color;
+
+.hero {
+	margin-top: 3.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	h1 {
+		font-weight: 900;
+	}
+
+	.newButtonHandler {
+		&::after {
+			content: none;
+		}
+
+		button {
+			padding: 1rem 2.5rem;
+			border-radius: 50px;
+			background-color: color.$primary-color;
+			color: white;
+			border: none;
+
+			i {
+				margin-right: 1.2rem;
+			}
+		}
+	}
+}

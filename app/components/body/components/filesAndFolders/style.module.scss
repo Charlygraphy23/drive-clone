@@ -1,0 +1,28 @@
+@use "../../../../styles/variable.scss" as color;
+
+.filesAndFolders {
+	margin-top: 3rem;
+
+	.folders {
+		h6 {
+			color: color.$text-gray-color;
+		}
+
+		.folderContainer {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			grid-template-rows: 50px;
+			gap: 10px;
+
+			.skeleton {
+				width: 100%;
+				background-color: red;
+				margin-right: 10px;
+				border-radius: 10px;
+				padding: 0.2rem;
+
+				font-weight: bold;
+			}
+		}
+	}
+}

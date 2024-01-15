@@ -1,2 +1,38 @@
+@use "../../../../styles/variable.scss" as color;
+
 .sidebar__navigation {
+	padding: 1rem 0rem;
+
+	.navRoute {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		padding: 0.9em 1.6em;
+		border-radius: 10px;
+		font-size: 1.1rem;
+		text-decoration: none;
+		color: color.$text-gray-color;
+		margin-bottom: 15px;
+
+		&.active {
+			background-color: color.$light-primary-color;
+			color: color.$primary-color;
+			font-weight: 500;
+			margin-bottom: 20px;
+
+			.navRoute__icon {
+				color: color.$primary-color !important;
+			}
+		}
+
+		.navRoute__icon {
+			font-size: inherit;
+			margin-right: 10px;
+			color: color.$icon-color;
+		}
+
+		.navRoute__label {
+			font-size: inherit;
+		}
+	}
 }
