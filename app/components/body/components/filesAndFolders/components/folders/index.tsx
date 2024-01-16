@@ -13,6 +13,23 @@ const folders = [
 		name: "my folder",
 		path: "myfolder",
 	},
+	{
+		_id: "sad312asdde231",
+		name: "my  dummy folder",
+		path: "myfolder",
+	},
+
+	{
+		_id: "333adsdadasd",
+		name: "my  dummy folder",
+		path: "myfolder",
+	},
+
+	{
+		_id: "asd324234",
+		name: "my  dummy folder",
+		path: "myfolder",
+	},
 ];
 
 const FolderComponent = () => {

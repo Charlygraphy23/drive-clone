@@ -16,14 +16,18 @@
 		}
 
 		button {
-			padding: 1rem 2.5rem;
+			padding: 1em 2.5em;
+			font-size: 0.8rem;
 			border-radius: 50px;
 			background-color: color.$primary-color;
 			color: white;
 			border: none;
+			display: flex;
+			align-items: center;
 
 			i {
 				margin-right: 1.2rem;
+				font-size: 1.5em;
 			}
 		}
 	}

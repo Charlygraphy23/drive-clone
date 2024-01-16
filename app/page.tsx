@@ -5,7 +5,7 @@ import BodyComponent from "./components/body";
 export default function Home() {
 	return (
 		<main className={`${style.home} container-fluid`}>
-			<div className={`${style.home__wrapper} row`}>
+			<div className={`${style.home__wrapper} d-flex`}>
 				<div className={style.sidebar__wrapper}>
 					<Sidebar />
 				</div>
