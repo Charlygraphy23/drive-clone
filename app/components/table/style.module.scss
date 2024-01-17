@@ -1,0 +1,29 @@
+@use "../../styles/variable.scss" as color;
+
+.table {
+    width: 100%;
+    $padding: 10px 5px;
+
+    thead {
+        th {
+            font-weight: 500;
+            color: color.$text-gray-color;
+            padding: $padding;
+            border-bottom: 1px solid rgba(color.$text-gray-color, 0.1);
+        }
+    }
+
+    tbody {
+        tr {
+            th {
+                padding: 10px 20px;
+                color: color.$black-color;
+            }
+
+            td {
+                padding: 10px 20px;
+                color: color.$text-gray-color;
+            }
+        }
+    }
+}

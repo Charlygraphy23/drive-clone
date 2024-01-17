@@ -1,6 +1,7 @@
 import React from "react";
 import style from "../../style.module.scss";
 import FolderSkeleton from "./components/folderSkeleton";
+import FileSection from "./components/fileSection";
 
 const folders = [
 	{
@@ -32,6 +33,10 @@ const folders = [
 	},
 ];
 
+const files = [
+
+]
+
 const FolderComponent = () => {
 	return (
 		<div className={style.folders}>
@@ -41,6 +46,12 @@ const FolderComponent = () => {
 				{folders.map((folder, index) => (
 					<FolderSkeleton key={index} />
 				))}
+			</div>
+
+			<h6 className="mt-5">Files</h6>
+
+			<div className={style.filesContainer}>
+				<FileSection/>
 			</div>
 		</div>
 	);

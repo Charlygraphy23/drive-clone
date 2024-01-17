@@ -6,6 +6,7 @@
 	.folders {
 		h6 {
 			color: color.$text-gray-color;
+			margin: 15px 0px;
 		}
 
 		.folderContainer {
@@ -14,7 +15,7 @@
 			grid-auto-rows: 50px;
 			column-count: auto;
 			gap: 10px;
-			margin-top: 20px;
+			
 
 			.skeleton {
 				width: 100%;
@@ -51,6 +52,7 @@
 					}
 
 					li { 
+						cursor: pointer;
 						i {
 							margin-right: 10px;
 							color: color.$gray-color;
@@ -58,6 +60,10 @@
 					}
 				}
 			}
+		}
+
+		.filesContainer{
+			margin-top: 10px;
 		}
 	}
 }
