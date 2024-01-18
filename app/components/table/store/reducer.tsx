@@ -5,6 +5,7 @@ export default (state: any, action: any) => {
 
   switch (type) {
     case "add":
+      newState.data = action.payload
       return newState;
     default:
       newState;

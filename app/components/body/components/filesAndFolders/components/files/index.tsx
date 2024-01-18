@@ -1,10 +1,13 @@
 import MyTable from "@/app/components/table";
 import React from "react";
+import PDFLogo from "@app/assets/pdf-icon.svg";
+import style from "../../style.module.scss";
 
 const columns = [
   {
     title: "Name",
     dataIndex: "name",
+    icon: PDFLogo,
   },
   {
     title: "Member",
@@ -39,14 +42,34 @@ const dataset = [
     member: "10 members",
     lastModified: new Date().toLocaleString(),
   },
+  {
+    name: "Quick CV portfolio",
+    member: "10 members",
+    lastModified: new Date().toLocaleString(),
+  },
+  {
+    name: "Quick CV portfolio",
+    member: "10 members",
+    lastModified: new Date().toLocaleString(),
+  },
 ];
 
-const dummyApiCall = async () => {
-  return dataset;
-};
-
 const FileSection = () => {
-  return <MyTable columns={columns} api={dummyApiCall}/>;
+  const dummyApiCall = async () => {
+    "use server";
+    return dataset;
+  };
+
+  return (
+    <div className={style.files}>
+      <h6 className="mt-5">Files</h6>
+
+      <div className={style.filesContainer}>
+        <MyTable columns={columns} api={dummyApiCall} />
+      </div>
+    </div>
+  );
+
 };
 
 export default FileSection;

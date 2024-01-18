@@ -1,9 +1,11 @@
 "use client";
 
-import { PropsWithChildren, createContext, useReducer } from "react";
+import { Dispatch, PropsWithChildren, createContext, useReducer } from "react";
 import Reducer from "./reducer";
 
-export const TableContext = createContext({});
+type TableContextType = [typeof initialState, Dispatch<any>];
+
+export const TableContext = createContext([] as unknown as TableContextType);
 
 const initialState = {
   data: [],

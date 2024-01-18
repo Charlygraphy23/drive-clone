@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import TableContextProvider from "./store";
 import Table from "./table";

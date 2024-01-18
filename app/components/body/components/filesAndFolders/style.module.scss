@@ -2,12 +2,13 @@
 
 .filesAndFolders {
 	margin-top: 3rem;
+	h6 {
+		color: color.$black-color;
+		margin: 15px 0px;
+	}
 
 	.folders {
-		h6 {
-			color: color.$text-gray-color;
-			margin: 15px 0px;
-		}
+	
 
 		.folderContainer {
 			display: grid;
@@ -62,6 +63,9 @@
 			}
 		}
 
+	}
+
+	.files {
 		.filesContainer{
 			margin-top: 10px;
 		}
