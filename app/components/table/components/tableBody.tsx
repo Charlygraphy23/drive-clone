@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { TableContext } from "../store";
 import TableLoader from "./tableLoader";
 import TableColumnHandler from "./tableColumnHandler";
+import TableEmpty from "./tableEmpty";
 
 type Props = {
   columns: any[];
@@ -15,16 +16,18 @@ const TableBody = ({ columns, loading }: Props) => {
 
   const data = state.data;
 
-  
-
   return (
     <tbody>
       {data?.map((val, key) => (
         <tr key={key}>
           {columns?.map((column, i) => {
             if (i === 0)
-              return <th key={i}>{<TableColumnHandler data={val} {...column}/>}</th>;
-            return <td key={i}>{<TableColumnHandler data={val} {...column}/>}</td>;
+              return (
+                <th key={i}>{<TableColumnHandler data={val} {...column} />}</th>
+              );
+            return (
+              <td key={i}>{<TableColumnHandler data={val} {...column} />}</td>
+            );
           })}
         </tr>
       ))}
@@ -32,7 +35,9 @@ const TableBody = ({ columns, loading }: Props) => {
       {loading &&
         Array(4)
           .fill(0)
-          .map((_, index) => <TableLoader key={index} />)}
+          .map((_, index) => <TableLoader key={index} columns={columns}/>)}
+
+      {!loading && !data?.length && <TableEmpty columns={columns}/>}
     </tbody>
   );
 };

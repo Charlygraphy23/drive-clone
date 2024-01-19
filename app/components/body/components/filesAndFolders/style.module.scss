@@ -2,6 +2,11 @@
 
 .filesAndFolders {
 	margin-top: 3rem;
+	overflow: auto;
+    max-height: calc(100vh - 50%);
+	padding-right: 10px;
+
+	
 	h6 {
 		color: color.$black-color;
 		margin: 15px 0px;
