@@ -3,25 +3,21 @@
 .filesAndFolders {
 	margin-top: 3rem;
 	overflow: auto;
-    max-height: calc(100vh - 50%);
+	max-height: calc(100vh - 50%);
 	padding-right: 10px;
 
-	
 	h6 {
 		color: color.$black-color;
 		margin: 15px 0px;
 	}
 
 	.folders {
-	
-
 		.folderContainer {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 			grid-auto-rows: 50px;
 			column-count: auto;
 			gap: 10px;
-			
 
 			.skeleton {
 				width: 100%;
@@ -57,7 +53,7 @@
 						}
 					}
 
-					li { 
+					li {
 						cursor: pointer;
 						i {
 							margin-right: 10px;
@@ -67,12 +63,31 @@
 				}
 			}
 		}
-
 	}
 
 	.files {
-		.filesContainer{
+		.filesContainer {
 			margin-top: 10px;
+		}
+	}
+}
+
+.renameFolder {
+	display: flex;
+	flex-direction: column;
+
+	h5 {
+		display: flex;
+		margin-bottom: 2rem;
+
+		span {
+			flex: 1;
+		}
+
+		button {
+			font-size: 0.8rem;
+			box-shadow: none;
+			width: 20px;
 		}
 	}
 }

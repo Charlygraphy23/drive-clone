@@ -1,49 +1,34 @@
+"use client";
+
 import React from "react";
 import style from "../../style.module.scss";
 import FolderSkeleton from "./components/folderSkeleton";
-
-const folders = [
-  {
-    _id: "asdkj21233123",
-    name: "Dummy",
-    path: "dummy",
-  },
-  {
-    _id: "sad312e231",
-    name: "my folder",
-    path: "myfolder",
-  },
-  {
-    _id: "sad312asdde231",
-    name: "my  dummy folder",
-    path: "myfolder",
-  },
-
-  {
-    _id: "333adsdadasd",
-    name: "my  dummy folder",
-    path: "myfolder",
-  },
-
-  {
-    _id: "asd324234",
-    name: "my  dummy folder",
-    path: "myfolder",
-  },
-];
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import ModalComponent from "@/app/components/modal";
+import { RENAME_MODAL_ID } from "./utils/consts";
+import RenameFolder from "./components/renameFolder";
 
 const FolderComponent = () => {
-  return (
-    <div className={style.folders}>
-      <h6>Folders</h6>
+	const { data } = useSelector<RootState, RootState["folders"]>(
+		(state) => state.folders
+	);
 
-      <div className={style.folderContainer}>
-        {folders.map((folder, index) => (
-          <FolderSkeleton key={index} />
-        ))}
-      </div>
-    </div>
-  );
+	return (
+		<div className={style.folders}>
+			<h6>Folders</h6>
+
+			<div className={style.folderContainer}>
+				{data.map((folder, index) => (
+					<FolderSkeleton data={folder} key={index} />
+				))}
+			</div>
+
+			<ModalComponent id={RENAME_MODAL_ID}>
+				<RenameFolder />
+			</ModalComponent>
+		</div>
+	);
 };
 
 export default FolderComponent;

@@ -1,3 +1,7 @@
-import {createAction} from "@reduxjs/toolkit"
+import { createAction } from "@reduxjs/toolkit";
 
-const addFolder = createAction('addFolder')
+type AddFolderType = {
+	name: string;
+};
+
+export const addFolder = createAction<AddFolderType>("addFolder");

@@ -10,7 +10,6 @@
 /* Track */
 ::-webkit-scrollbar-track {
 	background: #f1f1f1;
-	
 }
 
 /* Handle */
@@ -28,4 +27,37 @@ body {
 	background-color: color.$secondary-color;
 	min-height: 100vh;
 	min-height: 100svh;
+}
+
+input {
+	border: 2px solid rgba(color.$gray-color, 0.5);
+	padding: 10px;
+	border-radius: 3px;
+
+	&:is(:focus, :active) {
+		border-color: color.$primary-color;
+	}
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: 1px solid transparent;
+	padding: 1em 2em;
+	font-size: 1rem;
+}
+
+.button.submit {
+	border-radius: 20px;
+	width: 2.5em;
+	height: 2em;
+	background-color: color.$primary-color;
+	color: white;
+}
+
+.button.cancel {
+	@extend .submit;
+	background-color: transparent !important;
+	color: color.$primary-color;
 }
