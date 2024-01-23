@@ -6,21 +6,17 @@ import MyDropdown from "@/app/components/dropdown";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import ModalComponent from "@/app/components/modal";
 import { RENAME_MODAL_ID } from "../utils/consts";
+import { BootstrapMethods } from "@/app/utils/index.utils";
 
 type Props = {
 	data: FolderDataType;
 };
 
 const FolderSkeleton = ({ data }: Props) => {
-	// const handleClick = () => {
-	// 	console.log("Hanlde Click");
-	// 	const instance = new window.bootstrap.Modal(`#${RENAME_MODAL_ID}`);
-	// 	instance.toggle();
-	// 	setTimeout(() => {
-	// 		console.log("Timeout has been fired");
-	// 		instance.hide();
-	// 	}, 2000);
-	// };
+
+	const handleRenameClient = () => {
+		BootstrapMethods.toggle(RENAME_MODAL_ID)
+	}
 
 	return (
 		<div className={style.skeleton}>
@@ -36,7 +32,7 @@ const FolderSkeleton = ({ data }: Props) => {
 					render: () => <i className='bi bi-three-dots-vertical'></i>,
 				}}>
 				<MyDropdown.Menu>
-					<MyDropdown.List className='d-flex'>
+					<MyDropdown.List className='d-flex' onClick={handleRenameClient}>
 						<i className='bi bi-pen-fill'></i>
 						<span> Rename </span>
 					</MyDropdown.List>
