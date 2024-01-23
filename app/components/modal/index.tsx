@@ -1,53 +1,20 @@
 "use client";
 
-import React, {
-  Children,
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import style from "./style.module.scss";
+import React, { PropsWithChildren } from "react";
 import ModalButton, { ModalCloseButton } from "./components/modalButton";
-import { BootstrapMethods } from "@/app/utils/index.utils";
+import ModalComponent from "./components/modalComponent";
 
-export type ModalProps = {
-  id: string;
+type Props = {
+	id: string;
+	isOpen?: boolean;
+	toggle?: (isOpen?: boolean) => void;
 } & PropsWithChildren;
 
-const ModalComponent = ({ id, children }: ModalProps) => {
-  const instance = useRef<any>(null);
-
-  const getInstance = useCallback(() => {
-    const bootstrap = BootstrapMethods.getBootstarp();
-    if (!instance.current) instance.current = new bootstrap.Modal(`#${id}`);
-  }, [id]);
-
-  useEffect(() => {
-    getInstance();
-  }, [getInstance]);
-
-  
-
-
-  return (
-    <div id={id} className={`${style.modal} modal fade`} tabIndex={-1}>
-      <div
-        className={`${style.modalDialog} modal-dialog modal-dialog-centered`}
-      >
-        <div className={`${style.modalContent} modal-content`}>
-          <div className="modal-body">
-            {Children.count(children) ? children : "Provide Node children"}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+const Modal = (props: Props) => {
+	return <ModalComponent {...props} />;
 };
 
-ModalComponent.Button = ModalButton;
-ModalComponent.ButtonClose = ModalCloseButton;
+Modal.Button = ModalButton;
+Modal.ButtonClose = ModalCloseButton;
 
-export default ModalComponent;
+export default Modal;
