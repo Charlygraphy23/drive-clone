@@ -4,23 +4,23 @@ import React from "react";
 import style from "../../../style.module.scss";
 import MyDropdown from "@/app/components/dropdown";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
-import { RENAME_MODAL_ID } from "../utils/consts";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
-import { Modal } from "bootstrap";
+import { ModalStateType } from "@/app/store/reducers/modal.reducers";
+import { toggleRenameModal } from "@/app/store/actions";
 
 type Props = {
 	data: FolderDataType;
 };
 
 const FolderSkeleton = ({ data }: Props) => {
-	const state = useSelector<RootState, Record<string, any>>(
+	const dispatch = useDispatch()
+	const state = useSelector<RootState, ModalStateType>(
 		(state) => state.modals
 	);
-	const renameModalInstance = state?.[RENAME_MODAL_ID] as Modal;
 
 	const handleRenameClient = () => {
-		renameModalInstance.toggle();
+		dispatch(toggleRenameModal(true))
 	};
 
 	return (

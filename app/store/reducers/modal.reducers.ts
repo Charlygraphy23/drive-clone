@@ -1,12 +1,16 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { openModal } from "../actions";
+import { toggleRenameModal } from "../actions";
 
-const initialState = {} as Record<string, any>;
+const initialState = {
+	renameModal: false
+}
+
+export type ModalStateType = typeof initialState
 
 export default createReducer(initialState, (builder) => {
-	builder.addCase(openModal, (state, action) => {
+	builder.addCase(toggleRenameModal, (state, action) => {
 		const payload = action?.payload;
-		state[payload.type] = payload.instance;
+		state.renameModal = payload
 		return state;
 	});
 });
