@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import style from "../../../style.module.scss";
 import ModalComponent from "@/app/components/modal";
 import { RENAME_MODAL_ID } from "../utils/consts";
@@ -8,16 +8,32 @@ import { useSelector, useDispatch } from "react-redux";
 import { Modal } from "bootstrap";
 import { RootState } from "@/app/store";
 import { ModalStateType } from "@/app/store/reducers/modal.reducers";
-import { toggleRenameModal } from "@/app/store/actions";
+import { addFolder, renameFolder, toggleRenameModal } from "@/app/store/actions";
 
 const RenameFolder = () => {
+  const [name, setName] = useState("");
   const dispatch = useDispatch();
-  const { renameModal } = useSelector<RootState, ModalStateType>(
+  const { renameModal , data } = useSelector<RootState, ModalStateType>(
     (state) => state.modals
   );
 
-  const toggleModal = () => {
-    dispatch(toggleRenameModal(!renameModal));
+  const toggleModal = (isOpen?:boolean) => {
+    dispatch(toggleRenameModal({
+		isOpen : !!isOpen,
+	}));
+  };
+
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
+
+  const handleModalSubmit = (event: FormEvent) => {
+	event.preventDefault();
+
+    if (!name) return;
+    dispatch(renameFolder({ folderId : data?.folderId , name }));
+	toggleModal(false)
+	setName("");
   };
 
   return (
@@ -26,21 +42,21 @@ const RenameFolder = () => {
       isOpen={renameModal}
       toggle={toggleModal}
     >
-      <div className={style.renameFolder}>
+      <form onSubmit={handleModalSubmit} className={style.renameFolder}>
         <h5>
           <span>Rename</span>
           <ModalComponent.ButtonClose />
         </h5>
 
-        <input type="text" />
+        <input type="text" value={name} onChange={onChange} />
 
         <div className="d-flex justify-content-end align-items-center mt-4 mb-2">
-          <button className="button cancel me-3" onClick={toggleModal}>
+          <button type="button" className="button cancel me-3" onClick={() => toggleModal(false)}>
             cancel
           </button>
-          <button className="button submit">OK</button>
+          <button type="submit" className="button submit" >OK</button>
         </div>
-      </div>
+      </form>
     </ModalComponent>
   );
 };

@@ -38,7 +38,7 @@ const ModalComponent = ({ id, children, isOpen, toggle }: Props) => {
     if (!instance?.current) return;
 
     const handleHidden = () => {
-	  if(toggle) toggle()
+	   if(toggle) toggle(false)
     };
 	
 	const modal = document.querySelector(".modal")

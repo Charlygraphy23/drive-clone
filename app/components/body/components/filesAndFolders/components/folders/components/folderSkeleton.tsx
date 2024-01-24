@@ -20,7 +20,12 @@ const FolderSkeleton = ({ data }: Props) => {
 	);
 
 	const handleRenameClient = () => {
-		dispatch(toggleRenameModal(true))
+		dispatch(toggleRenameModal({
+			isOpen : true,
+			data : {
+				folderId : data?._id
+			} 
+		}))
 	};
 
 	return (
