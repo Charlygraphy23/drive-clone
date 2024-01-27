@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, MouseEventHandler } from "react";
+import style from "../style.module.scss";
 
 type Props = {
 	className?: string;
@@ -6,10 +7,17 @@ type Props = {
 	onClick?: MouseEventHandler<HTMLElement>;
 } & PropsWithChildren;
 
-const DropdownList = ({ className, children, divider, onClick }: Props) => {
+const DropdownList = ({
+	className = "",
+	children,
+	divider = false,
+	onClick,
+}: Props) => {
 	return (
 		<li
-			className={`${className} dropdown-${divider ? "divider" : "item"}`}
+			className={`${className} ${style.list} dropdown-${
+				divider ? "divider" : "item"
+			}`}
 			onClick={onClick}>
 			{children}
 		</li>

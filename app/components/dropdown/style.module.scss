@@ -1,0 +1,36 @@
+@use "../../styles/variable.scss" as color;
+
+.dropdown {
+	.toggle {
+		cursor: pointer;
+		&.showIcon::after {
+			content: "";
+		}
+
+		&::after {
+			content: none;
+		}
+	}
+
+	.menu {
+		padding: 0;
+		overflow: hidden;
+
+		.list {
+			padding: 8px 10px;
+			cursor: pointer;
+
+			&:is(:hover, :focus) {
+				background-color: rgba(black, 0.1);
+			}
+
+			&:focus-visible {
+				outline: color.$primary-color auto 1px;
+			}
+
+			&:active {
+				background-color: color.$violet-color;
+			}
+		}
+	}
+}

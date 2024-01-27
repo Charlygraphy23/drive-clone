@@ -31,6 +31,8 @@
 				justify-content: space-between;
 
 				.label {
+					overflow: hidden;
+
 					i {
 						margin-right: 10px;
 						color: color.$gray-color;
@@ -41,6 +43,7 @@
 						margin-bottom: 0;
 						text-overflow: ellipsis;
 						color: color.$black-color;
+						overflow: hidden;
 					}
 				}
 

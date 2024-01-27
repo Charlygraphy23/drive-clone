@@ -1,4 +1,13 @@
 .modal {
+	.dialog {
+		.content {
+			border-radius: 20px;
+
+			.body {
+				padding: 1.2rem 2rem;
+			}
+		}
+	}
 }
 
 .modalButton {
