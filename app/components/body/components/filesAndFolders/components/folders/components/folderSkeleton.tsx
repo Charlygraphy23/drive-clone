@@ -19,6 +19,7 @@ const FolderSkeleton = ({ data }: Props) => {
 				isOpen: true,
 				data: {
 					folderId: data?._id,
+					type: "folder"
 				},
 			})
 		);

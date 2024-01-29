@@ -45,6 +45,8 @@ export type FolderStateType = {
   data: FolderDataType[];
   error: string;
 };
+
+
 export default createReducer(initialState, (builder) => {
   builder
     .addCase(addFolder, (state, action) => {

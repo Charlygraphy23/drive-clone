@@ -1,6 +1,7 @@
 import React from "react";
 import style from "../../style.module.scss";
 import FileComponent from "./components/fileComponent";
+import RenameFolder from "../folders/components/renameFolder";
 
 const dataset = [
 	{
@@ -44,6 +45,7 @@ const FileSection = () => {
 			<div className={style.filesContainer}>
 				<FileComponent apiCall={dummyApiCall} />
 			</div>
+			<RenameFolder/>
 		</div>
 	);
 };

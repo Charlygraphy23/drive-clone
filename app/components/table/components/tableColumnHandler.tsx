@@ -32,11 +32,14 @@ const TableColumnHandler = ({
 		);
 	};
 
-	if (render)
+	if (render){
+		console.log( dataIndex, data, title)
 		return render({
 			record: { dataIndex, data, title },
 			value: handleDataMapping(),
 		});
+	}
+		
 
 	return (
 		<div className={style.columnHandler}>
