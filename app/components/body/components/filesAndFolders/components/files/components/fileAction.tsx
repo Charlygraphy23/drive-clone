@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import MyDropdown from "@/app/components/dropdown";
 import { toggleRenameModal } from "@/app/store/actions";
@@ -6,26 +6,23 @@ import React from "react";
 import { useDispatch } from "react-redux";
 
 type Props = {
-	data: any
-}
+	data: any;
+};
 
-const FileAction = ({data} : Props) => {
+const FileAction = ({ data }: Props) => {
 	const dispatch = useDispatch();
 
 	const handleRenameClick = () => {
-		console.log(data)
 		dispatch(
 			toggleRenameModal({
 				isOpen: true,
 				data: {
-					folderId: data?._id,
-					type: "file"
+					fileId: data?._id,
+					type: "file",
 				},
 			})
 		);
-	}
-
-	console.log(data)
+	};
 
 	return (
 		<MyDropdown

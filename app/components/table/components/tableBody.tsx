@@ -1,45 +1,46 @@
 "use client";
 
-import React, { useContext } from "react";
-import { TableContext } from "../store";
+import React from "react";
 import TableLoader from "./tableLoader";
 import TableColumnHandler from "./tableColumnHandler";
 import TableEmpty from "./tableEmpty";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import { FolderStateType } from "@/app/store/reducers/folders.reducers";
 
 type Props = {
-  columns: any[];
-  loading: boolean;
+	columns: any[];
 };
 
-const TableBody = ({ columns, loading }: Props) => {
-  const [state] = useContext(TableContext);
+const TableBody = ({ columns }: Props) => {
+	const { data } = useSelector<RootState, FolderStateType>(
+		(state) => state?.files
+	);
 
-  const data = state.data;
+	return (
+		<tbody>
+			{data?.map((val, key) => (
+				<tr key={key}>
+					{columns?.map((column, i) => {
+						if (i === 0)
+							return (
+								<th key={i}>{<TableColumnHandler data={val} {...column} />}</th>
+							);
+						return (
+							<td key={i}>{<TableColumnHandler data={val} {...column} />}</td>
+						);
+					})}
+				</tr>
+			))}
 
-  return (
-    <tbody>
-      {data?.map((val, key) => (
-        <tr key={key}>
-          {columns?.map((column, i) => {
-            if (i === 0)
-              return (
-                <th key={i}>{<TableColumnHandler data={val} {...column} />}</th>
-              );
-            return (
-              <td key={i}>{<TableColumnHandler data={val} {...column} />}</td>
-            );
-          })}
-        </tr>
-      ))}
+			{/* {loading &&
+				Array(4)
+					.fill(0)
+					.map((_, index) => <TableLoader key={index} columns={columns} />)} */}
 
-      {loading &&
-        Array(4)
-          .fill(0)
-          .map((_, index) => <TableLoader key={index} columns={columns}/>)}
-
-      {!loading && !data?.length && <TableEmpty columns={columns}/>}
-    </tbody>
-  );
+			{!data?.length && <TableEmpty columns={columns} />}
+		</tbody>
+	);
 };
 
 export default TableBody;

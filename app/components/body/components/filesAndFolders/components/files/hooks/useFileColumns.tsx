@@ -24,7 +24,9 @@ const useFileColumns = () => {
 		{
 			title: "",
 			dataIndex: "",
-			render: ({data} : any) => <FileAction data={data} />,
+			render: ({ record }: any) => {
+				return <FileAction data={record?.data} />;
+			},
 		},
 	];
 

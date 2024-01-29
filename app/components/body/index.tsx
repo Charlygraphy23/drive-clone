@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import TopBarComponent from "./components/toolbar";
 import style from "./style.module.scss";
 import HeroComponent from "./components/hero";
@@ -9,7 +9,9 @@ const BodyComponent = () => {
 		<div className={style.body}>
 			<TopBarComponent />
 			<HeroComponent />
-			<FilesAndFolders />
+			<Suspense fallback={<div> Ullaala</div>}>
+				<FilesAndFolders />
+			</Suspense>
 		</div>
 	);
 };

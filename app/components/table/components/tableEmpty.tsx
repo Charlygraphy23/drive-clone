@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ColumnType } from "../interface/index.interface";
 
