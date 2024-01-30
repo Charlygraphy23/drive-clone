@@ -1,0 +1,19 @@
+.renameModal {
+	display: flex;
+	flex-direction: column;
+
+	h5 {
+		display: flex;
+		margin-bottom: 2rem;
+
+		span {
+			flex: 1;
+		}
+
+		button {
+			font-size: 0.8rem;
+			box-shadow: none;
+			width: 20px;
+		}
+	}
+}

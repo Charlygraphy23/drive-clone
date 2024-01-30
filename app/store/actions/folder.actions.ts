@@ -11,3 +11,5 @@ type RenameFolderType = {
 
 export const addFolder = createAction<AddFolderType>("addFolder");
 export const renameFolder = createAction<RenameFolderType>("renameFolder");
+export const renameFolder = createAction<RenameFolderType>("renameFolder");
+

@@ -1,41 +1,9 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { createFile, renameFile } from "../actions";
+import { addBulkFiles, createFile, renameFile } from "../actions";
 
 const initialState = {
 	loading: false,
-	data: [
-		{
-			_id: "afsdfsdfs",
-			name: "Monthly report July",
-			member: "Only You",
-			lastModified: new Date().toDateString(),
-		},
-		{
-			_id: "3422",
-			name: "Campaign plan 2024",
-			member: "4 members",
-			lastModified: new Date().toDateString(),
-		},
-
-		{
-			_id: "afsdfasd34sdfs",
-			name: "Quick CV portfolio",
-			member: "10 members",
-			lastModified: new Date().toDateString(),
-		},
-		{
-			_id: "afss3423dfsdfs",
-			name: "Quick CV portfolio",
-			member: "10 members",
-			lastModified: new Date().toDateString(),
-		},
-		{
-			_id: "afsdfsasdas432dfs",
-			name: "Quick CV portfolio",
-			member: "10 members",
-			lastModified: new Date().toDateString(),
-		},
-	],
+	data: [] as FileDataType[],
 	error: "",
 };
 
@@ -43,6 +11,7 @@ export type FileDataType = {
 	_id: string;
 	name: string;
 	lastModified: string;
+	member?: string;
 };
 export type FolderStateType = {
 	loading: boolean;
@@ -70,6 +39,11 @@ export default createReducer(initialState, (builder) => {
 					file.name = payload?.name;
 				}
 			});
+			return state;
+		}).addCase(addBulkFiles, (state, action) => {
+			const payload = action?.payload;
+
+			state.data.push(...payload?.data);
 			return state;
 		});
 });

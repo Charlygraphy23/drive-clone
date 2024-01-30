@@ -19,6 +19,7 @@ const FileAction = ({ data }: Props) => {
 				data: {
 					fileId: data?._id,
 					type: "file",
+					value: data?.name
 				},
 			})
 		);

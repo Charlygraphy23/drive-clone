@@ -23,7 +23,6 @@ const FolderComponent = () => {
           ))}
         </div>
 
-        <RenameFolder />
       </div>
   );
 };
