@@ -1,13 +1,6 @@
 "use client";
 
-import { BootstrapMethods } from "@/app/utils/index.utils";
-import {
-	Children,
-	PropsWithChildren,
-	useCallback,
-	useEffect,
-	useRef,
-} from "react";
+import { Children, PropsWithChildren } from "react";
 import style from "../style.module.scss";
 
 type Props = {

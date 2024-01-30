@@ -18,12 +18,13 @@ type Props = {
 
 const Modal = (props: Props) => {
 	const { id, isOpen, toggle, children } = props;
-
 	const instance = useRef<any>(null);
 
 	const getInstance = useCallback(() => {
-		const bootstrap = BootstrapMethods.getBootstarp();
-		if (!instance.current) instance.current = new bootstrap.Modal(`#${id}`);
+		if (!instance.current) {
+			const bootstrap = BootstrapMethods.getBootstarp();
+			instance.current = new bootstrap.Modal(`#${id}`);
+		}
 	}, [id]);
 
 	useEffect(() => {
