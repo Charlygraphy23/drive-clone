@@ -1,0 +1,20 @@
+@use "/app/styles/mixins.scss" as mixins;
+
+.wrapper {
+	margin: 2rem 0;
+
+	.row {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		padding: 2px;
+		gap: 15px;
+		grid-auto-rows: 30px;
+		column-count: auto;
+		padding: 10px 0px;
+
+		.col {
+			@include mixins.shimmerEffect(rgba(black, 0.05));
+			border-radius: 4px;
+		}
+	}
+}

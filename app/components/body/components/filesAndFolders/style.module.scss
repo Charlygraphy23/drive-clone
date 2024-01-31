@@ -1,5 +1,53 @@
 @use "../../../../styles/variable.scss" as color;
 
+@mixin folderSkeletonBlock {
+	width: 100%;
+	background-color: white;
+	margin-right: 10px;
+	border-radius: 10px;
+	padding: 0.2rem 1rem;
+	display: flex;
+	align-items: center;
+	box-shadow: 0px 0px 30px rgba(black, 0.1);
+	justify-content: space-between;
+	@content;
+
+	.label {
+		overflow: hidden;
+
+		i {
+			margin-right: 10px;
+			color: color.$gray-color;
+		}
+
+		p {
+			white-space: nowrap;
+			margin-bottom: 0;
+			text-overflow: ellipsis;
+			color: color.$black-color;
+			overflow: hidden;
+		}
+	}
+
+	.dropdown {
+		.dropdownItem {
+			cursor: pointer;
+
+			&::after {
+				content: none;
+			}
+		}
+
+		li {
+			cursor: pointer;
+			i {
+				margin-right: 10px;
+				color: color.$gray-color;
+			}
+		}
+	}
+}
+
 .filesAndFolders {
 	margin-top: 3rem;
 	overflow: auto;
@@ -20,50 +68,7 @@
 			gap: 10px;
 
 			.skeleton {
-				width: 100%;
-				background-color: white;
-				margin-right: 10px;
-				border-radius: 10px;
-				padding: 0.2rem 1rem;
-				display: flex;
-				align-items: center;
-				box-shadow: 0px 0px 30px rgba(black, 0.1);
-				justify-content: space-between;
-
-				.label {
-					overflow: hidden;
-
-					i {
-						margin-right: 10px;
-						color: color.$gray-color;
-					}
-
-					p {
-						white-space: nowrap;
-						margin-bottom: 0;
-						text-overflow: ellipsis;
-						color: color.$black-color;
-						overflow: hidden;
-					}
-				}
-
-				.dropdown {
-					.dropdownItem {
-						cursor: pointer;
-
-						&::after {
-							content: none;
-						}
-					}
-
-					li {
-						cursor: pointer;
-						i {
-							margin-right: 10px;
-							color: color.$gray-color;
-						}
-					}
-				}
+				@include folderSkeletonBlock;
 			}
 		}
 	}
@@ -74,5 +79,3 @@
 		}
 	}
 }
-
-

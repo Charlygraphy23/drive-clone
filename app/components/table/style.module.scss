@@ -1,68 +1,73 @@
 @use "../../styles/variable.scss" as color;
 
 .table {
-    width: 100%;
-    $padding: 10px 5px;
+	width: 100%;
+	$padding: 10px 5px;
 
-    thead {
-        th {
-            font-weight: 500;
-            color: color.$text-gray-color;
-            padding: $padding;
-            border-bottom: 1px solid rgba(color.$text-gray-color, 0.1);
-        }
-    }
+	thead {
+		th {
+			font-weight: 500;
+			color: color.$text-gray-color;
+			padding: $padding;
+			border-bottom: 1px solid rgba(color.$text-gray-color, 0.1);
+		}
+	}
 
-    tbody {
-        tr {
-            th {
-                padding: 10px 20px;
-                color: color.$black-color;
-            }
+	tbody {
+		tr {
+			th {
+				padding: 10px 20px;
+				color: color.$black-color;
+			}
 
-            td {
-                padding: 10px 20px;
-                color: color.$text-gray-color;
-            }
-        }
-    }
+			td {
+				padding: 10px 20px;
+				color: color.$text-gray-color;
+			}
+		}
+	}
 
-    .skelton {
-        margin: 10px 0px;
+	.skelton {
+		margin: 10px 0px;
 
-        td {
-            padding: 0px;
-            padding-right: 10px;
-            padding-bottom: 10px;
+		td {
+			padding: 0px;
+			padding-right: 10px;
+			padding-bottom: 10px;
 
-            div {
-                background-color: #ebecec;
-                background-image: linear-gradient(90deg, rgba(#fff, 0), rgba(#fff, 0.5), rgba(#fff, 0));
-                background-size: 40px 100%; // width of the shine
-                background-repeat: no-repeat;
-                background-position: left -40px top 0;
-                animation: shine 1s ease infinite;
-                border-radius: 4px;
-                height: 20px;
-                width: 100%;
-            }
-        }
-    }
+			div {
+				background-color: #ebecec;
+				background-image: linear-gradient(
+					90deg,
+					rgba(#fff, 0),
+					rgba(#fff, 0.5),
+					rgba(#fff, 0)
+				);
+				background-size: 40px 100%; // width of the shine
+				background-repeat: no-repeat;
+				background-position: left -40px top 0;
+				animation: shine 1s ease infinite;
+				border-radius: 4px;
+				height: 20px;
+				width: 100%;
+			}
+		}
+	}
 }
 
 .columnHandler {
-    display: flex;
-    align-items: center;
-    .icon {
-        width:  20px;
-        height: 20px;
-        margin-right: 10px;
-    }
+	display: flex;
+	align-items: center;
+	.icon {
+		width: 20px;
+		height: 20px;
+		margin-right: 10px;
+	}
 }
 
 @keyframes shine {
-    to {
-        // Move shine from left to right, with offset on the right based on the width of the shine - see background-size
-        background-position: right -40px top 0;
-    }
+	to {
+		// Move shine from left to right, with offset on the right based on the width of the shine - see background-size
+		background-position: right -40px top 0;
+	}
 }

@@ -2,20 +2,21 @@
 
 import React from "react";
 import style from "../style.module.scss";
-import { ColumnType } from "../interfaces/index.interface";
 
 type Props = {
-	columns: ColumnType[];
+	size: number;
 };
 
-const TableLoader = ({ columns }: Props) => {
+const TableLoader = ({ size }: Props) => {
 	return (
 		<tr className={style.skelton}>
-			{columns?.map((_, index) => (
-				<td key={index}>
-					<div></div>
-				</td>
-			))}
+			{Array(size)
+				.fill(0)
+				?.map((_, index) => (
+					<td key={index}>
+						<div></div>
+					</td>
+				))}
 		</tr>
 	);
 };
