@@ -1,15 +1,15 @@
 "use client";
 
 import React from "react";
-import TableLoader from "./tableLoader";
 import TableColumnHandler from "./tableColumnHandler";
 import TableEmpty from "./tableEmpty";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { FolderStateType } from "@/app/store/reducers/folders.reducers";
+import { ColumnType } from "../interfaces/index.interface";
 
 type Props = {
-	columns: any[];
+	columns: ColumnType[];
 };
 
 const TableBody = ({ columns }: Props) => {

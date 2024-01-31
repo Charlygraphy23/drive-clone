@@ -3,6 +3,7 @@ import FolderComponent from "./components/folders";
 import style from "./style.module.scss";
 import FileSection from "./components/files";
 import FileAndFolderStateProvider from "./provider";
+import { FileAndFolderDatasetType } from "./interfaces/index.interface";
 
 const data = {
 	files: [
@@ -81,7 +82,7 @@ const FilesAndFolders = async () => {
 	const dataset = await api();
 
 	return (
-		<FileAndFolderStateProvider data={dataset}>
+		<FileAndFolderStateProvider data={dataset as FileAndFolderDatasetType}>
 			<div className={style.filesAndFolders}>
 				<FolderComponent />
 				<FileSection />

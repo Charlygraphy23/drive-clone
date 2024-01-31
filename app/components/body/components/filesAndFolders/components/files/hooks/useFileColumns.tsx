@@ -3,9 +3,11 @@
 import React from "react";
 import FileAction from "../components/fileAction";
 import PDFLogo from "@app/assets/pdf-icon.svg";
+import { ColumnType } from "@/app/components/table/interfaces/index.interface";
+import { FileDataType } from "@/app/store/reducers/files.reducers";
 
 const useFileColumns = () => {
-	const columns = [
+	const columns: ColumnType[] = [
 		{
 			title: "Name",
 			dataIndex: "name",
@@ -24,8 +26,8 @@ const useFileColumns = () => {
 		{
 			title: "",
 			dataIndex: "",
-			render: ({ record }: any) => {
-				return <FileAction data={record?.data} />;
+			render: ({ record }) => {
+				return <FileAction data={record?.data as FileDataType} />;
 			},
 		},
 	];

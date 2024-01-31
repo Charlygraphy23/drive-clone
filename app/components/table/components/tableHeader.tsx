@@ -1,7 +1,8 @@
 import React from "react";
+import { ColumnType } from "../interfaces/index.interface";
 
 type Props = {
-	columns: any[];
+	columns: ColumnType[];
 };
 
 const TableHeader = ({ columns }: Props) => {

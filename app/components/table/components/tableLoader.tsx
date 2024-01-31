@@ -2,7 +2,7 @@
 
 import React from "react";
 import style from "../style.module.scss";
-import { ColumnType } from "../interface/index.interface";
+import { ColumnType } from "../interfaces/index.interface";
 
 type Props = {
 	columns: ColumnType[];

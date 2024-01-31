@@ -2,11 +2,7 @@ import React, { PropsWithChildren } from "react";
 import DropdownMenu from "./components/dropdownMenu";
 import DropdownList from "./components/dropdownList";
 import style from "./style.module.scss";
-
-type HandlerType = {
-	render?: () => React.ReactElement;
-	className?: string;
-};
+import { HandlerType } from "./interfaces/index.interface";
 
 type Props = {
 	className?: string;

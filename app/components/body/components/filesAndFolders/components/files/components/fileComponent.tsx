@@ -1,12 +1,10 @@
 "use client";
 
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import useFileColumns from "../hooks/useFileColumns";
 import MyTable from "@/app/components/table";
 
-type Props = {} & PropsWithChildren;
-
-const FileComponent = ({}: Props) => {
+const FileComponent = () => {
 	const { columns } = useFileColumns();
 
 	return <MyTable columns={columns} />;

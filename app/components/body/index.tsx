@@ -9,7 +9,7 @@ const BodyComponent = () => {
 		<div className={style.body}>
 			<TopBarComponent />
 			<HeroComponent />
-			<Suspense fallback={<div> Ullaala</div>}>
+			<Suspense fallback={<div> Loading...</div>}>
 				<FilesAndFolders />
 			</Suspense>
 		</div>

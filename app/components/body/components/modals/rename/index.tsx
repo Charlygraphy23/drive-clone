@@ -15,8 +15,8 @@ import {
 	renameFolder,
 	toggleRenameModal,
 } from "@/app/store/actions";
-import { RENAME_MODAL_ID } from "../../filesAndFolders/components/folders/utils/consts";
 import { useDispatch } from "react-redux";
+import { RENAME_MODAL_ID } from "@/app/config/const";
 
 type Props = {
 	isOpen: boolean;

@@ -2,11 +2,12 @@
 
 import MyDropdown from "@/app/components/dropdown";
 import { toggleRenameModal } from "@/app/store/actions";
+import { FileDataType } from "@/app/store/reducers/files.reducers";
 import React from "react";
 import { useDispatch } from "react-redux";
 
 type Props = {
-	data: any;
+	data: FileDataType;
 };
 
 const FileAction = ({ data }: Props) => {
@@ -19,7 +20,7 @@ const FileAction = ({ data }: Props) => {
 				data: {
 					fileId: data?._id,
 					type: "file",
-					value: data?.name
+					value: data?.name,
 				},
 			})
 		);

@@ -1,5 +1,5 @@
 import React from "react";
-import { ColumnType } from "../interface/index.interface";
+import { ColumnType } from "../interfaces/index.interface";
 import style from "../style.module.scss";
 import Image from "next/image";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";

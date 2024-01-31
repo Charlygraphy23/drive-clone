@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import RenameModal from "../modals/rename";
 import { ModalStateType } from "@/app/store/reducers/modal.reducers";
 import { RootState } from "@/app/store";
+import { FileAndFolderDatasetType } from "./interfaces/index.interface";
 
 type Props = {
-	data: any;
+	data: FileAndFolderDatasetType;
 } & PropsWithChildren;
 
 const FileAndFolderStateProvider = ({ children, data }: Props) => {
