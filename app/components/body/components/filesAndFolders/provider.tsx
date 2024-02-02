@@ -7,13 +7,14 @@ import RenameModal from "../modals/rename";
 import { ModalStateType } from "@/app/store/reducers/modal.reducers";
 import { RootState } from "@/app/store";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
+import NewfolderModal from "../modals/newfolder";
 
 type Props = {
 	data: FileAndFolderDatasetType;
 } & PropsWithChildren;
 
 const FileAndFolderStateProvider = ({ children, data }: Props) => {
-	const { renameModal, data: modalState } = useSelector<
+	const { renameModal, newFolderModal , data: modalState } = useSelector<
 		RootState,
 		ModalStateType
 	>((state) => state.modals);
@@ -33,6 +34,7 @@ const FileAndFolderStateProvider = ({ children, data }: Props) => {
 		<Fragment>
 			{children}
 			<RenameModal isOpen={renameModal} data={modalState} />
+			<NewfolderModal isOpen={newFolderModal} data={modalState} />
 		</Fragment>
 	);
 };

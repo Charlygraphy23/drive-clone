@@ -1,0 +1,5 @@
+@use "../rename/style.module.scss" as renameMOdalStyle;
+
+.newfolderModal{
+    @include renameMOdalStyle.renameStyle
+}

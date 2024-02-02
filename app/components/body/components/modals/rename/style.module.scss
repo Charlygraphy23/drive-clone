@@ -1,6 +1,8 @@
-.renameModal {
+
+@mixin renameStyle {
 	display: flex;
 	flex-direction: column;
+	@content;
 
 	h5 {
 		display: flex;
@@ -16,4 +18,8 @@
 			width: 20px;
 		}
 	}
+}
+
+.renameModal {
+	@include renameStyle;
 }

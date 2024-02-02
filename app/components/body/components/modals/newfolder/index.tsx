@@ -1,22 +1,11 @@
 "use client";
 
-import React, {
-  ChangeEvent,
-  FormEvent,
-  memo,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, FormEvent, memo, useState } from "react";
 import style from "./style.module.scss";
 import ModalComponent from "@/app/components/modal";
-import {
-  renameFile,
-  renameFolder,
-  toggleRenameModal,
-} from "@/app/store/actions";
+import { addFolder, toggleRenameModal } from "@/app/store/actions";
 import { useDispatch } from "react-redux";
-import { RENAME_MODAL_ID } from "@/app/config/const";
+import { NEW_FOLDER_MODAL_ID } from "@/app/config/const";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 
 type Props = {
@@ -24,10 +13,9 @@ type Props = {
   data: ModalDataType;
 };
 
-const RenameModal = ({ isOpen, data }: Props) => {
+const NewFolderModal = ({ isOpen, data }: Props) => {
   const dispatch = useDispatch();
   const [name, setName] = useState<string>("");
-  const currName = useRef(name);
 
   const toggleModal = (isOpen?: boolean) => {
     dispatch(
@@ -35,14 +23,6 @@ const RenameModal = ({ isOpen, data }: Props) => {
         isOpen: !!isOpen,
       })
     );
-
-	if(data && data.value) {
-
-	}
-
-    const value = (data && "value" in data && data?.value) ?? "";
-
-    setName(value as string);
   };
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -54,30 +34,21 @@ const RenameModal = ({ isOpen, data }: Props) => {
 
     if (!name) return;
 
-	if(data && data.type)
-
-    if (data?.type === "file" && "fileId" in data) {
-      dispatch(renameFile({ fileId: data?.fileId, name }));
-    } else if ("folderId" in data)
-      dispatch(renameFolder({ folderId: data?.folderId, name }));
-    else console.warn("Mismatch rename modal type");
+    dispatch(addFolder({ name }));
 
     toggleModal(false);
     setName("");
   };
 
-  useEffect(() => {
-    if (currName.current === data?.value) return;
-    currName.current = data?.value ?? "";
-
-    setName(data?.value ?? "");
-  }, [data?.value]);
-
   return (
-    <ModalComponent id={RENAME_MODAL_ID} isOpen={isOpen} toggle={toggleModal}>
-      <form onSubmit={handleModalSubmit} className={style.renameModal}>
+    <ModalComponent
+      id={NEW_FOLDER_MODAL_ID}
+      isOpen={isOpen}
+      toggle={toggleModal}
+    >
+      <form onSubmit={handleModalSubmit} className={style.newfolderModal}>
         <h5>
-          <span>Rename</span>
+          <span>New Folder</span>
           <ModalComponent.ButtonClose />
         </h5>
 
@@ -100,4 +71,4 @@ const RenameModal = ({ isOpen, data }: Props) => {
   );
 };
 
-export default memo(RenameModal);
+export default memo(NewFolderModal);
