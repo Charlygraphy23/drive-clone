@@ -10,3 +10,8 @@ export type ActionType = {
 		| unknown
 		| any;
 };
+
+export enum DATA_TYPE {
+	FILE = "file",
+	FOLDER = "folder",
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import MyDropdown from "@/app/components/dropdown";
+import { DATA_TYPE } from "@/app/interfaces/index.interface";
 import { toggleRenameModal } from "@/app/store/actions";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
 import React from "react";
@@ -19,7 +20,7 @@ const FileAction = ({ data }: Props) => {
 				isOpen: true,
 				data: {
 					fileId: data?._id,
-					type: "file",
+					type: DATA_TYPE.FILE,
 					value: data?.name,
 				},
 			})

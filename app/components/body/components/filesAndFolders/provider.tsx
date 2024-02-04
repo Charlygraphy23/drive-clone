@@ -14,10 +14,11 @@ type Props = {
 } & PropsWithChildren;
 
 const FileAndFolderStateProvider = ({ children, data }: Props) => {
-	const { renameModal, newFolderModal , data: modalState } = useSelector<
-		RootState,
-		ModalStateType
-	>((state) => state.modals);
+	const {
+		renameModal,
+		newFolderModal,
+		data: modalState,
+	} = useSelector<RootState, ModalStateType>((state) => state.modals);
 
 	const dispatch = useDispatch();
 	const ref = useRef(false);

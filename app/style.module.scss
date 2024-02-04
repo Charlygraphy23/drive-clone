@@ -1,7 +1,9 @@
-.home {
+@use "./styles/variable.scss" as color;
+
+.appLayout {
 	min-height: inherit;
 
-	.home__wrapper {
+	.wrapper {
 		min-height: inherit;
 
 		.sidebar__wrapper {
@@ -12,6 +14,14 @@
 			flex: 1;
 			padding: 2rem;
 			max-height: 100vh;
+
+			.body {
+				background-color: color.$light-gray-color;
+				height: 100%;
+				border-radius: 20px;
+				overflow: hidden;
+				padding: 2rem;
+			}
 		}
 	}
 }

@@ -40,10 +40,11 @@ export default createReducer(initialState, (builder) => {
 				}
 			});
 			return state;
-		}).addCase(addBulkFiles, (state, action) => {
+		})
+		.addCase(addBulkFiles, (state, action) => {
 			const payload = action?.payload;
 
-			state.data.push(...payload?.data);
+			state.data = payload?.data;
 			return state;
 		});
 });

@@ -1,76 +1,67 @@
 @use "../../styles/variable.scss" as color;
 
-.body {
-	background-color: color.$light-gray-color;
-	height: 100%;
-	border-radius: 20px;
-	overflow: hidden;
-	padding: 2rem;
-	
+.body__topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 
-	.body__topbar {
+	.topbar__search {
+		color: color.$text-gray-color;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		cursor: pointer;
 
-		.topbar__search {
+		i {
+			margin-right: 5px;
+			font-weight: bold;
+		}
+
+		p {
+			background-color: transparent;
 			color: color.$text-gray-color;
-			display: flex;
-			align-items: center;
+			padding: 0.5em;
+			font-weight: bold;
+			margin: 0;
+		}
+	}
+
+	.avatar__wrapper {
+		.img__wrapper {
+			padding: 0.2em;
 			cursor: pointer;
+			border: 1px solid color.$primary-color;
+			border-radius: 50%;
 
-			i {
-				margin-right: 5px;
-				font-weight: bold;
-			}
-
-			p {
-				background-color: transparent;
-				color: color.$text-gray-color;
-				padding: 0.5em;
-				font-weight: bold;
-				margin: 0;
+			&::after {
+				content: none;
 			}
 		}
-
-		.avatar__wrapper {
-			.img__wrapper {
-				padding: 0.2em;
-				cursor: pointer;
-				border: 1px solid color.$primary-color;
-				border-radius: 50%;
-
-				&::after {
-					content: none;
-				}
-			}
-			img {
-				width: 2.5rem;
-				height: 2.5rem;
-				border-radius: 50%;
-				position: relative;
-			}
+		img {
+			width: 2.5rem;
+			height: 2.5rem;
+			border-radius: 50%;
+			position: relative;
 		}
+	}
 
-		.notification__wrapper {
-			margin-right: 2.5vw;
+	.notification__wrapper {
+		margin-right: 2.5vw;
 
-			i {
-				font-size: 1.5rem;
-				color: color.$text-gray-color;
-				position: relative;
+		i {
+			font-size: 1.5rem;
+			color: color.$text-gray-color;
+			position: relative;
 
-				&::after {
-					content: "";
-					position: absolute;
-					top: 5%;
-					width: 10px;
-					height: 10px;
-					background-color: color.$primary-color;
-					border-radius: 50%;
-					right: 0;
-					border: 1px solid white;
-				}
+			&::after {
+				content: "";
+				position: absolute;
+				top: 5%;
+				width: 10px;
+				height: 10px;
+				background-color: color.$primary-color;
+				border-radius: 50%;
+				right: 0;
+				border: 1px solid white;
 			}
 		}
 	}

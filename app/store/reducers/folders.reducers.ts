@@ -41,7 +41,7 @@ export default createReducer(initialState, (builder) => {
 		.addCase(addBulkFolder, (state, action) => {
 			const payload = action.payload;
 
-			state.data.push(...payload?.data);
+			state.data = payload?.data;
 			return state;
 		});
 });

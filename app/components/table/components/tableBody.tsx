@@ -3,20 +3,14 @@
 import React from "react";
 import TableColumnHandler from "./tableColumnHandler";
 import TableEmpty from "./tableEmpty";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
-import { FolderStateType } from "@/app/store/reducers/folders.reducers";
 import { ColumnType } from "../interfaces/index.interface";
 
-type Props = {
+type Props<T> = {
 	columns: ColumnType[];
+	data: T[];
 };
 
-const TableBody = ({ columns }: Props) => {
-	const { data } = useSelector<RootState, FolderStateType>(
-		(state) => state?.files
-	);
-
+const TableBody = <T,>({ columns, data }: Props<T>) => {
 	return (
 		<tbody>
 			{data?.map((val, key) => (
@@ -24,10 +18,14 @@ const TableBody = ({ columns }: Props) => {
 					{columns?.map((column, i) => {
 						if (i === 0)
 							return (
-								<th key={i}>{<TableColumnHandler data={val} {...column} />}</th>
+								<th key={i}>
+									{<TableColumnHandler<T> data={val} {...column} />}
+								</th>
 							);
 						return (
-							<td key={i}>{<TableColumnHandler data={val} {...column} />}</td>
+							<td key={i}>
+								{<TableColumnHandler<T> data={val} {...column} />}
+							</td>
 						);
 					})}
 				</tr>

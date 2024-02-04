@@ -1,27 +1,31 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { ColumnType } from "../interfaces/index.interface";
 import style from "../style.module.scss";
 import Image from "next/image";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
-type Props = {
-	data: any;
+type Props<T> = {
+	data: T;
 } & ColumnType;
 
-const TableColumnHandler = ({
+const TableColumnHandler = <T,>({
 	render,
 	dataIndex,
 	data,
 	title,
 	icon,
-}: Props) => {
+}: Props<T>) => {
 	const handleDataMapping = () => {
 		const path = dataIndex ?? "";
 		const spitedPath = path?.split(".");
-		return spitedPath.reduce(
-			(prevData: any, currData: any) => prevData?.[currData],
-			data
-		);
+		return spitedPath.reduce<T>((_data, key) => {
+			if (Array.isArray(_data)) return undefined;
+
+			if (_data && typeof _data === "object" && key in _data)
+				return (_data as Record<string, any>)?.[key];
+
+			return _data;
+		}, data);
 	};
 
 	const renderIcon = () => {
@@ -35,14 +39,14 @@ const TableColumnHandler = ({
 	if (render) {
 		return render({
 			record: { dataIndex, data, title },
-			value: handleDataMapping(),
+			value: handleDataMapping() as ReactElement,
 		});
 	}
 
 	return (
 		<div className={style.columnHandler}>
 			{icon && renderIcon()}
-			<span>{handleDataMapping()}</span>
+			<span>{handleDataMapping() as ReactElement}</span>
 		</div>
 	);
 };

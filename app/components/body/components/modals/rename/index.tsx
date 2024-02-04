@@ -1,103 +1,100 @@
 "use client";
 
 import React, {
-  ChangeEvent,
-  FormEvent,
-  memo,
-  useEffect,
-  useRef,
-  useState,
+	ChangeEvent,
+	FormEvent,
+	memo,
+	useEffect,
+	useRef,
+	useState,
 } from "react";
 import style from "./style.module.scss";
 import ModalComponent from "@/app/components/modal";
 import {
-  renameFile,
-  renameFolder,
-  toggleRenameModal,
+	renameFile,
+	renameFolder,
+	toggleRenameModal,
 } from "@/app/store/actions";
 import { useDispatch } from "react-redux";
 import { RENAME_MODAL_ID } from "@/app/config/const";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
+import { DATA_TYPE } from "@/app/interfaces/index.interface";
 
 type Props = {
-  isOpen: boolean;
-  data: ModalDataType;
+	isOpen: boolean;
+	data: ModalDataType;
 };
 
 const RenameModal = ({ isOpen, data }: Props) => {
-  const dispatch = useDispatch();
-  const [name, setName] = useState<string>("");
-  const currName = useRef(name);
+	const dispatch = useDispatch();
+	const [name, setName] = useState<string>("");
+	const currName = useRef(name);
 
-  const toggleModal = (isOpen?: boolean) => {
-    dispatch(
-      toggleRenameModal({
-        isOpen: !!isOpen,
-      })
-    );
+	const toggleModal = (isOpen?: boolean) => {
+		dispatch(
+			toggleRenameModal({
+				isOpen: !!isOpen,
+			})
+		);
 
-	if(data && data.value) {
+		if (data && data.value) {
+		}
 
-	}
+		const value = data?.value ?? "";
 
-    const value = (data && "value" in data && data?.value) ?? "";
+		setName(value as string);
+	};
 
-    setName(value as string);
-  };
+	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+		setName(event.target.value);
+	};
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
+	const handleModalSubmit = (event: FormEvent) => {
+		event.preventDefault();
 
-  const handleModalSubmit = (event: FormEvent) => {
-    event.preventDefault();
+		if (!name) return;
 
-    if (!name) return;
+		if (data && data.type === DATA_TYPE.FILE) {
+			dispatch(renameFile({ fileId: data?.fileId, name }));
+		} else {
+			dispatch(renameFolder({ folderId: data?.folderId, name }));
+		}
 
-	if(data && data.type)
+		toggleModal(false);
+		setName("");
+	};
 
-    if (data?.type === "file" && "fileId" in data) {
-      dispatch(renameFile({ fileId: data?.fileId, name }));
-    } else if ("folderId" in data)
-      dispatch(renameFolder({ folderId: data?.folderId, name }));
-    else console.warn("Mismatch rename modal type");
+	useEffect(() => {
+		if (currName.current === data?.value) return;
+		currName.current = data?.value ?? "";
 
-    toggleModal(false);
-    setName("");
-  };
+		setName(data?.value ?? "");
+	}, [data?.value]);
 
-  useEffect(() => {
-    if (currName.current === data?.value) return;
-    currName.current = data?.value ?? "";
+	return (
+		<ModalComponent id={RENAME_MODAL_ID} isOpen={isOpen} toggle={toggleModal}>
+			<form onSubmit={handleModalSubmit} className={style.renameModal}>
+				<h5>
+					<span>Rename</span>
+					<ModalComponent.ButtonClose />
+				</h5>
 
-    setName(data?.value ?? "");
-  }, [data?.value]);
+				<input type='text' value={name} onChange={onChange} />
 
-  return (
-    <ModalComponent id={RENAME_MODAL_ID} isOpen={isOpen} toggle={toggleModal}>
-      <form onSubmit={handleModalSubmit} className={style.renameModal}>
-        <h5>
-          <span>Rename</span>
-          <ModalComponent.ButtonClose />
-        </h5>
-
-        <input type="text" value={name} onChange={onChange} />
-
-        <div className="d-flex justify-content-end align-items-center mt-4 mb-2">
-          <button
-            type="button"
-            className="button cancel me-3"
-            onClick={() => toggleModal(false)}
-          >
-            cancel
-          </button>
-          <button type="submit" className="button submit">
-            OK
-          </button>
-        </div>
-      </form>
-    </ModalComponent>
-  );
+				<div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
+					<button
+						type='button'
+						className='button cancel me-3'
+						onClick={() => toggleModal(false)}>
+						cancel
+					</button>
+					<button type='submit' className='button submit'>
+						OK
+					</button>
+				</div>
+			</form>
+		</ModalComponent>
+	);
 };
 
 export default memo(RenameModal);

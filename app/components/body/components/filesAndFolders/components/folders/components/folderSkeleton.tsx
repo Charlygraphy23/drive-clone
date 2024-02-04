@@ -6,6 +6,7 @@ import MyDropdown from "@/app/components/dropdown";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import { useDispatch } from "react-redux";
 import { toggleRenameModal } from "@/app/store/actions";
+import { DATA_TYPE } from "@/app/interfaces/index.interface";
 
 type Props = {
 	data: FolderDataType;
@@ -19,7 +20,7 @@ const FolderSkeleton = ({ data }: Props) => {
 				isOpen: true,
 				data: {
 					folderId: data?._id,
-					type: "folder",
+					type: DATA_TYPE.FOLDER,
 					value: data?.name,
 				},
 			})
