@@ -1,13 +1,8 @@
 import React from "react";
-import AppLayout from "../appLayout";
 import BinPage from "./page";
 
 const layout = () => {
-	return (
-		<AppLayout>
-			<BinPage />
-		</AppLayout>
-	);
+	return <BinPage />;
 };
 
 export default layout;

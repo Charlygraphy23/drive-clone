@@ -7,7 +7,16 @@ type RenderProps = {
 
 export type ColumnType = {
 	dataIndex: string;
-	render?: (props: RenderProps) => React.ReactElement[] | React.ReactElement;
+	render?: (
+		props: RenderProps
+	) =>
+		| React.ReactElement[]
+		| React.ReactElement
+		| string
+		| number
+		| null
+		| undefined
+		| boolean;
 	title: string;
 	icon?: React.ReactElement | StaticImport | string;
 };

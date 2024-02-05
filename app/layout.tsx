@@ -3,8 +3,7 @@ import { Roboto } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./globals.scss";
-import Script from "next/script";
-import AppClientProvider, { BootstrapClient } from "./provider";
+import AppLayout from "./appLayout";
 
 const inter = Roboto({
 	weight: "400",
@@ -22,14 +21,13 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
+	console.log("Rendered");
+
 	return (
 		<html lang='en'>
-			<AppClientProvider>
-				<body className={inter.className} suppressHydrationWarning={true}>
-					{children}
-					<BootstrapClient />
-				</body>
-			</AppClientProvider>
+			<body className={inter.className} suppressHydrationWarning={true}>
+				<AppLayout>{children}</AppLayout>
+			</body>
 		</html>
 	);
 }

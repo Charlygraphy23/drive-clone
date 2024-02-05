@@ -19,12 +19,15 @@ const TableColumnHandler = <T,>({
 		const path = dataIndex ?? "";
 		const spitedPath = path?.split(".");
 		return spitedPath.reduce<T>((_data, key) => {
-			if (Array.isArray(_data)) return undefined;
-
-			if (_data && typeof _data === "object" && key in _data)
+			if (
+				_data &&
+				!Array.isArray(_data) &&
+				typeof _data === "object" &&
+				key in _data
+			)
 				return (_data as Record<string, any>)?.[key];
 
-			return _data;
+			return undefined;
 		}, data);
 	};
 
@@ -46,7 +49,7 @@ const TableColumnHandler = <T,>({
 	return (
 		<div className={style.columnHandler}>
 			{icon && renderIcon()}
-			<span>{handleDataMapping() as ReactElement}</span>
+			<span>{(handleDataMapping() as ReactElement) ?? "-"}</span>
 		</div>
 	);
 };

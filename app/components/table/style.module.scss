@@ -23,6 +23,17 @@
 			td {
 				padding: 10px 20px;
 				color: color.$text-gray-color;
+
+				.empty {
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+
+					.emptyImage {
+						width: 200px;
+					}
+				}
 			}
 		}
 	}

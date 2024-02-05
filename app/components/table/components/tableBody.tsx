@@ -8,9 +8,10 @@ import { ColumnType } from "../interfaces/index.interface";
 type Props<T> = {
 	columns: ColumnType[];
 	data: T[];
+	emptyIcon?: React.ReactElement;
 };
 
-const TableBody = <T,>({ columns, data }: Props<T>) => {
+const TableBody = <T,>({ columns, data, emptyIcon }: Props<T>) => {
 	return (
 		<tbody>
 			{data?.map((val, key) => (
@@ -36,7 +37,7 @@ const TableBody = <T,>({ columns, data }: Props<T>) => {
 					.fill(0)
 					.map((_, index) => <TableLoader key={index} columns={columns} />)} */}
 
-			{!data?.length && <TableEmpty columns={columns} />}
+			{!data?.length && <TableEmpty columns={columns} emptyIcon={emptyIcon} />}
 		</tbody>
 	);
 };

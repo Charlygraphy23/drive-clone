@@ -54,7 +54,7 @@ const page = async () => {
 		<section className={style.bin}>
 			<h1>Bin</h1>
 
-			<BinTableComponent data={data as Record<string, any>} />
+			<BinTableComponent data={data as Record<string, any>[]} />
 		</section>
 	);
 };

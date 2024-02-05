@@ -21,6 +21,13 @@ const useTableColumns = () => {
 		{
 			title: "File Size",
 			dataIndex: "size",
+			render: function ({ value }) {
+				if (!value) return "-";
+				const sizeInBytes = +value;
+				const bytesToMb = 1024 * 1024;
+
+				return `${(sizeInBytes / bytesToMb).toPrecision(1)}MB`;
+			},
 		},
 
 		{
