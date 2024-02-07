@@ -1,7 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { PropsWithChildren, useLayoutEffect, useRef } from "react";
+import React, { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 import { AppStore } from "@app/store";
 import makeStore from "@app/store";
@@ -30,11 +30,8 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 };
 
 function BootstrapClient() {
-	useLayoutEffect(() => {
-		if (!window.bootstrap) {
-			require("bootstrap/dist/js/bootstrap.bundle");
-			require("bootstrap/dist/js/bootstrap");
-		}
+	useEffect(() => {
+		require("bootstrap");
 	}, []);
 
 	return null;

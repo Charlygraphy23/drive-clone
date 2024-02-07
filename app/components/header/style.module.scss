@@ -1,11 +1,11 @@
 @use "../../styles/variable.scss" as color;
 
-.body__topbar {
+.header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 
-	.topbar__search {
+	.search {
 		color: color.$text-gray-color;
 		display: flex;
 		align-items: center;

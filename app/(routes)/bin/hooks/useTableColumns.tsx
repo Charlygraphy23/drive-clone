@@ -2,7 +2,11 @@ import { ColumnType } from "@/app/components/table/interfaces/index.interface";
 import React from "react";
 import TableAction from "../components/tableAction";
 
-const useTableColumns = () => {
+type Props = {
+	restoreApi: () => Promise<any>;
+};
+
+const useTableColumns = ({ restoreApi }: Props) => {
 	const columns: ColumnType[] = [
 		{
 			title: "Name",
@@ -39,7 +43,7 @@ const useTableColumns = () => {
 			title: "",
 			dataIndex: "",
 			render: ({ record }) => {
-				return <TableAction />;
+				return <TableAction restoreApi={restoreApi} />;
 			},
 		},
 	];

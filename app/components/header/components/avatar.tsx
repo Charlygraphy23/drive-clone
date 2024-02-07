@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import style from "../../../style.module.scss";
+import style from "../style.module.scss";
 import MyDropdown from "@/app/components/dropdown";
 
 const TopBarAvatar = () => {

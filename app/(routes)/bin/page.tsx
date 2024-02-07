@@ -1,7 +1,8 @@
 import React from "react";
 import style from "./style.module.scss";
 import BinTableComponent from "./components/binTableComponent";
-import { DATA_TYPE } from "../interfaces/index.interface";
+import { DATA_TYPE } from "../../interfaces/index.interface";
+import HeaderComponent from "@/app/components/header";
 
 const dataset = [
 	{
@@ -47,14 +48,30 @@ const api = async () => {
 	});
 };
 
+async function restoreApi() {
+	"use server";
+
+	return await fetch("https://api.sampleapis.com/futurama/info")
+		.then((res) => res.json())
+		.then((data) => {
+			console.log("Data fetched ");
+		});
+}
+
 const page = async () => {
 	const data = await api();
 
 	return (
 		<section className={style.bin}>
-			<h1>Bin</h1>
+			<header className='d-flex justify-content-between align-items-center'>
+				<h1>Bin</h1>
+				<HeaderComponent hideSearch={true} />
+			</header>
 
-			<BinTableComponent data={data as Record<string, any>[]} />
+			<BinTableComponent
+				data={data as Record<string, any>[]}
+				restoreApi={restoreApi}
+			/>
 		</section>
 	);
 };

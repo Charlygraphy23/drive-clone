@@ -1,13 +1,13 @@
 import React, { Suspense } from "react";
-import TopBarComponent from "./components/toolbar";
+import HeaderComponent from "../header";
 import HeroComponent from "./components/hero";
-import FilesAndFolders from "./components/filesAndFolders";
 import FileAndFolderLoader from "../loader/fileAndFolderLoader";
+import FilesAndFolders from "./components/filesAndFolders";
 
 const BodyComponent = () => {
 	return (
 		<>
-			<TopBarComponent />
+			<HeaderComponent />
 			<HeroComponent />
 			<Suspense fallback={<FileAndFolderLoader />}>
 				<FilesAndFolders />

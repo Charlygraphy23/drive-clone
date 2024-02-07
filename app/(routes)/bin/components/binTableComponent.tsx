@@ -5,13 +5,15 @@ import useTableColumns from "../hooks/useTableColumns";
 import Table from "@app/components/table";
 import style from "../style.module.scss";
 import EmptyTableIcon from "@app/assets/emptyTableIcon.svg";
+import { useSelector } from "react-redux";
 
 type Props = {
 	data: Record<string, any>[];
+	restoreApi: () => Promise<any>;
 };
 
-const BinTableComponent = ({ data }: Props) => {
-	const { columns } = useTableColumns();
+const BinTableComponent = ({ data, restoreApi }: Props) => {
+	const { columns } = useTableColumns({ restoreApi });
 
 	return (
 		<div className={style.tableWrapper}>
