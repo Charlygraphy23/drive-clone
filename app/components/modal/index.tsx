@@ -44,11 +44,16 @@ const Modal = (props: Props) => {
 			if (toggle && isOpen) toggle(false);
 		};
 
-		const modal = document.querySelector(".modal");
+		const modals = document.querySelectorAll(".modal");
 
-		modal?.addEventListener("hidden.bs.modal", handleHidden);
+		modals.forEach((modal) =>
+			modal?.addEventListener("hidden.bs.modal", handleHidden)
+		);
+
 		return () => {
-			modal?.removeEventListener("hidden.bs.modal", handleHidden);
+			modals.forEach((modal) =>
+				modal?.removeEventListener("hidden.bs.modal", handleHidden)
+			);
 		};
 	}, [isOpen, toggle]);
 

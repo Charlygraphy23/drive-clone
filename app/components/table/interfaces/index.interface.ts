@@ -20,3 +20,10 @@ export type ColumnType = {
 	title: string;
 	icon?: React.ReactElement | StaticImport | string;
 };
+
+export type TableProps<T> = {
+	columns: ColumnType[];
+	data: T[];
+	emptyIcon?: React.ReactElement;
+	isLoading?: boolean;
+};

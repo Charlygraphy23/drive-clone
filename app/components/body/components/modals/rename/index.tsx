@@ -37,9 +37,6 @@ const RenameModal = ({ isOpen, data }: Props) => {
 			})
 		);
 
-		if (data && data.value) {
-		}
-
 		const value = data?.value ?? "";
 
 		setName(value as string);

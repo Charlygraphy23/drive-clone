@@ -13,12 +13,20 @@
 		text-decoration: none;
 		color: color.$text-gray-color;
 		margin-bottom: 15px;
+		transition: 0.3s all ease-in-out;
+
+		&:hover {
+			color: color.$primary-color;
+			.navRoute__icon {
+				color: color.$primary-color !important;
+			}
+		}
 
 		&.active {
 			background-color: color.$light-primary-color;
-			color: color.$primary-color;
 			font-weight: 500;
 			margin-bottom: 20px;
+			color: color.$primary-color;
 
 			.navRoute__icon {
 				color: color.$primary-color !important;

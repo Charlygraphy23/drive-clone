@@ -1,9 +1,10 @@
 import { ColumnType } from "@/app/components/table/interfaces/index.interface";
 import React from "react";
 import TableAction from "../components/tableAction";
+import { UseMutateFunction } from "@tanstack/react-query";
 
 type Props = {
-	restoreApi: () => Promise<any>;
+	restoreApi: UseMutateFunction;
 };
 
 const useTableColumns = ({ restoreApi }: Props) => {

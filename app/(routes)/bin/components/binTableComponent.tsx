@@ -6,6 +6,7 @@ import Table from "@app/components/table";
 import style from "../style.module.scss";
 import EmptyTableIcon from "@app/assets/emptyTableIcon.svg";
 import { useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
 
 type Props = {
 	data: Record<string, any>[];
@@ -13,11 +14,17 @@ type Props = {
 };
 
 const BinTableComponent = ({ data, restoreApi }: Props) => {
-	const { columns } = useTableColumns({ restoreApi });
+	const { mutate, isPending } = useMutation({ mutationFn: restoreApi });
+	const { columns } = useTableColumns({ restoreApi: mutate });
 
 	return (
 		<div className={style.tableWrapper}>
-			<Table columns={columns} data={data} emptyIcon={EmptyTableIcon} />
+			<Table
+				columns={columns}
+				data={data}
+				emptyIcon={EmptyTableIcon}
+				isLoading={isPending}
+			/>
 		</div>
 	);
 };

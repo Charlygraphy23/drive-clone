@@ -1,10 +1,11 @@
 "use client";
 
 import MyDropdown from "@/app/components/dropdown";
+import { UseMutateFunction, useMutation } from "@tanstack/react-query";
 import React from "react";
 
 type Props = {
-	restoreApi: () => Promise<any>;
+	restoreApi: UseMutateFunction;
 };
 
 const TableAction = ({ restoreApi }: Props) => {
