@@ -3,7 +3,10 @@
 import React, { ChangeEvent, FormEvent, memo, useState } from "react";
 import style from "./style.module.scss";
 import ModalComponent from "@/app/components/modal";
-import { addFolder, toggleNewFolderModal } from "@/app/store/actions";
+import {
+	addFolder,
+	toggleModal as toggleModalState,
+} from "@/app/store/actions";
 import { useDispatch } from "react-redux";
 import { NEW_FOLDER_MODAL_ID } from "@/app/config/const";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
@@ -13,14 +16,15 @@ type Props = {
 	data: ModalDataType;
 };
 
-const NewFolderModal = ({ isOpen, data }: Props) => {
+const NewFolderModal = ({ isOpen }: Props) => {
 	const dispatch = useDispatch();
 	const [name, setName] = useState<string>("");
 
 	const toggleModal = (isOpen?: boolean) => {
 		dispatch(
-			toggleNewFolderModal({
+			toggleModalState({
 				isOpen: !!isOpen,
+				name: "newFolderModal",
 			})
 		);
 	};

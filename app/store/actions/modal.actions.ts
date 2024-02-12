@@ -1,14 +1,13 @@
 import { createAction } from "@reduxjs/toolkit";
-import { ModalDataType } from "../reducers/modal.reducers";
+import { ModalDataType, ModalStateType } from "../reducers/modal.reducers";
 
 type ToggleModal = {
 	isOpen: boolean;
 	data?: ModalDataType | null;
+	name: keyof Pick<
+		ModalStateType,
+		"renameModal" | "confirmModal" | "newFolderModal"
+	>;
 };
 
-export const toggleRenameModal =
-	createAction<ToggleModal>("toggleRenameModal");
-
-
-export const toggleNewFolderModal =
-createAction<ToggleModal>("toggleNewFolderModal");
+export const toggleModal = createAction<ToggleModal>("toggleModal");

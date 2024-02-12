@@ -7,7 +7,7 @@ type Props = {
 	restoreApi: UseMutateFunction;
 };
 
-const useTableColumns = ({ restoreApi }: Props) => {
+const useTableColumns = (props: Props) => {
 	const columns: ColumnType[] = [
 		{
 			title: "Name",
@@ -43,8 +43,8 @@ const useTableColumns = ({ restoreApi }: Props) => {
 		{
 			title: "",
 			dataIndex: "",
-			render: ({ record }) => {
-				return <TableAction restoreApi={restoreApi} />;
+			render: () => {
+				return <TableAction {...props} />;
 			},
 		},
 	];

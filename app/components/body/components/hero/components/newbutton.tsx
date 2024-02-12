@@ -1,21 +1,22 @@
-"use client"
+"use client";
 
 import MyDropdown from "@/app/components/dropdown";
 import React from "react";
 import style from "../style.module.scss";
 import { useDispatch } from "react-redux";
-import { toggleNewFolderModal } from "@/app/store/actions";
+import { toggleModal } from "@/app/store/actions";
 
 const NewButtonComponent = () => {
-
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 
 	const handleNewFolderClick = () => {
-		dispatch(toggleNewFolderModal({
-			isOpen: true,
-		}))
-
-	}
+		dispatch(
+			toggleModal({
+				isOpen: true,
+				name: "newFolderModal",
+			})
+		);
+	};
 
 	return (
 		<MyDropdown
@@ -29,7 +30,9 @@ const NewButtonComponent = () => {
 				),
 			}}>
 			<MyDropdown.Menu>
-				<MyDropdown.List onClick={handleNewFolderClick}>New Folder</MyDropdown.List>
+				<MyDropdown.List onClick={handleNewFolderClick}>
+					New Folder
+				</MyDropdown.List>
 				<MyDropdown.List>New File</MyDropdown.List>
 			</MyDropdown.Menu>
 		</MyDropdown>

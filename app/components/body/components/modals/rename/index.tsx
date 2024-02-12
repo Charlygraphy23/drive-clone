@@ -13,7 +13,7 @@ import ModalComponent from "@/app/components/modal";
 import {
 	renameFile,
 	renameFolder,
-	toggleRenameModal,
+	toggleModal as toggleModalState,
 } from "@/app/store/actions";
 import { useDispatch } from "react-redux";
 import { RENAME_MODAL_ID } from "@/app/config/const";
@@ -32,8 +32,9 @@ const RenameModal = ({ isOpen, data }: Props) => {
 
 	const toggleModal = (isOpen?: boolean) => {
 		dispatch(
-			toggleRenameModal({
+			toggleModalState({
 				isOpen: !!isOpen,
+				name: "renameModal",
 			})
 		);
 

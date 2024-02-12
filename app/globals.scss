@@ -48,6 +48,16 @@ input {
 	font-size: 1rem;
 }
 
+.button:disabled {
+	opacity: 0.5;
+	cursor: wait;
+}
+
+.button.error {
+	@extend .submit;
+	background-color: color.$error !important;
+}
+
 .button.submit {
 	border-radius: 20px;
 	width: 2em;

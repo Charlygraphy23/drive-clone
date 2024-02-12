@@ -5,7 +5,7 @@ import style from "../../../style.module.scss";
 import MyDropdown from "@/app/components/dropdown";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import { useDispatch } from "react-redux";
-import { toggleRenameModal } from "@/app/store/actions";
+import { toggleModal } from "@/app/store/actions";
 import { DATA_TYPE } from "@/app/interfaces/index.interface";
 
 type Props = {
@@ -16,13 +16,14 @@ const FolderSkeleton = ({ data }: Props) => {
 	const dispatch = useDispatch();
 	const handleRenameClient = () => {
 		dispatch(
-			toggleRenameModal({
+			toggleModal({
 				isOpen: true,
 				data: {
 					folderId: data?._id,
 					type: DATA_TYPE.FOLDER,
 					value: data?.name,
 				},
+				name: "renameModal",
 			})
 		);
 	};

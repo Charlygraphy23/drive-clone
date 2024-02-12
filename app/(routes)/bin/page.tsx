@@ -1,7 +1,5 @@
 import React, { Suspense } from "react";
 import style from "./style.module.scss";
-import BinTableComponent from "./components/binTableComponent";
-import { DATA_TYPE } from "../../interfaces/index.interface";
 import HeaderComponent from "@/app/components/header";
 import BinPage from "./components/binPage";
 import FileLoader from "@/app/components/loader/fileLoader";

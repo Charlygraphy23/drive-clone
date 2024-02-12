@@ -46,6 +46,15 @@ const api = async () => {
 	});
 };
 
+const deleteForeverApi = async () => {
+	"use server";
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve(true);
+		}, 4000);
+	});
+};
+
 async function restoreApi() {
 	"use server";
 
@@ -63,6 +72,7 @@ const BinPage = async () => {
 		<BinTableComponent
 			data={data as Record<string, any>[]}
 			restoreApi={restoreApi}
+			deleteApi={deleteForeverApi}
 		/>
 	);
 };

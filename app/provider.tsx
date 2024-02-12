@@ -5,6 +5,7 @@ import React, { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 import { AppStore } from "@app/store";
 import makeStore from "@app/store";
+import ConfirmationModalComponent from "./components/modal/modals/confirmation";
 
 const queryClient = new QueryClient();
 

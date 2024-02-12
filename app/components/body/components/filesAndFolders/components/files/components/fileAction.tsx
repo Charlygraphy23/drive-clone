@@ -2,7 +2,7 @@
 
 import MyDropdown from "@/app/components/dropdown";
 import { DATA_TYPE } from "@/app/interfaces/index.interface";
-import { toggleRenameModal } from "@/app/store/actions";
+import { toggleModal } from "@/app/store/actions";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -16,13 +16,14 @@ const FileAction = ({ data }: Props) => {
 
 	const handleRenameClick = () => {
 		dispatch(
-			toggleRenameModal({
+			toggleModal({
 				isOpen: true,
 				data: {
 					fileId: data?._id,
 					type: DATA_TYPE.FILE,
 					value: data?.name,
 				},
+				name: "renameModal",
 			})
 		);
 	};
