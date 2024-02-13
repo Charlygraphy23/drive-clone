@@ -21,12 +21,12 @@ export function StoreProvider({ children }: PropsWithChildren) {
 
 const AppClientProvider = ({ children }: PropsWithChildren) => {
 	return (
-		<div>
+		<>
 			<QueryClientProvider client={queryClient}>
 				<StoreProvider>{children}</StoreProvider>
 			</QueryClientProvider>
 			<BootstrapClient />
-		</div>
+		</>
 	);
 };
 

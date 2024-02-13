@@ -1,5 +1,8 @@
 .bin {
 	padding-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 
 	h1 {
 		font-weight: 900;
@@ -7,5 +10,6 @@
 
 	.tableWrapper {
 		margin-top: 4rem;
+		overflow: auto;
 	}
 }
