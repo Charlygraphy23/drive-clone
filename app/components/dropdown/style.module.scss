@@ -20,6 +20,17 @@
 			padding: 8px 10px;
 			cursor: pointer;
 
+			a {
+				&:is(:hover, :focus) {
+					background-color: transparent;
+				}
+
+				&:active {
+					background-color: color.$violet-color;
+					color: white
+				}
+			}
+
 			&:is(:hover, :focus) {
 				background-color: rgba(black, 0.1);
 			}

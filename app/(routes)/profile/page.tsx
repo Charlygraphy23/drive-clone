@@ -1,12 +1,14 @@
-import RouteTemplate from "@/app/routeTemplate";
 import React from "react";
+import ProfileImageComponent from "./components/profileImage";
+import ProfileForm from "./components/profileForm";
 
 const ProfilePage = () => {
-	return (
-		<RouteTemplate>
-			<div>ProfilePage</div>
-		</RouteTemplate>
-	);
+  return (
+    <>
+      <ProfileImageComponent />
+      <ProfileForm />
+    </>
+  );
 };
 
 export default ProfilePage;
