@@ -42,6 +42,14 @@
 			border-radius: 50%;
 			position: relative;
 		}
+
+		.active {
+			background-color: color.$primary-color;
+
+			a {
+				color: white;
+			}
+		}
 	}
 
 	.notification__wrapper {

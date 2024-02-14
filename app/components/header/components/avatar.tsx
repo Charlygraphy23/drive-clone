@@ -1,9 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import style from "../style.module.scss";
 import MyDropdown from "@/app/components/dropdown";
+import { usePathname } from "next/navigation";
 
 const TopBarAvatar = () => {
+	const pathname = usePathname();
+
+	const isProfileRoute = /^\/profile/.test(pathname);
+
 	return (
 		<MyDropdown
 			className={style.avatar__wrapper}
@@ -17,7 +24,7 @@ const TopBarAvatar = () => {
 				),
 			}}>
 			<MyDropdown.Menu>
-				<MyDropdown.List>
+				<MyDropdown.List className={isProfileRoute ? style.active : ""}>
 					<Link className='dropdown-item' href='/profile'>
 						View Profile
 					</Link>

@@ -27,12 +27,16 @@
 
 				&:active {
 					background-color: color.$violet-color;
-					color: white
+					color: white;
 				}
 			}
 
 			&:is(:hover, :focus) {
 				background-color: rgba(black, 0.1);
+
+				a {
+					color: black;
+				}
 			}
 
 			&:focus-visible {
@@ -41,6 +45,9 @@
 
 			&:active {
 				background-color: color.$violet-color;
+				a {
+					color: white;
+				}
 			}
 		}
 	}
