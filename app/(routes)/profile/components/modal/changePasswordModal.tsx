@@ -14,7 +14,7 @@ type Props = {
 };
 
 const changePasswordApi = () =>
-	new Promise((resolve) => setTimeout(() => resolve(), 5000));
+	new Promise((resolve) => setTimeout(() => resolve(true), 5000));
 
 const ChangePasswordModal = ({ isOpen }: Props) => {
 	const [state, setState] = useState({
