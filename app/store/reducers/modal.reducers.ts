@@ -17,6 +17,7 @@ const initialState = {
 	renameModal: false,
 	newFolderModal: false,
 	confirmModal: false,
+	changePasswordModal: false,
 	data: {} as ModalDataType,
 };
 

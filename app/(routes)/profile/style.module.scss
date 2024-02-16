@@ -1,4 +1,6 @@
 @use "/app/styles/variable.scss" as color;
+@use "/app/components/body/components/modals/rename/style.module.scss" as
+	renameModalStyle;
 
 .layout {
 	display: flex;
@@ -122,7 +124,7 @@
 				&:nth-child(2) {
 					background-color: color.$primary-color;
 					color: white;
-					font-size: 0.9rem;
+					font-size: 0.7rem;
 					min-width: 6rem;
 					border-radius: 10px;
 				}
@@ -133,6 +135,24 @@
 			i {
 				cursor: pointer;
 			}
+		}
+	}
+}
+
+.changePassword {
+	@include renameModalStyle.renameStyle;
+
+	label {
+		width: 100%;
+		margin-bottom: 1rem;
+
+		display: flex;
+		flex-direction: column;
+
+		span {
+			font-size: 0.9rem;
+			font-weight: bold;
+			margin-bottom: 0.2rem;
 		}
 	}
 }
