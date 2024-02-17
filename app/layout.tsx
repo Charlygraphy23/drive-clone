@@ -4,13 +4,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./globals.scss";
 import AppClientProvider from "./provider";
-import RouteTemplate from "./routeTemplate";
-
-const inter = Roboto({
-	weight: "400",
-	subsets: ["latin"],
-	display: "swap",
-});
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -24,7 +17,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang='en'>
-			<body className={inter.className} suppressHydrationWarning={true}>
+			<body suppressHydrationWarning={true}>
 				<AppClientProvider>{children}</AppClientProvider>
 			</body>
 		</html>
