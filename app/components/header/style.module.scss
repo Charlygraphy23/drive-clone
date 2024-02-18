@@ -1,29 +1,9 @@
-@use "../../styles/variable.scss" as color;
+@use "/app/styles/variable.scss" as color;
 
 .header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-
-	.search {
-		color: color.$text-gray-color;
-		display: flex;
-		align-items: center;
-		cursor: pointer;
-
-		i {
-			margin-right: 5px;
-			font-weight: bold;
-		}
-
-		p {
-			background-color: transparent;
-			color: color.$text-gray-color;
-			padding: 0.5em;
-			font-weight: bold;
-			margin: 0;
-		}
-	}
 
 	.avatar__wrapper {
 		.img__wrapper {

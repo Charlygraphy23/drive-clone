@@ -1,0 +1,9 @@
+@use "/app/styles/variable.scss" as color;
+
+.filters {
+	width: 300px;
+	background-color: rgba(color.$violet-color, 0.1);
+	border-top-left-radius: 30px;
+	border-bottom-left-radius: 30px;
+	padding: 1rem;
+}

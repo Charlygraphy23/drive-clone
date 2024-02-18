@@ -1,6 +1,7 @@
 "use client";
 
-import React, {
+import { BootstrapMethods } from "@/app/utils/index.utils";
+import {
 	PropsWithChildren,
 	useCallback,
 	useEffect,
@@ -8,16 +9,18 @@ import React, {
 } from "react";
 import ModalButton, { ModalCloseButton } from "./components/modalButton";
 import ModalComponent from "./components/modalComponent";
-import { BootstrapMethods } from "@/app/utils/index.utils";
+import { ModalSize } from "./interfaces/index.interface";
 
 type Props = {
 	id: string;
 	isOpen?: boolean;
 	toggle?: (isOpen?: boolean) => void;
+	centered?: boolean
+	size?: ModalSize
 } & PropsWithChildren;
 
 const Modal = (props: Props) => {
-	const { id, isOpen, toggle, children } = props;
+	const { id, isOpen, toggle, children, centered, size } = props;
 	const instance = useRef<any>(null);
 
 	const getInstance = useCallback(() => {
@@ -58,7 +61,7 @@ const Modal = (props: Props) => {
 	}, [isOpen, toggle]);
 
 	return (
-		<ModalComponent isOpen={isOpen} id={id}>
+		<ModalComponent centered={centered} isOpen={isOpen} id={id} size={size}>
 			{children}
 		</ModalComponent>
 	);

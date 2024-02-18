@@ -1,11 +1,10 @@
 "use client";
 
+import makeStore, { AppStore } from "@app/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { PropsWithChildren, useEffect, useRef } from "react";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
-import { AppStore } from "@app/store";
-import makeStore from "@app/store";
-import ConfirmationModalComponent from "./components/modal/modals/confirmation";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +23,7 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 		<>
 			<QueryClientProvider client={queryClient}>
 				<StoreProvider>{children}</StoreProvider>
+				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 			<BootstrapClient />
 		</>
