@@ -3,6 +3,7 @@
 import makeStore, { AppStore } from "@app/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ConfigProvider } from "antd";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 
@@ -22,7 +23,10 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 	return (
 		<>
 			<QueryClientProvider client={queryClient}>
-				<StoreProvider>{children}</StoreProvider>
+				<StoreProvider>
+					<ConfigProvider theme={{ token: { zIndexPopupBase: 1090 } }}>
+						{children}
+					</ConfigProvider></StoreProvider>
 				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 			<BootstrapClient />
