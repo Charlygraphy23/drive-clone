@@ -1,0 +1,1 @@
+export const CONTENT_TYPE = ["mp4", "mp3", "jpg", "pdf", 'txt']

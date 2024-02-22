@@ -1,22 +1,25 @@
 "use client"
 
-import Accordion from '@/app/components/accordion';
-import { DatePicker } from 'antd';
+import { DatePicker, Select, SelectProps } from 'antd';
 import { Dayjs } from 'dayjs';
 import { useState } from 'react';
 import FilterWrapper from './components/filterWrapper';
 import style from './style.module.scss';
+import { CONTENT_TYPE } from './utils/index.utils';
 
 // dayjs.extend(customParseFormat);
 
 const { RangePicker } = DatePicker;
-
+const options: SelectProps['options'] = CONTENT_TYPE.map(val => ({
+    label: val?.toUpperCase(),
+    value: val
+}));
 
 const SearchFilters = () => {
     const [state, setState] = useState({
         createdAt: [Dayjs, Dayjs],
         exifDate: [Dayjs, Dayjs],
-
+        type: options
     });
 
     const onChange = (value: any, type: keyof typeof state) => {
@@ -44,18 +47,15 @@ const SearchFilters = () => {
                 </FilterWrapper>
 
                 <FilterWrapper label='By File Date' >
-                    {/* TODO: need multiselect filter to choose mimetype */}
-                    <Accordion
-                        className={style.accordion}
-                        button={{
-                            title: "Show demo",
-                            className: style.header
-                        }}
-                        content={{
-                            className: style.content
-                        }}>
-                        hello
-                    </Accordion>
+                    <Select
+                        style={{ width: "100%" }}
+                        mode="multiple"
+                        allowClear
+                        value={state.type}
+                        placeholder="Please select"
+                        onChange={(value) => onChange(value, "type")}
+                        options={options}
+                    />
                 </FilterWrapper>
             </div>
         </div>
