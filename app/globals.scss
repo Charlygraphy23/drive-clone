@@ -85,3 +85,68 @@ input {
 	padding: 0 !important;
 	margin: 0 !important;
 }
+
+.antd__appTheme {
+	.ant-select-selector {
+		border: none !important;
+		box-shadow: 0 0 0 2px rgba(color.$light-blue, 0.2) !important;
+
+		.ant-select-selection-overflow-item {
+			& > span {
+				border: 1px solid rgba(color.$light-brown1, 0.6);
+				font-weight: 600;
+				font-size: 0.75rem;
+				background-color: color.$light-brown;
+			}
+		}
+	}
+
+	.ant-picker-cell {
+		&.ant-picker-cell-today .ant-picker-cell-inner {
+			&::before {
+				border-color: color.$light-brown1;
+			}
+		}
+
+		// .ant-picker-cell-inner {
+		// 	background: red;
+		// }
+
+		&.ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+				.ant-picker-cell-disabled
+			),
+		&.ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+				.ant-picker-cell-disabled
+			) {
+			&::before,
+			.ant-picker-cell-inner {
+				background: color.$light-brown1;
+			}
+		}
+
+		&.ant-picker-cell-in-view.ant-picker-cell-in-range {
+			&::before {
+				background: color.$light-brown;
+			}
+		}
+	}
+
+	&.ant-picker {
+		border: none !important;
+		box-shadow: 0 0 0 2px rgba(color.$light-blue, 0.2) !important;
+
+		.ant-picker-active-bar {
+			background-color: rgba(color.$light-blue, 0.7);
+		}
+	}
+
+	.ant-select-item {
+		&.ant-select-item-option-selected {
+			background-color: color.$light-brown;
+
+			.ant-select-item-option-state {
+				color: color.$light-brown1;
+			}
+		}
+	}
+}

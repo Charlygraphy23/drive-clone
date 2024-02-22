@@ -2,35 +2,41 @@
 
 .filters {
 	width: 400px;
-	background-color: rgba(color.$violet-color, 0.06);
+	background-color: rgba(color.$light-blue, 0.06);
 	border-radius: 20px;
 	padding: 1rem;
 
-	.label {
-		margin-bottom: 1.5rem;
+	.wrapper {
+		.label {
+			margin-bottom: 1.5rem;
 
-		p {
-			margin-bottom: 4px;
-			font-weight: 500;
-			font-size: 0.75rem;
+			p {
+				margin-bottom: 5px;
+				font-weight: 500;
+				font-size: 0.75rem;
+			}
+
+			.accordion {
+				.header {
+					padding: 0.5rem;
+					box-shadow: none;
+					color: color.$black-color1;
+					font-size: 0.9rem;
+
+					// &:not(.collapsed) {
+					// 	background-color: red;
+					// }
+				}
+
+				.content {
+					max-height: 200px;
+					overflow: auto;
+				}
+			}
 		}
 
-		.accordion {
-			.header {
-				padding: 0.5rem;
-				box-shadow: none;
-				color: color.$black-color1;
-				font-size: 0.9rem;
-
-				// &:not(.collapsed) {
-				// 	background-color: red;
-				// }
-			}
-
-			.content {
-				max-height: 200px;
-				overflow: auto;
-			}
+		.filter {
+			background-color: red;
 		}
 	}
 }
