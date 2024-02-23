@@ -1,42 +1,50 @@
 @use "/app/styles/variable.scss" as color;
 
 .filters {
-	width: 400px;
-	background-color: rgba(color.$light-blue, 0.06);
-	border-radius: 20px;
-	padding: 1rem;
+  width: 400px;
+  background-color: rgba(color.$light-blue, 0.06);
+  border-radius: 20px;
+  padding: 1rem;
 
-	.wrapper {
-		.label {
-			margin-bottom: 1.5rem;
+  .wrapper {
+    .label {
+      margin-bottom: 1.5rem;
 
-			p {
-				margin-bottom: 5px;
-				font-weight: 500;
-				font-size: 0.75rem;
-			}
+      p {
+        margin-bottom: 5px;
+        font-weight: 500;
+        font-size: 0.75rem;
+      }
 
-			.accordion {
-				.header {
-					padding: 0.5rem;
-					box-shadow: none;
-					color: color.$black-color1;
-					font-size: 0.9rem;
+      .accordion {
+        .header {
+          padding: 0.5rem;
+          box-shadow: none;
+          color: color.$black-color1;
+          font-size: 0.9rem;
 
-					// &:not(.collapsed) {
-					// 	background-color: red;
-					// }
-				}
+          // &:not(.collapsed) {
+          // 	background-color: red;
+          // }
+        }
 
-				.content {
-					max-height: 200px;
-					overflow: auto;
-				}
-			}
-		}
+        .content {
+          max-height: 200px;
+          overflow: auto;
+        }
+      }
+    }
 
-		.filter {
-			background-color: red;
-		}
-	}
+    .buttonGroup {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0px;
+
+      button {
+        padding: 0.2em 2em;
+        box-shadow: 0px 0px 0px 10px rgba(black, 0.1);
+      }
+    }
+  }
 }

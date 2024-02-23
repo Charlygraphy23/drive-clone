@@ -82,6 +82,13 @@ const SearchFilters = () => {
                         type={"hashtags"}
                     />
                 </FilterWrapper>
+
+
+                <div className={style.buttonGroup}>
+                    <button>Reset</button>
+                    <button>Submit</button>
+                </div>
+
             </div>
         </div>
     )
