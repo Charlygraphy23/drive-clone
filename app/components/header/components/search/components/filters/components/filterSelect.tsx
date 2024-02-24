@@ -1,7 +1,7 @@
 "use client"
 
 import { Select, SelectProps } from 'antd';
-import { FilterStateType } from '..';
+import { FilterStateType } from '../../../interfaces/index.interface';
 
 type Props = {
     type: keyof FilterStateType,

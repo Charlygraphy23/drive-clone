@@ -18,7 +18,7 @@ const ResultComponent = ({ type, title, path, selected = false }: Props) => {
     console.log(style.lists)
 
     return (
-        <Link href={path} className={`${style.results} ${selected ? style.selected : ""}`}>
+        <Link href={path} className={`${style.option} ${selected ? style.selected : ""}`}>
             {fileIcon}
             <p>{title}</p>
             <i className="bi bi-arrow-return-left"></i>

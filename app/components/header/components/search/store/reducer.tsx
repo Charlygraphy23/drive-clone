@@ -1,9 +1,11 @@
 import { ActionType } from "@/app/interfaces/index.interface";
 import { SearchReducerStateType } from "../interfaces/index.interface";
-import { SUBMIT_FILTERS } from "./actions";
+import { SUBMIT_FILTERS, TOGGLE_FILTER_VIEW } from "./actions";
+
 
 const initialState = {
-    filters: {}
+    filters: {},
+    isFilterShown: false
 } as SearchReducerStateType
 
 const searchReducer = (state = initialState, action: ActionType) => {
@@ -14,6 +16,10 @@ const searchReducer = (state = initialState, action: ActionType) => {
     switch (type) {
         case SUBMIT_FILTERS:
             newState.filters = payload
+            return newState
+
+        case TOGGLE_FILTER_VIEW:
+            newState.isFilterShown = !newState.isFilterShown
             return newState
         default:
             return newState

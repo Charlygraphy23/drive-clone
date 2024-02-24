@@ -2,26 +2,23 @@
 
 import { DatePicker, SelectProps } from 'antd';
 import { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { FilterStateType } from '../../interfaces/index.interface';
+import { submitFilters } from '../../store/actions';
+import { SearchContext } from '../../store/context';
 import FilterSelect from './components/filterSelect';
 import FilterWrapper from './components/filterWrapper';
 import style from './style.module.scss';
 import { CONTENT_TYPE, HASHTAGS, getContentType, getTagsForSearch } from './utils/index.utils';
 
-export interface FilterStateType {
-    createdAt: [typeof Dayjs, typeof Dayjs],
-    exifDate: [typeof Dayjs, typeof Dayjs],
-    type: string[],
-    hashtags: string[]
-}
 
 const { RangePicker } = DatePicker;
 const typeOptions: SelectProps['options'] = getContentType(CONTENT_TYPE)
 const hashtagsOptions: SelectProps['options'] = getTagsForSearch(HASHTAGS)
 
 
-
 const SearchFilters = () => {
+    const { state: contextState, dispatch } = useContext(SearchContext)
     const [state, setState] = useState<FilterStateType>({
         createdAt: [Dayjs, Dayjs],
         exifDate: [Dayjs, Dayjs],
@@ -38,14 +35,33 @@ const SearchFilters = () => {
         }))
     }
 
+    const handleSubmit = () => {
+        dispatch(submitFilters(state))
+    }
+
+    const resetFilters = () => {
+        dispatch(submitFilters({} as FilterStateType))
+    }
+
+    useEffect(() => {
+        if (contextState.isFilterShown) {
+            setState(contextState.filters)
+        }
+
+        return () => {
+            if (!contextState.isFilterShown)
+                setState({} as FilterStateType)
+        }
+    }, [contextState?.filters, contextState.isFilterShown])
+
     return (
-        <div className={style.filters}>
+        <div className={`${style.filters} ${contextState.isFilterShown && style.show}`}>
             <h5 className="mb-4">Filters</h5>
 
             <div className={style.wrapper}>
                 <FilterWrapper label='By Upload Date' >
                     <RangePicker
-                        value={state.createdAt as any}
+                        value={state?.createdAt as any}
                         allowClear
                         popupClassName="antd__appTheme"
                         className="antd__appTheme"
@@ -57,7 +73,7 @@ const SearchFilters = () => {
                     <RangePicker
                         popupClassName="antd__appTheme"
                         className="antd__appTheme"
-                        value={state.exifDate as any}
+                        value={state?.exifDate as any}
                         allowClear
                         onChange={(dates) => onChange(dates, "exifDate")}
                     />
@@ -65,7 +81,7 @@ const SearchFilters = () => {
 
                 <FilterWrapper label='By File Date' >
                     <FilterSelect
-                        value={state.type}
+                        value={state?.type}
                         onChange={onChange}
                         options={typeOptions}
                         type={"type"}
@@ -76,19 +92,17 @@ const SearchFilters = () => {
 
                 <FilterWrapper label='By File Date' >
                     <FilterSelect
-                        value={state.hashtags}
+                        value={state?.hashtags}
                         onChange={onChange}
                         options={hashtagsOptions}
                         type={"hashtags"}
                     />
                 </FilterWrapper>
+            </div>
 
-
-                <div className={style.buttonGroup}>
-                    <button>Reset</button>
-                    <button>Submit</button>
-                </div>
-
+            <div className={style.buttonGroup}>
+                <button onClick={resetFilters}>Reset</button>
+                <button onClick={handleSubmit}>Submit</button>
             </div>
         </div>
     )
