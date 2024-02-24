@@ -3,19 +3,21 @@
 .filters {
 	width: 0px;
 	height: 0px;
-	background-color: rgba(color.$light-blue, 0.06);
-	border-radius: 20px;
 	padding: 0rem;
 	overflow: hidden;
+	background-color: rgba(color.$light-blue, 0.06);
+	border-radius: 20px;
 	transition: 0.2s ease-in;
 	transition-property: width;
-	display: flex;
 	flex-direction: column;
+	display: flex;
+	margin-left: -10%;
 
 	&.show {
 		width: 400px;
 		height: auto;
 		padding: 1rem;
+		margin-left: 0;
 
 		.wrapper {
 			padding: inherit;

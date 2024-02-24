@@ -38,7 +38,7 @@
 				display: flex;
 				align-items: center;
 				gap: 10px;
-				margin-bottom: 2rem;
+				margin-bottom: 1rem;
 
 				input {
 					flex: 1;
@@ -49,6 +49,22 @@
 					background-color: color.$primary-color;
 					color: white;
 					font-size: 0.9rem;
+				}
+			}
+
+			.appliedFilters {
+				margin-bottom: 1rem;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 5px;
+
+				.tag {
+					span {
+						strong {
+							font-size: 0.8rem;
+							text-transform: lowercase;
+						}
+					}
 				}
 			}
 

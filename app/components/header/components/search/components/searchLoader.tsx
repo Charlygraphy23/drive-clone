@@ -1,6 +1,5 @@
 import style from '../style.module.scss'
 
-
 const SearchLoader = () => {
     return (
         <div className={style.loader}>

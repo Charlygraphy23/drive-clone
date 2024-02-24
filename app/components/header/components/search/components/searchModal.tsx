@@ -5,6 +5,7 @@ import { useContext, useMemo, useState } from 'react';
 import { toggleFilterView } from '../store/actions';
 import { SearchContext } from '../store/context';
 import style from '../style.module.scss';
+import AppliedFilters from './appliedFilters';
 import ResultComponent from './resultComponent';
 import SearchLoader from './searchLoader';
 
@@ -48,10 +49,13 @@ const SearchModal = () => {
         <div className={style.inputGroup}>
             <input type="text" placeholder='Search..' value={search} onChange={(e) => setSearch(e.target.value)} />
             <button className="button" onClick={() => dispatch(toggleFilterView())}>Filter</button>
+
         </div>
 
 
         <div className={style.results}>
+            <AppliedFilters />
+
             {isLoading && <SearchLoader />}
             {!hasData && !isLoading && <span className="px-1 text-center">No result found!</span>}
             {hasData && <section className={style.listWrapper}>
