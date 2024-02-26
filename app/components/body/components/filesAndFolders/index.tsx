@@ -1,41 +1,55 @@
-import React from "react";
-import FolderComponent from "./components/folders";
-import style from "./style.module.scss";
 import FileSection from "./components/files";
-import FileAndFolderStateProvider from "./provider";
+import FolderComponent from "./components/folders";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
+import FileAndFolderStateProvider from "./provider";
+import style from "./style.module.scss";
 
 const data = {
 	files: [
 		{
 			_id: "afsdfsdfs",
 			name: "Monthly report July",
-			member: "Only You",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 			lastModified: new Date().toDateString(),
 		},
 		{
 			_id: "3422",
 			name: "Campaign plan 2024",
-			member: "4 members",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 			lastModified: new Date().toDateString(),
 		},
 
 		{
 			_id: "afsdfasd34sdfs",
 			name: "Quick CV portfolio",
-			member: "10 members",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 			lastModified: new Date().toDateString(),
 		},
 		{
 			_id: "afss3423dfsdfs",
 			name: "Quick CV portfolio",
-			member: "10 members",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 			lastModified: new Date().toDateString(),
 		},
 		{
 			_id: "afsdfsasdas432dfs",
 			name: "Quick CV portfolio",
-			member: "10 members",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 			lastModified: new Date().toDateString(),
 		},
 	],
@@ -44,28 +58,48 @@ const data = {
 			_id: "asdkj21233123",
 			name: "Dummy",
 			path: "dummy",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 		},
 		{
 			_id: "sad312e231",
 			name: "my folder",
 			path: "myfolder",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 		},
 		{
 			_id: "sad312asdde231",
 			name: "my  dummy folder",
 			path: "myfolder",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 		},
 
 		{
 			_id: "333adsdadasd",
 			name: "my  dummy folder",
 			path: "myfolder",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 		},
 
 		{
 			_id: "asd324234",
 			name: "my  dummy folder",
 			path: "myfolder",
+			owner: {
+				profileImage: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400",
+				email: "randomemail@gmail.com"
+			},
 		},
 	],
 };

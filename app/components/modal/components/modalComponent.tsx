@@ -17,9 +17,9 @@ const ModalComponent = ({ id, children, centered = true, size }: Props) => {
 
 	return (
 		<div id={id} className={`${style.modal} ${modalSize} modal fade`} tabIndex={-1}>
-			<div className={`${style.dialog} modal-dialog ${centered ? 'modal-dialog-centered' : ''}`}>
-				<div className={`${style.content} modal-content`}>
-					<div className={`${style.body} modal-body`}>
+			<div className={` modal-dialog ${style.dialog} ${centered ? 'modal-dialog-centered' : ''}`}>
+				<div className={` modal-content ${style.content}`}>
+					<div className={` modal-body ${style.body}`}>
 						{Children.count(children) ? children : "Provide Node children"}
 					</div>
 				</div>

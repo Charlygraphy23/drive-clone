@@ -27,8 +27,6 @@ const SearchFilters = () => {
     });
 
     const onChange = (value: any, type: keyof FilterStateType) => {
-        console.log("Value", value, type)
-
         setState(prev => ({
             ...prev,
             [type]: value

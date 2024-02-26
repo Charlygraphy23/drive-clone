@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import FileAction from "../components/fileAction";
-import PDFLogo from "@app/assets/pdf-icon.svg";
 import { ColumnType } from "@/app/components/table/interfaces/index.interface";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
+import PDFLogo from "@app/assets/pdf-icon.svg";
+import OwnerSection from "../../ownerSection";
+import FileAction from "../components/fileAction";
 
 const useFileColumns = () => {
 	const columns: ColumnType[] = [
@@ -14,8 +14,9 @@ const useFileColumns = () => {
 			icon: PDFLogo,
 		},
 		{
-			title: "Member",
-			dataIndex: "member",
+			title: "Owner",
+			dataIndex: "owner",
+			render: ({ record, value }) => <OwnerSection data={value as Record<string, any>} />
 		},
 
 		{

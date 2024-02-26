@@ -15,7 +15,6 @@ type Props = {
 const ResultComponent = ({ type, title, path, selected = false }: Props) => {
 
     const fileIcon = useMemo(() => getResultIcon(type), [type])
-    console.log(style.lists)
 
     return (
         <Link href={path} className={`${style.option} ${selected ? style.selected : ""}`}>
