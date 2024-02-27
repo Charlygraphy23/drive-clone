@@ -1,81 +1,104 @@
 @use "../../../../styles/variable.scss" as color;
 
+@mixin tableOwner {
+  display: flex;
+  align-items: center;
+
+  img {
+    border-radius: 50%;
+    margin-right: 5px;
+    object-fit: cover;
+  }
+
+  span {
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 160px;
+  }
+}
+
 @mixin folderSkeletonBlock {
-	width: 100%;
-	background-color: white;
-	margin-right: 10px;
-	border-radius: 10px;
-	padding: 0.2rem 1rem;
-	display: flex;
-	align-items: center;
-	box-shadow: 0px 0px 30px rgba(black, 0.1);
-	justify-content: space-between;
-	@content;
+  width: 100%;
+  background-color: white;
+  margin-right: 10px;
+  border-radius: 10px;
+  padding: 0.2rem 1rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 0px 30px rgba(black, 0.1);
+  justify-content: space-between;
+  @content;
 
-	.label {
-		overflow: hidden;
+  .label {
+    overflow: hidden;
 
-		i {
-			margin-right: 10px;
-			color: color.$gray-color;
-		}
+    i {
+      margin-right: 10px;
+      color: color.$gray-color;
+    }
 
-		p {
-			white-space: nowrap;
-			margin-bottom: 0;
-			text-overflow: ellipsis;
-			color: color.$black-color;
-			overflow: hidden;
-		}
-	}
+    p {
+      white-space: nowrap;
+      margin-bottom: 0;
+      text-overflow: ellipsis;
+      color: color.$black-color;
+      overflow: hidden;
+    }
+  }
 
-	.dropdown {
-		.dropdownItem {
-			cursor: pointer;
+  .dropdown {
+    .dropdownItem {
+      cursor: pointer;
 
-			&::after {
-				content: none;
-			}
-		}
+      &::after {
+        content: none;
+      }
+    }
 
-		li {
-			cursor: pointer;
-			i {
-				margin-right: 10px;
-				color: color.$gray-color;
-			}
-		}
-	}
+    li {
+      cursor: pointer;
+      i {
+        margin-right: 10px;
+        color: color.$gray-color;
+      }
+    }
+  }
 }
 
 .filesAndFolders {
-	margin-top: 3rem;
-	overflow: auto;
-	max-height: calc(100vh - 50%);
-	padding-right: 10px;
+  margin-top: 3rem;
+  overflow: auto;
+  max-height: calc(100vh - 50%);
+  padding-right: 10px;
 
-	h6 {
-		color: color.$black-color;
-		margin: 15px 0px;
-	}
+  h6 {
+    color: color.$black-color;
+    margin: 15px 0px;
+  }
 
-	.folders {
-		.folderContainer {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-			grid-auto-rows: 50px;
-			column-count: auto;
-			gap: 10px;
+  .folders {
+    .folderContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-auto-rows: 50px;
+      column-count: auto;
+      gap: 10px;
 
-			.skeleton {
-				@include folderSkeletonBlock;
-			}
-		}
-	}
+      .skeleton {
+        @include folderSkeletonBlock;
+      }
+    }
+  }
 
-	.files {
-		.filesContainer {
-			margin-top: 10px;
-		}
-	}
+  .files {
+    .filesContainer {
+      margin-top: 10px;
+
+      .owner {
+        @include tableOwner;
+      }
+    }
+  }
 }

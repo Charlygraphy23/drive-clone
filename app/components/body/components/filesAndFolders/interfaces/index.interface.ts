@@ -5,3 +5,9 @@ export type FileAndFolderDatasetType = {
 	files: FileDataType[];
 	folders: FolderDataType[];
 };
+
+
+export type OwnerAccessObject = {
+	profileImage: string;
+	email: string
+}

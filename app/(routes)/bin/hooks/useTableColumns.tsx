@@ -1,7 +1,9 @@
+import OwnerSection from "@/app/components/body/components/filesAndFolders/components/ownerSection";
+import { OwnerAccessObject } from "@/app/components/body/components/filesAndFolders/interfaces/index.interface";
 import { ColumnType } from "@/app/components/table/interfaces/index.interface";
-import React from "react";
-import TableAction from "../components/tableAction";
 import { UseMutateFunction } from "@tanstack/react-query";
+import TableAction from "../components/tableAction";
+import style from "../style.module.scss";
 
 type Props = {
 	restoreApi: UseMutateFunction;
@@ -14,8 +16,9 @@ const useTableColumns = (props: Props) => {
 			dataIndex: "name",
 		},
 		{
-			title: "Member",
-			dataIndex: "member",
+			title: "Owner",
+			dataIndex: "owner",
+			render: ({ record, value }) => <OwnerSection data={value as OwnerAccessObject} className={style.owner} />
 		},
 
 		{

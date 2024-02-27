@@ -1,10 +1,8 @@
 "use client";
 
 import MyDropdown from "@/app/components/dropdown";
-import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
 import { toggleModal } from "@/app/store/actions";
 import { UseMutateFunction } from "@tanstack/react-query";
-import React from "react";
 import { useDispatch } from "react-redux";
 
 type Props = {

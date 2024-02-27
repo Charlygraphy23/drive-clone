@@ -2,163 +2,163 @@
 @use "/app/styles/mixins.scss" as mixins;
 
 .search {
-	position: relative;
+  position: relative;
 
-	& > button {
-		color: color.$text-gray-color;
-		display: flex;
-		align-items: center;
-		cursor: pointer;
-		background-color: transparent;
-		border: none;
+  & > button {
+    color: color.$text-gray-color;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
 
-		i {
-			margin-right: 5px;
-			font-weight: bold;
-		}
+    i {
+      margin-right: 5px;
+      font-weight: bold;
+    }
 
-		p {
-			background-color: transparent;
-			color: color.$text-gray-color;
-			padding: 0.5em;
-			font-weight: bold;
-			margin: 0;
-		}
-	}
+    p {
+      background-color: transparent;
+      color: color.$text-gray-color;
+      padding: 0.5em;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
 
-	.modalClose {
-		background-color: white;
-		width: fit-content;
-		padding: 0.7em 1.2em;
-		border-radius: 50%;
-		font-size: 0.5rem;
-		color: black;
-		box-shadow: 0px 0px 10px rgba(black, 0.1);
-		opacity: 1;
+  .modalClose {
+    background-color: white;
+    width: fit-content;
+    padding: 0.7em 1.2em;
+    border-radius: 50%;
+    font-size: 0.5rem;
+    color: black;
+    box-shadow: 0px 0px 10px rgba(black, 0.1);
+    opacity: 1;
 
-		position: absolute;
-		top: -8px;
-		right: -8px;
-		overflow: hidden;
-		border: 1px solid rgba(black, 0.5);
-		transition: 0.2s ease-in;
-		transition-property: transform;
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    overflow: hidden;
+    border: 1px solid rgba(black, 0.5);
+    transition: 0.1s ease-in;
+    transition-property: transform;
 
-		&:hover {
-			transform: scale(1.4);
-		}
-	}
+    &:hover {
+      transform: scale(1.4);
+    }
+  }
 
-	.body {
-		display: flex;
-		gap: 1.2rem;
-		height: 480px;
+  .body {
+    display: flex;
+    gap: 1.2rem;
+    height: 480px;
 
-		.wrapper {
-			display: flex;
-			width: 100%;
-			flex-direction: column;
+    .wrapper {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
 
-			.inputGroup {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				margin-bottom: 1rem;
+      .inputGroup {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
 
-				input {
-					flex: 1;
-				}
+        input {
+          flex: 1;
+        }
 
-				button {
-					border-radius: 8px;
-					background-color: color.$primary-color;
-					color: white;
-					font-size: 0.9rem;
-				}
-			}
+        button {
+          border-radius: 8px;
+          background-color: color.$primary-color;
+          color: white;
+          font-size: 0.9rem;
+        }
+      }
 
-			.appliedFilters {
-				margin-bottom: 1rem;
-				display: flex;
-				flex-wrap: wrap;
-				gap: 5px;
+      .appliedFilters {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
 
-				.tag {
-					span {
-						strong {
-							font-size: 0.8rem;
-							text-transform: lowercase;
-						}
-					}
-				}
-			}
+        .tag {
+          span {
+            strong {
+              font-size: 0.8rem;
+              text-transform: lowercase;
+            }
+          }
+        }
+      }
 
-			.results {
-				display: flex;
-				width: 100%;
-				flex-direction: column;
-				overflow: auto;
+      .results {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        overflow: auto;
 
-				.listWrapper {
-					display: flex;
-					flex-direction: column;
-					margin-bottom: 1rem;
+        .listWrapper {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 1rem;
 
-					.lists {
-						margin: 0.5rem 0rem;
+          .lists {
+            margin: 0.5rem 0rem;
 
-						.option {
-							display: flex;
-							align-items: center;
-							color: black;
-							gap: 0.8rem;
-							font-size: 1rem;
-							border: 2px solid transparent;
-							padding: 0.8rem;
-							text-decoration: none;
-							transition: 0.2s ease-in-out;
-							transition-property: border-color, background-color;
+            .option {
+              display: flex;
+              align-items: center;
+              color: black;
+              gap: 0.8rem;
+              font-size: 1rem;
+              border: 2px solid transparent;
+              padding: 0.8rem;
+              text-decoration: none;
+              transition: 0.2s ease-in-out;
+              transition-property: border-color, background-color;
 
-							i {
-								font-size: 1.5em;
-							}
+              i {
+                font-size: 1.5em;
+              }
 
-							&:hover {
-								background-color: color.$light-gray-color;
-								text-decoration: underline;
-							}
+              &:hover {
+                background-color: color.$light-gray-color;
+                text-decoration: underline;
+              }
 
-							&.selected {
-								border-color: rgba(color.$primary-color, 0.5);
-								border-radius: 8px;
-							}
+              &.selected {
+                border-color: rgba(color.$primary-color, 0.5);
+                border-radius: 8px;
+              }
 
-							&:active {
-								background-color: color.$primary-color;
-								border-color: transparent;
-								color: white;
-							}
+              &:active {
+                background-color: color.$primary-color;
+                border-color: transparent;
+                color: white;
+              }
 
-							p {
-								margin: 0;
-								flex: 1;
-								overflow: hidden;
-								text-overflow: ellipsis;
-								white-space: nowrap;
-								// line-height: 2.2em;
-							}
-						}
-					}
-				}
+              p {
+                margin: 0;
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                // line-height: 2.2em;
+              }
+            }
+          }
+        }
 
-				.loader {
-					.group {
-						@include mixins.shimmerEffect(rgba(black, 0.08));
-						height: 40px;
-						border-radius: 5px;
-					}
-				}
-			}
-		}
-	}
+        .loader {
+          .group {
+            @include mixins.shimmerEffect(rgba(black, 0.08));
+            height: 40px;
+            border-radius: 5px;
+          }
+        }
+      }
+    }
+  }
 }

@@ -1,19 +1,18 @@
 "use client"
 
 import Image from "next/image";
+import { OwnerAccessObject } from "../interfaces/index.interface";
 
 
 type Props = {
-    data: {
-        profileImage: string;
-        email: string
-    }
+    data: OwnerAccessObject,
+    className: string
 }
 
-const OwnerSection = ({ data }: Props) => {
+const OwnerSection = ({ data, className }: Props) => {
     return (
-        <div>
-            <Image src={data?.profileImage} width={40} height={40} alt="profile image" />
+        <div className={className}>
+            <Image src={data?.profileImage} width={20} height={20} alt="profile image" />
             <span>{data?.email}</span>
         </div>
     )

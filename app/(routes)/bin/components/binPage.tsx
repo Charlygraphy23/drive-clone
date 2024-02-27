@@ -1,5 +1,4 @@
 import { DATA_TYPE } from "@/app/interfaces/index.interface";
-import React from "react";
 import BinTableComponent from "./binTableComponent";
 
 const dataset = [
@@ -10,6 +9,10 @@ const dataset = [
 		createAt: new Date().toDateString(),
 		path: "/",
 		type: DATA_TYPE.FOLDER,
+		owner: {
+			profileImage: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400",
+			email: "randomemail@gmail.com"
+		},
 	},
 	{
 		_id: "3422",
@@ -18,6 +21,10 @@ const dataset = [
 		createAt: new Date().toDateString(),
 		path: "/",
 		type: DATA_TYPE.FOLDER,
+		owner: {
+			profileImage: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400",
+			email: "randomemail@gmail.com"
+		},
 	},
 
 	{
@@ -27,6 +34,10 @@ const dataset = [
 		size: 3000, // bytes
 		path: "/",
 		type: DATA_TYPE.FILE,
+		owner: {
+			profileImage: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400",
+			email: "randomemail@gmail.com"
+		},
 	},
 	{
 		_id: "sad312e231",
@@ -35,6 +46,10 @@ const dataset = [
 		size: 1230, // bytes
 		path: "/",
 		type: DATA_TYPE.FILE,
+		owner: {
+			profileImage: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400",
+			email: "randomemail@gmail.com"
+		},
 	},
 ];
 
