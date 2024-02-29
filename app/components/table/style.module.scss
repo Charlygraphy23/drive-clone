@@ -2,7 +2,7 @@
 
 .table {
 	width: 100%;
-	$padding: 10px 5px;
+	$padding: 10px 10px;
 	position: relative;
 
 	table {
@@ -20,12 +20,12 @@
 		tbody {
 			tr {
 				th {
-					padding: 10px 20px;
+					padding: $padding;
 					color: color.$black-color;
 				}
 
 				td {
-					padding: 10px 20px;
+					padding: $padding;
 					color: color.$text-gray-color;
 
 					.empty {

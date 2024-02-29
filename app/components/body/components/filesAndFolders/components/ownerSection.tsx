@@ -12,7 +12,7 @@ type Props = {
 const OwnerSection = ({ data, className }: Props) => {
     return (
         <div className={className}>
-            <Image src={data?.profileImage} width={20} height={20} alt="profile image" />
+            <Image src={data?.profileImage} width={30} height={30} alt="profile image" />
             <span>{data?.email}</span>
         </div>
     )

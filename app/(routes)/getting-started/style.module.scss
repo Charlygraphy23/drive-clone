@@ -1,0 +1,16 @@
+.gettingStarted {
+	height: 100vh;
+	height: 100svh;
+	overflow: hidden;
+
+	display: flex;
+	justify-content: center;
+
+	.wrapper {
+		width: calc(100% - 10%);
+		height: 100%;
+
+		display: flex;
+		flex-direction: column;
+	}
+}

@@ -1,22 +1,22 @@
 @use "../../components/body/components/filesAndFolders/style.module.scss" as
-  fileClass;
+	fileClass;
 
 .bin {
-  padding-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+	padding-top: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 
-  h1 {
-    font-weight: 900;
-  }
+	h1 {
+		font-weight: 900;
+	}
 
-  .tableWrapper {
-    margin-top: 4rem;
-    overflow: auto;
-  }
+	.tableWrapper {
+		margin-top: 4rem;
+		overflow: auto;
+	}
 
-  .owner {
-    @include fileClass.tableOwner;
-  }
+	.owner {
+		@include fileClass.tableOwner;
+	}
 }
