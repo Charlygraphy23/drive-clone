@@ -1,5 +1,5 @@
 import GettingStartedHeader from './components/header'
-import PlaceHolderUI from './components/placeHolderUI'
+import HeroSection from './components/hero'
 import style from './style.module.scss'
 
 
@@ -8,7 +8,7 @@ const GettingStarted = () => {
         <section className={`${style.gettingStarted} container-fluid`}>
             <div className={style.wrapper}>
                 <GettingStartedHeader />
-                <PlaceHolderUI />
+                <HeroSection />
                 {/* Form Section */}
                 {/* Footer Section */}
             </div>

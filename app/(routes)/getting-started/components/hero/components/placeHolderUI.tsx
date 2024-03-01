@@ -1,8 +1,9 @@
+import DoodleUiContainer from '../../doodleUiContainer'
 import style from '../style.module.scss'
 
 const PlaceHolderUI = () => {
     return (
-        <div className={style.placeHolder}>
+        <DoodleUiContainer className={style.placeHolder}>
             <aside>
                 <div></div>
                 <div></div>
@@ -67,7 +68,11 @@ const PlaceHolderUI = () => {
                 </table>
 
             </main>
-        </div>
+
+            <div className={style.download}>
+                <i className="bi bi-cloud-arrow-down-fill"></i>
+            </div>
+        </DoodleUiContainer>
     )
 }
 
