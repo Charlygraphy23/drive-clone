@@ -1,2 +1,23 @@
+@use "/app/styles/variable.scss" as color;
+
 .header {
+  margin: 2rem 0rem;
+  padding: 0rem 1rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .helpButton {
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid color.$primary-color;
+    background-color: transparent;
+    color: color.$primary-color;
+
+    &:active {
+      background-color: rgba(color.$light-primary-color, 0.8);
+    }
+  }
 }
