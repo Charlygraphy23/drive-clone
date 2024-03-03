@@ -1,0 +1,50 @@
+@use "/app/styles/variable.scss" as color;
+
+.stepForm {
+	display: flex;
+	flex: 1;
+
+	.stepFormUI {
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+		flex-direction: column;
+
+		span {
+			display: flex;
+			font-size: 0.9rem;
+			color: color.$black-color;
+			cursor: pointer;
+			line-height: 0.9em;
+			display: flex;
+			align-items: center;
+			margin-bottom: 30px;
+			font-weight: 500;
+
+			i {
+				color: color.$black-color;
+				margin-right: 5px;
+				font-size: 1rem;
+			}
+		}
+
+		form {
+			align-items: flex-start;
+			padding-left: 1rem;
+
+			h4 {
+				text-align: left;
+			}
+
+			input {
+				text-align: left;
+			}
+
+			button {
+				align-self: flex-start;
+				font-size: 0.9rem;
+				padding: 0.5em 1em;
+			}
+		}
+	}
+}

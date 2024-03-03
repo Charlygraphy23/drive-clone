@@ -31,5 +31,22 @@
 		.doodleContainer {
 			@include doodleContainer;
 		}
+
+		.footer {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 0.9rem;
+			color: rgba(color.$gray-color, 0.4);
+			padding: 1.5rem 0.5rem;
+
+			p {
+				margin: 0;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 20px;
+			}
+		}
 	}
 }

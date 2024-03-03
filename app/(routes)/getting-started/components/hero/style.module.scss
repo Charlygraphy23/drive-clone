@@ -1,13 +1,50 @@
 @use "/app/styles/variable.scss" as color;
 
+$sizes: 1 17% 17%, 2 80% 10%, 3 10% 80%, 4 90% 80%;
+
 .hero {
 	display: flex;
-	justify-content: flex-end;
+	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-
-	margin-top: 2rem;
 	overflow: hidden;
+	flex: 1;
+	position: relative;
+
+	.icons {
+		border-radius: 50%;
+		overflow: hidden;
+		padding: 0.5rem;
+		background-color: rgba(color.$gray-color, 0.1);
+		position: absolute;
+		z-index: 1;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		transform-origin: center center;
+		pointer-events: none;
+		opacity: 0;
+
+		@each $key, $top, $left in $sizes {
+			&:nth-child(#{$key}) {
+				@keyframes zoom-#{$key} {
+					0% {
+						top: 50%;
+						left: 50%;
+					}
+
+					100% {
+						top: $top;
+						left: $left;
+						opacity: 1;
+					}
+				}
+
+				animation: zoom-#{$key} 0.8s ease-in-out forwards;
+				animation-delay: 0.5s;
+			}
+		}
+	}
 
 	.placeholderWrapper {
 		width: 100%;
@@ -17,6 +54,25 @@
 		justify-content: center;
 		align-items: flex-end;
 		padding: 1rem;
+		overflow: hidden;
+
+		& > div {
+			transform: translateY(100%) scale(0);
+
+			@keyframes pop {
+				0% {
+					transform: translateY(100%) scale(0);
+				}
+
+				50% {
+					transform: translateY(0%) scale(1.1);
+				}
+				100% {
+					transform: scale(1);
+				}
+			}
+			animation: pop 1s ease-in-out forwards;
+		}
 
 		&::after {
 			content: "";
@@ -112,49 +168,9 @@
 	}
 
 	.form {
-		display: flex;
-		justify-content: center;
-		flex-direction: column;
-		max-width: 400px;
-
-		h4 {
-			text-align: center;
-			color: color.$black-color;
-		}
-
-		input[type="text"] {
-			font-size: 2.5rem;
-			border: none;
-			text-align: center;
-			outline: none;
-			font-weight: 500;
-			color: color.$black-color;
-			margin-bottom: 1rem;
-
-			&::placeholder {
-				color: rgba(black, 0.2);
-				opacity: 1; /* Firefox */
-			}
-
-			&::-ms-input-placeholder {
-				/* Edge 12 -18 */
-				color: rgba(black, 0.2);
-			}
-		}
-
-		button {
-			width: fit-content;
-			align-self: center;
-			border-radius: 30px;
-			padding: 0.8rem 1.5rem;
-			background-color: color.$primary-color;
-			color: white;
-			margin-bottom: 1.3rem;
-		}
-
 		p {
 			display: flex;
-			gap: 10px;
+			gap: 4px;
 			align-items: center;
 			text-align: center;
 
@@ -165,6 +181,8 @@
 			span {
 				color: color.$gray-color;
 				font-size: 0.8rem;
+				line-height: 1em;
+				width: fit-content;
 			}
 		}
 	}

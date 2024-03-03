@@ -1,27 +1,41 @@
 "use client"
 
+import AptImage from '@app/assets/apt.png'
+import DbImage from '@app/assets/db.png'
+import FolderImage from '@app/assets/folder.png'
+import ServerImage from '@app/assets/server.png'
+
+
+
+import Image from 'next/image'
+import InputGroupComponent from '../inputGroup'
 import PlaceHolderUI from './components/placeHolderUI'
 import style from './style.module.scss'
+
 
 const HeroSection = () => {
     return (
         <div className={style.hero}>
+            <div className={style.icons}>
+                <Image src={AptImage} alt="icons" width={30} height={30} />
+            </div>
+
+            <div className={style.icons}>
+                <Image src={DbImage} alt="icons" width={30} height={30} />
+            </div>
+            <div className={style.icons}>
+                <Image src={ServerImage} alt="icons" width={30} height={30} />
+            </div>
+            <div className={style.icons}>
+                <Image src={FolderImage} alt="icons" width={30} height={30} />
+            </div>
+
+
             <div className={style.placeholderWrapper}>
                 <PlaceHolderUI />
-
             </div>
-            <div className={style.form}>
-                <h4>Get started with your email</h4>
-                <input type="text" placeholder='type here' />
-                <button className="button">Get Started</button>
+            <InputGroupComponent className={style.form} showTerms />
 
-                <p>
-                    <input type="checkbox" />
-                    <span>
-                        By checking this box, I acknowledge and agree to the terms and conditions.
-                    </span>
-                </p>
-            </div>
         </div>
     )
 }

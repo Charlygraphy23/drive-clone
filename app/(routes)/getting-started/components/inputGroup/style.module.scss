@@ -1,0 +1,43 @@
+@use "/app/styles/variable.scss" as color;
+
+.inputGroup {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	max-width: 400px;
+
+	h4 {
+		text-align: center;
+		color: color.$black-color;
+	}
+
+	input[type="text"] {
+		font-size: 2.5rem;
+		border: none;
+		text-align: center;
+		outline: none;
+		font-weight: 500;
+		color: color.$black-color;
+		margin-bottom: 1rem;
+
+		&::placeholder {
+			color: rgba(black, 0.2);
+			opacity: 1; /* Firefox */
+		}
+
+		&::-ms-input-placeholder {
+			/* Edge 12 -18 */
+			color: rgba(black, 0.2);
+		}
+	}
+
+	button {
+		width: fit-content;
+		align-self: center;
+		border-radius: 30px;
+		padding: 0.8rem 1.5rem;
+		background-color: color.$primary-color;
+		color: white;
+		margin-bottom: 2rem;
+	}
+}
