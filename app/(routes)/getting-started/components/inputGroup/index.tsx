@@ -1,19 +1,30 @@
 "use client"
 
-import { PropsWithChildren } from 'react'
+import { FormEvent, PropsWithChildren } from 'react'
 import style from './style.module.scss'
 
 type Props = {
   className?: string,
-  showTerms?: boolean
+  showTerms?: boolean,
+  title: string,
+  value: string,
+  submit: () => void
+  onChange: () => void,
+  buttonText: string
 } & PropsWithChildren
 
-const InputGroupComponent = ({ className, showTerms = false }: Props) => {
+const InputGroupComponent = ({ className, showTerms = false, submit, onChange, value, title, buttonText }: Props) => {
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    submit()
+  }
+
   return (
-    <form action="#" className={`${style.inputGroup} ${className}`}>
-      <h4>Get started with your email</h4>
-      <input type="text" placeholder='type here' />
-      <button className="button" type='submit'>Get Started</button>
+    <form action="#" className={`${style.inputGroup} ${className}`} onSubmit={handleSubmit}>
+      <h4>{title}</h4>
+      <input type="text" placeholder='type here' value={value} onChange={onChange} />
+      <button className="button" type='submit'>{buttonText}</button>
 
       {showTerms && <p>
         <input type="checkbox" />
