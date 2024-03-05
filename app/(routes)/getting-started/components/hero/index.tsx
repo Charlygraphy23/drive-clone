@@ -8,19 +8,34 @@ import ServerImage from '@app/assets/server.png'
 
 
 import Image from 'next/image'
+import { useContext } from 'react'
+import { GetStartedContext } from '../../store'
 import InputGroupComponent from '../inputGroup'
 import { SubmitParameterValueType } from '../inputGroup/interfaces/index.interface'
+import StepForm from '../stepform'
 import PlaceHolderUI from './components/placeHolderUI'
 import style from './style.module.scss'
 
 
 const HeroSection = () => {
+    const { state: { data, activePage }, dispatch, setPage } = useContext(GetStartedContext)
 
 
     const onSubmit = (key: string, value: SubmitParameterValueType) => {
-        console.log(key, value)
+        console.log("in")
+        if (typeof value !== "string") {
+            dispatch({ [key]: value?.value })
+        }
+        else {
+            dispatch({ [key]: value })
+        }
+
+        setPage(activePage + 1)
     }
 
+    if (activePage !== -1) {
+        return <StepForm />
+    }
 
     return (
         <div className={style.hero}>

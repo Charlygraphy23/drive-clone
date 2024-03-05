@@ -1,3 +1,5 @@
+"use client"
+
 import StepFormChatUI from './components/formChatUI'
 import StepFormUI from './components/formUI'
 import { StepFormData } from './interfaces/index.interface'

@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { GetStartedContext } from '../../../store'
 import InputGroupComponent from '../../inputGroup'
+import { SubmitParameterValueType } from '../../inputGroup/interfaces/index.interface'
 import { StepFormData } from '../interfaces/index.interface'
 import style from '../style.module.scss'
 
@@ -18,20 +20,15 @@ const getInitialValues = (data: StepFormData[]) => {
 
 const StepFormUI = ({ data }: Props) => {
     const [state, setState] = useState(getInitialValues(data))
-    const [activeIndex, setActiveIndex] = useState(0)
+    const { state: { activePage }, setPage } = useContext(GetStartedContext)
 
     const onBackEvent = () => {
-        setActiveIndex(prev => {
-            if (prev === 0) return 0;
-            return --prev
-        })
+        if (activePage === -1) setPage(-1);
+        setPage(activePage - 1)
     }
 
-    const onSubmit = (key: string, value: string) => {
-        setActiveIndex(prev => {
-            if (prev >= data.length - 1) return prev;
-            return ++prev
-        })
+    const onSubmit = (key: string, value: SubmitParameterValueType) => {
+        if (activePage < data.length - 1) setPage(activePage + 1)
 
         setState(prev => ({
             ...prev,
@@ -44,7 +41,7 @@ const StepFormUI = ({ data }: Props) => {
     return (
         <div className={style.stepFormUIContainer}>
             <div className={style.stepFormUIWrapper}>
-                {data?.map((value, index) => <div style={{ top: activeIndex < index ? "100%" : activeIndex !== index ? "-100%" : "0" }} key={value.dataIndex} className={`${style.stepFormUI} ${activeIndex === index && style.active}`}>
+                {data?.map((value, index) => <div style={{ top: activePage < index ? "100%" : activePage !== index ? "-100%" : "0" }} key={value.dataIndex} className={`${style.stepFormUI} ${activePage === index && style.active}`}>
                     <span onClick={onBackEvent}>
                         <i className="bi bi-chevron-left"></i>
                         Back
