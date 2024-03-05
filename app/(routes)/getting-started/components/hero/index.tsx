@@ -9,11 +9,19 @@ import ServerImage from '@app/assets/server.png'
 
 import Image from 'next/image'
 import InputGroupComponent from '../inputGroup'
+import { SubmitParameterValueType } from '../inputGroup/interfaces/index.interface'
 import PlaceHolderUI from './components/placeHolderUI'
 import style from './style.module.scss'
 
 
 const HeroSection = () => {
+
+
+    const onSubmit = (key: string, value: SubmitParameterValueType) => {
+        console.log(key, value)
+    }
+
+
     return (
         <div className={style.hero}>
             <div className={style.icons}>
@@ -34,7 +42,14 @@ const HeroSection = () => {
             <div className={style.placeholderWrapper}>
                 <PlaceHolderUI />
             </div>
-            <InputGroupComponent className={style.form} showTerms />
+            <InputGroupComponent
+                className={style.form}
+                showTerms
+                submit={onSubmit}
+                buttonText='Getting Started'
+                id='email'
+                title='Getting started with your email'
+            />
 
         </div>
     )
