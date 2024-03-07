@@ -1,8 +1,9 @@
 "use client"
 
-import { ChangeEvent, FormEvent, PropsWithChildren, useState } from 'react'
-import { SubmitParameterValueType } from './interfaces/index.interface'
-import style from './style.module.scss'
+import { ChangeEvent, FormEvent, PropsWithChildren, useState } from 'react';
+import { ValidationError } from 'yup';
+import { InputGroupStateSchema, InputGroupStateType, SubmitParameterValueType } from './interfaces/index.interface';
+import style from './style.module.scss';
 
 type Props = {
   className?: string,
@@ -13,75 +14,87 @@ type Props = {
   id: string
 } & PropsWithChildren
 
+
 const InputGroupComponent = ({ className, showTerms = false, submit, title, buttonText, id }: Props) => {
-  const [state, setState] = useState("")
-  const [checked, setChecked] = useState(false)
-  const [error, setError] = useState({
-    showTerms: false
-  } as Record<string, any>)
+  const [state, setState] = useState<InputGroupStateType>({} as InputGroupStateType)
+  const [error, setError] = useState({} as Record<string, string>)
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setState(event.target.value)
+    setState(prev => ({
+      ...prev,
+      [event.target.id]: event.target.value
+    }))
   }
 
   const handleChecked = (event: ChangeEvent<HTMLInputElement>) => {
     if (!showTerms) return;
-    setChecked(event.target.checked)
+    setState(prev => ({
+      ...prev,
+      checked: event.target.checked
+    }))
   }
 
-  const validateInput = () => {
+  const validateInput = async () => {
     let hasError = false
-    if (showTerms && !checked) {
-      hasError = true
-      setError(prev => ({
-        ...prev,
-        showTerms: true
-      }))
-    }
 
-    // TODO; yup schema validation
-    if (id === "email") {
-      hasError = false
-      setError(prev => ({
-        ...prev,
-        [id]: false
-      }))
+    try {
+      const isValidSchema = await InputGroupStateSchema.validate(state, { abortEarly: false })
+      console.log("Validate ", isValidSchema)
+
+
+    }
+    catch (err: unknown) {
+      console.error(err)
+      const errors = (err as ValidationError).inner;
+
+      errors.forEach(_err => {
+        setError(prev => {
+          const key = _err?.path;
+
+          if (!key) return prev;
+
+          return {
+            ...prev,
+            [key]: _err.message
+          }
+
+        })
+      })
+      hasError = true
 
     }
 
     return hasError
+
   }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError({
-      showTerms: false
-    })
+    setError({})
 
-    const hasErrors = validateInput()
+    const hasErrors = await validateInput()
     console.log({ hasErrors })
 
     if (hasErrors) return
 
     if (showTerms) {
       return submit(id, {
-        value: state,
-        showTerms: checked
+        value: state?.[id],
+        showTerms: state?.checked
       })
     }
 
-    submit(id, state)
+    submit(id, state?.[id])
   }
-  console.log("Submit", state, checked, error)
 
   return (
     <form action="#" className={`${style.inputGroup} ${error?.[id] ? style.error : ""} ${className}`} onSubmit={handleSubmit}>
       <h4>{title}</h4>
-      <input id={id} type="text" placeholder='type here' value={state} onChange={onChange} />
+      <input id={id} type="text" placeholder='type here' value={state?.[id]} onChange={onChange} />
       <button className="button" type='submit'>{buttonText}</button>
 
       {showTerms && <p className={`${style.showTerms} ${error?.showTerms ? style.error : ""}`}>
-        <input type="checkbox" checked={checked} onChange={handleChecked} />
+        <input type="checkbox" checked={state?.checked} onChange={handleChecked} />
         <span>
           By checking this box, I acknowledge and agree to the terms and conditions.
         </span>
