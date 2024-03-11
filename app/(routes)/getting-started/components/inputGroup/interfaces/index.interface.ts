@@ -15,4 +15,7 @@ export const InputGroupStateSchema = object({
     checked: boolean()
 });
 
-export type InputGroupStateType = typeof InputGroupStateSchema
+export type InputGroupStateType = {
+    email?: string;
+    checked?: boolean
+}

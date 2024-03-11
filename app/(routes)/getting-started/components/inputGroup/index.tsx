@@ -17,12 +17,15 @@ type Props = {
 
 const InputGroupComponent = ({ className, showTerms = false, submit, title, buttonText, id }: Props) => {
   const [state, setState] = useState<InputGroupStateType>({} as InputGroupStateType)
-  const [error, setError] = useState({} as Record<string, string>)
+  const [error, setError] = useState<Record<keyof InputGroupStateType, boolean>>({} as Record<keyof InputGroupStateType, boolean>)
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+
+    const key = event.target.id as string
+
     setState(prev => ({
       ...prev,
-      [event.target.id]: event.target.value
+      [key]: event.target.value
     }))
   }
 
@@ -40,8 +43,6 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
     try {
       const isValidSchema = await InputGroupStateSchema.validate(state, { abortEarly: false })
       console.log("Validate ", isValidSchema)
-
-
     }
     catch (err: unknown) {
       console.error(err)
@@ -50,7 +51,6 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
       errors.forEach(_err => {
         setError(prev => {
           const key = _err?.path;
-
           if (!key) return prev;
 
           return {
@@ -70,7 +70,7 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError({})
+    setError({} as Record<keyof InputGroupStateType, boolean>)
 
     const hasErrors = await validateInput()
     console.log({ hasErrors })
@@ -79,7 +79,7 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
 
     if (showTerms) {
       return submit(id, {
-        value: state?.[id],
+        value: state?.[id as keyof ] ?? "",
         showTerms: state?.checked
       })
     }
@@ -87,14 +87,16 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
     submit(id, state?.[id])
   }
 
+  console.log(state)
+
   return (
     <form action="#" className={`${style.inputGroup} ${error?.[id] ? style.error : ""} ${className}`} onSubmit={handleSubmit}>
       <h4>{title}</h4>
-      <input id={id} type="text" placeholder='type here' value={state?.[id]} onChange={onChange} />
+      <input id={id} type="text" placeholder='type here' value={state?.[id] ?? ""} onChange={onChange} />
       <button className="button" type='submit'>{buttonText}</button>
 
       {showTerms && <p className={`${style.showTerms} ${error?.showTerms ? style.error : ""}`}>
-        <input type="checkbox" checked={state?.checked} onChange={handleChecked} />
+        <input type="checkbox" checked={state?.checked ?? false} onChange={handleChecked} />
         <span>
           By checking this box, I acknowledge and agree to the terms and conditions.
         </span>
