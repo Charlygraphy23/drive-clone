@@ -1,6 +1,6 @@
 "use client"
 
-import { ChangeEvent, FormEvent, PropsWithChildren, useState } from 'react';
+import { ChangeEvent, FormEvent, PropsWithChildren, useMemo, useState } from 'react';
 import { ValidationError } from 'yup';
 import { InputGroupStateSchema, InputGroupStateType, SubmitParameterValueType } from './interfaces/index.interface';
 import style from './style.module.scss';
@@ -18,6 +18,12 @@ type Props = {
 const InputGroupComponent = ({ className, showTerms = false, submit, title, buttonText, id }: Props) => {
   const [state, setState] = useState<InputGroupStateType>({} as InputGroupStateType)
   const [error, setError] = useState<Record<keyof InputGroupStateType, boolean>>({} as Record<keyof InputGroupStateType, boolean>)
+
+  const [value, ID] = useMemo(() => {
+    const ID = id as keyof InputGroupStateType
+    const value = state?.[ID] as string
+    return [value, ID]
+  }, [id, state])
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
 
@@ -76,26 +82,24 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
     console.log({ hasErrors })
 
     if (hasErrors) return
-
     if (showTerms) {
       return submit(id, {
-        value: state?.[id as keyof ] ?? "",
-        showTerms: state?.checked
+        value: value,
+        showTerms: state?.checked ?? false
       })
     }
 
-    submit(id, state?.[id])
+    submit(id, value)
   }
 
-  console.log(state)
 
   return (
-    <form action="#" className={`${style.inputGroup} ${error?.[id] ? style.error : ""} ${className}`} onSubmit={handleSubmit}>
+    <form action="#" className={`${style.inputGroup} ${error?.[ID] ? style.error : ""} ${className}`} onSubmit={handleSubmit}>
       <h4>{title}</h4>
-      <input id={id} type="text" placeholder='type here' value={state?.[id] ?? ""} onChange={onChange} />
+      <input id={id} type="text" placeholder='type here' value={value ?? ""} onChange={onChange} />
       <button className="button" type='submit'>{buttonText}</button>
 
-      {showTerms && <p className={`${style.showTerms} ${error?.showTerms ? style.error : ""}`}>
+      {showTerms && <p className={`${style.showTerms} ${error?.checked ? style.error : ""}`}>
         <input type="checkbox" checked={state?.checked ?? false} onChange={handleChecked} />
         <span>
           By checking this box, I acknowledge and agree to the terms and conditions.
