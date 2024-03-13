@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, PropsWithChildren, useMemo, useState } from 'react';
 import { ValidationError } from 'yup';
-import { InputGroupStateSchema, InputGroupStateType, SubmitParameterValueType } from './interfaces/index.interface';
+import { InputGroupStateType, SubmitParameterValueType } from './interfaces/index.interface';
 import style from './style.module.scss';
 
 type Props = {
@@ -47,8 +47,14 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
     let hasError = false
 
     try {
-      const isValidSchema = await InputGroupStateSchema.validate(state, { abortEarly: false })
-      console.log("Validate ", isValidSchema)
+
+      // TODO: need to fix
+      if (showTerms) {
+        // const isValidSchema = await InputGroupStateSchema.validate(state, { abortEarly: false })
+        // console.log("Validate ", isValidSchema)
+      }
+
+
     }
     catch (err: unknown) {
       console.error(err)
