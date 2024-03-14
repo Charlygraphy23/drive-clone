@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, PropsWithChildren, useMemo, useState } from 'react';
 import { ValidationError } from 'yup';
-import { InputGroupStateType, SubmitParameterValueType } from './interfaces/index.interface';
+import { InputGroupStateType, InputStateSchemaObjectWithCheck, InputStateSchemaWithCheck, SubmitParameterValueType } from './interfaces/index.interface';
 import style from './style.module.scss';
 
 type Props = {
@@ -14,53 +14,79 @@ type Props = {
   id: string
 } & PropsWithChildren
 
+const isObjectData = (state: InputGroupStateType | string, showTerms: boolean): state is InputGroupStateType => {
+  return !!showTerms && typeof state === "object" && "email" in state
+}
+
 
 const InputGroupComponent = ({ className, showTerms = false, submit, title, buttonText, id }: Props) => {
-  const [state, setState] = useState<InputGroupStateType>({} as InputGroupStateType)
+  const initialState = showTerms ? {
+    email: '',
+    checked: false
+  } as InputGroupStateType : ""
+  const [state, setState] = useState<InputGroupStateType | string>(initialState)
   const [error, setError] = useState<Record<keyof InputGroupStateType, boolean>>({} as Record<keyof InputGroupStateType, boolean>)
 
   const [value, ID] = useMemo(() => {
     const ID = id as keyof InputGroupStateType
-    const value = state?.[ID] as string
-    return [value, ID]
-  }, [id, state])
+
+    if (isObjectData(state, showTerms)) {
+      const value = state?.[ID] as string
+      return [value, ID]
+    }
+    return [state, ID]
+  }, [id, showTerms, state])
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-
+    setError({} as Record<keyof InputGroupStateType, boolean>)
     const key = event.target.id as string
+    const value = event.target.value
 
-    setState(prev => ({
-      ...prev,
-      [key]: event.target.value
-    }))
+    setState(prev => {
+      if (isObjectData(prev, showTerms)) {
+        return {
+          ...prev,
+          [key]: value
+        }
+      }
+
+      return value
+    })
   }
 
   const handleChecked = (event: ChangeEvent<HTMLInputElement>) => {
     if (!showTerms) return;
-    setState(prev => ({
-      ...prev,
-      checked: event.target.checked
-    }))
+
+    setState(prev => {
+      if (isObjectData(prev, showTerms)) {
+        return {
+          ...prev,
+          checked: event.target.checked
+        }
+      }
+      return value
+    })
+
   }
 
   const validateInput = async () => {
     let hasError = false
 
     try {
-
-      // TODO: need to fix
-      if (showTerms) {
-        // const isValidSchema = await InputGroupStateSchema.validate(state, { abortEarly: false })
-        // console.log("Validate ", isValidSchema)
+      if (isObjectData(state, showTerms)) {
+        await InputStateSchemaObjectWithCheck
+          .validate(state, { abortEarly: false, context: { email: "email" in state, checked: "checked" in state } })
       }
-
-
+      else {
+        await InputStateSchemaWithCheck
+          .validate(state, { abortEarly: false })
+      }
     }
     catch (err: unknown) {
-      console.error(err)
       const errors = (err as ValidationError).inner;
-
       errors.forEach(_err => {
+        console.log(JSON.stringify(_err))
+
         setError(prev => {
           const key = _err?.path;
           if (!key) return prev;
@@ -85,10 +111,8 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
     setError({} as Record<keyof InputGroupStateType, boolean>)
 
     const hasErrors = await validateInput()
-    console.log({ hasErrors })
-
     if (hasErrors) return
-    if (showTerms) {
+    if (isObjectData(state, showTerms)) {
       return submit(id, {
         value: value,
         showTerms: state?.checked ?? false
@@ -98,6 +122,8 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
     submit(id, value)
   }
 
+  console.log("Submit ", error)
+
 
   return (
     <form action="#" className={`${style.inputGroup} ${error?.[ID] ? style.error : ""} ${className}`} onSubmit={handleSubmit}>
@@ -105,7 +131,7 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
       <input id={id} type="text" placeholder='type here' value={value ?? ""} onChange={onChange} />
       <button className="button" type='submit'>{buttonText}</button>
 
-      {showTerms && <p className={`${style.showTerms} ${error?.checked ? style.error : ""}`}>
+      {isObjectData(state, showTerms) && <p className={`${style.showTerms} ${error?.checked ? style.error : ""}`}>
         <input type="checkbox" checked={state?.checked ?? false} onChange={handleChecked} />
         <span>
           By checking this box, I acknowledge and agree to the terms and conditions.
