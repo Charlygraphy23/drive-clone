@@ -41,7 +41,10 @@ const StepFormUI = ({ data }: Props) => {
     return (
         <div className={style.stepFormUIContainer}>
             <div className={style.stepFormUIWrapper}>
-                {data?.map((value, index) => <div style={{ top: activePage < index ? "100%" : activePage !== index ? "-100%" : "0" }} key={value.dataIndex} className={`${style.stepFormUI} ${activePage === index && style.active}`}>
+                {data?.map((value, index) => <div
+                    style={{ top: activePage < index ? "100%" : activePage !== index ? "-100%" : "0" }}
+                    key={value.dataIndex}
+                    className={`${style.stepFormUI} ${activePage === index && style.active}`}>
                     <span onClick={onBackEvent}>
                         <i className="bi bi-chevron-left"></i>
                         Back

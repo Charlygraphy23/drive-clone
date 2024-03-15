@@ -5,7 +5,7 @@ import { GetStartedContext } from '.'
 
 const GetStartedProvider = ({ children }: PropsWithChildren) => {
     const [state, setState] = useState({
-        activePage: -1,
+        activePage: 0,
         data: {} as Record<string, any>
     })
 

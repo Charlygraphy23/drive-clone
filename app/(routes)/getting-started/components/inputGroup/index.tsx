@@ -85,8 +85,6 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
     catch (err: unknown) {
       const errors = (err as ValidationError).inner;
       errors.forEach(_err => {
-        console.log(JSON.stringify(_err))
-
         setError(prev => {
           const key = _err?.path;
           if (!key) return prev;
@@ -121,8 +119,6 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
 
     submit(id, value)
   }
-
-  console.log("Submit ", error)
 
 
   return (
