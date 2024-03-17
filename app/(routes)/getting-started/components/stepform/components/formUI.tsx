@@ -28,8 +28,7 @@ const StepFormUI = ({ data }: Props) => {
     }
 
     const onSubmit = (key: string, value: SubmitParameterValueType) => {
-        if (activePage < data.length - 1) setPage(activePage + 1)
-
+        setPage(activePage + 1)
         setState(prev => ({
             ...prev,
             [key]: value
@@ -45,10 +44,10 @@ const StepFormUI = ({ data }: Props) => {
                     style={{ top: activePage < index ? "100%" : activePage !== index ? "-100%" : "0" }}
                     key={value.dataIndex}
                     className={`${style.stepFormUI} ${activePage === index && style.active}`}>
-                    <span onClick={onBackEvent}>
+                    <p onClick={onBackEvent}>
                         <i className="bi bi-chevron-left"></i>
                         Back
-                    </span>
+                    </p>
                     <InputGroupComponent
                         className={style.form}
                         buttonText={value.buttonText}

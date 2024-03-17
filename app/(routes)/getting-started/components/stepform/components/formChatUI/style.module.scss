@@ -1,0 +1,77 @@
+@use "/app/styles/variable.scss" as color;
+
+.chatUI {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: flex-end;
+	width: 100%;
+
+	.chatWrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+
+		.chatContainer {
+			margin: 10px;
+
+			.chat {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				width: 100%;
+
+				%commonCode {
+					display: flex;
+					align-items: center;
+					margin-bottom: 20px;
+
+					p {
+						margin: 0;
+						background-color: color.$light-gray-color;
+						padding: 0.4rem 0.8rem;
+						border-radius: 20px;
+						font-weight: 400;
+						user-select: none;
+					}
+				}
+
+				.sender {
+					@extend %commonCode;
+
+					img {
+						margin-right: 10px;
+						border: 1px solid rgba(black, 0.1);
+						border-radius: 50%;
+						padding: 0.2rem;
+					}
+				}
+
+				.receiver {
+					justify-content: flex-end;
+					@extend %commonCode;
+
+					span {
+						width: 30px;
+						height: 30px;
+						display: inline-block;
+						border: 1px solid rgba(black, 0.1);
+						text-align: center;
+						line-height: 30px;
+						border-radius: 50%;
+						margin-left: 10px;
+					}
+				}
+			}
+		}
+
+		.chatImage {
+			margin: 10px;
+			background-color: white;
+			box-shadow: 0px 6px 10px rgba(black, 0.1);
+			border-radius: 50%;
+			padding: 0.5rem;
+			user-select: none;
+		}
+	}
+}

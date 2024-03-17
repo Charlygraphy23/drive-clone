@@ -20,6 +20,9 @@
 
 	display: flex;
 	justify-content: center;
+	transform: scale(0.9);
+	animation: zoomIn 0.3s ease-out forwards;
+	animation-delay: 1s;
 
 	.wrapper {
 		width: calc(100% - 10%);
@@ -48,5 +51,15 @@
 				gap: 20px;
 			}
 		}
+	}
+}
+
+@keyframes zoomIn {
+	0% {
+		transform: scale(0.9);
+	}
+
+	100% {
+		transform: scale(1);
 	}
 }

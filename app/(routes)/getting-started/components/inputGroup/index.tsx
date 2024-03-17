@@ -79,25 +79,40 @@ const InputGroupComponent = ({ className, showTerms = false, submit, title, butt
       }
       else {
         await InputStateSchemaWithCheck
-          .validate(state, { abortEarly: false })
+          .validate(state)
       }
     }
     catch (err: unknown) {
-      const errors = (err as ValidationError).inner;
-      errors.forEach(_err => {
+      hasError = true
+
+
+      if (isObjectData(state, showTerms)) {
+        const errors = (err as ValidationError).inner;
+        errors.forEach(_err => {
+          setError(prev => {
+            const key = _err?.path;
+            if (!key) return prev;
+
+            return {
+              ...prev,
+              [key]: _err.message
+            }
+
+          })
+        })
+      }
+
+      else {
+        const errors = (err as ValidationError)
         setError(prev => {
-          const key = _err?.path;
-          if (!key) return prev;
+          if (!ID) return prev;
 
           return {
             ...prev,
-            [key]: _err.message
+            [ID]: errors.message
           }
-
         })
-      })
-      hasError = true
-
+      }
     }
 
     return hasError
