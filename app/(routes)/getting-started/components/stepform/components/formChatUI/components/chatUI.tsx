@@ -16,18 +16,18 @@ const ChatUI = ({ question, answer }: Props) => {
         <div className={style.chat}>
             <div className={style.sender}>
                 <Image src={Logo} alt="brand" width={30} height={30} />
-                <p>{question}</p>
+                <p className={style.message}>{question}</p>
             </div>
 
             <div className={style.receiver}>
-                <p>{!answer ? <ThreeDots
+                <div className={style.message}>{!answer ? <ThreeDots
                     visible={true}
                     height="20"
                     width="20"
                     color="black"
                     radius="9"
                     ariaLabel="three-dots-loading"
-                /> : answer}</p>
+                /> : answer}</div>
                 <span>J</span>
             </div>
         </div>
