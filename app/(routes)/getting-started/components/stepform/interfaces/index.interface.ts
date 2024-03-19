@@ -7,5 +7,6 @@ export type StepFormData = {
 
 export type ChatUIStateType = {
     question: string;
-    answer: string
+    answer?: string
+    key: string
 }[]

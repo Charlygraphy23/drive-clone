@@ -11,7 +11,6 @@ import Image from 'next/image'
 import { useContext } from 'react'
 import { GetStartedContext } from '../../store'
 import InputGroupComponent from '../inputGroup'
-import { SubmitParameterValueType } from '../inputGroup/interfaces/index.interface'
 import StepForm from '../stepform'
 import PlaceHolderUI from './components/placeHolderUI'
 import style from './style.module.scss'
@@ -21,15 +20,7 @@ const HeroSection = () => {
     const { state: { data, activePage }, dispatch, setPage } = useContext(GetStartedContext)
 
 
-    const onSubmit = (key: string, value: SubmitParameterValueType) => {
-        console.log("in")
-        if (typeof value !== "string") {
-            dispatch({ [key]: value?.value })
-        }
-        else {
-            dispatch({ [key]: value })
-        }
-
+    const onSubmit = () => {
         setPage(activePage + 1)
     }
 
@@ -60,7 +51,7 @@ const HeroSection = () => {
             <InputGroupComponent
                 className={style.form}
                 showTerms
-                submit={onSubmit}
+                onSubmit={onSubmit}
                 buttonText='Getting Started'
                 id='email'
                 title='Getting started with your email'

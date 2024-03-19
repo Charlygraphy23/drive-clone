@@ -5,8 +5,13 @@ import { GetStartedContext } from '.'
 
 const GetStartedProvider = ({ children }: PropsWithChildren) => {
     const [state, setState] = useState({
-        activePage: 0,
-        data: {} as Record<string, any>
+        activePage: -1,
+        data: {
+            email: "",
+            checked: false,
+            firstName: "",
+            lastName: ""
+        }
     })
 
     const dispatch = (value: Record<string, any>) => {
@@ -20,6 +25,17 @@ const GetStartedProvider = ({ children }: PropsWithChildren) => {
         setState(newState)
     }
 
+    const onChange = (key: string, value?: string | number | boolean,) => {
+
+        const newState = Object.assign({}, state);
+
+        newState.data = {
+            ...newState?.data,
+            [key]: value
+        }
+        setState(newState)
+    }
+
     const setPage = (page: number) => {
         setState(prev => ({
             ...prev,
@@ -28,7 +44,7 @@ const GetStartedProvider = ({ children }: PropsWithChildren) => {
     }
 
     return (
-        <GetStartedContext.Provider value={{ state, dispatch, setPage }}>
+        <GetStartedContext.Provider value={{ state, dispatch, setPage, onChange }}>
             {children}
         </GetStartedContext.Provider>
     )

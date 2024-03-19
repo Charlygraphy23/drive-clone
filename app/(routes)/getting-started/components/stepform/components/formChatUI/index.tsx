@@ -24,18 +24,19 @@ const StepFormChatUI = ({ data }: Props) => {
 
         setState(prev => [...prev, {
             question: data?.[contextState.activePage]?.botQuestion,
-            answer: ""
+            key: data?.[contextState.activePage]?.dataIndex
         }])
 
         activePageRef.current = contextState.activePage
 
     }, [activePageRef, contextState?.activePage, data])
+    console.log
 
     return (
         <div className={style.chatUI}>
             <div className={style.chatWrapper}>
                 <DoodleUiContainer className={style.chatContainer} >
-                    {state.map((val, index) => <ChatUI key={index} question={val.question} />)}
+                    {state.map((val) => <ChatUI key={val?.key} question={val.question} answer={contextState?.data?.[val?.key]} />)}
                 </DoodleUiContainer>
                 <Image className={style.chatImage} src={Logo} alt="Logo" width={40} height={40} />
             </div>

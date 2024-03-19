@@ -4,7 +4,7 @@ export type SubmitParameterValueType = string | {
     value: string; showTerms: boolean
 }
 
-export const InputStateSchemaObjectWithCheck = object().shape({
+export const InputStateSchema = object().shape({
     email: string().when("$email", {
         is: (value: boolean) => !!value,
         then: () => string().email().required(),
@@ -15,9 +15,20 @@ export const InputStateSchemaObjectWithCheck = object().shape({
         then: () => boolean().required().isTrue(),
         otherwise: () => boolean().notRequired()
     }),
+
+    firstName: string().when("$firstName", {
+        is: (value: boolean) => !!value,
+        then: () => string().required(),
+        otherwise: () => string().notRequired()
+    }),
+
+    lastName: string().when("$lastName", {
+        is: (value: boolean) => !!value,
+        then: () => string().required(),
+        otherwise: () => string().notRequired()
+    }),
 });
 
-export const InputStateSchemaWithCheck = string().required()
 
 
 export type InputGroupStateType = {

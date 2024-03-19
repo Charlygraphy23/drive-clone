@@ -8,7 +8,6 @@ import style from "../style.module.scss";
 type Props = {
     question?: string;
     answer?: string;
-
 }
 
 const ChatUI = ({ question, answer }: Props) => {
