@@ -5,6 +5,8 @@
   justify-content: center;
   flex-direction: column;
   max-width: 400px;
+  flex: 1;
+  align-items: center;
 
   &.error {
     color: color.$error;
@@ -62,6 +64,8 @@
   }
 
   .showTerms {
+    max-width: 300px;
+
     &.error {
       color: color.$error;
 

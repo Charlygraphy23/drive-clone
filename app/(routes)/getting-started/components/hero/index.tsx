@@ -17,7 +17,7 @@ import style from './style.module.scss'
 
 
 const HeroSection = () => {
-    const { state: { data, activePage }, dispatch, setPage } = useContext(GetStartedContext)
+    const { state: { activePage }, setPage } = useContext(GetStartedContext)
 
 
     const onSubmit = () => {
@@ -48,14 +48,16 @@ const HeroSection = () => {
             <div className={style.placeholderWrapper}>
                 <PlaceHolderUI />
             </div>
-            <InputGroupComponent
-                className={style.form}
-                showTerms
-                onSubmit={onSubmit}
-                buttonText='Getting Started'
-                id='email'
-                title='Getting started with your email'
-            />
+            <div className="mb-5" >
+                <InputGroupComponent
+                    className={style.form}
+                    showTerms
+                    onSubmit={onSubmit}
+                    buttonText='Getting Started'
+                    id='email'
+                    title='Getting started with your email'
+                />
+            </div>
 
         </div>
     )
