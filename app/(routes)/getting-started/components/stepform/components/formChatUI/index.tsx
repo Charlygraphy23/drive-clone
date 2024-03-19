@@ -20,7 +20,7 @@ const StepFormChatUI = ({ data }: Props) => {
 
     useEffect(() => {
         if (!data) return;
-        if (activePageRef.current === contextState.activePage) return;
+        if (activePageRef.current >= contextState.activePage) return;
 
         setState(prev => [...prev, {
             question: data?.[contextState.activePage]?.botQuestion,
