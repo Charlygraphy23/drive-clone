@@ -1,0 +1,43 @@
+.loginPage {
+	width: 100%;
+	height: 100vh;
+	height: 100svh;
+	overflow: hidden;
+
+	display: flex;
+	justify-content: center;
+
+	.container {
+		width: calc(100% - 20%);
+		height: 100%;
+
+		.header {
+			display: flex;
+			padding: 1.5rem 0.5rem;
+
+			& > div {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+
+				h4 {
+					margin: 0;
+					font-weight: 900;
+					line-height: 1.1;
+				}
+			}
+		}
+
+		.flowWrapper {
+			display: flex;
+			justify-content: center;
+			height: 100%;
+			padding-top: 8vh;
+
+			img {
+				margin-left: -75px;
+				z-index: -1;
+			}
+		}
+	}
+}

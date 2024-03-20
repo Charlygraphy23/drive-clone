@@ -1,5 +1,24 @@
 @use "/app/styles/variable.scss" as color;
 
+@mixin onLoadAnimation() {
+	@keyframes onLoadAnimation {
+		0% {
+			top: 100%;
+			opacity: 0;
+		}
+
+		50% {
+			top: 30%;
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+			top: 0;
+		}
+	}
+}
+
 .stepForm {
 	display: flex;
 	flex: 1;
@@ -7,6 +26,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		flex: 1;
 
 		.stepFormUIWrapper {
 			min-width: 600px;
@@ -113,22 +133,17 @@
 	}
 }
 
-@keyframes onLoadAnimation {
-	0% {
-		top: 100%;
-		opacity: 0;
-	}
-
-	50% {
-		top: 30%;
-		opacity: 0;
-	}
-
-	100% {
-		opacity: 1;
-		top: 0;
+@container (max-width: 691px) {
+	.stepForm {
+		.stepFormUIContainer {
+			.stepFormUIWrapper {
+				min-width: 100%;
+			}
+		}
 	}
 }
+
+@include onLoadAnimation();
 
 @keyframes onLeave {
 	0% {

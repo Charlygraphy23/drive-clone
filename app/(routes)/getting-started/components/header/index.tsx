@@ -13,7 +13,7 @@ const GettingStartedHeader = () => {
             </Link>
 
             <button className={`button ${style.helpButton}`}>
-                Help
+                Log in
             </button>
         </header>
     )

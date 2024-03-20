@@ -1,82 +1,88 @@
 @use "/app/styles/variable.scss" as color;
 
 .inputGroup {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  max-width: 400px;
-  flex: 1;
-  align-items: center;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	max-width: 400px;
+	flex: 1;
+	align-items: center;
 
-  &.error {
-    color: color.$error;
+	&.error {
+		color: color.$error;
 
-    input[type="text"] {
-      color: color.$error;
+		input[type="text"] {
+			color: color.$error;
 
-      &::placeholder {
-        color: rgba(color.$error, 0.2);
-        opacity: 1; /* Firefox */
-      }
+			&::placeholder {
+				color: rgba(color.$error, 0.2);
+				opacity: 1; /* Firefox */
+			}
 
-      &::-ms-input-placeholder {
-        /* Edge 12 -18 */
-        color: rgba(color.$error, 0.2);
-      }
-    }
-  }
+			&::-ms-input-placeholder {
+				/* Edge 12 -18 */
+				color: rgba(color.$error, 0.2);
+			}
+		}
+	}
 
-  h4 {
-    text-align: center;
-    color: color.$black-color;
-  }
+	h4 {
+		text-align: center;
+		color: color.$black-color;
+	}
 
-  input[type="text"] {
-    font-size: 2.5rem;
-    border: none;
-    text-align: center;
-    outline: none;
-    font-weight: 500;
-    color: color.$black-color;
-    margin-bottom: 1rem;
-    caret-color: color.$primary-color;
-    border-radius: 15px;
+	input[type="text"] {
+		font-size: 2.5rem;
+		border: none;
+		text-align: center;
+		outline: none;
+		font-weight: 500;
+		color: color.$black-color;
+		margin-bottom: 1rem;
+		caret-color: color.$primary-color;
+		border-radius: 15px;
 
-    &::placeholder {
-      color: rgba(black, 0.2);
-      opacity: 1; /* Firefox */
-    }
+		&::placeholder {
+			color: rgba(black, 0.2);
+			opacity: 1; /* Firefox */
+		}
 
-    &::-ms-input-placeholder {
-      /* Edge 12 -18 */
-      color: rgba(black, 0.2);
-    }
-  }
+		&::-ms-input-placeholder {
+			/* Edge 12 -18 */
+			color: rgba(black, 0.2);
+		}
+	}
 
-  button {
-    width: fit-content;
-    align-self: center;
-    border-radius: 30px;
-    padding: 0.8rem 1.5rem;
-    background-color: color.$primary-color;
-    color: white;
-    margin-bottom: 2rem;
-  }
+	button {
+		width: fit-content;
+		align-self: center;
+		border-radius: 30px;
+		padding: 0.8rem 1.5rem;
+		background-color: color.$primary-color;
+		color: white;
+		margin-bottom: 2rem;
+		transition: 0.1s ease-in;
+		transition-property: background-color;
 
-  .showTerms {
-    max-width: 300px;
+		&:active {
+			background-color: color.$primary-color2;
+		}
+	}
 
-    &.error {
-      color: color.$error;
+	.showTerms {
+		max-width: 300px;
 
-      input {
-        border-color: color.$error;
-        box-shadow: 0px 0px 2px color.$error;
-      }
+		&.error {
+			color: color.$error;
 
-      span {
-        color: inherit;
-      }
-    }
-  }
+			input {
+				border-color: color.$error;
+				box-shadow: 0px 0px 2px color.$error;
+			}
+
+			span {
+				color: inherit;
+			}
+		}
+	}
 }

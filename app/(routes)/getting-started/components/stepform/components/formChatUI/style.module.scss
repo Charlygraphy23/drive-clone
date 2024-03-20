@@ -1,4 +1,5 @@
 @use "/app/styles/variable.scss" as color;
+@use "../../style.module.scss" as StepFormStyle;
 
 .chatUI {
 	display: flex;
@@ -6,15 +7,19 @@
 	align-items: flex-end;
 	justify-content: flex-end;
 	width: 100%;
+	pointer-events: none;
+	flex: 1;
 
 	.chatWrapper {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-end;
+		min-width: 280px;
 
 		.chatContainer {
 			margin: 10px;
 			flex-direction: column;
+			animation: onLoadAnimation 0.8s ease-out;
 
 			.chat {
 				display: flex;
@@ -30,10 +35,11 @@
 					.message {
 						margin: 0;
 						background-color: color.$light-gray-color;
-						padding: 0.4rem 0.8rem;
+						padding: 0.4em 0.8em;
 						border-radius: 20px;
 						font-weight: 400;
 						user-select: none;
+						font-size: 0.9rem;
 					}
 				}
 
@@ -62,6 +68,11 @@
 						border-radius: 50%;
 						margin-left: 10px;
 					}
+
+					.message {
+						color: white;
+						background-color: color.$black-color1;
+					}
 				}
 			}
 		}
@@ -76,3 +87,11 @@
 		}
 	}
 }
+
+@container (max-width: 953px) {
+	.chatUI {
+		display: none;
+	}
+}
+
+@include StepFormStyle.onLoadAnimation();

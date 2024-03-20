@@ -23,7 +23,7 @@ const ChatUI = ({ question, answer }: Props) => {
                     visible={true}
                     height="20"
                     width="20"
-                    color="black"
+                    color="white"
                     radius="9"
                     ariaLabel="three-dots-loading"
                 /> : answer}</div>
