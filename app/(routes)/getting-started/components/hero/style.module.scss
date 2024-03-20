@@ -170,6 +170,12 @@ $sizes: 1 max(10%, 0vh) min(17%, 25vw), 2 max(72%, 40vh) max(10%, 0vw),
   }
 
   .form {
+    input {
+      &[type="text"] {
+        width: 100%;
+      }
+    }
+
     p {
       display: flex;
       gap: 4px;
@@ -203,7 +209,22 @@ $sizes: 1 max(10%, 0vh) min(17%, 25vw), 2 max(72%, 40vh) max(10%, 0vw),
 
       p {
         max-width: 250px;
+        span {
+          font-size: 0.7rem;
+        }
       }
+
+      button {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+@container (max-width: 548px) {
+  .hero {
+    .icons {
+      display: none;
     }
   }
 }
