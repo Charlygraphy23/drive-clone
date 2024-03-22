@@ -6,6 +6,12 @@
 
 	display: flex;
 	justify-content: center;
+	background: linear-gradient(
+		166deg,
+		rgba(186, 156, 255, 0.1) 0%,
+		rgba(255, 255, 255, 0) 100%
+	);
+	animation: glowBackground 2s ease-in-out forwards;
 
 	.container {
 		width: calc(100% - 20%);
@@ -39,5 +45,39 @@
 				z-index: -1;
 			}
 		}
+	}
+}
+
+// TODO: background animations
+@keyframes glowBackground {
+	0% {
+		background: linear-gradient(
+			166deg,
+			rgba(186, 156, 255, 0.1) 0%,
+			rgba(255, 255, 255, 0) 100%
+		);
+	}
+
+	40% {
+		background: linear-gradient(
+			0deg,
+			rgba(186, 156, 255, 0.1) 0%,
+			rgba(255, 255, 255, 0) 100%
+		);
+	}
+
+	60% {
+		background: linear-gradient(
+			360deg,
+			rgba(186, 156, 255, 0.1) 0%,
+			rgba(255, 255, 255, 0) 100%
+		);
+	}
+	100% {
+		background: linear-gradient(
+			166deg,
+			rgba(186, 156, 255, 1) 0%,
+			rgba(255, 255, 255, 0) 100%
+		);
 	}
 }

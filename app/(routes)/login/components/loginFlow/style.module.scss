@@ -1,6 +1,133 @@
+@use "/app/styles/variable.scss" as color;
+
+$themeColor: rgba(color.$primary-color, 0.4);
+
 .loginFlow {
-	width: 450px;
-	height: 620px;
-	background-color: red;
-	color: white;
+	width: 100%;
+	max-width: 450px;
+	height: 100%;
+	max-height: 520px;
+	color: color.$black-color;
+	border: 1px solid $themeColor;
+	border-radius: 20px;
+	padding: 1.5rem 3rem;
+	background-color: white;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	box-shadow: 0px 0px 100px rgba(color.$light-gray-color, 1);
+
+	.inputGroup {
+		background-color: color.$light-gray-color;
+		width: 100%;
+		border-radius: 10px;
+		padding: 0rem 1rem;
+		display: flex;
+		align-items: center;
+
+		i {
+			font-size: 1.3em;
+			color: rgba(color.$gray-color, 0.4);
+		}
+
+		input {
+			border: none;
+			background-color: inherit;
+			width: 100%;
+			outline: none;
+			min-height: 50px;
+			transition: 0.3s linear all;
+		}
+
+		&:focus-within {
+			outline: 1px solid rgba(color.$primary-color, 0.1);
+
+			input {
+				caret-color: color.$primary-color;
+			}
+
+			i {
+				font-size: 1.3em;
+				color: rgba(color.$primary-color, 0.7);
+			}
+		}
+	}
+
+	.remindPassword {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+
+		label {
+			display: flex;
+			color: color.$text-gray-color;
+			align-items: center;
+			gap: 6px;
+			font-size: 0.8rem;
+
+			span {
+				width: 1.3em;
+				height: 1.3em;
+				border-radius: 50%;
+				border: 1px solid $themeColor;
+				position: relative;
+				overflow: hidden;
+				cursor: pointer;
+
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				color: white;
+				line-height: 1.1;
+				transition: 0.1s ease-in-out all;
+
+				&::after {
+					position: absolute;
+					top: 0;
+					left: 0;
+					pointer-events: none;
+					width: 100%;
+					height: 100%;
+				}
+
+				i {
+					opacity: 0;
+					font-size: 0.6em;
+				}
+			}
+
+			input {
+				display: none;
+				opacity: 0;
+			}
+
+			input:checked ~ span {
+				background-color: color.$primary-color;
+
+				i {
+					opacity: 1;
+				}
+			}
+		}
+
+		a {
+			color: black;
+			font-size: 0.9rem;
+		}
+	}
+
+	button {
+		width: 100%;
+		border-radius: 10px;
+		padding: 0.5rem;
+		background-color: black;
+		color: white;
+
+		&:is(:active) {
+			background-color: rgba(black, 0.8);
+		}
+	}
 }
