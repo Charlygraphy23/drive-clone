@@ -1,7 +1,7 @@
 import LoginIllustration from '@app/assets/login-illustration.svg'
 import Image from 'next/image'
+import LoginFlow from '../../components/loginFlow'
 import LoginHeader from './components/header'
-import LoginFlow from './components/loginFlow'
 import style from './style.module.scss'
 
 
@@ -11,7 +11,7 @@ const LoginPage = () => {
             <div className={style.container}>
                 <LoginHeader />
                 <div className={style.flowWrapper}>
-                    <LoginFlow />
+                    <LoginFlow title='Login' rememberMe submitText='Login' />
                     <Image src={LoginIllustration} alt='LoginIllustration' />
                 </div>
             </div>

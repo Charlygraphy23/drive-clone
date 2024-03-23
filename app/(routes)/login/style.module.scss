@@ -1,3 +1,31 @@
+@use "/app/styles/variable.scss" as color;
+
+%commonStyle {
+	content: "";
+	position: absolute;
+	display: block;
+	z-index: -1;
+	border-radius: 50%;
+	aspect-ratio: 1 / 1;
+	filter: blur(5em);
+}
+
+@mixin animate($maxScale: 1.4) {
+	@keyframes animateScale {
+		0% {
+			transform: scale(0.9);
+		}
+
+		50% {
+			transform: scale($maxScale);
+		}
+
+		100% {
+			transform: scale(0.9);
+		}
+	}
+}
+
 .loginPage {
 	width: 100%;
 	height: 100vh;
@@ -6,12 +34,38 @@
 
 	display: flex;
 	justify-content: center;
-	background: linear-gradient(
-		166deg,
-		rgba(186, 156, 255, 0.1) 0%,
-		rgba(255, 255, 255, 0) 100%
-	);
-	animation: glowBackground 2s ease-in-out forwards;
+	position: relative;
+
+	&::after {
+		@extend %commonStyle;
+		$top: 15%;
+		$left: 18%;
+		top: $top;
+		left: $left;
+		width: 20vw;
+		background: linear-gradient(
+			90deg,
+			rgba(color.$primary-color, 0.6) 0%,
+			rgba(white, 0) 100%
+		);
+		animation: animateScale 2.5s ease-in-out infinite;
+	}
+
+	&::before {
+		@extend %commonStyle;
+		$top: 50%;
+		$left: 40%;
+		top: $top;
+		left: $left;
+		width: 20vw;
+		background: linear-gradient(
+			90deg,
+			rgba(color.$light-brown1, 1) 0%,
+			rgba(white, 0) 100%
+		);
+		animation: animateScale 3s ease-in-out infinite;
+		animation-delay: 0.3s;
+	}
 
 	.container {
 		width: calc(100% - 20%);
@@ -48,36 +102,4 @@
 	}
 }
 
-// TODO: background animations
-@keyframes glowBackground {
-	0% {
-		background: linear-gradient(
-			166deg,
-			rgba(186, 156, 255, 0.1) 0%,
-			rgba(255, 255, 255, 0) 100%
-		);
-	}
-
-	40% {
-		background: linear-gradient(
-			0deg,
-			rgba(186, 156, 255, 0.1) 0%,
-			rgba(255, 255, 255, 0) 100%
-		);
-	}
-
-	60% {
-		background: linear-gradient(
-			360deg,
-			rgba(186, 156, 255, 0.1) 0%,
-			rgba(255, 255, 255, 0) 100%
-		);
-	}
-	100% {
-		background: linear-gradient(
-			166deg,
-			rgba(186, 156, 255, 1) 0%,
-			rgba(255, 255, 255, 0) 100%
-		);
-	}
-}
+@include animate();

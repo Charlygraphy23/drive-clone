@@ -20,37 +20,61 @@ $themeColor: rgba(color.$primary-color, 0.4);
 	box-shadow: 0px 0px 100px rgba(color.$light-gray-color, 1);
 
 	.inputGroup {
-		background-color: color.$light-gray-color;
 		width: 100%;
-		border-radius: 10px;
-		padding: 0rem 1rem;
-		display: flex;
-		align-items: center;
 
-		i {
-			font-size: 1.3em;
-			color: rgba(color.$gray-color, 0.4);
+		.errorMessage {
+			font-size: 0.7em;
+			color: color.$error1;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 5px;
+			justify-content: flex-end;
+			align-items: center;
+			padding-right: 10px;
 		}
 
-		input {
-			border: none;
-			background-color: inherit;
+		.inputGroupWrapper {
+			background-color: color.$light-gray-color;
 			width: 100%;
-			outline: none;
-			min-height: 50px;
-			transition: 0.3s linear all;
-		}
+			border-radius: 10px;
+			padding: 0rem 1rem;
+			display: flex;
+			align-items: center;
+			border: 1px solid transparent;
 
-		&:focus-within {
-			outline: 1px solid rgba(color.$primary-color, 0.1);
+			&.error {
+				border-color: color.$error1;
 
-			input {
-				caret-color: color.$primary-color;
+				i {
+					color: color.$error1 !important;
+				}
 			}
 
 			i {
 				font-size: 1.3em;
-				color: rgba(color.$primary-color, 0.7);
+				color: rgba(color.$gray-color, 0.4);
+			}
+
+			input {
+				border: none;
+				background-color: inherit;
+				width: 100%;
+				outline: none;
+				min-height: 50px;
+				transition: 0.3s linear all;
+			}
+
+			&:focus-within {
+				outline: 1px solid rgba(color.$primary-color, 0.1);
+
+				input {
+					caret-color: color.$primary-color;
+				}
+
+				i {
+					font-size: 1.3em;
+					color: rgba(color.$primary-color, 0.7);
+				}
 			}
 		}
 	}
