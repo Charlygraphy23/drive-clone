@@ -1,42 +1,42 @@
-import Link from 'next/link';
-import InputGroup from './components/inputGroup';
+"use client"
+
+import { useState } from 'react';
+import EmailPassword from './components/emailPassword';
+import EmailSendSuccess from './components/emailSendSuccess';
+import ForgotPassword from './components/forgotPassword';
+import { LoginFlowState } from './interfaces/index.interface';
 import style from './style.module.scss';
 
 
-type Props = {
-    title: string;
-    rememberMe?: boolean;
-    submitText: string;
-}
+const LoginFlow = () => {
+    const [activePage, setActivePage] = useState(0);
+    const [state, setState] = useState<LoginFlowState>({} as LoginFlowState)
 
-// TODO: need to add a wrapper to make a slide animation work!!
-// TODO: wrapper will be positioned relative and will have a min-width of 450px (needs to handled by mobile devices)
-const LoginFlow = ({
-    title,
-    rememberMe = false,
-    submitText
-}: Props) => {
+    const onNext = () => {
+        setActivePage(prev => prev + 1)
+    }
+
+    const goBack = (number: number) => {
+        setActivePage(prev => {
+
+            if (typeof number === 'number') {
+                return number
+            }
+
+            return prev <= 0 ? 0 : --prev
+        })
+    }
+
+    const clearState = () => {
+        setState({} as LoginFlowState)
+    }
+
     return (
 
-        // TODO: this class then will be positioned absolute 
-        // TODO: below code will be in a separate component
-        // TODO: This current component will handle the logic to show & hide the form layout!!
         <div className={style.loginFlow}>
-            <h4>{title}</h4>
-            <InputGroup className={style.error} type='text' icon={<i className="bi bi-person-fill"></i>} />
-            <InputGroup type='password' icon={<i className="bi bi-lock-fill"></i>} />
-            {rememberMe && <div className={style.remindPassword}>
-                <label htmlFor="checkbox">
-                    <input hidden id="checkbox" type="checkbox" />
-                    <span><i className="bi bi-check2"></i></span>
-                    Remember my choice
-                </label>
-                <Link href={"#"}>Forgot Password?</Link>
-            </div>}
-
-            <button className="button">
-                {submitText}
-            </button>
+            <EmailPassword goBack={goBack} index={0} onNext={onNext} active={activePage} title='Login' rememberMe submitText='Login' setState={setState} value={state} />
+            <ForgotPassword goBack={goBack} index={1} onNext={onNext} active={activePage} title='Forgot Password' submitText='Submit' setState={setState} value={state} />
+            <EmailSendSuccess index={2} goBack={goBack} active={activePage} submitText='Back to Login' onClear={clearState} />
         </div>
     )
 }

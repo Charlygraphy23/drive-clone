@@ -9,9 +9,10 @@ type Props = {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
     className?: string;
     errorMessage?: string;
+    id?: string
 }
 
-const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMessage = "" }: Props) => {
+const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMessage = "", id }: Props) => {
     return (
         <div className={style.inputGroup}>
             {errorMessage && <div className={style.errorMessage}>
@@ -20,7 +21,7 @@ const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMes
             </div>}
             <div className={`${className} ${style.inputGroupWrapper}`}>
                 <span>{icon}</span>
-                <input type={type} value={value} onChange={onChange} />
+                <input id={id} type={type} value={value} onChange={onChange} />
             </div>
         </div>
     )

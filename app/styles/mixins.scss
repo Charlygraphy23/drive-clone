@@ -19,3 +19,11 @@
 		}
 	}
 }
+
+@mixin hideInputAutoFillColor($element: input, $backgroundColor: white) {
+	#{$element}:-webkit-autofill,
+	#{$element}:-webkit-autofill:hover,
+	#{$element}:-webkit-autofill:focus {
+		-webkit-box-shadow: 0 0 0px 1000px $backgroundColor inset !important;
+	}
+}

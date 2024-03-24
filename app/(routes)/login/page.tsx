@@ -11,7 +11,7 @@ const LoginPage = () => {
             <div className={style.container}>
                 <LoginHeader />
                 <div className={style.flowWrapper}>
-                    <LoginFlow title='Login' rememberMe submitText='Login' />
+                    <LoginFlow />
                     <Image src={LoginIllustration} alt='LoginIllustration' />
                 </div>
             </div>

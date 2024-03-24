@@ -1,4 +1,5 @@
 @use "/app/styles/variable.scss" as color;
+@use "/app/styles/mixins.scss" as methods;
 
 .inputGroup {
 	display: flex;
@@ -52,6 +53,7 @@
 			color: rgba(black, 0.2);
 		}
 	}
+	@include methods.hideInputAutoFillColor(input, white);
 
 	button {
 		width: fit-content;
