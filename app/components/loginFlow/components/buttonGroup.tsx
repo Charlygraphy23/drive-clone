@@ -1,14 +1,15 @@
 import { Hourglass } from "react-loader-spinner";
+import style from '../style.module.scss';
 
 type Props = {
-    handleSubmit: () => Promise<void>;
+    handleSubmit?: () => Promise<void>;
     submitText: string
     loading?: boolean
 }
 
 const ButtonGroup = ({ handleSubmit, submitText, loading = false }: Props) => {
     return (
-        <button className="button" onClick={handleSubmit} disabled={loading}>
+        <button className={`button ${style.button}`} onClick={handleSubmit} disabled={loading}>
             {submitText}
 
             <div className="mx-2 d-flex" >

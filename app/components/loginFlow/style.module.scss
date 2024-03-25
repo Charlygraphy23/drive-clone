@@ -74,6 +74,10 @@ $themeColor: rgba(color.$primary-color, 0.4);
 					font-size: 0.8rem;
 				}
 			}
+
+			button {
+				@extend .button;
+			}
 		}
 
 		&.emailPassword {
@@ -143,77 +147,78 @@ $themeColor: rgba(color.$primary-color, 0.4);
 			}
 		}
 	}
+}
 
-	.inputGroup {
+.inputGroup {
+	width: 100%;
+
+	.errorMessage {
+		font-size: 0.7em;
+		color: color.$error1;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		justify-content: flex-end;
+		align-items: center;
+		padding-right: 10px;
+	}
+
+	.inputGroupWrapper {
+		background-color: color.$light-gray-color;
 		width: 100%;
+		border-radius: 10px;
+		padding: 0rem 1rem;
+		display: flex;
+		align-items: center;
+		border: 1px solid transparent;
 
-		.errorMessage {
-			font-size: 0.7em;
-			color: color.$error1;
-			display: flex;
-			flex-wrap: wrap;
-			gap: 5px;
-			justify-content: flex-end;
-			align-items: center;
-			padding-right: 10px;
+		&.error {
+			border-color: color.$error1;
+
+			i {
+				color: color.$error1 !important;
+			}
 		}
 
-		.inputGroupWrapper {
-			background-color: color.$light-gray-color;
+		i {
+			font-size: 1.3em;
+			color: rgba(color.$gray-color, 0.4);
+		}
+
+		input {
+			border: none;
+			background-color: inherit;
 			width: 100%;
-			border-radius: 10px;
-			padding: 0rem 1rem;
-			display: flex;
-			align-items: center;
-			border: 1px solid transparent;
+			outline: none;
+			min-height: 50px;
+			transition: 0.3s linear all;
+			flex: 1;
+		}
+		@include methods.hideInputAutoFillColor(input, color.$light-gray-color);
 
-			&.error {
-				border-color: color.$error1;
+		&:focus-within {
+			outline: 1px solid rgba(color.$primary-color, 0.1);
 
-				i {
-					color: color.$error1 !important;
-				}
+			input {
+				caret-color: color.$primary-color;
 			}
 
 			i {
 				font-size: 1.3em;
-				color: rgba(color.$gray-color, 0.4);
-			}
-
-			input {
-				border: none;
-				background-color: inherit;
-				width: 100%;
-				outline: none;
-				min-height: 50px;
-				transition: 0.3s linear all;
-			}
-			@include methods.hideInputAutoFillColor(input, color.$light-gray-color);
-
-			&:focus-within {
-				outline: 1px solid rgba(color.$primary-color, 0.1);
-
-				input {
-					caret-color: color.$primary-color;
-				}
-
-				i {
-					font-size: 1.3em;
-					color: rgba(color.$primary-color, 0.7);
-				}
+				color: rgba(color.$primary-color, 0.7);
 			}
 		}
 	}
+}
 
-	button {
-		width: 100%;
-		border-radius: 10px;
-		padding: 0.5rem;
-		background-color: black;
-		color: white;
+.button {
+	width: 100%;
+	border-radius: 10px;
+	padding: 0.5rem;
+	background-color: black;
+	color: white;
 
-		&:is(:active) {
-			background-color: rgba(black, 0.8);
-		}
+	&:is(:active) {
+		background-color: rgba(black, 0.8);
 	}
 }

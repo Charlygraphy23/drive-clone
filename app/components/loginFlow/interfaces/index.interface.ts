@@ -29,11 +29,13 @@ export type LoginFlowState = {
     rememberMe?: boolean;
 }
 
+export const passwordYupValidation = string().required("No password provided!").min(8, "Password is too short - should be 8 chars minimum.")
+    .matches(/[a-zA-Z,0-9\d@$!%*#?&]/, "Password must be contain at least one alphanumeric character")
+
 
 export const EmailPasswordSchema = object().shape({
     email: string().required(),
-    password: string().required("No password provided!").min(8, "Password is too short - should be 8 chars minimum.")
-        .matches(/[a-zA-Z,0-9\d@$!%*#?&]/, "Password must be contain at least one alphanumeric character"),
+    password: passwordYupValidation,
 })
 
 export const ForgotPasswordSchema = object().shape({

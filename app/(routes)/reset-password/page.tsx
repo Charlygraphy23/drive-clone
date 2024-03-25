@@ -1,10 +1,19 @@
+import LoginHeader from '../login/components/header'
+import PasswordChangeForm from './components/passwordChangeForm'
+import style from './style.module.scss'
 
 const ResetPassword = () => {
-
-    // TODO: reset password !!
-    // TODO: R&D on authentication
     return (
-        <div>page</div>
+        <div className={style.resetPassword}>
+            <div className={style.container}>
+                <LoginHeader />
+
+                <div className={style.wrapper}>
+                    <PasswordChangeForm />
+                </div>
+            </div>
+
+        </div>
     )
 }
 

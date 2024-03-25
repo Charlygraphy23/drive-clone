@@ -34,9 +34,31 @@ const LoginFlow = () => {
     return (
 
         <div className={style.loginFlow}>
-            <EmailPassword goBack={goBack} index={0} onNext={onNext} active={activePage} title='Login' rememberMe submitText='Login' setState={setState} value={state} />
-            <ForgotPassword goBack={goBack} index={1} onNext={onNext} active={activePage} title='Forgot Password' submitText='Submit' setState={setState} value={state} />
-            <EmailSendSuccess index={2} goBack={goBack} active={activePage} submitText='Back to Login' onClear={clearState} />
+            <EmailPassword
+                goBack={goBack}
+                index={0}
+                onNext={onNext}
+                active={activePage}
+                title='Login'
+                rememberMe
+                submitText='Login'
+                setState={setState}
+                value={state} />
+            <ForgotPassword
+                goBack={goBack}
+                index={1}
+                onNext={onNext}
+                active={activePage}
+                title='Forgot Password'
+                submitText='Submit'
+                setState={setState}
+                value={state} />
+            <EmailSendSuccess
+                index={2}
+                goBack={goBack}
+                active={activePage}
+                submitText='Back to Login'
+                onClear={clearState} />
         </div>
     )
 }

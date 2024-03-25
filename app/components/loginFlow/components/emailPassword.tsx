@@ -6,6 +6,7 @@ import { ValidationError } from 'yup';
 import { EmailPasswordPropsType, EmailPasswordSchema, LoginFlowState } from '../interfaces/index.interface';
 import style from "../style.module.scss";
 import { getViewSlideClass } from '../utils/index.util';
+import ButtonGroup from './buttonGroup';
 import InputGroup from './inputGroup';
 
 
@@ -75,19 +76,19 @@ const EmailPassword = ({
             <h4>{title}</h4>
             <InputGroup
                 value={value?.email}
-                className={errors?.email && style.error || ""}
                 id="email" type='text'
                 icon={<i className="bi bi-person-fill"></i>}
                 onChange={handleChange}
-                errorMessage={errors?.email && "Please enter a valid email" || ""} />
+                errorMessage={errors?.email && "Please enter a valid email" || ""}
+                placeHolder='your email' />
             <InputGroup
-                className={errors?.password && style.error || ""}
                 value={value?.password}
                 type='password'
                 id="password"
                 icon={<i className="bi bi-lock-fill"></i>}
                 onChange={handleChange}
-                errorMessage={errors?.password && "Please enter a valid password" || ""} />
+                errorMessage={errors?.password && "Please enter a valid password" || ""}
+                placeHolder='your password' />
             {rememberMe && <div className={style.remindPassword}>
                 <label htmlFor="checkbox">
                     <input hidden id="checkbox" type="checkbox" onChange={e => setState(prev => ({ ...prev, rememberMe: e.target.checked }))} />
@@ -97,9 +98,8 @@ const EmailPassword = ({
                 <Link onClick={handleNextPage} href={"#"}>Forgot Password?</Link>
             </div>}
 
-            <button className="button" onClick={handleSubmit}>
-                {submitText}
-            </button>
+            <ButtonGroup submitText={submitText} handleSubmit={handleSubmit} />
+
         </div>
     )
 }
