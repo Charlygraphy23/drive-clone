@@ -7,6 +7,8 @@ import { ConfigProvider } from "antd";
 import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
+import ErrorComponent from './error';
+import ErrorBoundary from "./errorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +24,7 @@ export function StoreProvider({ children }: PropsWithChildren) {
 
 const AppClientProvider = ({ children }: PropsWithChildren) => {
 	return (
-		<>
+		<ErrorBoundary fallback={ErrorComponent}>
 			<SessionProvider>
 				<QueryClientProvider client={queryClient}>
 					<StoreProvider>
@@ -34,7 +36,7 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 				<BootstrapClient />
 			</SessionProvider>
 
-		</>
+		</ErrorBoundary>
 	);
 };
 

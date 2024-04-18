@@ -18,3 +18,9 @@ export interface UserSchemaType {
 }
 
 export interface UserSchemaDocument extends UserSchemaType, Document { }
+
+export type CreateUser = {
+    email: string;
+    firstName: string;
+    lastName: string;
+}

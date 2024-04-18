@@ -19,7 +19,3 @@ export const BootstrapMethods = {
         modal.hide()
     }
 }
-
-export const CONFIG = {
-    defaultDateFormat: "DD-MM-YYYY"
-}

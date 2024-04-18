@@ -1,6 +1,7 @@
 "use client"
 
-import { CONFIG } from '@/app/utils/index.utils'
+
+import { APP_CONFIG } from '@/app/_config'
 import { Tag } from 'antd'
 import { Dayjs } from 'dayjs'
 import { useCallback, useContext } from 'react'
@@ -58,5 +59,5 @@ export default AppliedFilters;
 
 
 const RenderDateUI = ({ startDate, endDate }: RenderDateUIProps) => {
-    return <span>{startDate.format(CONFIG.defaultDateFormat)} <i className="bi bi-arrow-left-right mx-1"></i> {endDate.format(CONFIG.defaultDateFormat)}</span>
+    return <span>{startDate.format(APP_CONFIG.defaultDateFormat)} <i className="bi bi-arrow-left-right mx-1"></i> {endDate.format(APP_CONFIG.defaultDateFormat)}</span>
 }

@@ -1,5 +1,7 @@
 "use client"
 
+import { signupApi } from '@/app/_apis_routes/user'
+import { useMutation } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { GetStartedContext } from '../../../store'
 import InputGroupComponent from '../../inputGroup'
@@ -11,15 +13,27 @@ type Props = {
 }
 
 const StepFormUI = ({ data }: Props) => {
-    const { state: { activePage }, setPage } = useContext(GetStartedContext)
+    const { state: { activePage, data: formData }, setPage } = useContext(GetStartedContext)
+    const { mutateAsync } = useMutation({ mutationFn: signupApi })
 
     const onBackEvent = () => {
         if (activePage === -1) setPage(-1);
         setPage(activePage - 1)
     }
 
-    const onSubmit = () => {
-        setPage(activePage + 1)
+    const onSubmit = async () => {
+
+        if (activePage + 1 === data.length) {
+            await mutateAsync({
+                email: formData.email,
+                firstName: formData.firstName,
+                lastName: formData.lastName
+            })
+        }
+        else {
+            setPage(activePage + 1)
+        }
+        // TODO: place api call
     }
 
 

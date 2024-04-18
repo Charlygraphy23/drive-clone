@@ -1,11 +1,12 @@
+import { APP_CONFIG } from '@/app/_config';
 import { hash } from 'bcrypt';
-import mongoose, { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 import { LoginType, UserSchemaDocument, UserSchemaType } from "../interfaces/user.interface";
 
 export const MODEL_NAME = "User" as const;
 
-const saltRounds = 10;
-const schema = new Schema<UserSchemaType>({
+const saltRounds = APP_CONFIG.BCRYPT_SALT;
+const schema = new mongoose.Schema<UserSchemaType>({
     firstName: {
         type: String,
         trim: true
@@ -40,11 +41,10 @@ const schema = new Schema<UserSchemaType>({
 
 schema.pre("save", async function (next) {
     const password = this.password ?? ""
-    hash(password, saltRounds, (err, hash) => {
-        if (err) throw err;
-        this.password = hash
-    });
+    const hashedPass = await hash(password, saltRounds);
+
+    this.password = hashedPass
     next();
 })
 
-export const UserModel = mongoose.models.User || model<UserSchemaDocument>(MODEL_NAME, schema)
+export const UserModel = mongoose.models.User || mongoose.model<UserSchemaDocument>(MODEL_NAME, schema)

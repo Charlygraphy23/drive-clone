@@ -16,6 +16,7 @@ const connect = async () => {
 }
 
 export const connectDB = async () => {
+    console.log("Let's Connect to DB")
     try {
         if (mongoose.connection.readyState === MONGODB_CONNECTION_STATES.disconnecting) {
             console.log("Disconnecting")
@@ -35,5 +36,6 @@ export const connectDB = async () => {
     }
     catch (err) {
         console.log("Error while connecting with mongodb", err)
+        throw err
     }
 }

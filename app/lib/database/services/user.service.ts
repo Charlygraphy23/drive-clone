@@ -1,4 +1,5 @@
-import { UserSchemaType } from "../interfaces/user.interface";
+import { generatePassword } from "../../lib";
+import { CreateUser, UserSchemaType } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
 
 export class UserService {
@@ -6,4 +7,8 @@ export class UserService {
         return await UserModel.findOne({ email }).select(select)
     }
 
+    async createUserWithoutPass({ email, firstName, lastName }: CreateUser) {
+        const randomString = await generatePassword();
+        return await UserModel.create([{ email, firstName, lastName, password: randomString }])
+    }
 }
