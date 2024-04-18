@@ -4,6 +4,7 @@ import makeStore, { AppStore } from "@app/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ConfigProvider } from "antd";
+import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 
@@ -22,14 +23,17 @@ export function StoreProvider({ children }: PropsWithChildren) {
 const AppClientProvider = ({ children }: PropsWithChildren) => {
 	return (
 		<>
-			<QueryClientProvider client={queryClient}>
-				<StoreProvider>
-					<ConfigProvider theme={{ token: { zIndexPopupBase: 1090 } }}>
-						{children}
-					</ConfigProvider></StoreProvider>
-				<ReactQueryDevtools initialIsOpen={false} />
-			</QueryClientProvider>
-			<BootstrapClient />
+			<SessionProvider>
+				<QueryClientProvider client={queryClient}>
+					<StoreProvider>
+						<ConfigProvider theme={{ token: { zIndexPopupBase: 1090 } }}>
+							{children}
+						</ConfigProvider></StoreProvider>
+					<ReactQueryDevtools initialIsOpen={false} />
+				</QueryClientProvider>
+				<BootstrapClient />
+			</SessionProvider>
+
 		</>
 	);
 };

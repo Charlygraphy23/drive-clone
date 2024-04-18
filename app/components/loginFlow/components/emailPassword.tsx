@@ -1,5 +1,6 @@
 "use client"
 
+import { signIn } from "next-auth/react";
 import Link from 'next/link';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import { ValidationError } from 'yup';
@@ -37,7 +38,13 @@ const EmailPassword = ({
                 // TODO: remember me logic
             }
 
-            // TODO: redirect to home page
+            signIn("credentials", {
+                ...value,
+                callbackUrl: "/",
+                redirect: false
+            }).then((res) => {
+                console.log(res)
+            })
         }
         catch (err: any) {
             const errors = (err as ValidationError).inner;
