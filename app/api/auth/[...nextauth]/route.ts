@@ -20,14 +20,15 @@ export const authOptions: AuthOptions = {
             credentials: {},
             async authorize(credentials, req) {
                 try {
-                    console.log("credentials", credentials)
-                    await credentialSchema.isValid(credentials, { abortEarly: false })
+                    const isValidated = await credentialSchema.isValid(credentials, { abortEarly: false })
+
+                    if (!isValidated) return null
+
                     const { email, password } = credentials as CredentialsType;
                     await connectDB();
 
                     const service = new UserService()
                     const userObj = await service.findByEmail(email, { password: 1 })
-                    console.log("userObj", userObj)
 
                     if (!userObj) return null;
 

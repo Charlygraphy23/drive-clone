@@ -34,11 +34,11 @@ export const passwordYupValidation = string().required("No password provided!").
 
 
 export const EmailPasswordSchema = object().shape({
-    email: string().required(),
+    email: string().email().required(),
     password: passwordYupValidation,
 })
 
 export const ForgotPasswordSchema = object().shape({
-    email: string().required(),
+    email: string().email().required(),
 
 })
