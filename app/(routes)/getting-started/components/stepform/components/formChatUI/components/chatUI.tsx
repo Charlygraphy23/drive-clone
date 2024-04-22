@@ -7,7 +7,7 @@ import style from "../style.module.scss";
 
 type Props = {
     question?: string;
-    answer?: string;
+    answer?: string | boolean;
 }
 
 const ChatUI = ({ question, answer }: Props) => {

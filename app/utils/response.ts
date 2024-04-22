@@ -25,7 +25,7 @@ export class ApiResponse {
         const _status = status ?? this._status
         const options = {
             status: _status,
-        } as NextResponse.ResponseInit;
+        } as ResponseInit;
 
         if (this._headers) options.headers = this._headers;
 

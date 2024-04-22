@@ -1,6 +1,6 @@
 import style from "../style.module.scss";
 
-function calculateStorage(): Promise<unknown> {
+function calculateStorage(): Promise<Record<string, number>> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve({

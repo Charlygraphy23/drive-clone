@@ -8,7 +8,7 @@ import { CredentialsType, credentialSchema } from "./interfaces/index.interface"
 
 
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
     // Configure one or more authentication providers
     secret: process.env.NEXTAUTH_SECRET,
     session: {
