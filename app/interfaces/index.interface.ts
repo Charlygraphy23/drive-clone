@@ -1,14 +1,15 @@
+/* eslint-disable no-unused-vars */
 export type ActionType = {
 	type: string;
 	payload:
-		| Record<string, any>
-		| string
-		| boolean
-		| number
-		| undefined
-		| null
-		| unknown
-		| any;
+	| Record<string, any>
+	| string
+	| boolean
+	| number
+	| undefined
+	| null
+	| unknown
+	| any;
 };
 
 export enum DATA_TYPE {

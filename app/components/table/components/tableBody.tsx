@@ -1,13 +1,10 @@
 "use client";
 
-import React from "react";
+import { TableProps } from "../interfaces/index.interface";
 import TableColumnHandler from "./tableColumnHandler";
 import TableEmpty from "./tableEmpty";
-import { ColumnType, TableProps } from "../interfaces/index.interface";
-import TableLoader from "./tableLoader";
-import FullTableLoader from "./fullTableLoader";
 
-type Props<T> = {} & TableProps<T>;
+type Props<T> = TableProps<T>
 
 const TableBody = <T,>({ columns, data, emptyIcon }: Props<T>) => {
 	return (

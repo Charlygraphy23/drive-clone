@@ -7,7 +7,7 @@ type Props = {
     type: keyof FilterStateType,
     value: string[],
     options: SelectProps['options']
-    onChange: (value: any, type: keyof FilterStateType) => void
+    onChange: (_value: unknown, _type: keyof FilterStateType) => void
 };
 
 const FilterSelect = ({ value, options, onChange, type }: Props) => {

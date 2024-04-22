@@ -26,7 +26,7 @@ const SearchFilters = () => {
         hashtags: []
     });
 
-    const onChange = (value: any, type: keyof FilterStateType) => {
+    const onChange = (value: unknown, type: keyof FilterStateType) => {
         setState(prev => ({
             ...prev,
             [type]: value
@@ -57,7 +57,7 @@ const SearchFilters = () => {
             <h5 className="mb-4">Filters</h5>
 
             <div className={style.wrapper}>
-                <FilterWrapper label='By Upload Date' >
+                <FilterWrapper label='By Upload Date'>
                     <RangePicker
                         value={state?.createdAt as any}
                         allowClear
@@ -67,7 +67,7 @@ const SearchFilters = () => {
                     />
                 </FilterWrapper>
 
-                <FilterWrapper label='By File Date' >
+                <FilterWrapper label='By File Date'>
                     <RangePicker
                         popupClassName="antd__appTheme"
                         className="antd__appTheme"
@@ -77,7 +77,7 @@ const SearchFilters = () => {
                     />
                 </FilterWrapper>
 
-                <FilterWrapper label='By File Date' >
+                <FilterWrapper label='By File Date'>
                     <FilterSelect
                         value={state?.type}
                         onChange={onChange}
@@ -88,7 +88,7 @@ const SearchFilters = () => {
                 </FilterWrapper>
 
 
-                <FilterWrapper label='By File Date' >
+                <FilterWrapper label='By File Date'>
                     <FilterSelect
                         value={state?.hashtags}
                         onChange={onChange}

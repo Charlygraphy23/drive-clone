@@ -6,7 +6,7 @@ type Props = {
     icon?: ReactElement;
     type: 'text' | "email" | "password";
     value?: string;
-    onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+    onChange?: (_event: ChangeEvent<HTMLInputElement>) => void;
     className?: string;
     errorMessage?: string;
     id?: string;

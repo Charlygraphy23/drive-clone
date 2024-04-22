@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import React from "react";
-import style from "../style.module.scss";
 import MyDropdown from "@/app/components/dropdown";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import style from "../style.module.scss";
 
 const TopBarAvatar = () => {
 	const pathname = usePathname();
@@ -17,6 +16,7 @@ const TopBarAvatar = () => {
 			handler={{
 				className: style.img__wrapper,
 				render: () => (
+					// eslint-disable-next-line @next/next/no-img-element
 					<img
 						src='https://images.pexels.com/photos/18489099/pexels-photo-18489099/free-photo-of-man-in-white-shirt-with-book-in-hands.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load'
 						alt='avatar-image'

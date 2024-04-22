@@ -18,7 +18,7 @@ export const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
             credentials: {},
-            async authorize(credentials, req) {
+            async authorize(credentials, _req) {
                 try {
                     const isValidated = await credentialSchema.isValid(credentials, { abortEarly: false })
 
@@ -62,7 +62,7 @@ export const authOptions: AuthOptions = {
         })
     ],
     callbacks: {
-        async signIn({ user, account, profile, email, credentials }) {
+        async signIn(_payload) {
             // console.log("signIn", { user, account, profile, email, credentials })
             return true
         },

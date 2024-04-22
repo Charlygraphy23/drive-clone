@@ -54,7 +54,7 @@ const dataset = [
 ];
 
 const api = async () => {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve(dataset);
 		}, 2000);
@@ -63,7 +63,7 @@ const api = async () => {
 
 const deleteForeverApi = async () => {
 	"use server";
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve(true);
 		}, 4000);
@@ -73,7 +73,7 @@ const deleteForeverApi = async () => {
 async function restoreApi() {
 	"use server";
 
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve(true);
 		}, 5000);
@@ -85,7 +85,7 @@ const BinPage = async () => {
 
 	return (
 		<BinTableComponent
-			data={data as Record<string, any>[]}
+			data={data as Record<string, unknown>[]}
 			restoreApi={restoreApi}
 			deleteApi={deleteForeverApi}
 		/>

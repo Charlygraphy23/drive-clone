@@ -1,17 +1,16 @@
 "use client";
 
-import React from "react";
-import useTableColumns from "../hooks/useTableColumns";
-import Table from "@app/components/table";
-import style from "../style.module.scss";
-import EmptyTableIcon from "@app/assets/emptyTableIcon.svg";
-import { useMutation } from "@tanstack/react-query";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
+import EmptyTableIcon from "@app/assets/emptyTableIcon.svg";
+import Table from "@app/components/table";
+import { useMutation } from "@tanstack/react-query";
+import useTableColumns from "../hooks/useTableColumns";
+import style from "../style.module.scss";
 
 type Props = {
-	data: Record<string, any>[];
-	restoreApi: () => Promise<any>;
-	deleteApi: () => Promise<any>;
+	data: Record<string, unknown>[];
+	restoreApi: () => Promise<unknown>;
+	deleteApi: () => Promise<unknown>;
 };
 
 const BinTableComponent = ({ data, restoreApi, deleteApi }: Props) => {

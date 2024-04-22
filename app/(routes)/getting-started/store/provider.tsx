@@ -14,7 +14,7 @@ const GetStartedProvider = ({ children }: PropsWithChildren) => {
         }
     })
 
-    const dispatch = (value: Record<string, any>) => {
+    const dispatch = (value: Record<string, unknown>) => {
 
         const newState = Object.assign({}, state);
 

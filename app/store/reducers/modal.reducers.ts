@@ -1,16 +1,16 @@
+import { DATA_TYPE } from "@/app/interfaces/index.interface";
 import { createReducer } from "@reduxjs/toolkit";
 import { toggleModal } from "../actions";
-import { DATA_TYPE } from "@/app/interfaces/index.interface";
 
 export type ModalDataType = { value: string } & (
 	| {
-			fileId: string;
-			type: DATA_TYPE.FILE;
-	  }
+		fileId: string;
+		type: DATA_TYPE.FILE;
+	}
 	| {
-			folderId: string;
-			type: DATA_TYPE.FOLDER;
-	  }
+		folderId: string;
+		type: DATA_TYPE.FOLDER;
+	}
 );
 
 const initialState = {

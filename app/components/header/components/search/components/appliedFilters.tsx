@@ -10,7 +10,6 @@ import { clearFilterByName } from '../store/actions'
 import { SearchContext } from '../store/context'
 import style from '../style.module.scss'
 
-type Props = {};
 type RenderDateUIProps = {
     startDate: Dayjs,
     endDate: Dayjs
@@ -20,7 +19,7 @@ const AppliedFilters = () => {
     const { state, dispatch } = useContext(SearchContext);
     const { filters = {} } = state;
 
-    const renderFilterValue = useCallback((key: keyof FilterStateType, value: any) => {
+    const renderFilterValue = useCallback((key: keyof FilterStateType, value: Array<Dayjs> | string[]) => {
         const keysWithDate: Array<keyof FilterStateType> = ["createdAt", "exifDate"]
 
         if (keysWithDate.includes(key)) {
@@ -41,7 +40,7 @@ const AppliedFilters = () => {
 
     return (
         <div className={style.appliedFilters}>
-            {Object.entries<FilterStateType>(filters).map(([key, filter]) => <Tag
+            {Object.entries<Array<Dayjs> | string[]>(filters).map(([key, filter]) => <Tag
                 className={style.tag}
                 key={key}
                 color="magenta"

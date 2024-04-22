@@ -31,7 +31,8 @@ export const POST = async (req: Request) => {
         return response.status(200).send("Done")
 
     }
-    catch (err: any) {
+    catch (_err: unknown) {
+        const err = _err as { message: string }
         if (err instanceof ValidationError) {
             console.log(err)
         }

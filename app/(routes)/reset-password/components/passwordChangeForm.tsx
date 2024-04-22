@@ -39,7 +39,7 @@ const PasswordChangeForm = () => {
             console.log("Password change")
             setResetSuccess(true)
         }
-        catch (err: any) {
+        catch (err: unknown) {
             const errors = (err as ValidationError).inner;
 
             errors.forEach(_err => {

@@ -7,7 +7,7 @@ interface ViewPagePropsType {
     active: number;
     onNext: () => void;
     index: number;
-    goBack: (number?: number) => void;
+    goBack: (_number?: number) => void;
     value: LoginFlowState;
     setState: Dispatch<SetStateAction<LoginFlowState>>
 }
@@ -16,8 +16,7 @@ export type EmailPasswordPropsType = {
     rememberMe?: boolean;
 } & ViewPagePropsType
 
-export type ForgotPasswordPropsType = {
-} & ViewPagePropsType
+export type ForgotPasswordPropsType = ViewPagePropsType
 
 export type EmailSendSuccessPropsType = {
     onClear?: () => void

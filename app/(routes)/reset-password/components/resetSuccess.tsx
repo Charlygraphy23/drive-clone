@@ -15,7 +15,7 @@ const ResetPasswordSuccess = () => {
         <div className={style.resetSuccess}>
             <h4>🔐 Password Reset Success! 🎉</h4>
             <p>
-                🎉 Your password reset was successful! You're all set to dive back in. 🚀 If you need further assistance, we're here to help. Stay secure and enjoy your day! 😊
+                🎉 Your password reset was successful! You&apos;re all set to dive back in. 🚀 If you need further assistance, we&apos;re here to help. Stay secure and enjoy your day! 😊
             </p>
 
             <ButtonGroup submitText="Back to login" handleSubmit={handleClick} />

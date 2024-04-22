@@ -18,7 +18,7 @@ const useTableColumns = (props: Props) => {
 		{
 			title: "Owner",
 			dataIndex: "owner",
-			render: ({ record, value }) => <OwnerSection data={value as OwnerAccessObject} className={style.owner} />
+			render: ({ value }) => <OwnerSection data={value as OwnerAccessObject} className={style.owner} />
 		},
 
 		{

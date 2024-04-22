@@ -1,7 +1,6 @@
-import React from "react";
 import style from "../style.module.scss";
 
-function calculateStorage(): Promise<any> {
+function calculateStorage(): Promise<unknown> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
 			resolve({

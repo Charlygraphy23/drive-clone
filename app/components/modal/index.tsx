@@ -14,7 +14,7 @@ import { ModalSize } from "./interfaces/index.interface";
 type Props = {
 	id: string;
 	isOpen?: boolean;
-	toggle?: (isOpen?: boolean) => void;
+	toggle?: (_isOpen?: boolean) => void;
 	centered?: boolean
 	size?: ModalSize
 } & PropsWithChildren;

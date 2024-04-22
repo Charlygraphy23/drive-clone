@@ -25,7 +25,7 @@ const EmailSendSuccess = ({
                 <span>📧✨ Keep an eye on your inbox for further instructions. </span>
             </div>
             <h6>
-                If you have any questions or need assistance, don't hesitate to reach out. Stay secure! 🔒😊 #CyberSafety
+                If you have any questions or need assistance, don&apos;t hesitate to reach out. Stay secure! 🔒😊 #CyberSafety
             </h6>
 
             <button className="button" onClick={handleClick}>{submitText}</button>

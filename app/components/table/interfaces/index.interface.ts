@@ -1,14 +1,15 @@
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import React from "react";
 
 type RenderProps = {
 	record: { data: unknown } & Pick<ColumnType, "dataIndex" | "title">;
-	value: string | number | boolean | null | React.ReactElement | Object;
+	value: string | number | boolean | null | React.ReactElement | Record<string, unknown>;
 };
 
 export type ColumnType = {
 	dataIndex: string;
 	render?: (
-		props: RenderProps
+		_props: RenderProps
 	) =>
 		| React.ReactElement[]
 		| React.ReactElement
