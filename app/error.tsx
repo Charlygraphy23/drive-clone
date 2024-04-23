@@ -6,7 +6,7 @@ export default function Error({
   error,
 
 }: {
-  error: Error & { digest?: string }
+  error?: Error & { digest?: string }
 }) {
   useEffect(() => {
     // Log the error to an error reporting service

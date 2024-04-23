@@ -24,19 +24,20 @@ export function StoreProvider({ children }: PropsWithChildren) {
 
 const AppClientProvider = ({ children }: PropsWithChildren) => {
 	return (
-		<ErrorBoundary fallback={ErrorComponent}>
-			<SessionProvider>
-				<QueryClientProvider client={queryClient}>
+
+		<SessionProvider>
+			<QueryClientProvider client={queryClient}>
+				<ErrorBoundary fallback={<ErrorComponent />}>
 					<StoreProvider>
 						<ConfigProvider theme={{ token: { zIndexPopupBase: 1090 } }}>
 							{children}
-						</ConfigProvider></StoreProvider>
-					<ReactQueryDevtools initialIsOpen={false} />
-				</QueryClientProvider>
-				<BootstrapClient />
-			</SessionProvider>
-
-		</ErrorBoundary>
+						</ConfigProvider>
+					</StoreProvider>
+				</ErrorBoundary>
+				<ReactQueryDevtools initialIsOpen={false} />
+			</QueryClientProvider>
+			<BootstrapClient />
+		</SessionProvider>
 	);
 };
 

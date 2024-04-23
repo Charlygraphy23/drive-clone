@@ -3,7 +3,7 @@
 import React, { PropsWithChildren } from "react";
 
 type Props = {
-    fallback: React.ComponentType<{ error: Record<string, any> | null }>
+    fallback: any
 } & PropsWithChildren;
 
 
@@ -29,17 +29,16 @@ class ErrorBoundary extends React.Component<Props, State> {
         //   in ErrorBoundary (created by App)
         //   in div (created by App)
         //   in App
-        console.error(error);
+        console.error("Error boundary", error);
         this.setState({ error: error })
     }
 
     render() {
 
-        const Fallback = this.props.fallback
 
         if (this.state.hasError) {
             // You can render any custom fallback UI
-            return <Fallback error={this.state.error} />;
+            return this.props.fallback;
         }
 
         return this.props.children;

@@ -24,8 +24,6 @@ const StepFormUI = ({ data }: Props) => {
     const onSubmit = async () => {
 
         if (activePage + 1 === data.length) {
-            throw new Error("Hi from Error")
-
             await mutateAsync({
                 email: formData.email,
                 firstName: formData.firstName,
@@ -57,6 +55,7 @@ const StepFormUI = ({ data }: Props) => {
                         title={value.title}
                         id={value.dataIndex}
                     />
+                    {/* {data.[0].adaa} */}
                 </div>)}
             </div>
         </div>
