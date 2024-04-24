@@ -7,8 +7,6 @@ import { ConfigProvider } from "antd";
 import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
-import ErrorComponent from './error';
-import ErrorBoundary from "./errorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -27,13 +25,11 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 
 		<SessionProvider>
 			<QueryClientProvider client={queryClient}>
-				<ErrorBoundary fallback={<ErrorComponent />}>
-					<StoreProvider>
-						<ConfigProvider theme={{ token: { zIndexPopupBase: 1090 } }}>
-							{children}
-						</ConfigProvider>
-					</StoreProvider>
-				</ErrorBoundary>
+				<StoreProvider>
+					<ConfigProvider theme={{ token: { zIndexPopupBase: 1090 } }}>
+						{children}
+					</ConfigProvider>
+				</StoreProvider>
 				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 			<BootstrapClient />
