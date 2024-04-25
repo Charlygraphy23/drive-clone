@@ -56,7 +56,6 @@ const StepFormUI = ({ data }: Props) => {
                         title={value.title}
                         id={value.dataIndex}
                     />
-                    {/* {data.[0].adaa} */}
                 </div>)}
             </div>
         </div>
