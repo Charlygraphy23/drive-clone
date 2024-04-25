@@ -14,7 +14,7 @@ type Props = {
 
 const StepFormUI = ({ data }: Props) => {
     const { state: { activePage, data: formData }, setPage } = useContext(GetStartedContext)
-    const { mutateAsync } = useMutation({ mutationFn: signupApi })
+    const { mutateAsync, isPending } = useMutation({ mutationFn: signupApi })
 
     const onBackEvent = () => {
         if (activePage === -1) setPage(-1);
@@ -24,7 +24,6 @@ const StepFormUI = ({ data }: Props) => {
     const onSubmit = async () => {
 
         if (activePage + 1 === data.length) {
-            throw new Error("Invalid!!")
             await mutateAsync({
                 email: formData.email,
                 firstName: formData.firstName,

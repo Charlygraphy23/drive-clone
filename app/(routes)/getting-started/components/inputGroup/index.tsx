@@ -12,11 +12,12 @@ type Props = {
   title: string,
   onSubmit: () => void
   buttonText: string,
-  id: string
+  id: string,
+  isLoading?: boolean,
 } & PropsWithChildren
 
 
-const InputGroupComponent = ({ className, showTerms = false, onSubmit, title, buttonText, id }: Props) => {
+const InputGroupComponent = ({ className, showTerms = false, onSubmit, title, buttonText, id, isLoading = false }: Props) => {
   const { state: contextState, onChange } = useContext(GetStartedContext)
   const state = contextState.data
   // const [state, setState] = useState<InputGroupStateType | string>(initialState)
@@ -92,7 +93,7 @@ const InputGroupComponent = ({ className, showTerms = false, onSubmit, title, bu
     <form action="#" className={`${style.inputGroup} ${error?.[ID] ? style.error : ""} ${className}`} onSubmit={handleSubmit}>
       <h4>{title}</h4>
       <input id={id} type="text" placeholder='type here' value={value ?? ""} onChange={onChangeHandler} />
-      <button className="button" type='submit'>{buttonText}</button>
+      <button className="button" type='submit' disabled={isLoading}>{buttonText}</button>
 
       {showTerms && <p className={`${style.showTerms} ${error?.checked ? style.error : ""}`}>
         <input type="checkbox" checked={state?.checked ?? false} onChange={handleChecked} />
