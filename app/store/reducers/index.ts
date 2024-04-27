@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
+import filesReducer from "./files.reducers";
 import FolderReducer from "./folders.reducers";
 import ModalReducer from "./modal.reducers";
-import filesReducer from "./files.reducers";
+import notificationReducer from "./notification.reducer";
 import profileReducer from "./profile.reduce";
+
 
 const rootReducer = () =>
 	combineReducers({
@@ -10,6 +12,7 @@ const rootReducer = () =>
 		modals: ModalReducer,
 		files: filesReducer,
 		profile: profileReducer,
+		notification: notificationReducer
 	});
 
 export default rootReducer;

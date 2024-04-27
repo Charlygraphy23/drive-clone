@@ -8,10 +8,11 @@ import style from '../style.module.scss'
 
 const FinishPageUI = () => {
 
-    const { setPage } = useContext(GetStartedContext);
+    const { setPage, resetData } = useContext(GetStartedContext);
 
     const handleClick = () => {
         setPage(-1)
+        resetData()
     }
 
     return (

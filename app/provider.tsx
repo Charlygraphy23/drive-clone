@@ -7,6 +7,7 @@ import { ConfigProvider } from "antd";
 import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
+import Notifications from "./components/notification";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,8 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 					<ConfigProvider theme={{ token: { zIndexPopupBase: 1090 } }}>
 						{children}
 					</ConfigProvider>
+					<Notifications />
+
 				</StoreProvider>
 				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>

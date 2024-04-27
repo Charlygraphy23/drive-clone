@@ -93,7 +93,13 @@ const InputGroupComponent = ({ className, showTerms = false, onSubmit, title, bu
     <form action="#" className={`${style.inputGroup} ${error?.[ID] ? style.error : ""} ${className}`} onSubmit={handleSubmit}>
       <h4>{title}</h4>
       <input id={id} type="text" placeholder='type here' value={value ?? ""} onChange={onChangeHandler} />
-      <button className="button" type='submit' disabled={isLoading}>{buttonText}</button>
+      <button className="button" type='submit' disabled={isLoading}>
+        {isLoading && <div className="spinner-border text-light" role="status" style={{ width: "15px", height: "15px", marginRight: "10px" }}>
+          <span className="visually-hidden">Loading...</span>
+        </div>}
+
+        <span>{buttonText}</span>
+      </button>
 
       {showTerms && <p className={`${style.showTerms} ${error?.checked ? style.error : ""}`}>
         <input type="checkbox" checked={state?.checked ?? false} onChange={handleChecked} />

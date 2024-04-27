@@ -1,7 +1,9 @@
 "use client"
 
 import { signupApi } from '@/app/_apis_routes/user'
+import useNotification from '@/app/_hooks/useNotification'
 import { useMutation } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { useContext } from 'react'
 import { GetStartedContext } from '../../../store'
 import InputGroupComponent from '../../inputGroup'
@@ -15,6 +17,7 @@ type Props = {
 const StepFormUI = ({ data }: Props) => {
     const { state: { activePage, data: formData }, setPage } = useContext(GetStartedContext)
     const { mutateAsync, isPending } = useMutation({ mutationFn: signupApi })
+    const { sendNotification } = useNotification()
 
     const onBackEvent = () => {
         if (activePage === -1) setPage(-1);
@@ -23,17 +26,21 @@ const StepFormUI = ({ data }: Props) => {
 
     const onSubmit = async () => {
 
+        if (isPending) return
+
         if (activePage + 1 === data.length) {
             await mutateAsync({
                 email: formData.email,
                 firstName: formData.firstName,
                 lastName: formData.lastName
-            })
+            }).then(() => setPage(activePage + 1))
+                .catch((err: unknown) => {
+                    const error = err as AxiosError<{ message: string }>
+                    sendNotification(error?.response?.data?.message)
+                })
         }
-        else {
-            setPage(activePage + 1)
-        }
-        // TODO: place api call
+        else setPage(activePage + 1)
+
     }
 
 
@@ -54,6 +61,7 @@ const StepFormUI = ({ data }: Props) => {
                         onSubmit={onSubmit}
                         title={value.title}
                         id={value.dataIndex}
+                        isLoading={isPending}
                     />
                 </div>)}
             </div>
