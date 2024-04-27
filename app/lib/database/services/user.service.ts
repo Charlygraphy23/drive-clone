@@ -9,7 +9,7 @@ export class UserService {
 
     async createUserWithoutPass({ email, firstName, lastName }: CreateUser) {
         const randomString = await generatePassword();
-        console.log("Password", randomString)
+        console.log("Password-", randomString)
         return await UserModel.create([{ email, firstName, lastName, password: randomString }])
     }
 }

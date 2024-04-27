@@ -28,14 +28,13 @@ const authOptions: AuthOptions = {
                     await connectDB();
 
                     const service = new UserService()
-                    const userObj = await service.findByEmail(email, { password: 1 })
+                    const userObj = await service.findByEmail(email, "+password")
 
                     if (!userObj) return null;
 
                     const user = userObj?.toObject()
 
                     const matchedPassword = await comparePasswordWithHash(password, user?.password ?? "")
-
                     if (!matchedPassword) return null;
 
                     return {
@@ -62,12 +61,9 @@ const authOptions: AuthOptions = {
         })
     ],
     callbacks: {
-        async signIn(_payload) {
-            // console.log("signIn", { user, account, profile, email, credentials })
-            return true
-        },
         async session({ session, user, token }) {
             console.log("session", { session, user, token })
+            // TODO filter the session what actually needs to be passed
             return session
         },
         async jwt({ token }) {
