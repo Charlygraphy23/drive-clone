@@ -5,6 +5,8 @@ async function middleware(request: NextRequestWithAuth) {
     console.log("Hi")
     const hasAppRoutePermission = await checkAuthForAppRoute(request)
     // return NextResponse.json(new URL('/home', request.url))
+
+    // TODO: need to check if we can stop auto updation of JWT token while feching next session.
 }
 
 export default withAuth(middleware, {
