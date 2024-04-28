@@ -2,6 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import { ValidationError } from 'yup';
 import { EmailPasswordPropsType, EmailPasswordSchema, LoginFlowState } from '../interfaces/index.interface';
@@ -29,6 +30,8 @@ const EmailPassword = ({
         password: false,
     } as Record<keyof LoginFlowState, boolean>)
 
+    const router = useRouter()
+
     const handleSubmit = async () => {
         setErrors({} as Record<keyof LoginFlowState, boolean>)
         try {
@@ -38,28 +41,42 @@ const EmailPassword = ({
                 // TODO: remember me logic
             }
 
-            signIn("credentials", {
+            const response = await signIn("credentials", {
                 ...value,
-                callbackUrl: "/",
                 redirect: false
-            }).then((res) => {
-                console.log(res)
             })
+
+            if (!response?.ok) {
+                setErrors(prev => ({
+                    ...prev,
+                    email: true,
+                    password: true
+                }))
+                return;
+            }
+
+
+            console.log(response)
+            router.push("/")
         }
         catch (err: any) {
-            const errors = (err as ValidationError).inner;
-            errors.forEach(_err => {
-                setErrors(prev => {
-                    const key = _err?.path;
-                    if (!key) return prev;
 
-                    return {
-                        ...prev,
-                        [key]: _err.message
-                    }
+            if (err instanceof ValidationError) {
+                const errors = (err as ValidationError).inner;
+                errors.forEach(_err => {
+                    setErrors(prev => {
+                        const key = _err?.path;
+                        if (!key) return prev;
 
+                        return {
+                            ...prev,
+                            [key]: _err.message
+                        }
+
+                    })
                 })
-            })
+            }
+
         }
     }
 
