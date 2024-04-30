@@ -1,26 +1,33 @@
-import { NextRequestWithAuth, withAuth } from "next-auth/middleware"
-import { checkAuthForAppRoute } from './app/middlewre/app.middleware'
+import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
+import { handleMiddleware } from "./app/middlewre";
+import { publicAppRoutes } from "./app/middlewre/app.middleware";
 
 async function middleware(request: NextRequestWithAuth) {
-    console.log("Hi")
-    const hasAppRoutePermission = await checkAuthForAppRoute(request)
-    // return NextResponse.json(new URL('/home', request.url))
+    const url = new URL(request.url);
+    const path = url?.pathname
+    const inPublicPath = publicAppRoutes.find(p => path.startsWith(p))
 
-    // TODO: need to check if we can stop auto updation of JWT token while feching next session.
+    if (request?.nextauth?.token && inPublicPath) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/'
+        return NextResponse.rewrite(url)
+    }
+
 }
 
 export default withAuth(middleware, {
-    // Matches the pages config in `[...nextauth]`
+    secret: process.env.NEXTAUTH_SECRET,
     pages: {
         signIn: "/login",
         error: "/login",
     },
-    // callbacks: {
-    //     authorized({ req, token }) {
-    //         console.
-    //         if (!token || !token?.user) return false
-    //     }
-    // }
+    callbacks: {
+        authorized: async ({ req, token }) => {
+            const hasPermission = await handleMiddleware(req, token)
+            return !!hasPermission
+        }
+    }
 })
 
 // See "Matching Paths" below to learn more

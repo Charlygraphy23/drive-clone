@@ -29,10 +29,13 @@ const EmailPassword = ({
         email: false,
         password: false,
     } as Record<keyof LoginFlowState, boolean>)
-
-    const router = useRouter()
+    const [loading, setLoading] = useState(false)
+    const router = useRouter();
 
     const handleSubmit = async () => {
+
+        if (loading) return;
+
         setErrors({} as Record<keyof LoginFlowState, boolean>)
         try {
             await EmailPasswordSchema.validate(value, { abortEarly: false })
@@ -41,12 +44,14 @@ const EmailPassword = ({
                 // TODO: remember me logic
             }
 
+            setLoading(true)
             const response = await signIn("credentials", {
                 ...value,
                 redirect: false
             })
 
             if (!response?.ok) {
+                setLoading(false)
                 setErrors(prev => ({
                     ...prev,
                     email: true,
@@ -58,9 +63,9 @@ const EmailPassword = ({
 
             console.log(response)
             router.push("/")
+            setLoading(false)
         }
         catch (err: any) {
-
             if (err instanceof ValidationError) {
                 const errors = (err as ValidationError).inner;
                 errors.forEach(_err => {
@@ -77,6 +82,8 @@ const EmailPassword = ({
                 })
             }
 
+            console.log(err)
+            setLoading(false)
         }
     }
 
@@ -122,7 +129,7 @@ const EmailPassword = ({
                 <Link onClick={handleNextPage} href={"#"}>Forgot Password?</Link>
             </div>}
 
-            <ButtonGroup submitText={submitText} handleSubmit={handleSubmit} />
+            <ButtonGroup loading={loading} submitText={submitText} handleSubmit={handleSubmit} />
 
         </div>
     )

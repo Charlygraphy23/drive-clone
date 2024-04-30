@@ -1,24 +1,23 @@
-import { NextRequestWithAuth } from "next-auth/middleware";
+import { JWT } from "next-auth/jwt";
+import { NextRequest } from "next/server";
 
-const publicPaths = ["/login", "/getting-started"]
+export const publicAppRoutes = ["/login", "/getting-started"]
 
-export const checkAuthForAppRoute = async (request: NextRequestWithAuth) => {
+export const checkAuthForAppRoute = async (request: NextRequest, token: JWT | null) => {
     const url = new URL(request.url);
-
     const path = url?.pathname
 
-    const isPublicPath = publicPaths.find(p => path.includes(p))
+    const isPublicPath = publicAppRoutes.find(p => path.startsWith(p))
 
-    if (isPublicPath) console.log("FOUND PUBLIC APP ROUTE PATH (skipping authorization check)")
-
-    if (!isPublicPath) {
-        // const session = await getServerSession(authConfig)
-        console.log("Next Auth", request.nextauth)
-
-        // TODO: check for authentication
+    if (isPublicPath) {
+        console.log("FOUND PUBLIC APP ROUTE PATH (skipping authorization check)")
+        return true
     }
 
+    if (!token) return false
 
+    if (!token?.user) return false
 
-
+    console.log("Token ", token)
+    return true
 }

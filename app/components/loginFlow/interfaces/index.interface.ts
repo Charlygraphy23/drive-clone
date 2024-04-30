@@ -38,6 +38,6 @@ export const EmailPasswordSchema = object().shape({
 })
 
 export const ForgotPasswordSchema = object().shape({
-    email: string().email().required(),
+    forgotEmail: string().email().required(),
 
 })

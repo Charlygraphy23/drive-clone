@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react'
 import { ValidationError } from 'yup'
-import { ForgotPasswordPropsType, ForgotPasswordSchema, LoginFlowState } from '../interfaces/index.interface'
+import { ForgotPasswordPropsType, ForgotPasswordSchema } from '../interfaces/index.interface'
 import style from '../style.module.scss'
 import { getViewSlideClass } from '../utils/index.util'
 import ButtonGroup from './buttonGroup'
@@ -20,8 +20,8 @@ const ForgotPassword = ({
 }: Props) => {
 
     const [errors, setErrors] = useState({
-        email: false,
-    } as Record<keyof LoginFlowState, boolean>)
+        forgotEmail: false,
+    })
 
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +33,7 @@ const ForgotPassword = ({
     }
 
     const handleSubmit = async () => {
-        setErrors({} as Record<keyof LoginFlowState, boolean>)
+        setErrors({ forgotEmail: false })
         try {
             await ForgotPasswordSchema.validate(value, { abortEarly: false })
             onNext && onNext()
@@ -41,19 +41,22 @@ const ForgotPassword = ({
             // TODO: redirect to success page
         }
         catch (err: any) {
-            const errors = (err as ValidationError).inner;
-            errors.forEach(_err => {
-                setErrors(prev => {
-                    const key = _err?.path;
-                    if (!key) return prev;
+            if (err instanceof ValidationError) {
+                const errors = (err as ValidationError).inner;
+                errors.forEach(_err => {
+                    setErrors(prev => {
+                        const key = _err?.path;
+                        if (!key) return prev;
 
-                    return {
-                        ...prev,
-                        [key]: _err.message
-                    }
+                        return {
+                            ...prev,
+                            [key]: _err.message
+                        }
 
+                    })
                 })
-            })
+            }
+            console.log(err)
         }
     }
 
@@ -69,12 +72,12 @@ const ForgotPassword = ({
                 <h4 className="flex-fill text-center">{title}</h4>
             </div>
             <InputGroup
-                id='email'
-                className={errors?.email && style.error || ""}
+                id='forgotEmail'
+                className={errors?.forgotEmail && style.error || ""}
                 type='email'
                 icon={<i className="bi bi-envelope-fill"></i>}
                 value={value?.email}
-                errorMessage={errors?.email && "Please enter a valid email" || ""}
+                errorMessage={errors?.forgotEmail && "Please enter a valid email" || ""}
                 onChange={handleChange}
             />
             <ButtonGroup submitText={submitText} handleSubmit={handleSubmit} />
