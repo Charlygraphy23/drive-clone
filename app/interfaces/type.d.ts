@@ -11,7 +11,7 @@ declare module process.env {
 
 declare module 'next-auth' {
     interface Session {
-        user: Omit<UserSchemaType, "imageUrl"> & DefaultSession['user'];
+        user: { id: string } & Omit<UserSchemaType, "imageUrl" | "_id"> & DefaultSession['user'];
     }
 
     interface User extends Omit<UserSchemaType, "imageUrl"> { }

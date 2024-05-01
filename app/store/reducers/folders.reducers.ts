@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { addBulkFolder, addFolder, renameFolder } from "../actions";
+import { addBulkFolder, addFolderAsync, renameFolder } from "../actions";
 
 const initialState = {
 	loading: false,
@@ -20,12 +20,20 @@ export type FolderStateType = {
 
 export default createReducer(initialState, (builder) => {
 	builder
-		.addCase(addFolder, (state, action) => {
+		.addCase(addFolderAsync.pending, (state) => {
+			state.loading = true
+			return state;
+		})
+		.addCase(addFolderAsync.fulfilled, (state, action) => {
+			state.loading = false
 			state.data.push({
-				_id: Date.now().toString(),
+				_id: action?.payload?.id,
 				name: action.payload.name,
-				path: "myFolder",
 			});
+			return state;
+		})
+		.addCase(addFolderAsync.rejected, (state) => {
+			state.loading = false
 			return state;
 		})
 		.addCase(renameFolder, (state, action) => {

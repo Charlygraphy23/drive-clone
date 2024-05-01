@@ -1,15 +1,19 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, memo, useState } from "react";
-import style from "./style.module.scss";
 import ModalComponent from "@/app/components/modal";
-import {
-	addFolder,
-	toggleModal as toggleModalState,
-} from "@/app/store/actions";
-import { useDispatch } from "react-redux";
 import { NEW_FOLDER_MODAL_ID } from "@/app/config/const";
+import { RootState } from "@/app/store";
+import {
+	addFolderAsync,
+	toggleModal as toggleModalState
+} from "@/app/store/actions";
+import { FolderStateType } from "@/app/store/reducers/folders.reducers";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
+import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
+import { ChangeEvent, FormEvent, memo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import style from "./style.module.scss";
 
 type Props = {
 	isOpen: boolean;
@@ -17,8 +21,16 @@ type Props = {
 };
 
 const NewFolderModal = ({ isOpen }: Props) => {
+	const { loading } = useSelector<RootState, FolderStateType>(
+		(state) => state.folders
+	);
 	const dispatch = useDispatch();
 	const [name, setName] = useState<string>("");
+	const session = useSession()
+	const user = session?.data?.user
+	const params = useParams()
+	console.log(params)
+
 
 	const toggleModal = (isOpen?: boolean) => {
 		dispatch(
@@ -33,15 +45,26 @@ const NewFolderModal = ({ isOpen }: Props) => {
 		setName(event.target.value);
 	};
 
+	const resetState = () => {
+		toggleModal(false);
+		setName("");
+	}
+
 	const handleModalSubmit = (event: FormEvent) => {
 		event.preventDefault();
 
+		if (loading) return;
+
 		if (!name) return;
 
-		dispatch(addFolder({ name }));
+		const folderId = params?.folderId ?? null
 
-		toggleModal(false);
-		setName("");
+		dispatch(addFolderAsync({
+			name, createdBy: user?.id ?? "", reset: resetState,
+			parentFolderId: folderId
+		}));
+
+
 	};
 
 	return (
@@ -65,7 +88,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 						cancel
 					</button>
 					<button type='submit' className='button submit'>
-						OK
+						{loading ? "Loading" : "OK"}
 					</button>
 				</div>
 			</form>
