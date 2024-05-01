@@ -7,7 +7,7 @@ import { ValidationError } from "yup";
 import { CredentialsType, credentialSchema } from "../api/auth/[...nextauth]/interfaces/index.interface";
 
 
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
     // Configure one or more authentication providers 
     secret: process.env.NEXTAUTH_SECRET,
     session: {

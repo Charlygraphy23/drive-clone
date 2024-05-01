@@ -1,6 +1,6 @@
-import authConfig from '@/app/lib/authConfig'
+import { authOptions } from '@/app/lib/authConfig'
 import LoginIllustration from '@app/assets/login-illustration.svg'
-import { Session, getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import LoginFlow from '../../components/loginFlow'
@@ -9,7 +9,7 @@ import style from './style.module.scss'
 
 
 const LoginPage = async () => {
-    const session = await getServerSession<any, Session>(authConfig)
+    const session = await getServerSession(authOptions)
 
     if (session) return redirect("/")
 

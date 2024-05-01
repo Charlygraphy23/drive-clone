@@ -29,8 +29,6 @@ const NewFolderModal = ({ isOpen }: Props) => {
 	const session = useSession()
 	const user = session?.data?.user
 	const params = useParams()
-	console.log(params)
-
 
 	const toggleModal = (isOpen?: boolean) => {
 		dispatch(
