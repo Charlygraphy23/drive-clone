@@ -1,5 +1,8 @@
+import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
 import { FilesAndFolderService } from "@/app/lib/database/services/filesAndFolder.service";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import FileSection from "./components/files";
 import FolderComponent from "./components/folders";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
@@ -110,6 +113,10 @@ const api = async () => {
 	return new Promise(async (resolve, reject) => {
 
 		try {
+
+			const session = await getServerSession(authOptions);
+			if (!session) return redirect("/login")
+
 			await connectDB()
 			const filesAndFolderService = new FilesAndFolderService()
 			const folders = await filesAndFolderService.getFolders()
