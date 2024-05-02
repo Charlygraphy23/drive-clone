@@ -1,13 +1,13 @@
 "use client";
 
-import { addBulkFiles, addBulkFolder } from "@/app/store/actions";
-import React, { Fragment, PropsWithChildren, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import RenameModal from "../modals/rename";
-import { ModalStateType } from "@/app/store/reducers/modal.reducers";
 import { RootState } from "@/app/store";
-import { FileAndFolderDatasetType } from "./interfaces/index.interface";
+import { addBulkFiles, addBulkFolder } from "@/app/store/actions";
+import { ModalStateType } from "@/app/store/reducers/modal.reducers";
+import { Fragment, PropsWithChildren, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import NewfolderModal from "../modals/newfolder";
+import RenameModal from "../modals/rename";
+import { FileAndFolderDatasetType } from "./interfaces/index.interface";
 
 type Props = {
 	data: FileAndFolderDatasetType;

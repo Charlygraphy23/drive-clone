@@ -21,4 +21,8 @@ export class FilesAndFolderService {
         })
     }
 
+    async getFolders() {
+        return await Model.find()
+    }
+
 }

@@ -7,8 +7,9 @@ async function middleware(request: NextRequestWithAuth) {
     const url = new URL(request.url);
     const path = url?.pathname
     const inPublicPath = publicAppRoutes.find(p => path.startsWith(p))
+    const isApiRoute = path.startsWith("/api")
 
-    if (request?.nextauth?.token && inPublicPath) {
+    if (request?.nextauth?.token && inPublicPath && !isApiRoute) {
         const url = request.nextUrl.clone()
         url.pathname = '/'
         return NextResponse.rewrite(url)
@@ -33,6 +34,6 @@ export default withAuth(middleware, {
 // See "Matching Paths" below to learn more
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|favicon.ico).*)'
+        '/((?!_next/static|_next/image|favicon.ico).*)'
     ]
 }

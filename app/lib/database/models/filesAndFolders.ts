@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType } from '../interfaces/files.interfaces';
 import { MODEL_NAME as USER_MODEL } from "./user";
 
@@ -32,4 +32,4 @@ const schema = new mongoose.Schema<FilesAndFolderSchemaType>({
 }, { timestamps: true })
 
 
-export const FilesAndFolderModel = mongoose.models["Files_And_Folders"] || mongoose.model<FilesAndFolderDocument>(MODEL_NAME, schema)
+export const FilesAndFolderModel = mongoose.models["Files_And_Folders"] as Model<FilesAndFolderDocument> || mongoose.model<FilesAndFolderDocument>(MODEL_NAME, schema)

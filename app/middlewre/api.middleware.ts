@@ -7,13 +7,16 @@ export const checkAuthForApiRoute = async (request: NextRequest, token: JWT | nu
     const url = new URL(request.url);
     const path = url?.pathname
 
-    const isPublicPath = publicPaths.find(p => path.startsWith(p))
+    const isPublicPath = publicPaths.find(p => path.endsWith(p))
 
     if (isPublicPath) {
         console.log("FOUND PUBLIC API ROUTE PATH (skipping authorization check)")
         return true
     }
 
-    console.log("Token ", token)
-    return false
+    if (!token) return false
+
+    if (!token?.user) return false
+
+    return true
 }

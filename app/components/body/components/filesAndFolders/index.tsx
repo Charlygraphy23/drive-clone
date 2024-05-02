@@ -1,3 +1,5 @@
+import { connectDB } from "@/app/lib/database/db";
+import { FilesAndFolderService } from "@/app/lib/database/services/filesAndFolder.service";
 import FileSection from "./components/files";
 import FolderComponent from "./components/folders";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
@@ -105,11 +107,24 @@ const data = {
 };
 
 const api = async () => {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve(data);
-		}, 5000);
-	});
+	return new Promise(async (resolve, reject) => {
+
+		try {
+			await connectDB()
+			const filesAndFolderService = new FilesAndFolderService()
+			const folders = await filesAndFolderService.getFolders()
+
+			resolve({
+				folders: JSON.parse(JSON.stringify(folders.map(f => f.toJSON()))),
+				files: data.files
+			})
+		}
+		catch (err) {
+			console.log(err)
+			reject(err)
+		}
+	})
+
 };
 
 const FilesAndFolders = async () => {

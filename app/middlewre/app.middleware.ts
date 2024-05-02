@@ -18,6 +18,5 @@ export const checkAuthForAppRoute = async (request: NextRequest, token: JWT | nu
 
     if (!token?.user) return false
 
-    console.log("Token ", token)
     return true
 }

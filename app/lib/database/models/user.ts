@@ -1,5 +1,5 @@
 import { APP_CONFIG } from '@/app/_config';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import mongoose from "mongoose";
 import { LoginType, UserSchemaDocument, UserSchemaType } from "../interfaces/user.interface";
 
