@@ -1,6 +1,16 @@
 "use client";
 
-import React, {
+import ModalComponent from "@/app/components/modal";
+import { RENAME_MODAL_ID } from "@/app/config/const";
+import { DATA_TYPE } from "@/app/interfaces/index.interface";
+import { useAppDispatch } from "@/app/store";
+import {
+	renameFile,
+	renameFolderAsync,
+	toggleModal as toggleModalState
+} from "@/app/store/actions";
+import { ModalDataType } from "@/app/store/reducers/modal.reducers";
+import {
 	ChangeEvent,
 	FormEvent,
 	memo,
@@ -9,16 +19,6 @@ import React, {
 	useState,
 } from "react";
 import style from "./style.module.scss";
-import ModalComponent from "@/app/components/modal";
-import {
-	renameFile,
-	renameFolder,
-	toggleModal as toggleModalState,
-} from "@/app/store/actions";
-import { useDispatch } from "react-redux";
-import { RENAME_MODAL_ID } from "@/app/config/const";
-import { ModalDataType } from "@/app/store/reducers/modal.reducers";
-import { DATA_TYPE } from "@/app/interfaces/index.interface";
 
 type Props = {
 	isOpen: boolean;
@@ -26,7 +26,7 @@ type Props = {
 };
 
 const RenameModal = ({ isOpen, data }: Props) => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [name, setName] = useState<string>("");
 	const currName = useRef(name);
 
@@ -55,7 +55,7 @@ const RenameModal = ({ isOpen, data }: Props) => {
 		if (data && data.type === DATA_TYPE.FILE) {
 			dispatch(renameFile({ fileId: data?.fileId, name }));
 		} else {
-			dispatch(renameFolder({ folderId: data?.folderId, name }));
+			dispatch(renameFolderAsync({ folderId: data?.folderId, updatedName: name }));
 		}
 
 		toggleModal(false);

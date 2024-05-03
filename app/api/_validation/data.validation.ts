@@ -29,3 +29,14 @@ export const DataCreateSchemaValidator = object().shape({
         otherwise: () => string().notRequired()
     })
 })
+
+export const UpdateNamePayloadSchema = object().shape({
+    folderId: string().test({
+        name: "valid-mongodb-id",
+        message: "Invalid item ID",
+        test: (value) => {
+            return mongoose.Types.ObjectId.isValid(value ?? "");
+        },
+    }).required(),
+    updatedName: string().matches(/^[a-zA-Z\s]+$/, 'Field must contain only alphabetic characters').required(),
+})

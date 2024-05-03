@@ -2,7 +2,7 @@
 
 import ModalComponent from "@/app/components/modal";
 import { NEW_FOLDER_MODAL_ID } from "@/app/config/const";
-import { RootState } from "@/app/store";
+import { RootState, useAppDispatch } from "@/app/store";
 import {
 	addFolderAsync,
 	toggleModal as toggleModalState
@@ -12,7 +12,7 @@ import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { ChangeEvent, FormEvent, memo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import style from "./style.module.scss";
 
 type Props = {
@@ -24,7 +24,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 	const { loading } = useSelector<RootState, FolderStateType>(
 		(state) => state.folders
 	);
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [name, setName] = useState<string>("");
 	const session = useSession()
 	const user = session?.data?.user

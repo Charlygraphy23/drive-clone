@@ -1,21 +1,20 @@
 "use client";
 
-import React from "react";
-import style from "../../../style.module.scss";
 import MyDropdown from "@/app/components/dropdown";
-import { FolderDataType } from "@/app/store/reducers/folders.reducers";
-import { useDispatch } from "react-redux";
-import { toggleModal } from "@/app/store/actions";
 import { DATA_TYPE } from "@/app/interfaces/index.interface";
+import { useAppStore } from "@/app/store";
+import { toggleModal } from "@/app/store/actions";
+import { FolderDataType } from "@/app/store/reducers/folders.reducers";
+import style from "../../../style.module.scss";
 
 type Props = {
 	data: FolderDataType;
 };
 
 const FolderSkeleton = ({ data }: Props) => {
-	const dispatch = useDispatch();
+	const store = useAppStore();
 	const handleRenameClient = () => {
-		dispatch(
+		store.dispatch(
 			toggleModal({
 				isOpen: true,
 				data: {
