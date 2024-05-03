@@ -1,10 +1,8 @@
 "use client";
 
-import { RootState } from "@/app/store";
+import { useAppSelector, useAppStore } from "@/app/store";
 import { addBulkFiles, addBulkFolder } from "@/app/store/actions";
-import { ModalStateType } from "@/app/store/reducers/modal.reducers";
-import { Fragment, PropsWithChildren, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Fragment, PropsWithChildren, useRef } from "react";
 import NewfolderModal from "../modals/newfolder";
 import RenameModal from "../modals/rename";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
@@ -18,18 +16,16 @@ const FileAndFolderStateProvider = ({ children, data }: Props) => {
 		renameModal,
 		newFolderModal,
 		data: modalState,
-	} = useSelector<RootState, ModalStateType>((state) => state.modals);
+	} = useAppSelector((state) => state.modals);
 
-	const dispatch = useDispatch();
-	const ref = useRef(false);
+	const initializeData = useRef<boolean>(false);
+	const store = useAppStore()
 
-	useEffect(() => {
-		if (ref?.current) return;
-		ref.current = true;
-
-		dispatch(addBulkFiles({ data: data?.files }));
-		dispatch(addBulkFolder({ data: data?.folders }));
-	}, [data?.files, data?.folders, dispatch]);
+	if (!initializeData?.current) {
+		store.dispatch(addBulkFiles({ data: data?.files }))
+		store.dispatch(addBulkFolder({ data: data?.folders }))
+		initializeData["current"] = true
+	}
 
 	return (
 		<Fragment>

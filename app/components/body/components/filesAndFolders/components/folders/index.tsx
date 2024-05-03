@@ -1,15 +1,12 @@
 "use client";
 
-import React from "react";
+import { useAppSelector } from "@/app/store";
 import style from "../../style.module.scss";
 import FolderSkeleton from "./components/folderSkeleton";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
+
 
 const FolderComponent = () => {
-	const { data } = useSelector<RootState, RootState["folders"]>(
-		(state) => state.folders
-	);
+	const { data } = useAppSelector(state => state.folders)
 
 	return (
 		<div className={style.folders}>

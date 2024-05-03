@@ -17,6 +17,8 @@ export const GET = async () => {
 
         const folders = await service.getFolders()
 
+        console.log("Folder Found!")
+
         return response.status(200).send({
             data: folders
         })

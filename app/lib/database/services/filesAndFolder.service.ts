@@ -22,7 +22,7 @@ export class FilesAndFolderService {
     }
 
     async getFolders() {
-        return await Model.find()
+        return await Model.find({}).exec();
     }
 
 }

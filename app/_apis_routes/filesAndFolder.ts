@@ -14,3 +14,18 @@ export const addFolderApi = async ({ name, createdBy, type, parentFolderId }: Cr
     }
 
 }
+
+
+export const getFoldersApi = async () => {
+    const res = await fetch('http://localhost:3000/api/data/folders')
+
+    if (!res.ok) {
+        // This will activate the closest `error.js` Error Boundary
+        throw new Error('Failed to fetch data')
+    }
+
+    console.log(await res.json())
+    return await res.json()
+
+}
+

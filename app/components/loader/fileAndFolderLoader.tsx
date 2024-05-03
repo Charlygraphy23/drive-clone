@@ -1,8 +1,8 @@
-import React from "react";
-import FolderLoader from "./folderLoader";
 import FileLoader from "./fileLoader";
+import FolderLoader from "./folderLoader";
 
 const FileAndFolderLoader = () => {
+	console.log("LOADER CALL")
 	return (
 		<>
 			<FolderLoader />

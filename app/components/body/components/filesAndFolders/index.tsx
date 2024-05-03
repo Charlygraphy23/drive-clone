@@ -1,8 +1,4 @@
-import { authOptions } from "@/app/lib/authConfig";
-import { connectDB } from "@/app/lib/database/db";
-import { FilesAndFolderService } from "@/app/lib/database/services/filesAndFolder.service";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { GET as getFolders } from "@/app/api/data/folders/route";
 import FileSection from "./components/files";
 import FolderComponent from "./components/folders";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
@@ -109,36 +105,19 @@ const data = {
 	],
 };
 
-const api = async () => {
-	return new Promise(async (resolve, reject) => {
+async function fetchData() {
+	const dataset = await getFolders();
+	if (!dataset.ok) return []
+	const data = await dataset.json()
+	return data?.data as FileAndFolderDatasetType["folders"]
 
-		try {
-
-			const session = await getServerSession(authOptions);
-			if (!session) return redirect("/login")
-
-			await connectDB()
-			const filesAndFolderService = new FilesAndFolderService()
-			const folders = await filesAndFolderService.getFolders()
-
-			resolve({
-				folders: JSON.parse(JSON.stringify(folders.map(f => f.toJSON()))),
-				files: data.files
-			})
-		}
-		catch (err) {
-			console.log(err)
-			reject(err)
-		}
-	})
-
-};
+}
 
 const FilesAndFolders = async () => {
-	const dataset = await api();
+	const folderData = await fetchData()
 
 	return (
-		<FileAndFolderStateProvider data={dataset as FileAndFolderDatasetType}>
+		<FileAndFolderStateProvider data={{ folders: folderData, files: data?.files } as FileAndFolderDatasetType}>
 			<div className={style.filesAndFolders}>
 				<FolderComponent />
 				<FileSection />
