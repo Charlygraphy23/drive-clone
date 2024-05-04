@@ -1,7 +1,7 @@
 import { JWT } from "next-auth/jwt";
 import { NextRequest } from "next/server";
 
-export const publicAppRoutes = ["/login", "/getting-started"]
+export const publicAppRoutes = ["/login", "/getting-started", "/reset-password"]
 
 export const checkAuthForAppRoute = async (request: NextRequest, token: JWT | null) => {
     const url = new URL(request.url);

@@ -1,22 +1,19 @@
 "use client";
 
-import React from "react";
-import useFileColumns from "../hooks/useFileColumns";
 import MyTable from "@/app/components/table";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
+import { useAppSelector } from "@/app/store";
 import {
-	FolderDataType,
-	FolderStateType,
+	FolderDataType
 } from "@/app/store/reducers/folders.reducers";
+import useFileColumns from "../hooks/useFileColumns";
 
 const FileComponent = () => {
 	const { columns } = useFileColumns();
-	const { data } = useSelector<RootState, FolderStateType>(
+	const { data } = useAppSelector(
 		(state) => state?.files
 	);
 
-	return <MyTable<FolderDataType> columns={columns} data={data} />;
+	return <MyTable<FolderDataType> columns={columns} data={data} />
 };
 
 export default FileComponent;

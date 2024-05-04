@@ -12,6 +12,9 @@ interface ViewPagePropsType {
     setState: Dispatch<SetStateAction<LoginFlowState>>
 }
 
+
+const EmailValidationSchema = string().email("In-valid Email format").required("Please enter a valid email")
+
 export type EmailPasswordPropsType = {
     rememberMe?: boolean;
 } & ViewPagePropsType
@@ -28,16 +31,15 @@ export type LoginFlowState = {
     rememberMe?: boolean;
 }
 
-export const passwordYupValidation = string().required("No password provided!").min(8, "Password is too short - should be 8 chars minimum.")
-    .matches(/[a-zA-Z,0-9\d@$!%*#?&]/, "Password must be contain at least one alphanumeric character")
+export const passwordYupValidation = string().required("Please enter password").min(8, "Password is too short - should be 8 chars minimum.")
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\]=])[A-Za-z\d@$!%*?&\]=]{8,}$/, 'Password must contain atleast 1 lowercase, 1 uppercase, 1 number and 1 special character.')
 
 
 export const EmailPasswordSchema = object().shape({
-    email: string().email().required(),
+    email: EmailValidationSchema,
     password: passwordYupValidation,
 })
 
 export const ForgotPasswordSchema = object().shape({
-    forgotEmail: string().email().required(),
-
+    email: EmailValidationSchema
 })

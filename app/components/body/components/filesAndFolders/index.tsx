@@ -1,4 +1,5 @@
 import { GET as getFolders } from "@/app/api/data/folders/route";
+import EmptySection from "./components/emptySection";
 import FileSection from "./components/files";
 import FolderComponent from "./components/folders";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
@@ -105,22 +106,29 @@ const data = {
 	],
 };
 
-async function fetchData() {
-	const dataset = await getFolders();
+async function fetchData(folderId?: string) {
+	console.log("folderId", folderId)
+	const dataset = await getFolders(folderId);
 	if (!dataset.ok) return []
 	const data = await dataset.json()
 	return data?.data as FileAndFolderDatasetType["folders"]
 
 }
 
-const FilesAndFolders = async () => {
-	const folderData = await fetchData()
+type Props = {
+	folderId?: string
+}
+
+
+const FilesAndFolders = async ({ folderId }: Props) => {
+	const folderData = await fetchData(folderId)
 
 	return (
-		<FileAndFolderStateProvider data={{ folders: folderData, files: data?.files } as FileAndFolderDatasetType}>
+		<FileAndFolderStateProvider data={{ folders: folderData, files: [] } as FileAndFolderDatasetType}>
 			<div className={style.filesAndFolders}>
 				<FolderComponent />
 				<FileSection />
+				<EmptySection />
 			</div>
 		</FileAndFolderStateProvider>
 	);

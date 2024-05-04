@@ -1,15 +1,15 @@
 "use client"
 
+import { ErrorHandler } from "@/app/utils/index.utils";
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { ChangeEvent, MouseEvent, useState } from 'react';
-import { ValidationError } from 'yup';
+import ButtonGroup from '../../buttonGroup';
+import InputGroup from '../../inputGroup';
 import { EmailPasswordPropsType, EmailPasswordSchema, LoginFlowState } from '../interfaces/index.interface';
 import style from "../style.module.scss";
 import { getViewSlideClass } from '../utils/index.util';
-import ButtonGroup from './buttonGroup';
-import InputGroup from './inputGroup';
 
 
 type Props = EmailPasswordPropsType
@@ -26,9 +26,9 @@ const EmailPassword = ({
 }: Props) => {
 
     const [errors, setErrors] = useState({
-        email: false,
-        password: false,
-    } as Record<keyof LoginFlowState, boolean>)
+        email: "",
+        password: "",
+    } as Record<keyof LoginFlowState, string>)
     const [loading, setLoading] = useState(false)
     const router = useRouter();
 
@@ -36,7 +36,7 @@ const EmailPassword = ({
 
         if (loading) return;
 
-        setErrors({} as Record<keyof LoginFlowState, boolean>)
+        setErrors({} as Record<keyof LoginFlowState, string>)
         try {
             await EmailPasswordSchema.validate(value, { abortEarly: false })
 
@@ -54,8 +54,8 @@ const EmailPassword = ({
                 setLoading(false)
                 setErrors(prev => ({
                     ...prev,
-                    email: true,
-                    password: true
+                    email: "",
+                    password: ""
                 }))
                 return;
             }
@@ -66,23 +66,11 @@ const EmailPassword = ({
             setLoading(false)
         }
         catch (err: any) {
-            if (err instanceof ValidationError) {
-                const errors = (err as ValidationError).inner;
-                errors.forEach(_err => {
-                    setErrors(prev => {
-                        const key = _err?.path;
-                        if (!key) return prev;
-
-                        return {
-                            ...prev,
-                            [key]: _err.message
-                        }
-
-                    })
-                })
+            const errors = ErrorHandler(err) as Record<string, string>
+            if (errors?._validationError) {
+                setErrors(errors)
             }
-
-            console.log(err)
+            console.error(err)
             setLoading(false)
         }
     }
@@ -110,7 +98,7 @@ const EmailPassword = ({
                 id="email" type='text'
                 icon={<i className="bi bi-person-fill"></i>}
                 onChange={handleChange}
-                errorMessage={errors?.email && "Please enter a valid email" || ""}
+                errorMessage={errors?.email || ""}
                 placeHolder='your email' />
             <InputGroup
                 value={value?.password}
@@ -118,7 +106,7 @@ const EmailPassword = ({
                 id="password"
                 icon={<i className="bi bi-lock-fill"></i>}
                 onChange={handleChange}
-                errorMessage={errors?.password && "Please enter a valid password" || ""}
+                errorMessage={errors?.password || ""}
                 placeHolder='your password' />
             {rememberMe && <div className={style.remindPassword}>
                 <label htmlFor="checkbox">

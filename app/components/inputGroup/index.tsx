@@ -1,5 +1,5 @@
 import { ChangeEvent, ReactElement } from 'react';
-import style from '../style.module.scss';
+import style from './style.module.scss';
 
 
 type Props = {
@@ -11,9 +11,10 @@ type Props = {
     errorMessage?: string;
     id?: string;
     placeHolder?: string;
+    name?: string
 }
 
-const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMessage = "", id, placeHolder }: Props) => {
+const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMessage = "", id, placeHolder, name }: Props) => {
     return (
         <div className={style.inputGroup}>
             {errorMessage && <div className={style.errorMessage}>
@@ -22,7 +23,7 @@ const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMes
             </div>}
             <div className={`${className} ${style.inputGroupWrapper} ${errorMessage && style.error || ""}`}>
                 {icon && <span>{icon}</span>}
-                <input id={id} type={type} value={value} onChange={onChange} placeholder={placeHolder} />
+                <input id={id} name={name} type={type} value={value} onChange={onChange} placeholder={placeHolder} />
             </div>
         </div>
     )

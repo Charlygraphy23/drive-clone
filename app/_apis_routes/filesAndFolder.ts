@@ -1,28 +1,24 @@
-import axios from "axios";
-import { CreateDataType } from "../lib/database/interfaces/files.interfaces";
+import { DATA_TYPE } from "../interfaces/index.interface";
+import { FilesAndFolderSchemaType } from "../lib/database/interfaces/files.interfaces";
+import { axiosInstance } from "./http";
 
 export type UpdateFolderNamePayload = {
     updatedName: string,
     folderId: string
 }
 
-export const addFolderApi = async ({ name, createdBy, type, parentFolderId }: CreateDataType) => {
-
-    const data = await axios.post("/api/data/create", {
+export const addFolderApi = async ({ name, createdBy, type, parentFolderId }: { type: DATA_TYPE } & Pick<FilesAndFolderSchemaType, "name" | "createdBy" | "parentFolderId">) => {
+    const data = await axiosInstance.post("/data/folders", {
         name, createdBy, type, parentFolderId
-    }, {
-        timeout: 30 * 1000
     })
 
     return data?.data as {
-        _id: string,
+        folderId: string,
     }
 
 }
 
 export const updateFolderNameApi = async (payload: UpdateFolderNamePayload) => {
-    return await axios.patch('/api/data/folders', payload, {
-        timeout: 30 * 1000
-    })
+    return await axiosInstance.patch('/data/folders', payload)
 }
 

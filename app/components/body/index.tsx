@@ -1,16 +1,21 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import HeaderComponent from "../header";
-import HeroComponent from "./components/hero";
 import FileAndFolderLoader from "../loader/fileAndFolderLoader";
 import FilesAndFolders from "./components/filesAndFolders";
+import HeroComponent from "./components/hero";
 
-const BodyComponent = () => {
+type Props = {
+	folderId?: string
+}
+
+
+const BodyComponent = ({ folderId }: Props) => {
 	return (
 		<>
 			<HeaderComponent />
 			<HeroComponent />
 			<Suspense fallback={<FileAndFolderLoader />}>
-				<FilesAndFolders />
+				<FilesAndFolders folderId={folderId} />
 			</Suspense>
 		</>
 	);

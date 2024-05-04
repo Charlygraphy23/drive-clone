@@ -1,9 +1,9 @@
 "use client"
 
-import ButtonGroup from '@/app/components/loginFlow/components/buttonGroup'
-import InputGroup from '@/app/components/loginFlow/components/inputGroup'
+import ButtonGroup from '@/app/components/buttonGroup'
+import InputGroup from '@/app/components/inputGroup'
+import { ErrorHandler } from '@/app/utils/index.utils'
 import { ChangeEvent, useState } from 'react'
-import { ValidationError } from 'yup'
 import { PasswordChangeFormErrorStatType, PasswordChangeFormSchema, PasswordChangeFormStateType } from '../interfaces/index.interface'
 import style from '../style.module.scss'
 import ResetPasswordSuccess from './resetSuccess'
@@ -19,8 +19,8 @@ const PasswordChangeForm = () => {
     const [resetSuccess, setResetSuccess] = useState(false)
 
     const [errors, setErrors] = useState<PasswordChangeFormErrorStatType>({
-        newPassword: false,
-        confirmPassword: false
+        newPassword: "",
+        confirmPassword: ""
     });
 
 
@@ -40,20 +40,12 @@ const PasswordChangeForm = () => {
             setResetSuccess(true)
         }
         catch (err: unknown) {
-            const errors = (err as ValidationError).inner;
+            const errors = ErrorHandler(err) as Record<string, string>
+            if (errors?._validationError) {
+                setErrors(errors as PasswordChangeFormErrorStatType)
+            }
+            console.error(err)
 
-            errors.forEach(_err => {
-                setErrors(prev => {
-                    const key = _err?.path;
-                    if (!key) return prev;
-
-                    return {
-                        ...prev,
-                        [key]: _err.message
-                    }
-
-                })
-            })
         }
 
     }
@@ -70,7 +62,7 @@ const PasswordChangeForm = () => {
                 type='text'
                 icon={<i className="bi bi-lock-fill"></i>}
                 placeHolder="new password"
-                errorMessage={errors?.newPassword && 'Please provide valid new password!' || ""}
+                errorMessage={errors?.newPassword || ""}
                 onChange={handleChange}
                 value={state.newPassword} />
             <InputGroup
@@ -79,7 +71,7 @@ const PasswordChangeForm = () => {
                 type='password'
                 icon={<i className="bi bi-lock-fill"></i>}
                 placeHolder="confirm password"
-                errorMessage={errors?.confirmPassword && 'Please provide valid confirm password!' || ""}
+                errorMessage={errors?.confirmPassword || ""}
                 onChange={handleChange} value={state.confirmPassword} />
             <ButtonGroup submitText='Submit' handleSubmit={handleSubmit} />
         </div>

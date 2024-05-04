@@ -1,7 +1,7 @@
 "use client"
 
+import { ErrorHandler } from '@/app/utils/index.utils';
 import { ChangeEvent, FormEvent, PropsWithChildren, useContext, useMemo, useState } from 'react';
-import { ValidationError } from 'yup';
 import { GetStartedContext } from '../../store';
 import { InputGroupStateType, InputStateSchema } from './interfaces/index.interface';
 import style from './style.module.scss';
@@ -21,7 +21,7 @@ const InputGroupComponent = ({ className, showTerms = false, onSubmit, title, bu
   const { state: contextState, onChange } = useContext(GetStartedContext)
   const state = contextState.data
   // const [state, setState] = useState<InputGroupStateType | string>(initialState)
-  const [error, setError] = useState<Record<keyof InputGroupStateType, boolean>>({} as Record<keyof InputGroupStateType, boolean>)
+  const [error, setError] = useState<Record<keyof InputGroupStateType, string>>({} as Record<keyof InputGroupStateType, string>)
 
   const [value, ID] = useMemo(() => {
     const ID = id as keyof InputGroupStateType
@@ -31,7 +31,7 @@ const InputGroupComponent = ({ className, showTerms = false, onSubmit, title, bu
   }, [id, state])
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setError({} as Record<keyof InputGroupStateType, boolean>)
+    setError({} as Record<keyof InputGroupStateType, string>)
     const key = event.target.id as string
     const value = event.target.value
 
@@ -60,19 +60,12 @@ const InputGroupComponent = ({ className, showTerms = false, onSubmit, title, bu
     }
     catch (err: unknown) {
       hasError = true
-      const errors = (err as ValidationError).inner;
-      errors.forEach(_err => {
-        setError(prev => {
-          const key = _err?.path;
-          if (!key) return prev;
+      const errors = ErrorHandler(err) as Record<string, string>
 
-          return {
-            ...prev,
-            [key]: _err.message
-          }
-
-        })
-      })
+      if (errors?._validationError) {
+        setError(errors)
+      }
+      console.error(errors)
     }
 
     return hasError
@@ -81,7 +74,7 @@ const InputGroupComponent = ({ className, showTerms = false, onSubmit, title, bu
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError({} as Record<keyof InputGroupStateType, boolean>)
+    setError({} as Record<keyof InputGroupStateType, string>)
 
     const hasErrors = await validateInput()
     if (hasErrors) return

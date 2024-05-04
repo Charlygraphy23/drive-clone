@@ -1,6 +1,6 @@
 "use client"
 
-import ButtonGroup from "@/app/components/loginFlow/components/buttonGroup"
+import ButtonGroup from "@/app/components/buttonGroup"
 import { useRouter } from "next/navigation"
 import style from '../style.module.scss'
 

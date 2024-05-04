@@ -1,0 +1,11 @@
+.button {
+	width: 100%;
+	border-radius: 10px;
+	padding: 0.5rem;
+	background-color: black;
+	color: white;
+
+	&:is(:active) {
+		background-color: rgba(black, 0.8);
+	}
+}

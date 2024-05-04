@@ -1,4 +1,5 @@
-import { CreateDataType, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
+import { FilterQuery } from "mongoose";
+import { CreateDataType, DATA_TYPE, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
 
 const Model = FilesAndFolderModel
@@ -21,8 +22,28 @@ export class FilesAndFolderService {
         })
     }
 
-    async getFolders() {
-        return await Model.find({})
+    async getFolders(folderId?: string) {
+
+        const filter = {
+            dataType: DATA_TYPE.FOLDER
+        } as FilterQuery<FilesAndFolderSchemaType>;
+
+        if (folderId) {
+            filter.parentFolderId = folderId;
+        } else {
+            filter.$expr = {
+                $or: [
+                    {
+                        $eq: [{ $type: "$parentFolderId" }, "missing"]
+                    },
+                    {
+                        $lte: ["$parentFolderId", null]
+                    }
+                ]
+            }
+        }
+
+        return await Model.find(filter)
     }
 
     async findOne(filters: Partial<Record<keyof (FilesAndFolderSchemaType & { _id: string }), any>>) {

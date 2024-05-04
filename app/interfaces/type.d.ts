@@ -4,9 +4,14 @@
 import { DefaultSession } from "next-auth";
 import { UserSchemaType } from "../lib/database/interfaces/user.interface";
 
-declare module process.env {
-    export const MONGO_URL: string
-    export const NEXTAUTH_SECRET: string
+declare global {
+    namespace NodeJS {
+        interface ProcessEnv {
+            MONGO_URL: string
+            NEXTAUTH_SECRET: string
+            // add more environment variables and their types here
+        }
+    }
 }
 
 declare module 'next-auth' {

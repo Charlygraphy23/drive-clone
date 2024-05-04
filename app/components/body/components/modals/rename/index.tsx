@@ -1,9 +1,11 @@
 "use client";
 
+import ButtonGroup from "@/app/components/buttonGroup";
+import InputGroup from "@/app/components/inputGroup";
 import ModalComponent from "@/app/components/modal";
 import { RENAME_MODAL_ID } from "@/app/config/const";
 import { DATA_TYPE } from "@/app/interfaces/index.interface";
-import { useAppDispatch } from "@/app/store";
+import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
 	renameFile,
 	renameFolderAsync,
@@ -27,6 +29,8 @@ type Props = {
 
 const RenameModal = ({ isOpen, data }: Props) => {
 	const dispatch = useAppDispatch();
+	const { loading, error } = useAppSelector(state => state.folders);
+
 	const [name, setName] = useState<string>("");
 	const currName = useRef(name);
 
@@ -43,6 +47,11 @@ const RenameModal = ({ isOpen, data }: Props) => {
 		setName(value as string);
 	};
 
+	const resetModal = () => {
+		toggleModal(false);
+		setName("");
+	}
+
 	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setName(event.target.value);
 	};
@@ -50,16 +59,15 @@ const RenameModal = ({ isOpen, data }: Props) => {
 	const handleModalSubmit = (event: FormEvent) => {
 		event.preventDefault();
 
+		if (loading) return;
+
 		if (!name) return;
 
 		if (data && data.type === DATA_TYPE.FILE) {
 			dispatch(renameFile({ fileId: data?.fileId, name }));
 		} else {
-			dispatch(renameFolderAsync({ folderId: data?.folderId, updatedName: name }));
+			dispatch(renameFolderAsync({ folderId: data?.folderId, updatedName: name, reset: resetModal }));
 		}
-
-		toggleModal(false);
-		setName("");
 	};
 
 	useEffect(() => {
@@ -77,18 +85,23 @@ const RenameModal = ({ isOpen, data }: Props) => {
 					<ModalComponent.ButtonClose />
 				</h5>
 
-				<input type='text' value={name} onChange={onChange} />
+				<InputGroup type="text" value={name} onChange={onChange} className={style.inputWrapper} errorMessage={error} />
 
 				<div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
-					<button
+					<ButtonGroup
 						type='button'
-						className='button cancel me-3'
-						onClick={() => toggleModal(false)}>
-						cancel
-					</button>
-					<button type='submit' className='button submit'>
-						OK
-					</button>
+						className='cancel me-4'
+						handleSubmit={() => toggleModal(false)} submitText="cancel" />
+
+					<ButtonGroup
+						disabled={!name}
+						type='submit'
+						className={`${style.submit} submit`}
+						submitText="Ok"
+						loading={loading}
+						loader="spin"
+					/>
+
 				</div>
 			</form>
 		</ModalComponent>

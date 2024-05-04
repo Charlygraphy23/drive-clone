@@ -1,11 +1,9 @@
-import axios from "axios";
 import { CreateUser } from "../lib/database/interfaces/user.interface";
+import { axiosInstance } from "./http";
 
 export const signupApi = ({ email, firstName, lastName }: CreateUser) => {
-    return axios.post("/api/users/signup", {
+    return axiosInstance.post("/users/signup", {
         email, firstName, lastName
-    }, {
-        timeout: 30 * 1000
     })
 
 }

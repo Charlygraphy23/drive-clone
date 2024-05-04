@@ -1,3 +1,4 @@
+@use "/app/styles/variable.scss" as color;
 
 @mixin renameStyle {
 	display: flex;
@@ -16,6 +17,20 @@
 			font-size: 0.8rem;
 			box-shadow: none;
 			width: 20px;
+		}
+	}
+
+	.submit {
+		width: 100%;
+		max-width: 5em;
+		justify-content: center;
+	}
+
+	.inputWrapper {
+		border-radius: 6px;
+
+		&:focus-within {
+			outline: 2px solid rgba(color.$light-blue, 1);
 		}
 	}
 }

@@ -1,8 +1,10 @@
 import Home from "@app/page"
 
-const FolderPage = () => {
+const FolderPage = (props: {
+    params: { folderId: string }
+}) => {
     return (
-        <Home />
+        <Home folderId={props.params?.folderId} />
     )
 }
 
