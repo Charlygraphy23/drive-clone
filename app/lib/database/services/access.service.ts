@@ -42,7 +42,7 @@ export class AccessService {
                     rootId: access?._id,
                     createdFor: access?.createdFor,
                     accessType: access?.accessType,
-                    origin: access?.origin,
+                    origin: ACCESS_ORIGIN.PARENT,
                     resourceId,
                 }
             })

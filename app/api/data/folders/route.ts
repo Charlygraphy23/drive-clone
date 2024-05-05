@@ -33,16 +33,14 @@ export const GET = async (folderId?: string) => {
                 resourceId: folderId ?? ""
             })
 
-            if (!hasAccess) {
+            if (!hasAccess?.success) {
                 //TODO: redirect to another page not found / no permissions
                 return response.status(403).send("Unauthorized")
             }
         }
 
 
-        const folders = await service.getFolders(folderId, user.id)
-        console.log(JSON.stringify(folders))
-
+        const folders = await service.getFolders(user.id, folderId)
         return response.status(200).send({
             data: folders
         })
@@ -79,7 +77,7 @@ export const PATCH = async (req: NextRequest) => {
             accessType: ACCESS_TYPE.WRITE
         })
 
-        if (!hasAccess) {
+        if (!hasAccess?.success) {
             //TODO: redirect to another page not found / no permissions
             return response.status(403).send("Unauthorized")
         }
@@ -137,7 +135,7 @@ export const POST = async (req: NextRequest) => {
             accessType: ACCESS_TYPE.WRITE
         }, { session: mongoSession })
 
-        if (!hasAccess) {
+        if (!hasAccess?.success) {
             //TODO: redirect to another page not found / no permissions
             return response.status(403).send("Unauthorized")
         }

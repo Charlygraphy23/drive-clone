@@ -1,5 +1,5 @@
 import { FilterQuery, PipelineStage, SessionOption, Types } from "mongoose";
-import { AccessSchemaType } from "../interfaces/access.interface";
+import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
 import { AccessService } from "./access.service";
@@ -8,10 +8,19 @@ const Model = FilesAndFolderModel
 const accessService = new AccessService()
 export class ResourceService {
 
-    async checkAccess(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption) {
+    async checkAccess(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption): Promise<{ data: AccessDocumentType | null, success: boolean }> {
         console.log("Checking access....")
+
+        if (!filters.resourceId) {
+            // User accessing / creating resource from root path
+            return { data: null, success: true }
+        }
+        console.log(
+            "filters: " + filters
+        )
+
         const resourceExist = await Model.findById({ _id: filters.resourceId }, null, options)
-        if (!resourceExist) return null;
+        if (!resourceExist) return { data: null, success: false }
 
         if (resourceExist?.createdBy?.toString() === userId) {
             // If the resource owner wants to access the resources
@@ -20,9 +29,10 @@ export class ResourceService {
         }
         const hasAccess = await accessService.findByUser(userId, filters, options)
 
-        if (!hasAccess) return null
+        if (!hasAccess) return { data: null, success: false }
 
-        return hasAccess
+        return { data: hasAccess, success: true }
+
     }
 
     async findFolderByName(name: string, parentFolderId: string, options?: SessionOption) {
@@ -31,30 +41,6 @@ export class ResourceService {
             parentFolderId: parentFolderId ?? null
         }, null, options)
     }
-    // async parentFolderInfo(parentFolderId: string, options?: SessionOption) {
-    //     if (!parentFolderId) return null;
-
-    //     return await Model.aggregate([
-    //         {
-    //             $match: {
-    //                 _id : parentFolderId,
-    //             },
-
-    //             $lookup : {
-    //                 from : AccessModelName,
-    //                 let: {rootId : parentFolderId},
-    //                 pipeline : [
-    //                     {
-    //                         $match : {
-    //                             $expr : {$eq : ["$resourceId" , "$$rootId"]}
-    //                         }
-    //                     }
-    //                 ],
-    //                 as : "access"
-    //             }
-    //         }
-    //     ], options)
-    // }
     async createFolder(payload: CreateDataType, options?: SessionOption) {
         return await Model.create([{
             name: payload?.name,
@@ -65,7 +51,7 @@ export class ResourceService {
         }], options)
     }
 
-    async getFolders(folderId?: string, userId: string) {
+    async getFolders(userId: string, folderId?: string) {
 
         const initialQuery = {
             dataType: DATA_TYPE.FOLDER
@@ -85,9 +71,6 @@ export class ResourceService {
                 ]
             }
         }
-
-        // TODO; check which folder this user has access to
-
 
         const pipelines = [
 
@@ -152,8 +135,8 @@ export class ResourceService {
         return await Model.aggregate(pipelines)
     }
 
-    async findOne(filters: Partial<Record<keyof (FilesAndFolderSchemaType & { _id: string }), any>>) {
-        return await Model.findOne(filters)
+    async findOne(filters: Partial<Record<keyof (FilesAndFolderSchemaType & { _id: string }), any>>, options?: SessionOption) {
+        return await Model.findOne(filters, null, options)
     }
 
 
