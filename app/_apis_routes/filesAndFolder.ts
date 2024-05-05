@@ -7,9 +7,9 @@ export type UpdateFolderNamePayload = {
     folderId: string
 }
 
-export const addFolderApi = async ({ name, createdBy, type, parentFolderId }: { type: DATA_TYPE } & Pick<FilesAndFolderSchemaType, "name" | "createdBy" | "parentFolderId">) => {
+export const addFolderApi = async ({ name, type, parentFolderId }: { type: DATA_TYPE } & Pick<FilesAndFolderSchemaType, "name" | "parentFolderId">) => {
     const data = await axiosInstance.post("/data/folders", {
-        name, createdBy, type, parentFolderId
+        name, type, parentFolderId
     })
 
     return data?.data as {

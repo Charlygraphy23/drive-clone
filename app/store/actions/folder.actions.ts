@@ -21,7 +21,6 @@ export const addFolderAsync = createAsyncThunk<{ id: string, type: DATA_TYPE } &
 		const data = await addFolderApi({
 			name: payload.name,
 			type: DATA_TYPE.FOLDER,
-			createdBy: payload?.createdBy,
 			parentFolderId: payload?.parentFolderId
 		})
 

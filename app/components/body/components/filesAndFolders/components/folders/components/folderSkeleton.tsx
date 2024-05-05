@@ -13,14 +13,17 @@ type Props = {
 
 const FolderSkeleton = ({ data }: Props) => {
 	const store = useAppStore();
-	const handleRenameClient = () => {
+	const handleRenameClient = (e: React.MouseEvent<HTMLElement>) => {
+		e.stopPropagation()
+		e.preventDefault()
+
 		store.dispatch(
 			toggleModal({
 				isOpen: true,
 				data: {
 					folderId: data?._id,
 					type: DATA_TYPE.FOLDER,
-					value: data?.name,
+					value: data?.name ?? "",
 				},
 				name: "renameModal",
 			})

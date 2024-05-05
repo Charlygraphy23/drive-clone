@@ -14,13 +14,6 @@ export const MongoIdSchemaValidation = string().test({
 
 
 export const DataCreateSchemaValidator = object().shape({
-    createdBy: string().test({
-        name: "valid-mongodb-id",
-        message: "Invalid item ID",
-        test: (value) => {
-            return mongoose.Types.ObjectId.isValid(value ?? "");
-        },
-    }).required(),
     name: folderNameValidation,
     type: string().oneOf([DATA_TYPE.FILE, DATA_TYPE.FOLDER]).required(),
     parentFolderId: string().when("$parentFolderId", {
