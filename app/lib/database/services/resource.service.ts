@@ -139,9 +139,75 @@ export class ResourceService {
         return await Model.findOne(filters, null, options)
     }
 
+    async folderInfo(folderId: string, loggedUserId: string) {
+        const folderList = await Model.aggregate([
+            {
+                $match: {
+                    _id: new Types.ObjectId(folderId)
+                }
+            },
+
+            {
+                $addFields: {
+                    isOwner: {
+                        $cond: {
+                            if: {
+                                $eq: ["$createdBy", new Types.ObjectId(loggedUserId)]
+                            },
+                            then: true,
+                            else: false
+                        }
+                    }
+                }
+            },
+
+            {
+                $lookup: {
+                    from: "files_and_folders",
+                    let: { userId: "$createdBy" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$userId"] }
+                            }
+                        },
+
+                        {
+                            $project: {
+                                firstName: 1,
+                                lastName: 1,
+                                email: 1,
+                                imageUrl: 1
+                            }
+                        }
+                    ],
+                    as: "ownerInfo"
+                }
+            },
+
+            {
+                $unwind: {
+                    path: "$ownerInfo",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+
+
+
+            {
+                $project: {
+                    createdBy: 0,
+                }
+            }
+
+        ])
+
+        return folderList?.[0] ?? null
+    }
+
 
     async updateName(_id: string, name: string) {
-        return await Model.findOneAndUpdate({ _id }, { name })
+        return await Model.findOneAndUpdate({ _id }, { name, lastUpdate: new Date() })
     }
 
 }

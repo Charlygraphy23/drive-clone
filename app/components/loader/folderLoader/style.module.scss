@@ -1,55 +1,55 @@
-@use "../../body/components/filesAndFolders/style.module.scss" as folderCss;
+@use "../../body/components/resources/style.module.scss" as folderCss;
 
 .wrapper {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	grid-auto-rows: 50px;
-	column-count: auto;
-	gap: 10px;
-	margin: 2rem 0rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-auto-rows: 50px;
+  column-count: auto;
+  gap: 10px;
+  margin: 2rem 0rem;
 
-	.folderLoader {
-		@include folderCss.folderSkeletonBlock;
-		background-color: rgba(black, 0.05);
-		box-shadow: 0px 0px 30px rgba(black, 0.02);
-		position: relative;
-		overflow: hidden;
+  .folderLoader {
+    @include folderCss.folderSkeletonBlock;
+    background-color: rgba(black, 0.05);
+    box-shadow: 0px 0px 30px rgba(black, 0.02);
+    position: relative;
+    overflow: hidden;
 
-		&::after {
-			content: "";
-			position: absolute;
-			height: 100%;
-			width: 150%;
+    &::after {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: 150%;
 
-			background: rgb(255, 255, 255);
-			background: radial-gradient(
-				circle,
-				rgba(255, 255, 255, 0.6) 0%,
-				rgba(255, 255, 255, 0) 35%,
-				rgba(0, 212, 255, 0) 100%
-			);
+      background: rgb(255, 255, 255);
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.6) 0%,
+        rgba(255, 255, 255, 0) 35%,
+        rgba(0, 212, 255, 0) 100%
+      );
 
-			left: -70%;
-			top: 0;
-			animation: shimmer 1s ease-in-out infinite;
-		}
+      left: -70%;
+      top: 0;
+      animation: shimmer 1s ease-in-out infinite;
+    }
 
-		@for $i from 1 to 10 {
-			&:nth-child(#{$i}) {
-				&::after {
-					animation-delay: 10ms * $i;
-				}
-			}
-		}
-	}
+    @for $i from 1 to 10 {
+      &:nth-child(#{$i}) {
+        &::after {
+          animation-delay: 10ms * $i;
+        }
+      }
+    }
+  }
 }
 
 @keyframes shimmer {
-	0% {
-		left: -90%;
-	}
+  0% {
+    left: -90%;
+  }
 
-	100% {
-		left: 40%;
-	}
+  100% {
+    left: 40%;
+  }
 }

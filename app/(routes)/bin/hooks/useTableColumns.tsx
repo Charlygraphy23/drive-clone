@@ -1,5 +1,5 @@
-import OwnerSection from "@/app/components/body/components/filesAndFolders/components/ownerSection";
-import { OwnerAccessObject } from "@/app/components/body/components/filesAndFolders/interfaces/index.interface";
+import OwnerSection from "@/app/components/body/components/resources/components/ownerSection";
+import { OwnerAccessObject } from "@/app/components/body/components/resources/interfaces/index.interface";
 import { ColumnType } from "@/app/components/table/interfaces/index.interface";
 import { UseMutateFunction } from "@tanstack/react-query";
 import TableAction from "../components/tableAction";

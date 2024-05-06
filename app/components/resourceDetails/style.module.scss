@@ -1,0 +1,82 @@
+@use "/app/styles/variable.scss" as colors;
+
+.resourceInfo {
+  height: 100%;
+  padding-left: 1rem;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease-in width;
+
+  &.active {
+    width: clamp(250px, 30vw, 300px);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .body {
+    background-color: colors.$light-gray-color;
+    height: 100%;
+    border-radius: 20px;
+    padding: 1rem;
+
+    .header {
+      padding: 0.3rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: colors.$black-color;
+      user-select: none;
+
+      & > div {
+        i {
+          margin-right: 0.8rem;
+          color: colors.$gray-color;
+        }
+
+        span {
+          display: inline-block;
+          max-width: 100px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+      }
+
+      & > i {
+        font-size: 1.6rem;
+        cursor: pointer;
+      }
+    }
+
+    .preview {
+      height: 160px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 4rem;
+      color: colors.$gray-color;
+    }
+
+    .access {
+      p {
+        font-weight: bold;
+        color: colors.$black-color;
+        margin-bottom: 0;
+      }
+
+      .accessWrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0rem;
+      }
+
+      .manageAccess {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}

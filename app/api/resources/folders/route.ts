@@ -1,4 +1,4 @@
-import { UpdateFolderNamePayload } from "@/app/_apis_routes/filesAndFolder";
+import { UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
@@ -8,54 +8,14 @@ import { ApiResponse } from "@/app/utils/response";
 import { startSession } from "mongoose";
 import { getServerSession } from "next-auth/next";
 import { NextRequest } from "next/server";
-import { DataCreateSchemaValidator, MongoIdSchemaValidation, UpdateNamePayloadSchema } from "../../_validation/data.validation";
+import { DataCreateSchemaValidator, UpdateNamePayloadSchema } from "../../_validation/data.validation";
 
 const service = new ResourceService()
 const accessService = new AccessService()
-
-export const GET = async (folderId?: string) => {
-    const response = new ApiResponse()
-
-    try {
-        const session = await getServerSession(authOptions)
-
-        if (!session) return response.status(401).send("Unauthorized")
-        const user = session.user
-
-        await connectDB();
-
-        if (folderId) {
-            const isValidId = MongoIdSchemaValidation.isValid(folderId)
-
-            if (!isValidId) return response.status(422).send("Invalid folderId")
-
-            const hasAccess = await service.checkAccess(user.id, {
-                resourceId: folderId ?? ""
-            })
-
-            if (!hasAccess?.success) {
-                //TODO: redirect to another page not found / no permissions
-                return response.status(403).send("Unauthorized")
-            }
-        }
-
-
-        const folders = await service.getFolders(user.id, folderId)
-        return response.status(200).send({
-            data: folders
-        })
-
-    }
-    catch (_err: unknown) {
-        const err = _err as { message: string }
-        console.error("Error - ", err)
-        return response.status(500).send(err?.message)
-    }
-
-}
+const response = new ApiResponse()
 
 export const PATCH = async (req: NextRequest) => {
-    const response = new ApiResponse()
+
 
     try {
         const session = await getServerSession(authOptions)
@@ -106,7 +66,6 @@ export const PATCH = async (req: NextRequest) => {
 }
 
 export const POST = async (req: NextRequest) => {
-    const response = new ApiResponse()
     const mongoSession = await startSession()
 
     try {

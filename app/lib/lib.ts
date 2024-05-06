@@ -4,7 +4,7 @@ const passwordTypes = [
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     "abcdefghijklmnopqrstuvwxyz",
     "0123456789",
-    "!@#$%^&*()_+~\\`|}{[]:;?><,./-="
+    "@$!%*?&]=^}"
 ]
 
 export const comparePasswordWithHash = async (plainPassword: string, hashPassword: string) => {

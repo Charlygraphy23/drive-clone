@@ -1,4 +1,4 @@
-import { GET as getFolders } from "@/app/api/data/folders/route";
+import { GET as getFolders } from "@/app/api/resources/route";
 import EmptySection from "./components/emptySection";
 import FileSection from "./components/files";
 import FolderComponent from "./components/folders";
@@ -107,7 +107,6 @@ const data = {
 };
 
 async function fetchData(folderId?: string) {
-	console.log("folderId", folderId)
 	const dataset = await getFolders(folderId);
 	if (!dataset.ok) return []
 	const data = await dataset.json()
@@ -120,7 +119,7 @@ type Props = {
 }
 
 
-const FilesAndFolders = async ({ folderId }: Props) => {
+const Resources = async ({ folderId }: Props) => {
 	const folderData = await fetchData(folderId)
 
 	return (
@@ -134,4 +133,4 @@ const FilesAndFolders = async ({ folderId }: Props) => {
 	);
 };
 
-export default FilesAndFolders;
+export default Resources;

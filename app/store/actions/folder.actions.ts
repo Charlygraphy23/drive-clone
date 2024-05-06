@@ -1,4 +1,4 @@
-import { addFolderApi, updateFolderNameApi, UpdateFolderNamePayload } from "@/app/_apis_routes/filesAndFolder";
+import { addFolderApi, updateFolderNameApi, UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
 import { DATA_TYPE, FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { ErrorHandler } from "@/app/utils/index.utils";
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";

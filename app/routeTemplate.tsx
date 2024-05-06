@@ -1,6 +1,7 @@
-import React, { PropsWithChildren } from "react";
-import style from "./style.module.scss";
+import { PropsWithChildren } from "react";
+import ResourceDetails from "./components/resourceDetails";
 import Sidebar from "./components/sidebar";
+import style from "./style.module.scss";
 
 const RouteTemplate = ({ children }: PropsWithChildren) => {
 	return (
@@ -12,7 +13,12 @@ const RouteTemplate = ({ children }: PropsWithChildren) => {
 
 				<div className={style.body__wrapper}>
 					<div className={style?.body}>{children}</div>
+					<aside className={style?.info}>
+						<ResourceDetails />
+					</aside>
 				</div>
+
+
 			</div>
 		</main>
 	);

@@ -1,34 +1,65 @@
 @use "../../../../styles/variable.scss" as color;
 
 .hero {
-	margin-top: 3.5rem;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+  margin-top: 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-	h1 {
-		font-weight: 900;
-	}
+  h1 {
+    font-weight: 900;
+  }
 
-	.newButtonHandler {
-		&::after {
-			content: none;
-		}
+  .buttonGroup {
+    display: flex;
+    align-items: center;
 
-		button {
-			padding: 0.8em 2em;
-			font-size: 0.8rem;
-			border-radius: 50px;
-			background-color: color.$primary-color;
-			color: white;
-			border: none;
-			display: flex;
-			align-items: center;
+    .newButtonHandler {
+      &::after {
+        content: none;
+      }
 
-			i {
-				margin-right: 1.2rem;
-				font-size: 1.5em;
-			}
-		}
-	}
+      button {
+        padding: 0.8em 2em;
+        font-size: 0.8rem;
+        border-radius: 50px;
+        background-color: color.$primary-color;
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+
+        i {
+          margin-right: 1.2rem;
+          font-size: 1.5em;
+        }
+      }
+    }
+
+    .resourceInfo {
+      width: 2rem;
+      height: 2rem;
+      margin-left: 1rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0px;
+      border-radius: 50%;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.3s ease;
+      transition-property: background-color;
+
+      color: color.$black-color1;
+
+      &:hover {
+        background-color: rgba(color.$black-color1, 0.15);
+      }
+
+      &.active {
+        background-color: color.$icon-color;
+      }
+    }
+  }
 }

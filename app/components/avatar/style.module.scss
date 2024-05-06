@@ -1,0 +1,19 @@
+@use "/app/styles/variable.scss" as colors;
+
+.avatar {
+  .wrapper {
+    position: relative;
+    width: 2.5rem;
+    height: 2.5rem;
+
+    padding: 0.2em;
+    cursor: pointer;
+    border: 2px solid colors.$primary-color;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      object-fit: cover;
+    }
+  }
+}

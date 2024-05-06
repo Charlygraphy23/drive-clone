@@ -32,7 +32,7 @@ export type LoginFlowState = {
 }
 
 export const passwordYupValidation = string().required("Please enter password").min(8, "Password is too short - should be 8 chars minimum.")
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\]=])[A-Za-z\d@$!%*?&\]=]{8,}$/, 'Password must contain atleast 1 lowercase, 1 uppercase, 1 number and 1 special character.')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\]=^}])[A-Za-z\d@$!%*?&\]=^}]{8,}$/, 'Password must contain atleast 1 lowercase, 1 uppercase, 1 number and 1 special character.')
 
 
 export const EmailPasswordSchema = object().shape({

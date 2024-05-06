@@ -2,7 +2,7 @@ import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import mongoose from "mongoose";
 import { object, string } from "yup";
 
-const folderNameValidation = string().matches(/^[a-zA-Z\s\d]+$/, 'Field must contain only alphabetic characters').required()
+const folderNameValidation = string().matches(/^[a-zA-Z\s\d)(-_]+$/, 'Field must contain only alphabetic characters').required()
 
 export const MongoIdSchemaValidation = string().test({
     name: "valid-mongodb-id",

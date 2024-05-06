@@ -8,7 +8,7 @@ export type UpdateFolderNamePayload = {
 }
 
 export const addFolderApi = async ({ name, type, parentFolderId }: { type: DATA_TYPE } & Pick<FilesAndFolderSchemaType, "name" | "parentFolderId">) => {
-    const data = await axiosInstance.post("/data/folders", {
+    const data = await axiosInstance.post("/resources/folders", {
         name, type, parentFolderId
     })
 
@@ -19,6 +19,10 @@ export const addFolderApi = async ({ name, type, parentFolderId }: { type: DATA_
 }
 
 export const updateFolderNameApi = async (payload: UpdateFolderNamePayload) => {
-    return await axiosInstance.patch('/data/folders', payload)
+    return await axiosInstance.patch('/resources/folders', payload)
 }
 
+
+export const getFolderInfoByIdApi = async (folderId: string) => {
+    return await axiosInstance.get(`/resources/folders/${folderId}`)
+}
