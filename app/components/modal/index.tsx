@@ -38,6 +38,7 @@ const Modal = (props: Props) => {
 		if (!instance?.current) return;
 
 		isOpen ? instance?.current?.show() : instance?.current?.hide();
+
 	}, [isOpen]);
 
 	useEffect(() => {

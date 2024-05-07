@@ -129,7 +129,13 @@ export class ResourceService {
                     ...initialQuery,
                     hasAccess: true
                 }
-            }
+            },
+
+            {
+                $project: {
+                    hasAccess: 0,
+                }
+            },
         ] as PipelineStage[]
 
         return await Model.aggregate(pipelines)

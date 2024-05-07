@@ -9,23 +9,26 @@ import { FileAndFolderDatasetType } from "./interfaces/index.interface";
 
 type Props = {
 	data: FileAndFolderDatasetType;
+	id?: string | null
 } & PropsWithChildren;
 
-const FileAndFolderStateProvider = ({ children, data }: Props) => {
+const FileAndFolderStateProvider = ({ children, data, id }: Props) => {
+	const initializeData = useRef<string | null | undefined>(null);
+	const store = useAppStore()
+
+	if (initializeData?.current !== id) {
+		console.log("Before Initizing", id)
+		store.dispatch(addBulkFiles({ data: data?.files }))
+		store.dispatch(addBulkFolder({ data: data?.folders }))
+		initializeData.current = id
+	}
+
 	const {
 		renameModal,
 		newFolderModal,
 		data: modalState,
 	} = useAppSelector((state) => state.modals);
 
-	const initializeData = useRef<boolean>(false);
-	const store = useAppStore()
-
-	if (!initializeData?.current) {
-		store.dispatch(addBulkFiles({ data: data?.files }))
-		store.dispatch(addBulkFolder({ data: data?.folders }))
-		initializeData["current"] = true
-	}
 
 	return (
 		<Fragment>

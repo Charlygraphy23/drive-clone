@@ -2,7 +2,7 @@
 
 import MyDropdown from "@/app/components/dropdown";
 import { DATA_TYPE } from "@/app/interfaces/index.interface";
-import { useAppStore } from "@/app/store";
+import { useAppDispatch } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import style from "../../../style.module.scss";
@@ -12,12 +12,12 @@ type Props = {
 };
 
 const FolderSkeleton = ({ data }: Props) => {
-	const store = useAppStore();
+	const dispatch = useAppDispatch();
 	const handleRenameClient = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
 		e.preventDefault()
 
-		store.dispatch(
+		dispatch(
 			toggleModal({
 				isOpen: true,
 				data: {

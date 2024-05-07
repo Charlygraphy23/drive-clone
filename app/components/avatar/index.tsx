@@ -8,7 +8,7 @@ type Props = {
     height?: number
 }
 
-const AvatarComponent = ({ user, width, height }: Props) => {
+const AvatarComponent = ({ user: _user, width, height }: Props) => {
     return (
         <div className={style.avatar}>
             <div className={style.wrapper} style={{ width, height }}>

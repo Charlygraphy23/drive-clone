@@ -7,6 +7,7 @@ import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
 import { startSession } from "mongoose";
 import { getServerSession } from "next-auth/next";
+import { revalidatePath } from "next/cache";
 import { NextRequest } from "next/server";
 import { DataCreateSchemaValidator, UpdateNamePayloadSchema } from "../../_validation/data.validation";
 
@@ -53,6 +54,10 @@ export const PATCH = async (req: NextRequest) => {
         if (folderExistWithName) return response.status(422).send("Folder Exists with the name!")
 
         await service.updateName(folderId, updatedName)
+
+        console.log("Url ", req.nextUrl.searchParams.get("path"))
+
+        revalidatePath("/")
 
         return response.status(200).send("Updated")
 

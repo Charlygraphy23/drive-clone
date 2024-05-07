@@ -47,7 +47,6 @@ export const renameFolderAsync = createAsyncThunk<{ _id: string, updatedName: st
 		if (payload?.reset) {
 			payload?.reset()
 		}
-
 		return {
 			_id: payload?.folderId,
 			updatedName: payload?.updatedName
