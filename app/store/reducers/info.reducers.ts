@@ -1,11 +1,12 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { getFolderInfoAsync, ResourceInfoDataType, toggleInfo } from "../actions/info.actions";
+import { clearSelectedFolderId, getFolderInfoAsync, ResourceInfoDataType, toggleInfo } from "../actions/info.actions";
 
 const initialState = {
     loading: false,
-    data: {} as ResourceInfoDataType,
+    data: {} as Record<string, ResourceInfoDataType>,
     error: "",
-    show: false
+    show: false,
+    selectedFolderId: ""
 };
 
 
@@ -19,14 +20,20 @@ export default createReducer(initialState, (builder) => {
             return state
         })
         .addCase(getFolderInfoAsync.fulfilled, (state, action) => {
+            const ID = action.payload._id
             state.loading = false;
             state.error = "";
-            state.data = action.payload
+            state.data[ID] = action.payload
+            state.selectedFolderId = ID
             return state;
         })
         .addCase(getFolderInfoAsync.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error?.message ?? "";
+            return state;
+        })
+        .addCase(clearSelectedFolderId, (state) => {
+            state.selectedFolderId = ""
             return state;
         })
         .addCase(toggleInfo, (state) => {

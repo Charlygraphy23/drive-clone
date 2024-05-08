@@ -10,14 +10,14 @@ import { NextRequest } from "next/server"
 const response = new ApiResponse()
 const service = new ResourceService()
 
-export const GET = async (req: NextRequest) => {
+export const GET = async (req: NextRequest, { params }: { params: { folderId: string } }) => {
     try {
         const session = await getServerSession(authOptions)
 
         if (!session) return response.status(401).send("Unauthorized")
         const user = session.user
 
-        const folderId = req.nextUrl.searchParams.get("folderId");
+        const folderId = params?.folderId;
 
         if (!folderId) return response.status(422).send("Please provide a folder ID");
 

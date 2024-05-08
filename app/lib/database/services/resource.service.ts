@@ -169,7 +169,7 @@ export class ResourceService {
 
             {
                 $lookup: {
-                    from: "files_and_folders",
+                    from: "users",
                     let: { userId: "$createdBy" },
                     pipeline: [
                         {

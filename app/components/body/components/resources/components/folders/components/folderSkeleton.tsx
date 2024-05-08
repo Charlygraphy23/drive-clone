@@ -5,14 +5,21 @@ import { DATA_TYPE } from "@/app/interfaces/index.interface";
 import { useAppDispatch } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import style from "../../../style.module.scss";
 
 type Props = {
 	data: FolderDataType;
+	isSelected?: boolean;
+	href: string
+	onClick: (_id: string, _e: React.MouseEvent<HTMLDivElement>,) => void
+	clearState: () => void
 };
 
-const FolderSkeleton = ({ data }: Props) => {
+const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) => {
 	const dispatch = useAppDispatch();
+	const router = useRouter()
 	const handleRenameClient = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
 		e.preventDefault()
@@ -29,9 +36,42 @@ const FolderSkeleton = ({ data }: Props) => {
 			})
 		);
 	};
+	const ref = useRef<HTMLDivElement>(null)
+
+
+	const onDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.preventDefault()
+		router.push(href)
+	}
+
+	const onSingleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		if (isSelected) return onDoubleClick(e)
+		onClick(data?._id, e,)
+	}
+
+
+	useEffect(() => {
+		function checkClick(e: MouseEvent) {
+			if (!ref.current) return;
+
+			const target = e.target as any
+			const Id = target?.id
+			const shouldReset = !ref?.current.contains(target as Node) && (!["resource-info"].includes(Id))
+			if (shouldReset) {
+				clearState()
+			}
+		}
+
+		document.addEventListener("click", checkClick)
+		return () => {
+			document.removeEventListener("click", checkClick)
+		}
+	}, [clearState])
 
 	return (
-		<div className={style.skeleton}>
+		<div ref={ref} className={`${style.skeleton} ${isSelected ? style.selected : ""}`}
+			onDoubleClick={onDoubleClick}
+			onClick={onSingleClick}>
 			<div className={`${style.label} d-flex`}>
 				<i className='bi bi-folder-fill'></i>
 				<p>{data?.name}</p>
