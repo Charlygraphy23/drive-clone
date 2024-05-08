@@ -1,0 +1,12 @@
+@use "/app/styles/mixins.scss" as mixins;
+
+.wrapper {
+  margin: 2rem 0;
+
+  .box {
+    @include mixins.shimmerEffect(rgba(black, 0.05));
+    height: 20px;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+  }
+}

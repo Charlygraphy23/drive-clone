@@ -7,7 +7,7 @@
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: 0.3s ease-in width;
+  transition: 0.3s ease-out width;
 
   &.active {
     width: clamp(250px, 30vw, 300px);
@@ -19,7 +19,10 @@
     background-color: colors.$light-gray-color;
     height: 100%;
     border-radius: 20px;
-    padding: 1rem;
+    // padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 
     .header {
       padding: 0.3rem 1rem;
@@ -28,6 +31,7 @@
       align-items: center;
       color: colors.$black-color;
       user-select: none;
+      padding: 1rem;
 
       & > div {
         i {
@@ -50,32 +54,67 @@
       }
     }
 
-    .preview {
-      height: 160px;
+    .scrollable {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 4rem;
-      color: colors.$gray-color;
-    }
+      flex-direction: column;
+      overflow: auto;
+      height: 100%;
+      padding: 0rem 1rem;
 
-    .access {
-      p {
+      .preview {
+        height: 160px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 4rem;
+        color: colors.$gray-color;
+      }
+
+      .headline {
         font-weight: bold;
         color: colors.$black-color;
         margin-bottom: 0;
       }
 
-      .accessWrapper {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin: 1rem 0rem;
+      .access {
+        .accessWrapper {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin: 1rem 0rem;
+
+          .avatar {
+            & > div {
+              width: 2rem;
+              height: 2rem;
+              cursor: default;
+            }
+          }
+        }
+
+        .manageAccess {
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+        }
       }
 
-      .manageAccess {
+      .details {
+        display: flex;
+        flex-direction: column;
         margin-top: 2rem;
-        margin-bottom: 1rem;
+
+        & > div {
+          margin-bottom: 1rem;
+          p {
+            margin-bottom: 0px;
+            font-size: 0.8rem;
+            font-weight: 500;
+          }
+
+          span {
+            color: colors.$gray-color;
+          }
+        }
       }
     }
   }

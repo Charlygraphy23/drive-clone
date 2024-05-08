@@ -6,11 +6,12 @@ type Props = {
     user?: Pick<User, "_id" | "firstName" | "lastName" | "image">,
     width?: number
     height?: number
+    className?: string
 }
 
-const AvatarComponent = ({ user: _user, width, height }: Props) => {
+const AvatarComponent = ({ user: _user, width, height, className = "" }: Props) => {
     return (
-        <div className={style.avatar}>
+        <div className={`${style.avatar} ${className}`}>
             <div className={style.wrapper} style={{ width, height }}>
                 <Image
                     src='https://images.pexels.com/photos/18489099/pexels-photo-18489099/free-photo-of-man-in-white-shirt-with-book-in-hands.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load'

@@ -7,6 +7,7 @@ import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 export type ResourceInfoDataType = {
     isOwner: boolean;
     ownerInfo: Pick<UserSchemaType, "firstName" | "lastName" | "email" | "imageUrl">
+    createdAt: string
 } & Omit<FilesAndFolderSchemaType, "createdBy">
 
 export const toggleInfo = createAction("showInfo")

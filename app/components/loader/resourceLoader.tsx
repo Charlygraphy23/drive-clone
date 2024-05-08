@@ -1,8 +1,7 @@
 import FileLoader from "./fileLoader";
 import FolderLoader from "./folderLoader";
 
-const FileAndFolderLoader = () => {
-	console.log("LOADER CALL")
+const ResourceLoader = () => {
 	return (
 		<>
 			<FolderLoader />
@@ -11,4 +10,4 @@ const FileAndFolderLoader = () => {
 	);
 };
 
-export default FileAndFolderLoader;
+export default ResourceLoader;

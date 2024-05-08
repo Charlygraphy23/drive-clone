@@ -34,7 +34,7 @@ const schema = new mongoose.Schema<AccessSchemaType>({
         type: Types.ObjectId,
         ref: DATA_MODEL,
         index: true,
-    }
+    },
 
 }, { timestamps: true })
 

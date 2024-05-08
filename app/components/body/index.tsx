@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import HeaderComponent from "../header";
-import FileAndFolderLoader from "../loader/fileAndFolderLoader";
+import ResourceLoader from "../loader/resourceLoader";
 import HeroComponent from "./components/hero";
 import Resources from "./components/resources";
 
@@ -14,7 +14,7 @@ const BodyComponent = ({ folderId }: Props) => {
 		<>
 			<HeaderComponent />
 			<HeroComponent />
-			<Suspense fallback={<FileAndFolderLoader />}>
+			<Suspense fallback={<ResourceLoader />}>
 				<Resources folderId={folderId} />
 			</Suspense>
 		</>
