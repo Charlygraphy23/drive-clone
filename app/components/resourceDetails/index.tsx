@@ -22,7 +22,7 @@ const ResourceDetails = () => {
     return (
 
         <section className={`${style.resourceInfo} ${show ? style.active : ""}`}>
-            {loading ? <ResourceInfoLoader /> : <div className={style.body}>
+            <div className={style.body}>
                 <div className={style.header}>
                     <div className="d-flex align-items-center">
                         <i className="bi bi-folder-fill"></i>
@@ -32,7 +32,7 @@ const ResourceDetails = () => {
                     <i className="bi bi-x" onClick={toggleResourceInfo}></i>
                 </div>
 
-                <div className={style.scrollable}>
+                {loading ? <ResourceInfoLoader /> : <div className={style.scrollable}>
 
                     <div className={style.preview}>
                         <i className="bi bi-folder-fill"></i>
@@ -68,8 +68,8 @@ const ResourceDetails = () => {
                             <span>{data.createdAt && new Date(folderInfo?.createdAt).toLocaleDateString()}</span>
                         </div>
                     </section>
-                </div>
-            </div>}
+                </div>}
+            </div>
         </section>
 
     )
