@@ -1,5 +1,7 @@
 import { User } from 'next-auth'
 import Image from 'next/image'
+import { useMemo } from 'react'
+import { Rings } from 'react-loader-spinner'
 import style from "./style.module.scss"
 
 type Props = {
@@ -7,17 +9,35 @@ type Props = {
     width?: number
     height?: number
     className?: string
+    isLoading?: boolean
 }
 
-const AvatarComponent = ({ user: _user, width, height, className = "" }: Props) => {
+const AvatarComponent = ({ user: _user, width, height, className = "", isLoading = false }: Props) => {
+
+    const firstWord = useMemo(() => {
+        return `${_user?.firstName?.charAt(0)}${_user?.lastName?.charAt(0)}`
+    }, [_user])
+
     return (
         <div className={`${style.avatar} ${className}`}>
             <div className={style.wrapper} style={{ width, height }}>
-                <Image
-                    src='https://images.pexels.com/photos/18489099/pexels-photo-18489099/free-photo-of-man-in-white-shirt-with-book-in-hands.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load'
-                    alt='avatar-image'
-                    fill={true}
-                />
+                {
+                    !isLoading ? <>
+                        {_user?.image && <Image
+                            src={_user?.image}
+                            alt='avatar-image'
+                            fill={true}
+                        />}
+
+                        <p>{firstWord?.[0] + firstWord[1]}</p></>
+                        : <div className="d-flex w-100 justify-content-center align-items-center">
+                            <Rings
+                                height="30"
+                                width="20"
+                                color="black"
+                            />
+                        </div>
+                }
             </div>
         </div>
     )

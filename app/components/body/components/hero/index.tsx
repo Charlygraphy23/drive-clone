@@ -20,7 +20,7 @@ const HeroComponent = () => {
 
 			<div className={style.buttonGroup}>
 				<NewButtonComponent />
-				<div id="resource-info" className={`${style.resourceInfo} ${show ? style.active : ""}`} onClick={toggleResourceInfo}>
+				<div id="resource-info-button" className={`${style.resourceInfo} ${show ? style.active : ""}`} onClick={toggleResourceInfo}>
 					<i className="bi bi-info-circle"></i>
 				</div>
 			</div>

@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import style from "../../../style.module.scss";
 
 type Props = {
@@ -49,14 +49,30 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 		onClick(data?._id, e,)
 	}
 
+	const findElements = useCallback((target: Node) => {
+		const IDs = ["resource-info-button", "resource-info"]
+
+		const hasElement = IDs.reduce((prev, Id) => {
+			const element = document.getElementById(Id)
+			const isContains = element?.contains(target)
+			if (isContains) return true;
+			if (prev) return prev;
+
+			return false;
+		}, false)
+
+
+		return hasElement
+	}, [])
+
 
 	useEffect(() => {
 		function checkClick(e: MouseEvent) {
 			if (!ref.current) return;
 
 			const target = e.target as any
-			const Id = target?.id
-			const shouldReset = !ref?.current.contains(target as Node) && (!["resource-info"].includes(Id))
+			const hasElement = findElements(target as Node)
+			const shouldReset = !ref?.current.contains(target as Node) && !hasElement
 			if (shouldReset) {
 				clearState()
 			}

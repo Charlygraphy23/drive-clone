@@ -1,10 +1,11 @@
 "use client";
 
+import EmptyInfoAnimation from '@/app/assets/empty-info.json';
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { toggleInfo } from "@/app/store/actions/info.actions";
-import AvatarComponent from "../avatar";
-import ButtonGroup from "../buttonGroup";
 import ResourceInfoLoader from "../loader/resourceInfloLoader";
+import LottiePlayer from "../lottiePlayer";
+import ResourceBody from './components/resourceBody';
 import style from './style.module.scss';
 
 
@@ -20,55 +21,19 @@ const ResourceDetails = () => {
 
 
     return (
-
-        <section className={`${style.resourceInfo} ${show ? style.active : ""}`}>
+        <section id="resource-info" className={`${style.resourceInfo} ${show ? style.active : ""}`}>
             <div className={style.body}>
                 <div className={style.header}>
                     <div className="d-flex align-items-center">
                         <i className="bi bi-folder-fill"></i>
-                        <span>Backenddasdasdasdasd</span>
+                        <span>{folderInfo?.name}</span>
                     </div>
 
                     <i className="bi bi-x" onClick={toggleResourceInfo}></i>
                 </div>
-
-                {loading ? <ResourceInfoLoader /> : <div className={style.scrollable}>
-
-                    <div className={style.preview}>
-                        <i className="bi bi-folder-fill"></i>
-                    </div>
-
-
-
-                    <section className={style.access}>
-                        <p className={style.headline}>Who has access</p>
-
-                        <div className={style.accessWrapper}>
-                            {Array(7).fill(0).map((_, i) => <AvatarComponent className={style.avatar} key={i} />)}
-                        </div>
-
-                        <ButtonGroup className={style.manageAccess} submitText="Manage access" />
-                    </section>
-
-                    <section className={style.details}>
-                        <p className={`${style.headline} mb-2`}>Folder Details</p>
-
-                        <div>
-                            <p>Owner</p>
-                            <span>{data.isOwner ? "me" : folderInfo?.ownerInfo?.firstName}</span>
-                        </div>
-
-                        <div>
-                            <p>Modified</p>
-                            <span>{data.lastModified && new Date(folderInfo?.lastModified ?? "").toLocaleDateString()}</span>
-                        </div>
-
-                        <div>
-                            <p>Created</p>
-                            <span>{data.createdAt && new Date(folderInfo?.createdAt).toLocaleDateString()}</span>
-                        </div>
-                    </section>
-                </div>}
+                {loading ? <ResourceInfoLoader /> : !folderInfo ? <div className="w-100 d-flex justify-content-center align-items-center mt-4">
+                    <LottiePlayer animationData={EmptyInfoAnimation} loop width={200} height={200} />
+                </div> : <ResourceBody />}
             </div>
         </section>
 
@@ -76,3 +41,5 @@ const ResourceDetails = () => {
 }
 
 export default ResourceDetails
+
+

@@ -204,7 +204,61 @@ export class ResourceService {
                 $project: {
                     createdBy: 0,
                 }
-            }
+            },
+
+            {
+                $lookup: {
+                    from: "accesses",
+                    let: { folderId: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$resourceId", "$$folderId"] }
+                            }
+                        },
+
+                        {
+                            $lookup: {
+                                from: "users",
+                                let: { userId: "$createdFor" },
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            $expr: { $eq: ["$_id", "$$userId"] }
+                                        }
+                                    },
+
+                                    {
+                                        $project: {
+                                            firstName: 1,
+                                            lastName: 1,
+                                            email: 1,
+                                            imageUrl: 1
+                                        }
+                                    }
+                                ],
+                                as: "userInfo"
+                            }
+                        },
+
+                        {
+                            $unwind: {
+                                path: "$userInfo",
+                                preserveNullAndEmptyArrays: true
+                            }
+                        },
+
+                        {
+                            $project: {
+                                createdFor: 0
+                            }
+                        }
+
+
+                    ],
+                    as: "accessList"
+                }
+            },
 
         ])
 
