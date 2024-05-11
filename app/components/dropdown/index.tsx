@@ -1,8 +1,8 @@
 import React, { PropsWithChildren } from "react";
-import DropdownMenu from "./components/dropdownMenu";
 import DropdownList from "./components/dropdownList";
-import style from "./style.module.scss";
+import DropdownMenu from "./components/dropdownMenu";
 import { HandlerType } from "./interfaces/index.interface";
+import style from "./style.module.scss";
 
 type Props = {
 	className?: string;
@@ -15,10 +15,12 @@ const MyDropdown = ({ className = "", children, handler, showIcon }: Props) => {
 	return (
 		<div className={`${className} ${style.dropdown} dropdown`}>
 			<div
-				className={`dropdown-toggle ${style.toggle} ${
-					showIcon ? style?.showIcon : ""
-				} ${handler?.className}`}
-				data-bs-toggle='dropdown'>
+				className={`dropdown-toggle ${style.toggle} ${showIcon ? style?.showIcon : ""
+					} ${handler?.className}`}
+				data-bs-toggle='dropdown' onClick={e => {
+					e.preventDefault()
+					e.stopPropagation()
+				}}>
 				{handler?.render ? handler?.render() : "Dropdown handler"}
 			</div>
 			{children}

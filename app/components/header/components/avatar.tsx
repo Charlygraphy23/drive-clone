@@ -24,10 +24,10 @@ const TopBarAvatar = () => {
 		<MyDropdown
 			handler={{
 				render: () => <AvatarComponent isLoading={session.status === "loading"} user={{
-					_id: user?.id ?? "",
+					_id: user?._id ?? "",
 					firstName: user?.firstName ?? "",
 					lastName: user?.lastName ?? "",
-					image: user?.image
+					image: user?.imageUrl
 				}} />,
 			}}>
 			<MyDropdown.Menu>

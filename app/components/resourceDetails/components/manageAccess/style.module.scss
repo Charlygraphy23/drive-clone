@@ -1,0 +1,83 @@
+@use "/app/styles/variable.scss" as color;
+
+.manageAccess {
+	.header {
+		display: flex;
+		align-items: center;
+
+		p {
+			margin: 0;
+			flex: 1;
+			width: 100%;
+			font-size: 1.3rem;
+		}
+
+		button {
+			width: fit-content;
+		}
+	}
+
+	.select {
+		margin-top: 1.5rem;
+
+		& > div {
+			border-radius: 5px;
+			border-color: color.$primary-color;
+		}
+	}
+
+	.selectedUsers {
+		margin-top: 1.2rem;
+		max-height: 300px;
+		overflow: auto;
+
+		.selectedUsersContainer {
+			display: flex;
+			align-items: center;
+			margin-top: 1rem;
+
+			.avatar {
+				font-size: 0.8rem;
+			}
+
+			.selectedUsersWrapper {
+				display: flex;
+				flex: 1;
+				align-items: center;
+				margin-left: 1rem;
+
+				.info {
+					display: flex;
+					flex-direction: column;
+					flex: 1;
+					font-size: 0.9rem;
+
+					p {
+						margin: 0;
+						font-weight: 500;
+						line-height: 20px;
+					}
+					span {
+						color: rgba(color.$gray-color, 0.6);
+					}
+				}
+
+				.selectAccess {
+					height: 40px;
+					width: 100px;
+
+					& > div {
+						border-radius: 3px;
+					}
+				}
+			}
+		}
+	}
+
+	.submit {
+		width: fit-content;
+		background-color: color.$primary-color;
+		font-size: 0.9rem;
+		width: 4rem;
+	}
+}

@@ -26,7 +26,7 @@ export const GET = async (req: NextRequest, { params }: { params: { folderId: st
 
         await connectDB();
 
-        const hasAccess = await service.checkAccess(user.id, {
+        const hasAccess = await service.checkAccess(String(user._id), {
             resourceId: folderId ?? "",
         })
 
@@ -35,7 +35,7 @@ export const GET = async (req: NextRequest, { params }: { params: { folderId: st
             return response.status(403).send("Unauthorized")
         }
 
-        const data = await service.folderInfo(folderId, user.id)
+        const data = await service.folderInfo(folderId, String(user._id))
 
         return response.status(200).send({
             data

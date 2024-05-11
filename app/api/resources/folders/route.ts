@@ -33,7 +33,7 @@ export const PATCH = async (req: NextRequest) => {
 
         await connectDB();
 
-        const hasAccess = await service.checkAccess(user.id, {
+        const hasAccess = await service.checkAccess(String(user._id), {
             resourceId: folderId ?? "",
             accessType: ACCESS_TYPE.WRITE
         })
@@ -94,7 +94,7 @@ export const POST = async (req: NextRequest) => {
         await connectDB();
         mongoSession.startTransaction()
 
-        const hasAccess = await service.checkAccess(user.id, {
+        const hasAccess = await service.checkAccess(String(user._id), {
             resourceId: parentFolderId ?? "",
             accessType: ACCESS_TYPE.WRITE
         }, { session: mongoSession })
@@ -110,14 +110,14 @@ export const POST = async (req: NextRequest) => {
 
         const [res] = await service.createFolder({
             name,
-            createdBy: user.id,
+            createdBy: String(user._id),
             type,
             parentFolderId
         }, { session: mongoSession })
 
         const folderInfo = res?.toJSON()
         await accessService.createWithParent({
-            userId: user.id, parentFolderId, resourceId: folderInfo?._id
+            userId: String(user._id), parentFolderId, resourceId: folderInfo?._id
         }, { session: mongoSession })
 
         await mongoSession.commitTransaction()

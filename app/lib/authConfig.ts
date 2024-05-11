@@ -36,9 +36,9 @@ export const authOptions: AuthOptions = {
                     if (!matchedPassword) return null;
 
                     return {
-                        id: user?._id,
+                        _id: user?._id,
                         email: user?.email,
-                        image: user?.imageUrl,
+                        imageUrl: user?.imageUrl,
                         name: `${user?.firstName} ${user?.lastName}`,
                         loginType: user?.loginType,
                         firstName: user?.firstName,

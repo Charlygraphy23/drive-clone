@@ -60,7 +60,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 		const folderId = params?.folderId as string ?? null
 
 		dispatch(addFolderAsync({
-			name, createdBy: user?.id ?? "", reset: resetState,
+			name, createdBy: String(user?._id) ?? "", reset: resetState,
 			parentFolderId: folderId
 		}));
 	};

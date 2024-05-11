@@ -1,12 +1,34 @@
-import { useAppSelector } from '@/app/store'
+"use client"
+
+import { useAppDispatch, useAppSelector } from '@/app/store'
+import {
+    toggleModal as toggleModalState
+} from "@/app/store/actions"
 import AvatarComponent from '../../avatar'
 import ButtonGroup from '../../buttonGroup'
 import style from '../style.module.scss'
+import ManageAccess from './manageAccess'
 
 
 const ResourceBody = () => {
     const { data, selectedFolderId } = useAppSelector(state => state?.resourceInfo)
+    const dispatch = useAppDispatch()
     const folderInfo = data?.[selectedFolderId]
+
+
+    const toggleModal = () => {
+        dispatch(
+            toggleModalState({
+                isOpen: true,
+                name: "manageAccessModal",
+                data: {
+                    type: null,
+                    value: selectedFolderId
+                }
+            })
+        );
+    };
+
 
     return (
         <div className={style.scrollable}>
@@ -30,7 +52,7 @@ const ResourceBody = () => {
                         }} />)}
                 </div>
 
-                <ButtonGroup className={style.manageAccess} submitText="Manage access" />
+                <ButtonGroup className={style.manageAccess} submitText="Manage access" handleSubmit={toggleModal} />
             </section>
 
             <section className={style.details}>
@@ -51,6 +73,8 @@ const ResourceBody = () => {
                     <span>{folderInfo?.createdAt && new Date(folderInfo?.createdAt).toLocaleDateString()}</span>
                 </div>
             </section>
+
+            <ManageAccess />
         </div>
     )
 }

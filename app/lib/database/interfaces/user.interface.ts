@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 
 export enum LoginType {
@@ -7,15 +7,15 @@ export enum LoginType {
 }
 
 export interface UserSchemaType {
-    _id: ObjectId | string;
+    _id: Types.ObjectId | string;
     firstName: string;
     lastName: string;
     email: string;
     password?: string;
-    loginType: LoginType
-    createdAt: Date | string;
-    updatedAt: Date | string;
-    imageUrl: string;
+    loginType?: LoginType
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    imageUrl?: string;
 }
 
 export interface UserSchemaDocument extends UserSchemaType, Document { }

@@ -16,10 +16,10 @@ declare global {
 
 declare module 'next-auth' {
     interface Session {
-        user: { id: string } & Omit<UserSchemaType, "imageUrl" | "_id"> & DefaultSession['user'];
+        user: UserSchemaType & Omit<DefaultSession['user'], 'image'>;
     }
 
-    interface User extends Omit<UserSchemaType, "imageUrl"> { }
+    interface User extends UserSchemaType { }
 
     interface JWT {
         user: User

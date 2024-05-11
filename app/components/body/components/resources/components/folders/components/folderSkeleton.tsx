@@ -20,6 +20,9 @@ type Props = {
 const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) => {
 	const dispatch = useAppDispatch();
 	const router = useRouter()
+	const ref = useRef<HTMLDivElement>(null)
+
+
 	const handleRenameClient = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
 		e.preventDefault()
@@ -36,8 +39,6 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 			})
 		);
 	};
-	const ref = useRef<HTMLDivElement>(null)
-
 
 	const onDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.preventDefault()
@@ -50,9 +51,10 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 	}
 
 	const findElements = useCallback((target: Node) => {
-		const IDs = ["resource-info-button", "resource-info"]
+		const IDs = ["resource-info-button", "resource-info", "more-option"]
+		const classes = [".ant-select-dropdown"]
 
-		const hasElement = IDs.reduce((prev, Id) => {
+		const hasElementWithId = IDs.reduce((prev, Id) => {
 			const element = document.getElementById(Id)
 			const isContains = element?.contains(target)
 			if (isContains) return true;
@@ -61,8 +63,18 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 			return false;
 		}, false)
 
+		const hasElementWithClass = classes.reduce((prev, Id) => {
+			const element = document.querySelector(Id)
+			const isContains = element?.contains(target)
+			if (isContains) return true;
+			if (prev) return prev;
 
-		return hasElement
+			return false;
+		}, false)
+
+
+
+		return hasElementWithId || hasElementWithClass
 	}, [])
 
 
@@ -82,7 +94,7 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 		return () => {
 			document.removeEventListener("click", checkClick)
 		}
-	}, [clearState])
+	}, [clearState, findElements])
 
 	return (
 		<div ref={ref} className={`${style.skeleton} ${isSelected ? style.selected : ""}`}
@@ -97,7 +109,10 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 				className={style.dropdown}
 				handler={{
 					className: style.dropdownItem,
-					render: () => <i className='bi bi-three-dots-vertical'></i>,
+					render: () => <i id="more-option" className='bi bi-three-dots-vertical' onClick={e => {
+						e.preventDefault()
+						e.stopPropagation()
+					}}></i>,
 				}}>
 				<MyDropdown.Menu>
 					<MyDropdown.List className='d-flex' onClick={handleRenameClient}>

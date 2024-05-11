@@ -2,15 +2,16 @@ import { DATA_TYPE } from "@/app/interfaces/index.interface";
 import { createReducer } from "@reduxjs/toolkit";
 import { toggleModal } from "../actions";
 
-export type ModalDataType = { value: string } & (
-	| {
+export type ModalDataType = { value: string } & Record<string, any> & (
+	| ({
 		fileId: string;
 		type: DATA_TYPE.FILE;
-	}
-	| {
+	} | {
 		folderId: string;
 		type: DATA_TYPE.FOLDER;
-	}
+	} | {
+		type: null;
+	})
 );
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
 	newFolderModal: false,
 	confirmModal: false,
 	changePasswordModal: false,
+	manageAccessModal: false,
 	data: {} as ModalDataType,
 };
 

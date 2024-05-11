@@ -20,7 +20,7 @@ export const getResources = async (folderId?: string) => {
 
             if (!isValidId) return { message: "Invalid folderId", status: 422 };
 
-            const hasAccess = await service.checkAccess(user.id, {
+            const hasAccess = await service.checkAccess(String(user._id), {
                 resourceId: folderId ?? ""
             })
 
@@ -31,7 +31,7 @@ export const getResources = async (folderId?: string) => {
         }
 
 
-        const folders = await service.getFolders(user.id, folderId)
+        const folders = await service.getFolders(String(user._id), folderId)
 
         return { message: "Un-authorized", status: 200, data: folders };
 
