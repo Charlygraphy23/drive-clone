@@ -1,6 +1,6 @@
 import { FilterQuery, PipelineStage, SessionOption, Types } from "mongoose";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
-import { CreateDataType, DATA_TYPE, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
+import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
 import { AccessService } from "./access.service";
 
@@ -8,7 +8,7 @@ const Model = FilesAndFolderModel
 const accessService = new AccessService()
 export class ResourceService {
 
-    async checkAccess(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption): Promise<{ data: AccessDocumentType | null, success: boolean }> {
+    async checkAccess(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption): Promise<{ data: AccessDocumentType | null, success: boolean, resource?: FilesAndFolderDocument | null }> {
         console.log("Checking access....")
 
         if (!filters.resourceId) {
@@ -31,7 +31,7 @@ export class ResourceService {
 
         if (!hasAccess) return { data: null, success: false }
 
-        return { data: hasAccess, success: true }
+        return { data: hasAccess, success: true, resource: resourceExist }
 
     }
 

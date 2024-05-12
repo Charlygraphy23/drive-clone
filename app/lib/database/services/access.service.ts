@@ -2,12 +2,13 @@
 
 import { AccessModal } from "@app/lib/database/models/access"
 import { ObjectId, SessionOption } from "mongoose"
-import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType, CreateWithParentType } from "../interfaces/access.interface"
+import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType, CreateAccess, CreateWithParentType } from "../interfaces/access.interface"
 
 const Model = AccessModal
 
 export class AccessService {
 
+    // createdFor + resourceId
     async findByUser(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption) {
         if (!userId || !filters?.resourceId) return null
         return await Model.findOne({ ...filters, createdFor: userId }, null, options)
@@ -50,5 +51,20 @@ export class AccessService {
 
         return await Model.create(accessData, options)
     }
+
+    async create(payload: CreateAccess) {
+        const { createdFor, resourceId, accessType } = payload
+        return await Model.create({
+            createdFor: createdFor,
+            accessType,
+            resourceId,
+            origin: ACCESS_ORIGIN.SELF,
+        })
+    }
+
+    async updateById(id: string, payload: Partial<AccessSchemaType>) {
+        return await Model.findByIdAndUpdate({ _id: id }, payload)
+    }
+
 
 }

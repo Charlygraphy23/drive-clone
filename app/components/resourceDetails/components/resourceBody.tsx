@@ -7,7 +7,6 @@ import {
 import AvatarComponent from '../../avatar'
 import ButtonGroup from '../../buttonGroup'
 import style from '../style.module.scss'
-import ManageAccess from './manageAccess'
 
 
 const ResourceBody = () => {
@@ -52,7 +51,7 @@ const ResourceBody = () => {
                         }} />)}
                 </div>
 
-                <ButtonGroup className={style.manageAccess} submitText="Manage access" handleSubmit={toggleModal} />
+                <ButtonGroup type="button" className={style.manageAccess} submitText="Manage access" handleSubmit={toggleModal} />
             </section>
 
             <section className={style.details}>
@@ -74,7 +73,6 @@ const ResourceBody = () => {
                 </div>
             </section>
 
-            <ManageAccess />
         </div>
     )
 }

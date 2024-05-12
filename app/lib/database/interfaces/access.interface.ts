@@ -26,3 +26,9 @@ export type CreateWithParentType = {
     parentFolderId: ObjectId | string | null
     resourceId: ObjectId | string
 }
+
+export type CreateAccess = {
+    createdFor: string;
+    resourceId: ObjectId | string | null
+    accessType: ACCESS_TYPE
+}

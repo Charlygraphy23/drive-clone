@@ -1,5 +1,6 @@
 "use client"
 
+import { updateAccess } from "@/app/_apis_routes/resources";
 import { getUsersByEmail } from "@/app/_apis_routes/user";
 import AvatarComponent from "@/app/components/avatar";
 import ButtonGroup from "@/app/components/buttonGroup";
@@ -11,14 +12,14 @@ import {
     toggleModal as toggleModalState
 } from "@/app/store/actions";
 import { AccessList } from "@/app/store/actions/info.actions";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Select, SelectProps } from "antd";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import style from "./style.module.scss";
 
-type SelectedAccessType = { _id?: string, } & Omit<AccessList, "_id" | "origin">
+type SelectedAccessType = { _id?: string, } & Pick<AccessList, "accessType" | "userInfo" | "resourceId">
 
 const ManageAccess = () => {
     const {
@@ -30,6 +31,7 @@ const ManageAccess = () => {
     } = useAppSelector((state) => state.resourceInfo);
     const [options, setOptions] = useState<SelectProps['options']>([] as SelectProps['options'])
     const [search, setSearch] = useState<string>("")
+    const [accessList, setAccessList] = useState<SelectedAccessType[]>([])
     const [selectedAccess, setSelectedAccess] = useState<SelectedAccessType[]>([])
     const { data, isFetching } = useQuery({
         queryFn: () => getUsersByEmail(search),
@@ -40,6 +42,7 @@ const ManageAccess = () => {
         staleTime: Infinity
     })
     const dispatch = useAppDispatch()
+    const mutation = useMutation({ mutationFn: updateAccess })
     const session = useSession()
     const user = session?.data?.user
     const folderId = modalState?.value
@@ -59,24 +62,42 @@ const ManageAccess = () => {
         setSearch(value)
     };
 
-    const handleChange = (values: []) => {
-        console.log(values)
+    const onChange = (values: string[]) => {
+        const contractData = values?.map((value) => {
+            const data = JSON.parse(value) as User
+            const userInfo = data as AccessList["userInfo"]
+            return {
+                userInfo,
+                accessType: ACCESS_TYPE.READ,
+                resourceId: folderId
+            }
+        })
+
+        setSelectedAccess([...accessList, ...contractData])
     }
 
-    const handleSelect = (value: string) => {
-        const data = JSON.parse(value) as User
+    const handleSubmit = async () => {
+        const formatData = selectedAccess.map(access => ({
+            accessId: access?._id,
+            createdFor: access?.userInfo?._id,
+            accessType: access?.accessType
+        }))
 
-        const userInfo = data as AccessList["userInfo"]
-        setSelectedAccess(prev => [...prev, {
-            userInfo,
-            accessType: ACCESS_TYPE.READ,
+        await mutation.mutateAsync({
+            accessList: formatData,
             resourceId: folderId
-        }])
-
-
+        })
     }
 
-    const handleSubmit = () => {
+    const onAccessTypeChange = (type: ACCESS_TYPE, index: number) => {
+        setSelectedAccess(prev => {
+            const newArray = Array.from(prev)
+            newArray[index] = {
+                ...newArray[index],
+                accessType: type
+            }
+            return newArray
+        })
     }
 
     useEffect(() => {
@@ -96,6 +117,7 @@ const ManageAccess = () => {
     }, [data, isFetching])
 
     useEffect(() => {
+        setAccessList(resourceInfoById?.accessList ?? [])
         setSelectedAccess(resourceInfoById?.accessList ?? [])
     }, [resourceInfoById])
 
@@ -108,7 +130,7 @@ const ManageAccess = () => {
                 </div>
 
                 <Select
-                    className={style.select}
+                    className={`${style.select} selectAccessList`}
                     mode="multiple"
                     style={{ width: '100%' }}
                     placeholder="Please select"
@@ -118,14 +140,13 @@ const ManageAccess = () => {
                     loading={isFetching}
                     onKeyDown={(e) => e.stopPropagation()}
                     filterOption={(inputValue, option) => !!JSON.parse(option?.value as string)?.email?.toString().includes(inputValue)}
-                    onChange={handleChange}
-                    onSelect={handleSelect}
+                    onChange={onChange}
 
                 />
 
                 <div className={style.selectedUsers}>
                     {
-                        selectedAccess.map((access) => <div key={String(access?._id)}
+                        selectedAccess.map((access, i) => <div key={String(access?._id)}
                             className={style.selectedUsersContainer}>
                             <AvatarComponent
                                 className={style.avatar}
@@ -142,15 +163,19 @@ const ManageAccess = () => {
                                     <span>{access?.userInfo?.email}</span>
                                 </div>
 
-                                <Select
-                                    className={style.selectAccess}
-                                    defaultValue={access?.accessType}
-                                    disabled={user?._id === access?.userInfo?._id}
-                                    options={[
-                                        { value: ACCESS_TYPE.WRITE, label: 'Write', disabled: user?._id === access?.userInfo?._id },
-                                        { value: ACCESS_TYPE.READ, label: 'Read', disabled: user?._id === access?.userInfo?._id },
-                                    ]}
-                                />
+                                {resourceInfoById?.ownerInfo?._id === access?.userInfo?._id ?
+                                    <p style={{ opacity: 0.4 }}>Owner</p> :
+                                    <Select
+                                        className={style.selectAccess}
+                                        defaultValue={access?.accessType}
+                                        disabled={resourceInfoById?.ownerInfo?._id === access?.userInfo?._id}
+                                        options={[
+                                            { value: ACCESS_TYPE.WRITE, label: 'Write', disabled: resourceInfoById?.ownerInfo?._id === access?.userInfo?._id },
+                                            { value: ACCESS_TYPE.READ, label: 'Read', disabled: resourceInfoById?.ownerInfo?._id === access?.userInfo?._id },
+                                        ]}
+                                        popupClassName="selectAccessType"
+                                        onSelect={(value) => onAccessTypeChange(value, i)}
+                                    />}
                             </div>
                         </div>)
                     }
@@ -167,3 +192,4 @@ const ManageAccess = () => {
 }
 
 export default ManageAccess
+

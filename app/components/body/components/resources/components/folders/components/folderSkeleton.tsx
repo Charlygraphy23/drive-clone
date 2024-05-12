@@ -52,7 +52,10 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 
 	const findElements = useCallback((target: Node) => {
 		const IDs = ["resource-info-button", "resource-info", "more-option"]
-		const classes = [".ant-select-dropdown"]
+		const classes = [".ant-select-dropdown", ".selectAccessType", ".selectAccessList"]
+
+		const t = target as HTMLElement
+		if (t?.dataset?.icon === "close") return true
 
 		const hasElementWithId = IDs.reduce((prev, Id) => {
 			const element = document.getElementById(Id)
@@ -82,9 +85,9 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 		function checkClick(e: MouseEvent) {
 			if (!ref.current) return;
 
-			const target = e.target as any
-			const hasElement = findElements(target as Node)
-			const shouldReset = !ref?.current.contains(target as Node) && !hasElement
+			const target = e.target as Node
+			const hasElement = findElements(target)
+			const shouldReset = !ref?.current.contains(target) && !hasElement
 			if (shouldReset) {
 				clearState()
 			}

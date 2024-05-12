@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store";
 import { toggleInfo } from "@/app/store/actions/info.actions";
 import ResourceInfoLoader from "../loader/resourceInfloLoader";
 import LottiePlayer from "../lottiePlayer";
+import ManageAccess from './components/manageAccess';
 import ResourceBody from './components/resourceBody';
 import style from './style.module.scss';
 
@@ -35,6 +36,8 @@ const ResourceDetails = () => {
                     <LottiePlayer animationData={EmptyInfoAnimation} loop width={200} height={200} />
                 </div> : <ResourceBody />}
             </div>
+            <ManageAccess />
+
         </section>
 
     )
