@@ -54,18 +54,6 @@ export const PATCH = async (req: NextRequest) => {
         const promises = accessNotContainsOwnerId.map((access) => {
             return new Promise(async (resolve, reject) => {
                 try {
-
-                    if (!access.accessId) {
-                        // ? Means this will be the new access to the resource
-                        const data = await service.create({
-                            accessType: access?.accessType,
-                            createdFor: access?.createdFor,
-                            resourceId
-                        })
-                        return resolve(data)
-
-                    }
-
                     const findAccessWithResourceId = await service.findByUser(access.createdFor, { resourceId })
                     console.log("findAccessWithResourceId ", findAccessWithResourceId)
 
