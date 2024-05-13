@@ -1,5 +1,6 @@
 
 
+import { getChildrenAccessListByFolderId } from "@/app/api/resources/_fetch"
 import { AccessModal } from "@app/lib/database/models/access"
 import { ObjectId, SessionOption } from "mongoose"
 import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType, CreateAccess, CreateWithParentType } from "../interfaces/access.interface"
@@ -8,6 +9,10 @@ const Model = AccessModal
 
 export class AccessService {
 
+
+    async getAccessesByFolderId(folderId: string) {
+        return await getChildrenAccessListByFolderId(folderId)
+    }
     // createdFor + resourceId
     async findByUser(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption) {
         if (!userId || !filters?.resourceId) return null

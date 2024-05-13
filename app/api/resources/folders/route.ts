@@ -10,11 +10,10 @@ import { getServerSession } from "next-auth/next";
 import { NextRequest } from "next/server";
 import { DataCreateSchemaValidator, UpdateNamePayloadSchema } from "../../_validation/data.validation";
 
-const service = new ResourceService()
-const accessService = new AccessService()
-const response = new ApiResponse()
 
 export const PATCH = async (req: NextRequest) => {
+    const service = new ResourceService()
+    const response = new ApiResponse()
 
 
     try {
@@ -67,6 +66,9 @@ export const PATCH = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => {
     const mongoSession = await startSession()
+    const accessService = new AccessService()
+    const response = new ApiResponse()
+
 
     try {
         const session = await getServerSession(authOptions)

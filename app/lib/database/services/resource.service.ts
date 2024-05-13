@@ -5,10 +5,11 @@ import { FilesAndFolderModel } from "../models/filesAndFolders";
 import { AccessService } from "./access.service";
 
 const Model = FilesAndFolderModel
-const accessService = new AccessService()
 export class ResourceService {
 
     async checkAccess(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption): Promise<{ data: AccessDocumentType | null, success: boolean, resource?: FilesAndFolderDocument | null }> {
+        const accessService = new AccessService()
+
         console.log("Checking access....")
 
         if (!filters.resourceId) {
@@ -269,5 +270,7 @@ export class ResourceService {
     async updateName(_id: string, name: string) {
         return await Model.findOneAndUpdate({ _id }, { name, lastUpdate: new Date() })
     }
+
+
 
 }
