@@ -2,7 +2,7 @@
 
 import { getChildrenAccessListByFolderId } from "@/app/api/resources/_fetch"
 import { AccessModal } from "@app/lib/database/models/access"
-import { FilterQuery, ObjectId, SessionOption, UpdateQuery } from "mongoose"
+import { FilterQuery, ObjectId, SessionOption, Types, UpdateQuery } from "mongoose"
 import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType, CreateWithParentType } from "../interfaces/access.interface"
 
 const Model = AccessModal
@@ -70,7 +70,7 @@ export class AccessService {
     }
 
     async updateById(id: string, payload: UpdateQuery<Partial<AccessSchemaType>>) {
-        return await Model.findByIdAndUpdate({ _id: id }, payload)
+        return await Model.findByIdAndUpdate({ _id: new Types.ObjectId(id) }, payload)
     }
 
     async updateMany(filters: FilterQuery<Partial<AccessSchemaType>>, payload: UpdateQuery<AccessSchemaType>) {

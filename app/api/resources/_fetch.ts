@@ -146,7 +146,7 @@ export const getChildrenAccessListByFolderId = async (folderId: string) => {
 
                         {
                             $project: {
-                                rootId: 1, createdFor: 1, accessType: 1, resourceId: 1,
+                                rootId: 1, createdFor: 1, accessType: 1, resourceId: 1, origin: 1
                             }
                         }
                     ],
@@ -156,7 +156,7 @@ export const getChildrenAccessListByFolderId = async (folderId: string) => {
 
         ])
 
-        return data as ({ _id: string, accesses: ({ _id: string } & Pick<AccessSchemaType, "accessType" | "createdFor" | "resourceId" | "rootId">)[] } & Pick<FilesAndFolderSchemaType, "createdBy" | "dataType" | "name" | "parentFolderId">)[]
+        return data as ({ _id: string, accesses: ({ _id: string } & Pick<AccessSchemaType, "accessType" | "createdFor" | "resourceId" | "rootId" | "origin">)[] } & Pick<FilesAndFolderSchemaType, "createdBy" | "dataType" | "name" | "parentFolderId">)[]
     }
     catch (_err: unknown) {
         console.log(_err)

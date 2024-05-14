@@ -35,7 +35,7 @@ const handleAccessManagement = (resourceId: string, accessListFromAPI: UpdateAcc
                         console.log("Find - accessId ", accessId)
 
                         await service.updateById(accessId, {
-                            accessType: hasAccess?.accessType
+                            accessType: accesses?.accessType
                         })
                     }
                     else {
