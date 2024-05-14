@@ -1,19 +1,68 @@
 import { UpdateAccessTypePayload } from "@/app/_apis_routes/resources";
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
-import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
+import { ACCESS_ORIGIN, ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { AccessService } from "@/app/lib/database/services/access.service";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
-import { MongooseError } from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 import { UpdateAccessPayloadValidator } from "../../_validation/access.validation";
 
 
+const handleAccessManagement = (resourceId: string, accessListFromAPI: UpdateAccessTypePayload["accessList"] = []) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const service = new AccessService()
+            const folders = await service.getAllChildFoldersWithAccess(resourceId)
+
+            let rootAccessId: string | null = null
+
+            for await (const folder of folders) {
+                const accessListOfDB = folder?.accesses ?? [];
+                console.log("Pick - folder ", folder?._id)
+                console.log("Pick - access ", accessListOfDB)
+
+
+
+                for await (const accesses of accessListFromAPI) {
+                    const hasAccess = accessListOfDB.find(a => a?.createdFor?.toString() === accesses?.createdFor)
+                    console.log("Local Access -  ", accesses)
+                    console.log("Find - hasAccess ", hasAccess)
+
+                    if (hasAccess) {
+                        const accessId = hasAccess?._id?.toString() ?? ""
+                        console.log("Find - accessId ", accessId)
+
+                        await service.updateById(accessId, {
+                            accessType: hasAccess?.accessType
+                        })
+                    }
+                    else {
+                        const accessData = await service.create({
+                            accessType: accesses?.accessType,
+                            createdFor: accesses?.createdFor,
+                            resourceId: folder?._id,
+                            origin: rootAccessId ? ACCESS_ORIGIN.PARENT : ACCESS_ORIGIN.SELF,
+                            rootId: rootAccessId ?? null
+                        })
+                        rootAccessId = accessData?._id?.toString()
+                    }
+
+
+                }
+            }
+            resolve(rootAccessId)
+        }
+        catch (error) {
+            reject(error)
+        }
+    })
+
+}
+
 export const PATCH = async (req: NextRequest) => {
     const response = new ApiResponse()
-    const service = new AccessService()
     const resourceService = new ResourceService()
     try {
         const session = await getServerSession(authOptions)
@@ -42,42 +91,11 @@ export const PATCH = async (req: NextRequest) => {
         }
 
         const hasResource = hasAccess.resource
-        const accessNotContainsOwnerId = accessList.filter((access) => access.createdFor !== hasResource?.createdBy?.toString())
-        console.log("accessNotContainsOwnerId", accessNotContainsOwnerId)
+        const accessListWithoutOwner = accessList.filter((access) => access.createdFor !== hasResource?.createdBy?.toString())
+        console.log("accessListWithoutOwner", accessListWithoutOwner)
         console.log("hasResource", hasResource)
 
-        const accessListFromDB = await service.getAccessesByFolderId(resourceId)
-        const promises = accessNotContainsOwnerId.map((access) => {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const findAccessWithResourceId = accessListFromDB.find(dbAccess => dbAccess?.resourceId?.toString() === resourceId && dbAccess?.createdFor?.toString() === access?.createdFor)
-                    console.log("findAccessWithResourceId ", findAccessWithResourceId)
-
-                    if (!findAccessWithResourceId) {
-
-                        // FIXME: if resourceId === DB_RESOURCE_ID then it means that the permission has been created for that folder 
-                        //and pass ther permission to its children
-
-                        // ? Means this will be the new access to the resource
-                        const data = await service.create({
-                            accessType: access?.accessType,
-                            createdFor: access?.createdFor,
-                            resourceId
-                        })
-                        return resolve(data)
-                    }
-
-                    const data = await service.updateById(findAccessWithResourceId._id, { accessType: access.accessType })
-                    return resolve(data)
-                }
-                catch (err) {
-                    const error = err as MongooseError
-                    reject(error)
-                }
-            })
-        })
-
-        await Promise.all(promises)
+        await handleAccessManagement(resourceId, accessListWithoutOwner)
         return response.status(200).send("Updated")
 
     }

@@ -13,7 +13,7 @@ export const GET = async (_req: NextRequest) => {
         const session = await getServerSession(authOptions)
         if (!session) return response.status(401).send("Unauthorized")
 
-        const res = await getChildrenAccessListByFolderId("66408ede8b8865fd1f5550ab")
+        const res = await getChildrenAccessListByFolderId("6643aafcc22b8756ce071c92")
 
         // if (res?.data) {
         //     return response.status(res.status).send({

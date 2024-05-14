@@ -38,6 +38,6 @@ const schema = new mongoose.Schema<AccessSchemaType>({
 
 }, { timestamps: true })
 
-schema.index({ createFor: 1, resourceId: 1 }, { unique: true })
+schema.index({ createdFor: 1, resourceId: 1 }, { unique: true })
 
 export const AccessModal = mongoose.models.Access as Model<AccessDocumentType> || mongoose.model<AccessDocumentType>(MODEL_NAME, schema)

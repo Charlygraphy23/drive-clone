@@ -1,6 +1,7 @@
 import { authOptions } from "@/app/lib/authConfig"
 import { connectDB } from "@/app/lib/database/db"
 import { AccessSchemaType } from "@/app/lib/database/interfaces/access.interface"
+import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces"
 import { FilesAndFolderModel } from "@/app/lib/database/models/filesAndFolders"
 import { ResourceService } from "@/app/lib/database/services/resource.service"
 import { Types } from "mongoose"
@@ -68,8 +69,10 @@ export const getChildrenAccessListByFolderId = async (folderId: string) => {
                     connectFromField: "_id",
                     connectToField: "parentFolderId",
                     as: "children",
+                    depthField: "depth",
                 }
             },
+
 
             {
                 $project: {
@@ -79,6 +82,7 @@ export const getChildrenAccessListByFolderId = async (folderId: string) => {
 
                 }
             },
+
 
             {
                 $project: {
@@ -101,10 +105,27 @@ export const getChildrenAccessListByFolderId = async (folderId: string) => {
             },
 
             {
+                $sort: { "depth": 1 } // Sort the results by depth
+            },
+
+            {
                 $project: {
                     name: 1,
                     createdBy: 1,
-                    parentFolderId: 1
+                    parentFolderId: 1,
+                    dataType: 1,
+                    depth: {
+                        $cond: {
+                            if: {
+                                $or: [
+                                    { $eq: [{ $type: "$depth" }, "missing"] },
+                                    { $lte: ["$depth", null] }
+                                ]
+                            },
+                            then: -1,
+                            else: "$depth"
+                        }
+                    }
                 }
             },
 
@@ -121,51 +142,21 @@ export const getChildrenAccessListByFolderId = async (folderId: string) => {
                                     $eq: ["$resourceId", "$$resourceId"]
                                 }
                             }
-                        }
+                        },
 
-                        // {$addFields : }
+                        {
+                            $project: {
+                                rootId: 1, createdFor: 1, accessType: 1, resourceId: 1,
+                            }
+                        }
                     ],
                     as: "accesses"
                 }
             },
 
-            // // ? make accesses data as ROOT data
-            // {
-            //     $unwind: {
-            //         path: "$accesses",
-            //         preserveNullAndEmptyArrays: true
-            //     }
-            // },
-            // {
-            //     $replaceRoot: { newRoot: "$accesses" }
-            // },
-
-
-
-            // // ? make children data as ROOT data
-            // {
-            //     $unwind: {
-            //         path: "$children",
-            //         preserveNullAndEmptyArrays: true
-            //     }
-            // },
-            // {
-            //     $replaceRoot: { newRoot: "$children" }
-            // },
-            // {
-            //     $project: {
-            //         name: 1,
-            //         createdBy: 1,
-            //         parentFolderId: 1
-            //     }
-            // },
-
-
-
-
         ])
 
-        return data as ({ _id: string } & AccessSchemaType)[]
+        return data as ({ _id: string, accesses: ({ _id: string } & Pick<AccessSchemaType, "accessType" | "createdFor" | "resourceId" | "rootId">)[] } & Pick<FilesAndFolderSchemaType, "createdBy" | "dataType" | "name" | "parentFolderId">)[]
     }
     catch (_err: unknown) {
         console.log(_err)

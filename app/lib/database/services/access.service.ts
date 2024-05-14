@@ -2,15 +2,15 @@
 
 import { getChildrenAccessListByFolderId } from "@/app/api/resources/_fetch"
 import { AccessModal } from "@app/lib/database/models/access"
-import { ObjectId, SessionOption } from "mongoose"
-import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType, CreateAccess, CreateWithParentType } from "../interfaces/access.interface"
+import { FilterQuery, ObjectId, SessionOption, UpdateQuery } from "mongoose"
+import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType, CreateWithParentType } from "../interfaces/access.interface"
 
 const Model = AccessModal
 
 export class AccessService {
 
 
-    async getAccessesByFolderId(folderId: string) {
+    async getAllChildFoldersWithAccess(folderId: string) {
         return await getChildrenAccessListByFolderId(folderId)
     }
     // createdFor + resourceId
@@ -57,18 +57,24 @@ export class AccessService {
         return await Model.create(accessData, options)
     }
 
-    async create(payload: CreateAccess) {
-        const { createdFor, resourceId, accessType } = payload
+    async create(payload: Partial<AccessSchemaType>) {
+        const { createdFor, resourceId, accessType, origin = ACCESS_ORIGIN.SELF, rootId = null } = payload
+        console.log("Payload created", payload)
         return await Model.create({
-            createdFor: createdFor,
+            createdFor,
             accessType,
             resourceId,
-            origin: ACCESS_ORIGIN.SELF,
+            origin,
+            rootId
         })
     }
 
-    async updateById(id: string, payload: Partial<AccessSchemaType>) {
+    async updateById(id: string, payload: UpdateQuery<Partial<AccessSchemaType>>) {
         return await Model.findByIdAndUpdate({ _id: id }, payload)
+    }
+
+    async updateMany(filters: FilterQuery<Partial<AccessSchemaType>>, payload: UpdateQuery<AccessSchemaType>) {
+        return await Model.updateMany(filters, payload)
     }
 
 

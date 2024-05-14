@@ -14,8 +14,9 @@ export type ResourceInfoStateType = typeof initialState;
 
 export default createReducer(initialState, (builder) => {
     builder
-        .addCase(getFolderInfoAsync.pending, (state) => {
+        .addCase(getFolderInfoAsync.pending, (state, action) => {
             state.loading = true;
+            state.selectedFolderId = action.meta.arg.folderId;
             state.error = "";
             return state
         })

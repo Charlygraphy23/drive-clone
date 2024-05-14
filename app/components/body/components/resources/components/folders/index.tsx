@@ -1,6 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/app/store";
+import { toggleModal } from "@/app/store/actions";
 import { clearSelectedFolderId, getFolderInfoAsync } from "@/app/store/actions/info.actions";
 import style from "../../style.module.scss";
 import FolderSkeleton from "./components/folderSkeleton";
@@ -21,6 +22,11 @@ const FolderComponent = () => {
 
 	const onClear = () => {
 		dispatch(clearSelectedFolderId())
+		dispatch(toggleModal({
+			isOpen: false,
+			name: "manageAccessModal",
+			data: null
+		}))
 	}
 
 	return (
