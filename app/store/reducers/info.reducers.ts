@@ -20,6 +20,7 @@ export default createReducer(initialState, (builder) => {
             state.error = "";
             return state
         })
+
         .addCase(getFolderInfoAsync.fulfilled, (state, action) => {
             const ID = action.payload._id
             state.loading = false;
