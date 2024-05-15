@@ -30,6 +30,7 @@
     "react-redux": "^9.1.0",
     "redux": "^5.0.1",
     "sass": "^1.69.7",
+    "webpack-merge": "^5.10.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
