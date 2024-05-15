@@ -1,5 +1,5 @@
 import { getFolderInfoByIdApi } from "@/app/_apis_routes/resources";
-import { AccessSchemaType } from "@/app/lib/database/interfaces/access.interface";
+import { ACCESS_TYPE, AccessSchemaType } from "@/app/lib/database/interfaces/access.interface";
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { ErrorHandler } from "@/app/utils/index.utils";
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
@@ -17,9 +17,19 @@ export type ResourceInfoDataType = {
     accessList?: AccessList[]
 } & Omit<FilesAndFolderSchemaType, "createdBy">
 
+export type UpdateInfoByFolderIdType = {
+    accesses: {
+        accessId?: string;
+        accessType: ACCESS_TYPE,
+        createdFor: string
+    }[],
+    folderId: string,
+    userInfo: UserInfoType
+}
+
 export const toggleInfo = createAction("showInfo")
 export const clearSelectedFolderId = createAction("clearSelectedFolderId")
-
+export const updateInfoByFolderId = createAction<UpdateInfoByFolderIdType>("updateInfoByFolderId")
 
 export const getFolderInfoAsync = createAsyncThunk<ResourceInfoDataType, { folderId: string }>("getResourceInfo", async (payload, _thunkAPI) => {
     try {

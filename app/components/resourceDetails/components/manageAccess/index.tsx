@@ -6,20 +6,21 @@ import AvatarComponent from "@/app/components/avatar";
 import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent from "@/app/components/modal";
 import { MANAGE_ACCESS_MODAL_ID } from "@/app/config/const";
+import { SelectedAccessType } from "@/app/interfaces/index.interface";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
     toggleModal as toggleModalState
 } from "@/app/store/actions";
-import { AccessList } from "@/app/store/actions/info.actions";
+import { AccessList, updateInfoByFolderId } from "@/app/store/actions/info.actions";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Select, SelectProps } from "antd";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import style from "./style.module.scss";
 
-type SelectedAccessType = { _id?: string, } & Pick<AccessList, "accessType" | "userInfo" | "resourceId">
 
 const ManageAccess = () => {
     const {
@@ -41,12 +42,21 @@ const ManageAccess = () => {
         refetchIntervalInBackground: false,
         staleTime: Infinity
     })
+    const [isLoading, setIsLoading] = useState(false)
+    const router = useRouter()
     const dispatch = useAppDispatch()
     const mutation = useMutation({ mutationFn: updateAccess })
     const session = useSession()
     const user = session?.data?.user
     const folderId = modalState?.value
     const resourceInfoById = resourceInfo[folderId]
+
+    const clearState = () => {
+        setSearch("")
+        setSelectedAccess([])
+        setAccessList([])
+        setOptions([])
+    }
 
 
     const toggleModal = (isOpen?: boolean) => {
@@ -56,6 +66,7 @@ const ManageAccess = () => {
                 name: "manageAccessModal",
             })
         );
+        clearState()
     };
 
     const handleSearch = (value: string) => {
@@ -77,6 +88,10 @@ const ManageAccess = () => {
     }
 
     const handleSubmit = async () => {
+
+        if (!folderId) return;
+
+        setIsLoading(true)
         const formatData = selectedAccess.map(access => ({
             accessId: access?._id,
             createdFor: access?.userInfo?._id,
@@ -87,6 +102,23 @@ const ManageAccess = () => {
             accessList: formatData,
             resourceId: folderId
         })
+        toggleModal();
+
+        dispatch(updateInfoByFolderId({
+            folderId,
+            accesses: formatData,
+            userInfo: {
+                _id: user?._id as NonNullable<string>,
+                firstName: user?.firstName as NonNullable<string>,
+                lastName: user?.lastName as NonNullable<string>,
+                email: user?.email as NonNullable<string>,
+                imageUrl: user?.imageUrl
+
+            }
+        }))
+        router.refresh()
+        setIsLoading(false)
+
     }
 
     const onAccessTypeChange = (type: ACCESS_TYPE, index: number) => {
@@ -182,7 +214,7 @@ const ManageAccess = () => {
                 </div>
 
                 <div className="d-flex justify-content-end align-items-center mt-4" >
-                    <ButtonGroup handleSubmit={handleSubmit} submitText="Done" className={style.submit} />
+                    <ButtonGroup handleSubmit={handleSubmit} submitText="Done" className={style.submit} loading={mutation.isPending || isLoading} loader="spin" />
                 </div>
 
             </div>
