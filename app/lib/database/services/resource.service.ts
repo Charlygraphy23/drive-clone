@@ -55,7 +55,8 @@ export class ResourceService {
     async getFolders(userId: string, folderId?: string) {
 
         const initialQuery = {
-            dataType: DATA_TYPE.FOLDER
+            dataType: DATA_TYPE.FOLDER,
+            createdBy: new Types.ObjectId(userId)
         } as FilterQuery<Partial<Record<keyof FilesAndFolderSchemaType, any>>>
 
         if (folderId) {

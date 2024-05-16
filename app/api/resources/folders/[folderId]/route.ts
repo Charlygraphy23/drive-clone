@@ -10,6 +10,7 @@ export const GET = async (req: NextRequest, { params }: { params: { folderId: st
     const response = new ApiResponse()
     const service = new ResourceService()
     try {
+
         const session = await getServerSession(authOptions)
 
         if (!session) return response.status(401).send("Unauthorized")

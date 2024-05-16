@@ -1,5 +1,6 @@
 
 import { getResources } from "@/app/api/resources/_fetch";
+import EmptySection from "./components/emptySection";
 import FolderComponent from "./components/folders";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
 import FileAndFolderStateProvider from "./provider";
@@ -125,7 +126,7 @@ const Resources = async ({ folderId }: Props) => {
 			<div className={style.filesAndFolders}>
 				<FolderComponent />
 				{/* <FileSection /> */}
-				{/* <EmptySection /> */}
+				<EmptySection />
 			</div>
 		</FileAndFolderStateProvider>
 	);
