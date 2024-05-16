@@ -18,7 +18,7 @@ import { Select, SelectProps } from "antd";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import style from "./style.module.scss";
 
 
@@ -50,6 +50,11 @@ const ManageAccess = () => {
     const user = session?.data?.user
     const folderId = modalState?.value
     const resourceInfoById = resourceInfo[folderId]
+
+    const hasAccess = useMemo(() => {
+        const access = resourceInfoById?.accessList?.find(a => a?.userInfo?._id === user?._id)
+        return access?.accessType === ACCESS_TYPE.WRITE
+    }, [resourceInfoById?.accessList, user?._id])
 
     const clearState = () => {
         setSearch("")
@@ -132,6 +137,7 @@ const ManageAccess = () => {
         })
     }
 
+
     useEffect(() => {
         if (isFetching) return;
 
@@ -151,7 +157,7 @@ const ManageAccess = () => {
     useEffect(() => {
         setAccessList(resourceInfoById?.accessList ?? [])
         setSelectedAccess(resourceInfoById?.accessList ?? [])
-    }, [resourceInfoById])
+    }, [resourceInfoById, manageAccessModal])
 
     return (
         <ModalComponent id={MANAGE_ACCESS_MODAL_ID} isOpen={manageAccessModal} toggle={toggleModal}>
@@ -173,6 +179,7 @@ const ManageAccess = () => {
                     onKeyDown={(e) => e.stopPropagation()}
                     filterOption={(inputValue, option) => !!JSON.parse(option?.value as string)?.email?.toString().includes(inputValue)}
                     onChange={onChange}
+                // disabled={!hasAccess}
 
                 />
 
@@ -200,10 +207,10 @@ const ManageAccess = () => {
                                     <Select
                                         className={style.selectAccess}
                                         defaultValue={access?.accessType}
-                                        disabled={resourceInfoById?.ownerInfo?._id === access?.userInfo?._id}
+                                        disabled={!hasAccess}
                                         options={[
-                                            { value: ACCESS_TYPE.WRITE, label: 'Write', disabled: resourceInfoById?.ownerInfo?._id === access?.userInfo?._id },
-                                            { value: ACCESS_TYPE.READ, label: 'Read', disabled: resourceInfoById?.ownerInfo?._id === access?.userInfo?._id },
+                                            { value: ACCESS_TYPE.WRITE, label: 'Write', disabled: !hasAccess },
+                                            { value: ACCESS_TYPE.READ, label: 'Read', disabled: !hasAccess },
                                         ]}
                                         popupClassName="selectAccessType"
                                         onSelect={(value) => onAccessTypeChange(value, i)}
@@ -213,9 +220,9 @@ const ManageAccess = () => {
                     }
                 </div>
 
-                <div className="d-flex justify-content-end align-items-center mt-4" >
+                {hasAccess && <div className="d-flex justify-content-end align-items-center mt-4" >
                     <ButtonGroup handleSubmit={handleSubmit} submitText="Done" className={style.submit} loading={mutation.isPending || isLoading} loader="spin" />
-                </div>
+                </div>}
 
             </div>
         </ModalComponent>
