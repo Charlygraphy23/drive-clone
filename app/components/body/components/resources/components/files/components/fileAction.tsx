@@ -4,7 +4,6 @@ import MyDropdown from "@/app/components/dropdown";
 import { DATA_TYPE } from "@/app/interfaces/index.interface";
 import { toggleModal } from "@/app/store/actions";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
-import React from "react";
 import { useDispatch } from "react-redux";
 
 type Props = {
@@ -28,6 +27,10 @@ const FileAction = ({ data }: Props) => {
 		);
 	};
 
+	const handleTrash = () => {
+
+	}
+
 	return (
 		<MyDropdown
 			handler={{
@@ -36,7 +39,7 @@ const FileAction = ({ data }: Props) => {
 			<MyDropdown.Menu>
 				<MyDropdown.List onClick={handleRenameClick}>Rename</MyDropdown.List>
 				<MyDropdown.List divider></MyDropdown.List>
-				<MyDropdown.List>Move to trash</MyDropdown.List>
+				<MyDropdown.List onClick={handleTrash}>Move to trash</MyDropdown.List>
 			</MyDropdown.Menu>
 		</MyDropdown>
 	);

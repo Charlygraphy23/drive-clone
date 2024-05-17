@@ -40,8 +40,8 @@ const ResourceBody = () => {
                 <p className={style.headline}>Who has access</p>
 
                 <div className={style.accessWrapper}>
-                    {folderInfo?.accessList?.map((access) => <AvatarComponent
-                        key={access._id}
+                    {folderInfo?.accessList?.map((access, index) => <AvatarComponent
+                        key={access?._id ?? index}
                         className={style.avatar}
                         user={{
                             _id: access?.userInfo?._id,

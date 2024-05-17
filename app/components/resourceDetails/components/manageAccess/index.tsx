@@ -14,7 +14,7 @@ import {
 } from "@/app/store/actions";
 import { AccessList, updateInfoByFolderId } from "@/app/store/actions/info.actions";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Select, SelectProps } from "antd";
+import { Divider, Select, SelectProps, Space } from "antd";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -34,6 +34,7 @@ const ManageAccess = () => {
     const [search, setSearch] = useState<string>("")
     const [accessList, setAccessList] = useState<SelectedAccessType[]>([])
     const [selectedAccess, setSelectedAccess] = useState<SelectedAccessType[]>([])
+    const [deletedUserIds, setDeletedUserIds] = useState<string[]>([])
     const { data, isFetching } = useQuery({
         queryFn: () => getUsersByEmail(search),
         queryKey: ["search-users", search],
@@ -100,26 +101,20 @@ const ManageAccess = () => {
         const formatData = selectedAccess.map(access => ({
             accessId: access?._id,
             createdFor: access?.userInfo?._id,
-            accessType: access?.accessType
+            accessType: access?.accessType,
+            userInfo: access?.userInfo
         }))
 
         await mutation.mutateAsync({
             accessList: formatData,
-            resourceId: folderId
+            resourceId: folderId,
+            deletedUserIds
         })
         toggleModal();
 
         dispatch(updateInfoByFolderId({
             folderId,
             accesses: formatData,
-            userInfo: {
-                _id: user?._id as NonNullable<string>,
-                firstName: user?.firstName as NonNullable<string>,
-                lastName: user?.lastName as NonNullable<string>,
-                email: user?.email as NonNullable<string>,
-                imageUrl: user?.imageUrl
-
-            }
         }))
         router.refresh()
         setIsLoading(false)
@@ -154,6 +149,11 @@ const ManageAccess = () => {
         setOptions(formattedData ?? [])
     }, [data, isFetching])
 
+    const handleRemove = (access: SelectedAccessType) => {
+        setDeletedUserIds(prev => ([...prev, access?.userInfo?._id]))
+        setSelectedAccess(prev => prev.filter(_access => _access?.userInfo?._id !== access?.userInfo?._id))
+    }
+
     useEffect(() => {
         setAccessList(resourceInfoById?.accessList ?? [])
         setSelectedAccess(resourceInfoById?.accessList ?? [])
@@ -179,7 +179,7 @@ const ManageAccess = () => {
                     onKeyDown={(e) => e.stopPropagation()}
                     filterOption={(inputValue, option) => !!JSON.parse(option?.value as string)?.email?.toString().includes(inputValue)}
                     onChange={onChange}
-                // disabled={!hasAccess}
+                    disabled={!hasAccess}
 
                 />
 
@@ -214,6 +214,19 @@ const ManageAccess = () => {
                                         ]}
                                         popupClassName="selectAccessType"
                                         onSelect={(value) => onAccessTypeChange(value, i)}
+                                        dropdownRender={(menu) => (
+                                            <>
+                                                {menu}
+                                                <Divider style={{ margin: '8px 0' }} />
+                                                <Space style={{ padding: '0 8px 4px', cursor: "pointer" }} onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    e.preventDefault()
+                                                    handleRemove(access)
+                                                }}>
+                                                    Remove Access
+                                                </Space>
+                                            </>
+                                        )}
                                     />}
                             </div>
                         </div>)

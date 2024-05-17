@@ -18,7 +18,6 @@ export const getResources = async (folderId?: string) => {
 
         if (!session) return { message: "Un-authorized", status: 401 };
         const user = session.user
-        console.log("loggedUserId ", user)
 
         await connectDB();
 

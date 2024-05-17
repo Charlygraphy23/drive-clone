@@ -73,6 +73,10 @@ export class AccessService {
         return await Model.findByIdAndUpdate({ _id: new Types.ObjectId(id) }, payload)
     }
 
+    async deleteById(id: string) {
+        return await Model.findByIdAndDelete({ _id: new Types.ObjectId(id) })
+    }
+
     async updateMany(filters: FilterQuery<Partial<AccessSchemaType>>, payload: UpdateQuery<AccessSchemaType>) {
         return await Model.updateMany(filters, payload)
     }

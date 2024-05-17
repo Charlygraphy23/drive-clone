@@ -5,7 +5,7 @@ import { axiosInstance } from "./http";
 
 export type UpdateFolderNamePayload = {
     updatedName: string,
-    folderId: string
+    folderId: string,
 }
 
 export type UpdateAccessTypePayload = {
@@ -14,7 +14,9 @@ export type UpdateAccessTypePayload = {
         accessType: ACCESS_TYPE,
         createdFor: string
     }[],
-    resourceId: string
+    resourceId: string,
+    deletedUserIds: string[],
+
 }
 
 export const addFolderApi = async ({ name, type, parentFolderId }: { type: DATA_TYPE } & Pick<FilesAndFolderSchemaType, "name" | "parentFolderId">) => {

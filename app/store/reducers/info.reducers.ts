@@ -1,13 +1,13 @@
 import { ACCESS_ORIGIN, ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { createReducer } from "@reduxjs/toolkit";
-import { AccessList, ResourceInfoDataType, clearSelectedFolderId, getFolderInfoAsync, toggleInfo, updateInfoByFolderId } from "../actions/info.actions";
+import { AccessList, ResourceInfoDataType, clearSelectedFolderId, getFolderInfoAsync, invalidateCache, toggleInfo, updateInfoByFolderId } from "../actions/info.actions";
 
 const initialState = {
     loading: false,
     data: {} as Record<string, ResourceInfoDataType>,
     error: "",
     show: false,
-    selectedFolderId: ""
+    selectedFolderId: "",
 };
 
 
@@ -43,8 +43,12 @@ export default createReducer(initialState, (builder) => {
             state.show = !state.show;
             return state;
         })
+        .addCase(invalidateCache, (state) => {
+            state.data = {} as Record<string, ResourceInfoDataType>
+            return state;
+        })
         .addCase(updateInfoByFolderId, (state, action) => {
-            const { folderId, accesses, userInfo } = action.payload
+            const { folderId, accesses } = action.payload
             const existingAccess = state?.data?.[folderId]?.accessList ?? [];
 
             const updatedAccess = accesses.reduce<AccessList[]>((prev, curr) => {
@@ -62,7 +66,7 @@ export default createReducer(initialState, (builder) => {
                         accessType: curr.accessType,
                         origin: ACCESS_ORIGIN.SELF,
                         resourceId: folderId,
-                        userInfo: userInfo,
+                        userInfo: curr?.userInfo,
                     } as AccessList
                     prev.push(newAccess)
                 }
@@ -70,7 +74,6 @@ export default createReducer(initialState, (builder) => {
             }, [])
 
             state.data = {
-                ...state.data,
                 [folderId]: {
                     ...state.data[folderId],
                     accessList: updatedAccess

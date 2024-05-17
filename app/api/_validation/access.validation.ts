@@ -25,6 +25,14 @@ export const UpdateAccessPayloadValidator = object().shape({
             return mongoose.Types.ObjectId.isValid(value ?? "");
 
         },
-    })
+    }),
+    deletedAccessIds: array().of(string().test({
+        name: "valid-mongodb-id",
+        message: "Invalid item ID",
+        test: (value) => {
+            if (value === null || value === undefined) return true
+            return mongoose.Types.ObjectId.isValid(value ?? "");
+        },
+    })),
 
 })
