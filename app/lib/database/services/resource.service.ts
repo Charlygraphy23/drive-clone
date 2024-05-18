@@ -8,6 +8,34 @@ import { AccessService } from "./access.service";
 const Model = FilesAndFolderModel
 export class ResourceService {
 
+    private getUserInfo(userId: string | Types.ObjectId) {
+        return [
+            {
+                $lookup: {
+                    from: "users",
+                    let: { userId },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$userId"] }
+                            }
+                        },
+
+                        {
+                            $project: {
+                                firstName: 1,
+                                lastName: 1,
+                                email: 1,
+                                imageUrl: 1
+                            }
+                        }
+                    ],
+                    as: "userInfo"
+                }
+            },
+        ]
+    }
+
     async checkAccess(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption): Promise<{ data: AccessDocumentType | null, success: boolean, resource?: FilesAndFolderDocument | null }> {
         const accessService = new AccessService()
 
@@ -54,15 +82,14 @@ export class ResourceService {
         }], options)
     }
 
-    async getFolders(userId: string, folderId?: string, showDeleted = false) {
+    async getResources(userId: string, resourceId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null) {
 
         const initialQuery = {
-            dataType: DATA_TYPE.FOLDER,
             createdBy: new Types.ObjectId(userId)
         } as FilterQuery<Partial<Record<keyof FilesAndFolderSchemaType, any>>>
 
-        if (folderId) {
-            initialQuery["parentFolderId"] = new Types.ObjectId(folderId);
+        if (resourceId) {
+            initialQuery["parentFolderId"] = new Types.ObjectId(resourceId);
         } else {
             initialQuery.$expr = {
                 $or: [
@@ -80,7 +107,18 @@ export class ResourceService {
             initialQuery["isDeleted"] = { $eq: true }
         }
 
+        if (resourceType) {
+            initialQuery["dataType"] = resourceType
+        }
+
         const pipelines = [
+            ...this.getUserInfo(new Types.ObjectId(userId)),
+            {
+                $unwind: {
+                    path: "$userInfo",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
 
             {
                 $lookup: {
@@ -226,31 +264,7 @@ export class ResourceService {
                                 $expr: { $eq: ["$resourceId", "$$folderId"] }
                             }
                         },
-
-                        {
-                            $lookup: {
-                                from: "users",
-                                let: { userId: "$createdFor" },
-                                pipeline: [
-                                    {
-                                        $match: {
-                                            $expr: { $eq: ["$_id", "$$userId"] }
-                                        }
-                                    },
-
-                                    {
-                                        $project: {
-                                            firstName: 1,
-                                            lastName: 1,
-                                            email: 1,
-                                            imageUrl: 1
-                                        }
-                                    }
-                                ],
-                                as: "userInfo"
-                            }
-                        },
-
+                        ...this.getUserInfo("$createdFor"),
                         {
                             $unwind: {
                                 path: "$userInfo",

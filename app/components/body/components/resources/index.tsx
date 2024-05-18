@@ -1,5 +1,6 @@
 
 import { getResources } from "@/app/api/resources/_fetch";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import EmptySection from "./components/emptySection";
 import FolderComponent from "./components/folders";
 import { FileAndFolderDatasetType } from "./interfaces/index.interface";
@@ -108,7 +109,7 @@ import style from "./style.module.scss";
 // };
 
 async function fetchData(folderId?: string) {
-	const dataset = await getResources(folderId);
+	const dataset = await getResources(folderId, DATA_TYPE.FOLDER);
 	return JSON.parse(JSON.stringify(dataset?.data)) as FileAndFolderDatasetType["folders"]
 
 }

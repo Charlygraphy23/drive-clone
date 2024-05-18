@@ -2,6 +2,7 @@ import OwnerSection from "@/app/components/body/components/resources/components/
 import { OwnerAccessObject } from "@/app/components/body/components/resources/interfaces/index.interface";
 import { ColumnType } from "@/app/components/table/interfaces/index.interface";
 import { UseMutateFunction } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import TableAction from "../components/tableAction";
 import style from "../style.module.scss";
 
@@ -18,12 +19,13 @@ const useTableColumns = (props: Props) => {
 		{
 			title: "Owner",
 			dataIndex: "owner",
-			render: ({ value }) => <OwnerSection data={value as OwnerAccessObject} className={style.owner} />
+			render: ({ record }) => <OwnerSection data={record.data as OwnerAccessObject} className={style.owner} />
 		},
 
 		{
 			title: "Date binned",
 			dataIndex: "createdAt",
+			render: ({ value }) => dayjs(String(value)).format("YYYY-MM-DD")
 		},
 
 		{
@@ -38,10 +40,10 @@ const useTableColumns = (props: Props) => {
 			},
 		},
 
-		{
-			title: "Original Location",
-			dataIndex: "path",
-		},
+		// {
+		// 	title: "Original Location",
+		// 	dataIndex: "path",
+		// },
 
 		{
 			title: "",

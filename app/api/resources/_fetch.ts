@@ -1,7 +1,7 @@
 import { authOptions } from "@/app/lib/authConfig"
 import { connectDB } from "@/app/lib/database/db"
 import { AccessSchemaType } from "@/app/lib/database/interfaces/access.interface"
-import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces"
+import { DATA_TYPE, FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces"
 import { FilesAndFolderModel } from "@/app/lib/database/models/filesAndFolders"
 import { ResourceService } from "@/app/lib/database/services/resource.service"
 import { PipelineStage, SessionOption, Types } from "mongoose"
@@ -10,7 +10,7 @@ import { MongoIdSchemaValidation } from "../_validation/data.validation"
 
 
 
-export const getResources = async (folderId?: string) => {
+export const getResources = async (resourceId?: string, resourceType: DATA_TYPE | null = null, showDeleted = false) => {
     const service = new ResourceService()
 
     try {
@@ -21,13 +21,13 @@ export const getResources = async (folderId?: string) => {
 
         await connectDB();
 
-        if (folderId) {
-            const isValidId = MongoIdSchemaValidation.isValid(folderId)
+        if (resourceId) {
+            const isValidId = MongoIdSchemaValidation.isValid(resourceId)
 
             if (!isValidId) return { message: "Invalid folderId", status: 422 };
 
             const hasAccess = await service.checkAccess(String(user._id), {
-                resourceId: folderId ?? ""
+                resourceId: resourceId ?? ""
             })
 
             if (!hasAccess?.success) {
@@ -37,7 +37,7 @@ export const getResources = async (folderId?: string) => {
         }
 
 
-        const folders = await service.getFolders(String(user._id), folderId)
+        const folders = await service.getResources(String(user._id), resourceId, showDeleted, resourceType)
 
         return { message: "Un-authorized", status: 200, data: folders };
 

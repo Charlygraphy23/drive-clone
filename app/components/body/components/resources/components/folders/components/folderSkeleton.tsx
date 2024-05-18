@@ -1,7 +1,7 @@
 "use client";
 
 import MyDropdown from "@/app/components/dropdown";
-import { DATA_TYPE } from "@/app/interfaces/index.interface";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";

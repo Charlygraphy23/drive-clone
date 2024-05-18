@@ -1,4 +1,6 @@
-import { DATA_TYPE } from "@/app/interfaces/index.interface";
+import { getResources } from "@/app/api/resources/_fetch";
+import { FileAndFolderDatasetType } from "@/app/components/body/components/resources/interfaces/index.interface";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import BinTableComponent from "./binTableComponent";
 
 const dataset = [
@@ -54,11 +56,8 @@ const dataset = [
 ];
 
 const api = async () => {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve(dataset);
-		}, 2000);
-	});
+	const dataset = await getResources("", DATA_TYPE.FOLDER, true);
+	return JSON.parse(JSON.stringify(dataset?.data)) as FileAndFolderDatasetType["folders"]
 };
 
 const deleteForeverApi = async () => {

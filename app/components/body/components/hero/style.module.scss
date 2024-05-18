@@ -35,35 +35,5 @@
 				}
 			}
 		}
-
-		.resourceInfo {
-			width: 2rem;
-			height: 2rem;
-			margin-left: 1rem;
-
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			line-height: 0px;
-			border-radius: 50%;
-			cursor: pointer;
-			user-select: none;
-			transition: 0.3s ease;
-			transition-property: background-color;
-
-			color: color.$black-color1;
-
-			&:hover {
-				background-color: rgba(color.$black-color1, 0.15);
-			}
-
-			&.active {
-				background-color: color.$icon-color;
-			}
-
-			i {
-				pointer-events: none;
-			}
-		}
 	}
 }

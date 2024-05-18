@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image";
+import AvatarComponent from "@/app/components/avatar";
 import { OwnerAccessObject } from "../interfaces/index.interface";
 
 
@@ -12,8 +12,8 @@ type Props = {
 const OwnerSection = ({ data, className }: Props) => {
     return (
         <div className={className}>
-            <Image src={data?.profileImage} width={30} height={30} alt="profile image" />
-            <span>{data?.email}</span>
+            <AvatarComponent user={data?.userInfo} style={{ fontSize: "0.7rem", marginRight: "10px", color: "black" }} />
+            <span>{data?.userInfo?.email}</span>
         </div>
     )
 }

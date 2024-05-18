@@ -14,10 +14,7 @@ export type ActionType = {
 	| any;
 };
 
-export enum DATA_TYPE {
-	FILE = "file",
-	FOLDER = "folder",
-}
+
 
 export type SelectedAccessType = { _id?: string, } & Pick<AccessList, "accessType" | "userInfo" | "resourceId">
 
