@@ -22,6 +22,7 @@
     "mongoose": "^8.3.2",
     "next": "14.0.4",
     "next-auth": "^4.24.7",
+    "nextjs-toploader": "^1.6.12",
     "npm": "^10.7.0",
     "react": "^18",
     "react-dom": "^18",

@@ -1,3 +1,4 @@
+import { getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
 import { FilterQuery, PipelineStage, SessionOption, Types } from "mongoose";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
@@ -53,7 +54,7 @@ export class ResourceService {
         }], options)
     }
 
-    async getFolders(userId: string, folderId?: string) {
+    async getFolders(userId: string, folderId?: string, showDeleted = false) {
 
         const initialQuery = {
             dataType: DATA_TYPE.FOLDER,
@@ -73,6 +74,10 @@ export class ResourceService {
                     }
                 ]
             }
+        }
+
+        if (showDeleted) {
+            initialQuery["isDeleted"] = { $eq: true }
         }
 
         const pipelines = [
@@ -141,7 +146,9 @@ export class ResourceService {
             },
         ] as PipelineStage[]
 
-        return await Model.aggregate(pipelines)
+        return await Model.aggregate(pipelines, {
+            withDeleted: showDeleted
+        })
     }
 
     async findOne(filters: Partial<Record<keyof (FilesAndFolderSchemaType & { _id: string }), any>>, options?: SessionOption) {
@@ -273,7 +280,12 @@ export class ResourceService {
     }
 
     async softDeleteResourceById(resourceId: string) {
-        return await Model.findOneAndUpdate({ _id: new Types.ObjectId(resourceId) }, { isDeleted: true })
+        const query = getListOfChildFoldersQuery(resourceId);
+
+        const folders = (await Model.aggregate(query)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
+        const folderIdsToDelete = folders?.map(folder => folder?._id);
+
+        return await Model.updateMany({ _id: { $in: folderIdsToDelete } }, { isDeleted: true })
     }
 
 }

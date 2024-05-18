@@ -7,6 +7,8 @@ import mongoose from "mongoose"
 import { getServerSession } from "next-auth"
 import { NextRequest } from "next/server"
 
+
+
 export const GET = async (req: NextRequest, { params }: { params: { resourceId: string } }) => {
     const response = new ApiResponse()
     const service = new ResourceService()

@@ -1,6 +1,7 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import type { Metadata } from "next";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.scss";
 import AppClientProvider from "./provider";
 
@@ -17,7 +18,10 @@ export default function RootLayout({
 	return (
 		<html lang='en'>
 			<body suppressHydrationWarning={true}>
-				<AppClientProvider>{children}</AppClientProvider>
+				<NextTopLoader color="#6a29ff" />
+				<AppClientProvider>
+					{children}
+				</AppClientProvider>
 			</body>
 		</html>
 	);

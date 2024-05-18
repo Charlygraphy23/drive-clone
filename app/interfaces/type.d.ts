@@ -32,3 +32,16 @@ declare module 'next-auth/jwt' {
         user: User
     }
 }
+
+declare module 'mongoose' {
+    interface QueryOptions {
+        withDeleted?: boolean;
+    }
+    interface AggregateOptions {
+        withDeleted?: boolean;
+    }
+    interface SessionOption {
+        withDeleted?: boolean;
+    }
+
+}

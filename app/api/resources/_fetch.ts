@@ -4,7 +4,7 @@ import { AccessSchemaType } from "@/app/lib/database/interfaces/access.interface
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces"
 import { FilesAndFolderModel } from "@/app/lib/database/models/filesAndFolders"
 import { ResourceService } from "@/app/lib/database/services/resource.service"
-import { SessionOption, Types } from "mongoose"
+import { PipelineStage, SessionOption, Types } from "mongoose"
 import { getServerSession } from "next-auth"
 import { MongoIdSchemaValidation } from "../_validation/data.validation"
 
@@ -48,88 +48,92 @@ export const getResources = async (folderId?: string) => {
     }
 }
 
+export const getListOfChildFoldersQuery = (folderId: string): PipelineStage[] => {
+    return [
+        {
+            $match: {
+                _id: new Types.ObjectId(folderId)
+            }
+        },
 
+        // ? recursively lookup over folders and find the child folder
+        {
+            $graphLookup: {
+                from: "files_and_folders",
+                startWith: "$_id",
+                connectFromField: "_id",
+                connectToField: "parentFolderId",
+                as: "children",
+                depthField: "depth",
+            }
+        },
+
+
+        {
+            $project: {
+                merged: {
+                    $concatArrays: [["$$ROOT"], "$children"]
+                },
+
+            }
+        },
+
+
+        {
+            $project: {
+                "merged.children": 0
+            }
+        },
+
+        // ? make children data as ROOT data
+        {
+            $unwind: {
+                path: "$merged",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+
+        {
+            $replaceRoot: {
+                newRoot: "$merged"
+            }
+        },
+
+        {
+            $sort: { "depth": 1 } // Sort the results by depth
+        },
+
+        {
+            $project: {
+                name: 1,
+                createdBy: 1,
+                parentFolderId: 1,
+                dataType: 1,
+                depth: {
+                    $cond: {
+                        if: {
+                            $or: [
+                                { $eq: [{ $type: "$depth" }, "missing"] },
+                                { $lte: ["$depth", null] }
+                            ]
+                        },
+                        then: -1,
+                        else: "$depth"
+                    }
+                }
+            }
+        },
+    ]
+}
 
 export const getChildrenAccessListByFolderId = async (folderId: string, options?: SessionOption) => {
+
+    const query = getListOfChildFoldersQuery(folderId)
     try {
         const data = await FilesAndFolderModel.aggregate([
 
             // ? get all the data of the folder by id
-            {
-                $match: {
-                    _id: new Types.ObjectId(folderId)
-                }
-            },
-
-            // ? recursively lookup over folders and find the child folder
-            {
-                $graphLookup: {
-                    from: "files_and_folders",
-                    startWith: "$_id",
-                    connectFromField: "_id",
-                    connectToField: "parentFolderId",
-                    as: "children",
-                    depthField: "depth",
-                }
-            },
-
-
-            {
-                $project: {
-                    merged: {
-                        $concatArrays: [["$$ROOT"], "$children"]
-                    },
-
-                }
-            },
-
-
-            {
-                $project: {
-                    "merged.children": 0
-                }
-            },
-
-            // ? make children data as ROOT data
-            {
-                $unwind: {
-                    path: "$merged",
-                    preserveNullAndEmptyArrays: true
-                }
-            },
-
-            {
-                $replaceRoot: {
-                    newRoot: "$merged"
-                }
-            },
-
-            {
-                $sort: { "depth": 1 } // Sort the results by depth
-            },
-
-            {
-                $project: {
-                    name: 1,
-                    createdBy: 1,
-                    parentFolderId: 1,
-                    dataType: 1,
-                    depth: {
-                        $cond: {
-                            if: {
-                                $or: [
-                                    { $eq: [{ $type: "$depth" }, "missing"] },
-                                    { $lte: ["$depth", null] }
-                                ]
-                            },
-                            then: -1,
-                            else: "$depth"
-                        }
-                    }
-                }
-            },
-
-
+            ...query,
             // ? find all the access that a particular folder has
             {
                 $lookup: {
