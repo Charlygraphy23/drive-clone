@@ -10,7 +10,7 @@ type AddBulkFiles = {
 };
 
 type RenameFile = {
-	fileId: string;
+	resourceId: string;
 	name: string;
 };
 

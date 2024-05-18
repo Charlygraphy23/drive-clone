@@ -12,6 +12,8 @@ import FolderSkeleton from "./components/folderSkeleton";
 const FolderComponent = () => {
 	const { data } = useAppSelector(state => state.folders)
 	const { selectedFolderId } = useAppSelector(state => state.resourceInfo)
+	const { manageAccessModal } = useAppSelector(state => state.modals)
+
 	const ref = useRef<string>("")
 
 	const dispatch = useAppDispatch()
@@ -25,12 +27,16 @@ const FolderComponent = () => {
 	}
 
 	const onClear = () => {
-		dispatch(clearSelectedFolderId())
-		dispatch(toggleModal({
-			isOpen: false,
-			name: "manageAccessModal",
-			data: null
-		}))
+		if (selectedFolderId)
+			dispatch(clearSelectedFolderId())
+
+		if (manageAccessModal) {
+			dispatch(toggleModal({
+				isOpen: false,
+				name: "manageAccessModal",
+			}))
+		}
+
 	}
 
 	useEffect(() => {

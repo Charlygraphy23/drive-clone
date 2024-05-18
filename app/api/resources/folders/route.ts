@@ -23,7 +23,7 @@ export const PATCH = async (req: NextRequest) => {
         const user = session.user
 
         const body = await req?.json()
-        const { folderId, updatedName } = body as UpdateFolderNamePayload;
+        const { id, updatedName } = body as UpdateFolderNamePayload;
 
         const isValid = await UpdateNamePayloadSchema.isValid(body, { abortEarly: false })
 
@@ -32,7 +32,7 @@ export const PATCH = async (req: NextRequest) => {
         await connectDB();
 
         const hasAccess = await service.checkAccess(String(user._id), {
-            resourceId: folderId ?? "",
+            resourceId: id ?? "",
             accessType: ACCESS_TYPE.WRITE
         })
 
@@ -41,17 +41,17 @@ export const PATCH = async (req: NextRequest) => {
             return response.status(403).send("Unauthorized")
         }
 
-        const foundFolder = await service.findOne({ _id: folderId })
+        const foundFolder = await service.findOne({ _id: id })
 
         if (!foundFolder) return response.status(422).send("No folder found!")
 
         const folderData = foundFolder.toJSON()
 
-        const folderExistWithName = await service.findOne({ name: updatedName, parentFolderId: folderData?.parentFolderId, _id: { $ne: folderId } })
+        const folderExistWithName = await service.findOne({ name: updatedName, parentFolderId: folderData?.parentFolderId, _id: { $ne: id } })
 
         if (folderExistWithName) return response.status(422).send("Folder Exists with the name!")
 
-        await service.updateName(folderId, updatedName)
+        await service.updateName(id, updatedName)
 
         return response.status(200).send("Updated")
 

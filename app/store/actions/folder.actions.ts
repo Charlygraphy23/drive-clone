@@ -1,8 +1,9 @@
-import { addFolderApi, updateFolderNameApi, UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
+import { addFolderApi, moveToTrashResourceApi, updateFolderNameApi, UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
 import { DATA_TYPE, FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { ErrorHandler } from "@/app/utils/index.utils";
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { FolderDataType } from "../reducers/folders.reducers";
+import { updateInfo } from "./info.actions";
 
 type AddFolderType = {
 	reset: () => void;
@@ -46,10 +47,29 @@ export const renameFolderAsync = createAsyncThunk<{ _id: string, updatedName: st
 
 		if (payload?.reset) {
 			payload?.reset()
+			_thunkAPI.dispatch(updateInfo({
+				id: payload?.id,
+				data: {
+					name: payload?.updatedName
+				}
+			}))
 		}
 		return {
-			_id: payload?.folderId,
+			_id: payload?.id,
 			updatedName: payload?.updatedName
+		}
+	}
+	catch (err) {
+		const errors = ErrorHandler(err)
+		return Promise.reject(errors)
+	}
+})
+
+export const moveToTrashAsync = createAsyncThunk<{ id: string }, { id: string }>("moveToTrash", async ({ id }, _thunkAPI) => {
+	try {
+		await moveToTrashResourceApi(id)
+		return {
+			id
 		}
 	}
 	catch (err) {

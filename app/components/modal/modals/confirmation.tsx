@@ -1,15 +1,15 @@
 "use client";
 
-import { CONFIRM_MODAL_ID } from "@/app/config/const";
-import React, { FormEvent } from "react";
-import style from "../style.module.scss";
 import ModalComponent from "@/app/components/modal";
-import { ModalStateType } from "@/app/store/reducers/modal.reducers";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleModal as toggleModalState } from "@/app/store/actions";
+import { CONFIRM_MODAL_ID } from "@/app/config/const";
 import { RootState } from "@/app/store";
+import { toggleModal as toggleModalState } from "@/app/store/actions";
+import { ModalStateType } from "@/app/store/reducers/modal.reducers";
 import { useMutation } from "@tanstack/react-query";
+import { FormEvent } from "react";
 import { Rings } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import style from "../style.module.scss";
 
 type Props = {
 	api: () => Promise<any>;
@@ -34,7 +34,6 @@ const ConfirmationModalComponent = ({ api, message }: Props) => {
 	const handleModalSubmit = async (event: FormEvent) => {
 		event.preventDefault();
 		await mutation.mutateAsync();
-		console.log("Submited");
 	};
 
 	return (

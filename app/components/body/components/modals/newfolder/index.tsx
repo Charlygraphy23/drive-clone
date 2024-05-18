@@ -27,9 +27,10 @@ const NewFolderModal = ({ isOpen }: Props) => {
 	const dispatch = useAppDispatch();
 	const [name, setName] = useState<string>("");
 	const session = useSession()
-	const user = session?.data?.user
 	const params = useParams()
 	const router = useRouter()
+	const user = session?.data?.user
+
 
 	const toggleModal = (isOpen?: boolean) => {
 		dispatch(

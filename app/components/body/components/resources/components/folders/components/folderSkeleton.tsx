@@ -31,7 +31,7 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 			toggleModal({
 				isOpen: true,
 				data: {
-					folderId: data?._id,
+					id: data?._id,
 					type: DATA_TYPE.FOLDER,
 					value: data?.name ?? "",
 				},
@@ -80,6 +80,25 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 		return hasElementWithId || hasElementWithClass
 	}, [])
 
+	const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
+		e.stopPropagation()
+		e.preventDefault()
+
+		console.log(`handleDelete`, data)
+
+		dispatch(
+			toggleModal({
+				isOpen: true,
+				data: {
+					id: data?._id,
+					type: DATA_TYPE.FOLDER,
+					value: data.name ?? ""
+				},
+				name: "deleteModal",
+			})
+		);
+	}
+
 
 	useEffect(() => {
 		function checkClick(e: MouseEvent) {
@@ -125,7 +144,7 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 
 					<MyDropdown.List divider></MyDropdown.List>
 
-					<MyDropdown.List className='d-flex'>
+					<MyDropdown.List className='d-flex' onClick={handleDelete}>
 						<i className='bi bi-trash3-fill'></i>
 						<span> Move to trash </span>
 					</MyDropdown.List>

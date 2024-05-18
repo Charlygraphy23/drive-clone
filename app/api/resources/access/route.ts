@@ -5,16 +5,17 @@ import { ACCESS_ORIGIN, ACCESS_TYPE } from "@/app/lib/database/interfaces/access
 import { AccessService } from "@/app/lib/database/services/access.service";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
+import mongoose, { SessionOption } from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 import { UpdateAccessPayloadValidator } from "../../_validation/access.validation";
 
 
-const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAccessTypePayload["accessList"] = [], deletedUserIds: string[] = []) => {
+const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAccessTypePayload["accessList"] = [], deletedUserIds: string[] = [], options?: SessionOption) => {
     return new Promise(async (resolve, reject) => {
         try {
             const service = new AccessService()
-            const folders = await service.getAllChildFoldersWithAccess(resourceId)
+            const folders = await service.getAllChildFoldersWithAccess(resourceId, options)
 
 
             console.log("Accesses Needs to be updated fromAPI ", updateAccessList)
@@ -93,6 +94,7 @@ const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAcce
 export const PATCH = async (req: NextRequest) => {
     const response = new ApiResponse()
     const resourceService = new ResourceService()
+    const mongoSession = await mongoose.startSession()
     try {
         const session = await getServerSession(authOptions)
 
@@ -108,11 +110,12 @@ export const PATCH = async (req: NextRequest) => {
         if (!isValid) return response.status(422).send("Invalid Data")
 
         await connectDB();
+        mongoSession.startTransaction()
 
         const hasAccess = await resourceService.checkAccess(String(user._id), {
             resourceId,
             accessType: ACCESS_TYPE.WRITE
-        })
+        }, { session: mongoSession })
 
         if (!hasAccess?.success) {
             //TODO: redirect to another page not found / no permissions
@@ -124,14 +127,19 @@ export const PATCH = async (req: NextRequest) => {
         console.log("accessListWithoutOwner", accessListWithoutOwner)
         console.log("hasResource", hasResource)
 
-        await handleAccessManagement(resourceId, accessListWithoutOwner, deletedUserIds)
+        await handleAccessManagement(resourceId, accessListWithoutOwner, deletedUserIds, { session: mongoSession })
+        await mongoSession.commitTransaction()
         return response.status(200).send("Updated")
 
     }
     catch (_err: unknown) {
         const err = _err as { message: string }
         console.error("Error - ", err)
+        await mongoSession.abortTransaction()
         return response.status(500).send(err?.message)
+    }
+    finally {
+        await mongoSession.endSession()
     }
 
 }

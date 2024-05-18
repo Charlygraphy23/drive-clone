@@ -11,7 +11,8 @@ export interface FilesAndFolderSchemaType {
     createdBy: string | mongoose.Types.ObjectId;
     lastModified?: string | Date;
     dataType: DATA_TYPE;
-    parentFolderId?: string | mongoose.Types.ObjectId
+    parentFolderId?: string | mongoose.Types.ObjectId,
+    isDeleted?: boolean
 }
 
 export interface FilesAndFolderDocument extends FilesAndFolderSchemaType, Document { }

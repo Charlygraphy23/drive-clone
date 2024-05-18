@@ -2,17 +2,7 @@ import { DATA_TYPE } from "@/app/interfaces/index.interface";
 import { createReducer } from "@reduxjs/toolkit";
 import { toggleModal } from "../actions";
 
-export type ModalDataType = { value: string } & Record<string, any> & (
-	| ({
-		fileId: string;
-		type: DATA_TYPE.FILE;
-	} | {
-		folderId: string;
-		type: DATA_TYPE.FOLDER;
-	} | {
-		type: null;
-	})
-);
+export type ModalDataType = { id: string, value?: string, type?: DATA_TYPE } & Record<string, any>
 
 const initialState = {
 	renameModal: false,
@@ -20,6 +10,7 @@ const initialState = {
 	confirmModal: false,
 	changePasswordModal: false,
 	manageAccessModal: false,
+	deleteModal: false,
 	data: {} as ModalDataType,
 };
 

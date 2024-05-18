@@ -25,13 +25,19 @@ export type UpdateInfoByFolderIdType = {
         userInfo: UserInfoType
     }[],
     folderId: string,
+}
 
+export type UpdateInfoActionType = {
+    id: string,
+    data: Partial<ResourceInfoDataType>
 }
 
 export const toggleInfo = createAction("showInfo")
 export const clearSelectedFolderId = createAction("clearSelectedFolderId")
 export const updateInfoByFolderId = createAction<UpdateInfoByFolderIdType>("updateInfoByFolderId")
 export const invalidateCache = createAction("invalidateCache")
+export const updateInfo = createAction<UpdateInfoActionType>("updateInfo")
+
 
 
 export const getFolderInfoAsync = createAsyncThunk<ResourceInfoDataType, { folderId: string }>("getResourceInfo", async (payload, _thunkAPI) => {

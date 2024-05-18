@@ -35,7 +35,7 @@ export default createReducer(initialState, (builder) => {
 			const payload = action?.payload;
 
 			state.data.forEach((file) => {
-				if (file?._id === payload?.fileId) {
+				if (file?._id === payload?.resourceId) {
 					file.name = payload?.name;
 				}
 			});

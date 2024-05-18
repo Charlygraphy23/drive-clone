@@ -10,8 +10,8 @@ const Model = AccessModal
 export class AccessService {
 
 
-    async getAllChildFoldersWithAccess(folderId: string) {
-        return await getChildrenAccessListByFolderId(folderId)
+    async getAllChildFoldersWithAccess(folderId: string, options?: SessionOption) {
+        return await getChildrenAccessListByFolderId(folderId, options)
     }
     // createdFor + resourceId
     async findByUser(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption) {

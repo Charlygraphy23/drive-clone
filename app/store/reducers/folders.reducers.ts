@@ -1,6 +1,6 @@
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
-import { addBulkFolder, addFolderAsync, renameFolderAsync } from "../actions";
+import { addBulkFolder, addFolderAsync, moveToTrashAsync, renameFolderAsync } from "../actions";
 
 const initialState = {
 	loading: false,
@@ -64,6 +64,11 @@ export default createReducer(initialState, (builder) => {
 			const payload = action.payload;
 
 			state.data = payload?.data;
+			return state;
+		})
+		.addCase(moveToTrashAsync.fulfilled, (state, action) => {
+			const folderId = action?.payload?.id
+			state.data = state?.data?.filter(folder => folder?._id !== folderId)
 			return state;
 		});
 });

@@ -34,7 +34,7 @@ export const DataCreateSchemaValidator = object().shape({
 })
 
 export const UpdateNamePayloadSchema = object().shape({
-    folderId: string().test({
+    id: string().test({
         name: "valid-mongodb-id",
         message: "Invalid item ID",
         test: (value) => {

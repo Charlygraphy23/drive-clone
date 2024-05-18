@@ -1,0 +1,37 @@
+@use "/app/styles/variable.scss" as color;
+
+.deleteModal {
+	display: flex;
+	flex-direction: column;
+
+	& > h5 {
+		display: flex;
+
+		span {
+			flex: 1;
+			overflow: hidden;
+			display: flex;
+			margin-right: 20px;
+			align-items: center;
+
+			i {
+				font-size: 1.1rem;
+				display: inline-block;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				margin-left: 10px;
+			}
+		}
+
+		button {
+			width: 20px;
+		}
+	}
+
+	.delete {
+		width: 100%;
+		max-width: 100px;
+		min-height: 40px;
+		background-color: color.$error1;
+	}
+}

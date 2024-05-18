@@ -4,7 +4,7 @@ import { AccessSchemaType } from "@/app/lib/database/interfaces/access.interface
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces"
 import { FilesAndFolderModel } from "@/app/lib/database/models/filesAndFolders"
 import { ResourceService } from "@/app/lib/database/services/resource.service"
-import { Types } from "mongoose"
+import { SessionOption, Types } from "mongoose"
 import { getServerSession } from "next-auth"
 import { MongoIdSchemaValidation } from "../_validation/data.validation"
 
@@ -50,7 +50,7 @@ export const getResources = async (folderId?: string) => {
 
 
 
-export const getChildrenAccessListByFolderId = async (folderId: string) => {
+export const getChildrenAccessListByFolderId = async (folderId: string, options?: SessionOption) => {
     try {
         const data = await FilesAndFolderModel.aggregate([
 
@@ -154,7 +154,7 @@ export const getChildrenAccessListByFolderId = async (folderId: string) => {
                 }
             },
 
-        ])
+        ], options)
 
         return data as ({ _id: string, accesses: ({ _id: string } & Pick<AccessSchemaType, "accessType" | "createdFor" | "resourceId" | "rootId" | "origin">)[] } & Pick<FilesAndFolderSchemaType, "createdBy" | "dataType" | "name" | "parentFolderId">)[]
     }

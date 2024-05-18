@@ -67,9 +67,9 @@ const RenameModal = ({ isOpen, data }: Props) => {
 		if (!name) return;
 
 		if (data && data.type === DATA_TYPE.FILE) {
-			dispatch(renameFile({ fileId: data?.fileId, name }));
+			dispatch(renameFile({ resourceId: data?.id, name }));
 		} else {
-			dispatch(renameFolderAsync({ folderId: data?.folderId, updatedName: name, reset: resetModal }));
+			dispatch(renameFolderAsync({ id: data?.id, updatedName: name, reset: resetModal }));
 		}
 	};
 

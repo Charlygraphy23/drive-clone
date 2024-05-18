@@ -5,7 +5,7 @@ import { axiosInstance } from "./http";
 
 export type UpdateFolderNamePayload = {
     updatedName: string,
-    folderId: string,
+    id: string,
 }
 
 export type UpdateAccessTypePayload = {
@@ -35,11 +35,15 @@ export const updateFolderNameApi = async (payload: UpdateFolderNamePayload) => {
 }
 
 
-export const getFolderInfoByIdApi = async (folderId: string) => {
-    return await axiosInstance.get(`/resources/folders/${folderId}`)
+export const getFolderInfoByIdApi = async (resourceId: string) => {
+    return await axiosInstance.get(`/resources/${resourceId}`)
 }
 
 
 export const updateAccess = async (payload: UpdateAccessTypePayload) => {
     return await axiosInstance.patch(`/resources/access`, payload)
+}
+
+export const moveToTrashResourceApi = async (resourceId: string) => {
+    return await axiosInstance.patch(`/resources/${resourceId}`)
 }

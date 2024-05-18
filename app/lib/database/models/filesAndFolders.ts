@@ -28,8 +28,38 @@ const schema = new mongoose.Schema<FilesAndFolderSchemaType>({
         ref: MODEL_NAME,
         index: true,
         default: null // means root
-    }
+    },
+    isDeleted: {
+        type: Boolean,
+        index: true,
+        default: false
+    },
 }, { timestamps: true })
 
+
+schema.pre('find', function () {
+    this.where({ isDeleted: { $ne: true } });
+});
+schema.pre('findOneAndDelete', function () {
+    this.where({ isDeleted: { $ne: true } });
+});
+schema.pre('findOneAndUpdate', function () {
+    this.where({ isDeleted: { $ne: true } });
+});
+schema.pre('updateMany', function () {
+    this.where({ isDeleted: { $ne: true } });
+});
+schema.pre('updateOne', function () {
+    this.where({ isDeleted: { $ne: true } });
+});
+schema.pre('findOneAndReplace', function () {
+    this.where({ isDeleted: { $ne: true } });
+});
+schema.pre('findOne', function () {
+    this.where({ isDeleted: { $ne: true } });
+});
+schema.pre('aggregate', function () {
+    this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+});
 
 export const FilesAndFolderModel = mongoose.models["Files_And_Folders"] as Model<FilesAndFolderDocument> || mongoose.model<FilesAndFolderDocument>(MODEL_NAME, schema)

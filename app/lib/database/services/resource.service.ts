@@ -42,6 +42,7 @@ export class ResourceService {
             parentFolderId: parentFolderId ?? null
         }, null, options)
     }
+
     async createFolder(payload: CreateDataType, options?: SessionOption) {
         return await Model.create([{
             name: payload?.name,
@@ -267,11 +268,12 @@ export class ResourceService {
         return folderList?.[0] ?? null
     }
 
-
     async updateName(_id: string, name: string) {
         return await Model.findOneAndUpdate({ _id }, { name, lastUpdate: new Date() })
     }
 
-
+    async softDeleteResourceById(resourceId: string) {
+        return await Model.findOneAndUpdate({ _id: new Types.ObjectId(resourceId) }, { isDeleted: true })
+    }
 
 }

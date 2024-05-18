@@ -18,7 +18,7 @@ const FileAction = ({ data }: Props) => {
 			toggleModal({
 				isOpen: true,
 				data: {
-					fileId: data?._id,
+					id: data?._id,
 					type: DATA_TYPE.FILE,
 					value: data?.name,
 				},
