@@ -115,7 +115,7 @@ export const PATCH = async (req: NextRequest) => {
         const hasAccess = await resourceService.checkAccess(String(user._id), {
             resourceId,
             accessType: ACCESS_TYPE.WRITE
-        }, { session: mongoSession })
+        }, { session: mongoSession, withDeleted: true })
 
         if (!hasAccess?.success) {
             //TODO: redirect to another page not found / no permissions
@@ -127,7 +127,7 @@ export const PATCH = async (req: NextRequest) => {
         console.log("accessListWithoutOwner", accessListWithoutOwner)
         console.log("hasResource", hasResource)
 
-        await handleAccessManagement(resourceId, accessListWithoutOwner, deletedUserIds, { session: mongoSession })
+        await handleAccessManagement(resourceId, accessListWithoutOwner, deletedUserIds, { session: mongoSession, withDeleted: true })
         await mongoSession.commitTransaction()
         return response.status(200).send("Updated")
 

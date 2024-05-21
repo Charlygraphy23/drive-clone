@@ -19,6 +19,17 @@
 
 		tbody {
 			tr {
+				border-bottom: 2px solid transparent;
+				transition: 0.2s ease-in;
+				transition-property: background-color, border-color;
+
+				&.selectable {
+					&:hover {
+						cursor: pointer;
+						background-color: rgba(black, 0.05);
+					}
+				}
+
 				th {
 					padding: $padding;
 					color: color.$black-color;
@@ -27,7 +38,6 @@
 				td {
 					padding: $padding;
 					color: color.$text-gray-color;
-
 					.empty {
 						display: flex;
 						flex-direction: column;
@@ -38,6 +48,11 @@
 							width: 200px;
 						}
 					}
+				}
+
+				&.active {
+					border-color: color.$icon-color;
+					background-color: rgba(black, 0.05);
 				}
 			}
 		}

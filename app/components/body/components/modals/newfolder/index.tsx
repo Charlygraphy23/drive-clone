@@ -12,7 +12,7 @@ import {
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, memo, useState } from "react";
+import { ChangeEvent, FormEvent, memo, useEffect, useRef, useState } from "react";
 import style from "./style.module.scss";
 
 type Props = {
@@ -24,6 +24,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 	const { loading, error } = useAppSelector(
 		(state) => state.folders
 	);
+	const ref = useRef<HTMLInputElement>(null)
 	const dispatch = useAppDispatch();
 	const [name, setName] = useState<string>("");
 	const session = useSession()
@@ -66,6 +67,13 @@ const NewFolderModal = ({ isOpen }: Props) => {
 		}));
 	};
 
+	useEffect(() => {
+		if (!ref.current) return;
+		ref.current.focus()
+		console.log(ref?.current)
+
+	}, [isOpen])
+
 	return (
 		<ModalComponent
 			id={NEW_FOLDER_MODAL_ID}
@@ -83,6 +91,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 					onChange={onChange}
 					className={style.inputWrapper}
 					errorMessage={error}
+					ref={ref}
 				/>
 
 				<div className='d-flex justify-content-end align-items-center mt-4 mb-2'>

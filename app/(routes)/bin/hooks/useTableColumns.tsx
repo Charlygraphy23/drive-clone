@@ -1,16 +1,19 @@
 import OwnerSection from "@/app/components/body/components/resources/components/ownerSection";
 import { OwnerAccessObject } from "@/app/components/body/components/resources/interfaces/index.interface";
 import { ColumnType } from "@/app/components/table/interfaces/index.interface";
-import { UseMutateFunction } from "@tanstack/react-query";
+import { FolderDataType } from "@/app/store/reducers/folders.reducers";
+import { UseMutationResult } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 import dayjs from "dayjs";
 import TableAction from "../components/tableAction";
 import style from "../style.module.scss";
 
 type Props = {
-	restoreApi: UseMutateFunction;
-};
+	mutation: UseMutationResult<AxiosResponse>
+}
 
-const useTableColumns = (props: Props) => {
+const useTableColumns = ({ mutation }: Props) => {
+
 	const columns: ColumnType[] = [
 		{
 			title: "Name",
@@ -48,8 +51,11 @@ const useTableColumns = (props: Props) => {
 		{
 			title: "",
 			dataIndex: "",
-			render: () => {
-				return <TableAction {...props} />;
+			render: ({ record }) => {
+				return <TableAction
+					data={record?.data as FolderDataType}
+					mutation={mutation}
+				/>;
 			},
 		},
 	];

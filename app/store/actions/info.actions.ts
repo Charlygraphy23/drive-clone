@@ -40,7 +40,7 @@ export const updateInfo = createAction<UpdateInfoActionType>("updateInfo")
 
 
 
-export const getFolderInfoAsync = createAsyncThunk<ResourceInfoDataType, { folderId: string }>("getResourceInfo", async (payload, _thunkAPI) => {
+export const getFolderInfoAsync = createAsyncThunk<ResourceInfoDataType, { folderId: string, withDeleted?: boolean }>("getResourceInfo", async (payload, _thunkAPI) => {
     try {
 
         const ID = payload.folderId;
@@ -49,7 +49,7 @@ export const getFolderInfoAsync = createAsyncThunk<ResourceInfoDataType, { folde
 
         if (info) return info
 
-        const data = await getFolderInfoByIdApi(ID)
+        const data = await getFolderInfoByIdApi(ID, payload?.withDeleted)
         return data?.data?.data
     }
     catch (err) {

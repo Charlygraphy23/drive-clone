@@ -1,5 +1,5 @@
 import { getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
-import { FilterQuery, PipelineStage, SessionOption, Types } from "mongoose";
+import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
@@ -193,7 +193,7 @@ export class ResourceService {
         return await Model.findOne(filters, null, options)
     }
 
-    async folderInfo(folderId: string, loggedUserId: string) {
+    async folderInfo(folderId: string, loggedUserId: string, options?: SessionOption) {
         const folderList = await Model.aggregate([
             {
                 $match: {
@@ -284,7 +284,7 @@ export class ResourceService {
                 }
             },
 
-        ])
+        ], options)
 
         return folderList?.[0] ?? null
     }
@@ -293,13 +293,25 @@ export class ResourceService {
         return await Model.findOneAndUpdate({ _id }, { name, lastUpdate: new Date() })
     }
 
-    async softDeleteResourceById(resourceId: string) {
+    async softDeleteResourceById(resourceId: string, options?: SessionOption) {
         const query = getListOfChildFoldersQuery(resourceId);
 
-        const folders = (await Model.aggregate(query)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
+        const folders = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
         const folderIdsToDelete = folders?.map(folder => folder?._id);
 
-        return await Model.updateMany({ _id: { $in: folderIdsToDelete } }, { isDeleted: true })
+        const _options = options as MongooseUpdateQueryOptions
+        return await Model.updateMany({ _id: { $in: folderIdsToDelete } }, { isDeleted: true }, _options)
+    }
+
+    async restoreDeletedResources(resourceId: string, options?: SessionOption) {
+        const query = getListOfChildFoldersQuery(resourceId);
+
+        const folders = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
+        console.log("Folders ", folders, resourceId)
+        const folderIdsToDelete = folders?.map(folder => folder?._id);
+
+        const _options = options as MongooseUpdateQueryOptions
+        return await Model.updateMany({ _id: { $in: folderIdsToDelete } }, { isDeleted: false }, _options)
     }
 
 }

@@ -49,7 +49,7 @@ const ManageAccess = () => {
     const mutation = useMutation({ mutationFn: updateAccess })
     const session = useSession()
     const user = session?.data?.user
-    const folderId = modalState?.value
+    const folderId = modalState?.value as NonNullable<string>
     const resourceInfoById = resourceInfo[folderId]
 
     const hasAccess = useMemo(() => {
@@ -86,7 +86,7 @@ const ManageAccess = () => {
             return {
                 userInfo,
                 accessType: ACCESS_TYPE.READ,
-                resourceId: folderId
+                resourceId: folderId as NonNullable<string>
             }
         })
 

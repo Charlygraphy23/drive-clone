@@ -1,6 +1,5 @@
-import { DATA_TYPE } from "../interfaces/index.interface";
 import { ACCESS_TYPE } from "../lib/database/interfaces/access.interface";
-import { FilesAndFolderSchemaType } from "../lib/database/interfaces/files.interfaces";
+import { DATA_TYPE, FilesAndFolderSchemaType } from "../lib/database/interfaces/files.interfaces";
 import { axiosInstance } from "./http";
 
 export type UpdateFolderNamePayload = {
@@ -35,8 +34,14 @@ export const updateFolderNameApi = async (payload: UpdateFolderNamePayload) => {
 }
 
 
-export const getFolderInfoByIdApi = async (resourceId: string) => {
-    return await axiosInstance.get(`/resources/${resourceId}`)
+export const getFolderInfoByIdApi = async (resourceId: string, withDeleted?: boolean) => {
+    let path = `/resources/${resourceId}`
+
+    if (withDeleted) {
+        path = path + `?deleted=true`
+    }
+
+    return await axiosInstance.get(path)
 }
 
 
@@ -46,4 +51,8 @@ export const updateAccess = async (payload: UpdateAccessTypePayload) => {
 
 export const moveToTrashResourceApi = async (resourceId: string) => {
     return await axiosInstance.patch(`/resources/${resourceId}`)
+}
+
+export const restoreFromTrashApi = async (resourceId: string) => {
+    return await axiosInstance.post(`/resources/${resourceId}`, {})
 }

@@ -27,4 +27,7 @@ export type TableProps<T> = {
 	data: T[];
 	emptyIcon?: React.ReactElement;
 	isLoading?: boolean;
+	onRowClick?: (_val: T) => void
+	selectedRowDataId?: string
+	dataKey: (keyof T) & string
 };
