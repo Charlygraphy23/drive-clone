@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactElement, Ref, forwardRef } from 'react';
+import { ChangeEvent, ReactElement } from 'react';
 import style from './style.module.scss';
 
 
@@ -14,7 +14,7 @@ type Props = {
     name?: string
 }
 
-const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMessage = "", id, placeHolder, name }: Props, ref: Ref<HTMLInputElement>) => {
+const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMessage = "", id, placeHolder, name }: Props) => {
     return (
         <div className={style.inputGroup}>
             {errorMessage && <div className={style.errorMessage}>
@@ -23,10 +23,16 @@ const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMes
             </div>}
             <div className={`${className} ${style.inputGroupWrapper} ${errorMessage && style.error || ""}`}>
                 {icon && <span>{icon}</span>}
-                <input ref={ref} id={id} name={name} type={type} value={value} onChange={onChange} placeholder={placeHolder} />
+                <input
+                    id={id}
+                    name={name}
+                    type={type}
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeHolder} />
             </div>
         </div>
     )
 }
 
-export default forwardRef(InputGroup)
+export default InputGroup

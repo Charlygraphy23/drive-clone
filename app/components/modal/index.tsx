@@ -37,37 +37,41 @@ const Modal = (props: Props) => {
 
 			if (instance.current) {
 				instance.current.hide()
-				instance.current.dispose()
-				instance.current = null
+				// instance.current.dispose()
+				// instance.current = null
 			}
-			if (toggle && isOpen) toggle(false);
 		}
 	}, [getInstance, isOpen, toggle]);
 
 	useEffect(() => {
+		console.log("Show", instance?.current)
 		if (!instance?.current) return;
 
 		isOpen ? instance?.current?.show() : instance?.current?.hide();
 	}, [isOpen]);
 
 
-	// useEffect(() => {
-	// 	if (!instance?.current) return;
+	useEffect(() => {
+		if (!instance?.current) return;
 
-	// 	const handleHidden = () => {
-	// 		if (toggle && isOpen) toggle(false);
-	// 	};
+		const handleHidden = () => {
+			if (toggle && isOpen) toggle(false);
+		};
 
-	// 	// const modals = document.querySelectorAll(".modal");
+		const modals = document.querySelectorAll(".modal");
 
-	// 	// modals.forEach((modal) =>
-	// 	// 	modal?.addEventListener("hidden.bs.modal", handleHidden)
-	// 	// );
+		modals.forEach((modal) =>
+			modal?.addEventListener("hidden.bs.modal", handleHidden)
+		);
 
-	// 	return () => {
-	// 		handleHidden()
-	// 	};
-	// }, [toggle, isOpen]);
+		return () => {
+			const modals = document.querySelectorAll(".modal");
+
+			modals.forEach((modal) =>
+				modal?.removeEventListener("hidden.bs.modal", handleHidden)
+			);
+		};
+	}, [toggle, isOpen]);
 
 	return (
 		<ModalComponent centered={centered} isOpen={isOpen} id={id} size={size}>

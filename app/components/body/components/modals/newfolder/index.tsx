@@ -91,7 +91,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 					onChange={onChange}
 					className={style.inputWrapper}
 					errorMessage={error}
-					ref={ref}
+				// ref={ref}
 				/>
 
 				<div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
