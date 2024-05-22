@@ -2,7 +2,7 @@
 
 import ButtonGroup from "@/app/components/buttonGroup";
 import InputGroup from "@/app/components/inputGroup";
-import ModalComponent from "@/app/components/modal";
+import ModalComponent, { ButtonClose } from "@/app/components/modal";
 import { NEW_FOLDER_MODAL_ID } from "@/app/config/const";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
@@ -12,7 +12,7 @@ import {
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, memo, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import style from "./style.module.scss";
 
 type Props = {
@@ -33,14 +33,14 @@ const NewFolderModal = ({ isOpen }: Props) => {
 	const user = session?.data?.user
 
 
-	const toggleModal = (isOpen?: boolean) => {
+	const toggleModal = useCallback((isOpen?: boolean) => {
 		dispatch(
 			toggleModalState({
 				isOpen: !!isOpen,
 				name: "newFolderModal",
 			})
 		);
-	};
+	}, [dispatch]);
 
 	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setName(event.target.value);
@@ -69,9 +69,10 @@ const NewFolderModal = ({ isOpen }: Props) => {
 
 	useEffect(() => {
 		if (!ref.current) return;
-		ref.current.focus()
-		console.log(ref?.current)
 
+		if (isOpen) {
+			ref.current.focus()
+		}
 	}, [isOpen])
 
 	return (
@@ -82,7 +83,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 			<form onSubmit={handleModalSubmit} className={style.newfolderModal}>
 				<h5>
 					<span>New Folder</span>
-					<ModalComponent.ButtonClose />
+					<ButtonClose />
 				</h5>
 
 				<InputGroup
@@ -91,12 +92,20 @@ const NewFolderModal = ({ isOpen }: Props) => {
 					onChange={onChange}
 					className={style.inputWrapper}
 					errorMessage={error}
-				// ref={ref}
+					ref={ref}
 				/>
 
 				<div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
 					<ButtonGroup handleSubmit={() => toggleModal(false)} submitText="cancel" className={`cancel me-4`} />
-					<ButtonGroup type="submit" disabled={!name} submitText="OK" className={`${style.submit} submit`} loading={loading} loader="spin" order={-1} />
+					<ButtonGroup
+						type="submit"
+						disabled={!name}
+						submitText="OK"
+						className={`${style.submit} submit`}
+						loading={loading}
+						loader="spin"
+						order={-1}
+					/>
 				</div>
 			</form>
 		</ModalComponent>

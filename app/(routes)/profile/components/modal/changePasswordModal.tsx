@@ -1,13 +1,13 @@
 "use client";
 
-import ModalComponent from "@/app/components/modal";
+import ModalComponent, { ButtonClose } from "@/app/components/modal";
 import { CHANGE_PASSWORD_MODAL } from "@/app/config/const";
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import { useDispatch } from "react-redux";
 import { toggleModal as toggleModalState } from "@/app/store/actions";
-import style from "../../style.module.scss";
 import { useMutation } from "@tanstack/react-query";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { Rings } from "react-loader-spinner";
+import { useDispatch } from "react-redux";
+import style from "../../style.module.scss";
 
 type Props = {
 	isOpen: boolean;
@@ -26,14 +26,14 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 		mutationFn: changePasswordApi,
 	});
 	const dispatch = useDispatch();
-	const toggleModal = (isOpen?: boolean) => {
+	const toggleModal = useCallback((isOpen?: boolean) => {
 		dispatch(
 			toggleModalState({
 				isOpen: !!isOpen,
 				name: "changePasswordModal",
 			})
 		);
-	};
+	}, [dispatch]);
 
 	const handleModalSubmit = async (event: FormEvent) => {
 		event.preventDefault();
@@ -51,7 +51,6 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 
 	const handleCancel = () => {
 		if (isPending) return;
-
 		toggleModal(false);
 	};
 
@@ -63,7 +62,7 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 			<form onSubmit={handleModalSubmit} className={style.changePassword}>
 				<h5>
 					<span>Change Password</span>
-					<ModalComponent.ButtonClose />
+					<ButtonClose />
 				</h5>
 
 				<label htmlFor='newPassword'>

@@ -53,10 +53,6 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 	const findElements = useCallback((target: Node) => {
 		const IDs = ["resource-info-button", "resource-info", "more-option"]
 		const classes = [".ant-select-dropdown", ".selectAccessType", ".selectAccessList"]
-
-		const t = target as HTMLElement
-		if (t?.dataset?.icon === "close") return true
-
 		const hasElementWithId = IDs.reduce((prev, Id) => {
 			const element = document.getElementById(Id)
 			const isContains = element?.contains(target)
@@ -83,8 +79,6 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 	const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
 		e.preventDefault()
-
-		console.log(`handleDelete`, data)
 
 		dispatch(
 			toggleModal({

@@ -4,7 +4,7 @@ import { updateAccess } from "@/app/_apis_routes/resources";
 import { getUsersByEmail } from "@/app/_apis_routes/user";
 import AvatarComponent from "@/app/components/avatar";
 import ButtonGroup from "@/app/components/buttonGroup";
-import ModalComponent from "@/app/components/modal";
+import ModalComponent, { ButtonClose } from "@/app/components/modal";
 import { MANAGE_ACCESS_MODAL_ID } from "@/app/config/const";
 import { SelectedAccessType } from "@/app/interfaces/index.interface";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
@@ -18,7 +18,7 @@ import { Divider, Select, SelectProps, Space } from "antd";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import style from "./style.module.scss";
 
 
@@ -35,6 +35,8 @@ const ManageAccess = () => {
     const [accessList, setAccessList] = useState<SelectedAccessType[]>([])
     const [selectedAccess, setSelectedAccess] = useState<SelectedAccessType[]>([])
     const [deletedUserIds, setDeletedUserIds] = useState<string[]>([])
+    const [selectEmails, setSelectEmails] = useState<string[]>([])
+
     const { data, isFetching } = useQuery({
         queryFn: () => getUsersByEmail(search),
         queryKey: ["search-users", search],
@@ -62,10 +64,10 @@ const ManageAccess = () => {
         setSelectedAccess([])
         setAccessList([])
         setOptions([])
+        setSelectEmails([])
     }
 
-
-    const toggleModal = (isOpen?: boolean) => {
+    const toggleModal = useCallback((isOpen?: boolean) => {
         dispatch(
             toggleModalState({
                 isOpen: !!isOpen,
@@ -73,7 +75,7 @@ const ManageAccess = () => {
             })
         );
         clearState()
-    };
+    }, [dispatch]);
 
     const handleSearch = (value: string) => {
         setSearch(value)
@@ -91,6 +93,7 @@ const ManageAccess = () => {
         })
 
         setSelectedAccess([...accessList, ...contractData])
+        setSelectEmails(values)
     }
 
     const handleSubmit = async () => {
@@ -132,6 +135,14 @@ const ManageAccess = () => {
         })
     }
 
+    const handleRemove = (access: SelectedAccessType) => {
+        setDeletedUserIds(prev => ([...prev, access?.userInfo?._id]))
+        setSelectedAccess(prev => prev.filter(_access => _access?.userInfo?._id !== access?.userInfo?._id))
+        setSelectEmails(prev => Array.from(prev.filter(userInfo => {
+            const data = JSON.parse(userInfo) as User
+            return access?.userInfo?.email !== data?.email
+        })))
+    }
 
     useEffect(() => {
         if (isFetching) return;
@@ -149,10 +160,6 @@ const ManageAccess = () => {
         setOptions(formattedData ?? [])
     }, [data, isFetching])
 
-    const handleRemove = (access: SelectedAccessType) => {
-        setDeletedUserIds(prev => ([...prev, access?.userInfo?._id]))
-        setSelectedAccess(prev => prev.filter(_access => _access?.userInfo?._id !== access?.userInfo?._id))
-    }
 
     useEffect(() => {
         setAccessList(resourceInfoById?.accessList ?? [])
@@ -164,7 +171,7 @@ const ManageAccess = () => {
             <div className={style.manageAccess}>
                 <div className={style.header}>
                     <p>Share `Folder name`</p>
-                    <ModalComponent.ButtonClose />
+                    <ButtonClose />
                 </div>
 
                 <Select
@@ -180,7 +187,8 @@ const ManageAccess = () => {
                     filterOption={(inputValue, option) => !!JSON.parse(option?.value as string)?.email?.toString().includes(inputValue)}
                     onChange={onChange}
                     disabled={!hasAccess}
-
+                    value={selectEmails}
+                    removeIcon={null}
                 />
 
                 <div className={style.selectedUsers}>

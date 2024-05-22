@@ -1,5 +1,5 @@
 import ButtonGroup from "@/app/components/buttonGroup";
-import ModalComponent from "@/app/components/modal";
+import ModalComponent, { ButtonClose } from "@/app/components/modal";
 import { DELETE_CONFIRMATION } from '@/app/config/const';
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
@@ -8,7 +8,7 @@ import {
 } from "@/app/store/actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import style from './style.module.scss';
 
 type Props = {
@@ -23,7 +23,7 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
-    const toggleModal = (isOpen?: boolean) => {
+    const toggleModal = useCallback((isOpen?: boolean) => {
         dispatch(
             toggleModalState({
                 isOpen: !!isOpen,
@@ -31,7 +31,7 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
             })
         );
 
-    };
+    }, [dispatch]);
 
     const handleModalSubmit = async (event: FormEvent) => {
         event.preventDefault()
@@ -52,7 +52,7 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
             <form onSubmit={handleModalSubmit} className={style.deleteModal}>
                 <h5>
                     <span>Delete <i>{data?.value}</i></span>
-                    <ModalComponent.ButtonClose />
+                    <ButtonClose />
                 </h5>
 
                 <div className={style.body}>

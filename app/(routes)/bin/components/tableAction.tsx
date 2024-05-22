@@ -21,7 +21,6 @@ const TableAction = ({ data, mutation }: Props) => {
 
 	const handleRestore = async () => {
 		try {
-			console.log("DAtA", data)
 			await mutation.mutateAsync(data?._id)
 			router.refresh()
 		} catch (e) {
@@ -34,6 +33,9 @@ const TableAction = ({ data, mutation }: Props) => {
 			toggleModal({
 				isOpen: true,
 				name: "confirmModal",
+				data: {
+					id: data?._id
+				}
 			})
 		);
 	};

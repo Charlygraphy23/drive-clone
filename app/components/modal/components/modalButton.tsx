@@ -1,6 +1,6 @@
 "use client";
 
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import style from "../style.module.scss";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 	modalId: string;
 } & PropsWithChildren;
 
-const ModalButton = ({ className, children, modalId }: Props) => {
+const ModalButtonComponent = ({ className, children, modalId }: Props) => {
 	return (
 		<button
 			type='button'
@@ -20,7 +20,7 @@ const ModalButton = ({ className, children, modalId }: Props) => {
 	);
 };
 
-export const ModalCloseButton = ({
+export const ModalCloseButtonComponent = ({
 	className,
 	children,
 }: Pick<Props, "className"> & PropsWithChildren) => {
@@ -34,4 +34,4 @@ export const ModalCloseButton = ({
 	);
 };
 
-export default ModalButton;
+export default ModalButtonComponent;

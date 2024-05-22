@@ -5,35 +5,35 @@ import { CONFIRM_MODAL_ID } from "@/app/config/const";
 import { RootState } from "@/app/store";
 import { toggleModal as toggleModalState } from "@/app/store/actions";
 import { ModalStateType } from "@/app/store/reducers/modal.reducers";
-import { useMutation } from "@tanstack/react-query";
-import { FormEvent } from "react";
-import { Rings } from "react-loader-spinner";
+import { FormEvent, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ButtonGroup from "../../buttonGroup";
 import style from "../style.module.scss";
 
 type Props = {
-	api: () => Promise<any>;
+	onSubmit: (_toggle: () => void, _resourceId: string) => void,
 	message: string;
+	isLoading?: boolean;
 };
 
-const ConfirmationModalComponent = ({ api, message }: Props) => {
-	const { confirmModal } = useSelector<RootState, ModalStateType>(
+const ConfirmationModalComponent = ({ onSubmit, message, isLoading = false }: Props) => {
+	const { confirmModal, data } = useSelector<RootState, ModalStateType>(
 		(state) => state.modals
 	);
-	const mutation = useMutation({ mutationFn: api });
 	const dispatch = useDispatch();
-	const toggleModal = (isOpen?: boolean) => {
+
+	const toggleModal = useCallback((isOpen?: boolean) => {
 		dispatch(
 			toggleModalState({
 				isOpen: !!isOpen,
 				name: "confirmModal",
 			})
 		);
-	};
+	}, [dispatch]);
 
 	const handleModalSubmit = async (event: FormEvent) => {
 		event.preventDefault();
-		await mutation.mutateAsync();
+		onSubmit(toggleModal, data?.id)
 	};
 
 	return (
@@ -49,31 +49,22 @@ const ConfirmationModalComponent = ({ api, message }: Props) => {
 				<p>{message}</p>
 
 				<div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
-					<button
-						type='button'
-						className='button cancel me-3'
-						onClick={() => toggleModal(false)}
-						disabled={mutation.isPending}>
-						cancel
-					</button>
-					<button
-						type='submit'
-						className='button error'
-						disabled={mutation.isPending}>
-						{mutation.isPending ? (
-							<Rings
-								visible={true}
-								height='25'
-								width='25'
-								color='white'
-								ariaLabel='rings-loading'
-								wrapperStyle={{}}
-								wrapperClass=''
-							/>
-						) : (
-							<span>OK</span>
-						)}
-					</button>
+					<ButtonGroup
+						submitText="cancel"
+						className="button cancel me-3"
+						handleSubmit={() => {
+							if (isLoading) return;
+							toggleModal(false)
+						}}
+						disabled={isLoading}
+					/>
+					<ButtonGroup
+						submitText={isLoading ? "Deleting..." : "OK"}
+						className={`button error ${style.submit}`}
+						handleSubmit={handleModalSubmit}
+						disabled={isLoading}
+					/>
+
 				</div>
 			</form>
 		</ModalComponent>

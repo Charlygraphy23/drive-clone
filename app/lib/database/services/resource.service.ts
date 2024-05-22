@@ -1,4 +1,5 @@
 import { getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
+import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
 import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
@@ -307,11 +308,20 @@ export class ResourceService {
         const query = getListOfChildFoldersQuery(resourceId);
 
         const folders = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
-        console.log("Folders ", folders, resourceId)
         const folderIdsToDelete = folders?.map(folder => folder?._id);
 
         const _options = options as MongooseUpdateQueryOptions
         return await Model.updateMany({ _id: { $in: folderIdsToDelete } }, { isDeleted: false }, _options)
+    }
+
+    async deleteForever(resourceId: string, options?: SessionOption) {
+        const query = getListOfChildFoldersQuery(resourceId);
+
+        const folders = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
+        const folderIdsToDelete = folders?.map(folder => folder?._id);
+
+        const _options = options as DefaultedQueryObserverOptions
+        return await Model.deleteMany({ _id: { $in: folderIdsToDelete } }, _options)
     }
 
 }

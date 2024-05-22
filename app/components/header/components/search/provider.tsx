@@ -1,6 +1,6 @@
 "use client"
 
-import Modal from '@/app/components/modal';
+import Modal, { ButtonClose } from '@/app/components/modal';
 import { SEARCH_MODAL } from '@/app/config/const';
 import { PropsWithChildren, useState } from 'react';
 import SearchStateProvider from './store/provider';
@@ -19,7 +19,7 @@ const SearchProvider = ({ children }: PropsWithChildren) => {
                 <p>Search File..</p>
             </button>
             <Modal centered={false} isOpen={isOpen} id={SEARCH_MODAL} size="xl">
-                <Modal.ButtonClose className={style.modalClose} />
+                <ButtonClose className={style.modalClose} />
                 {children}
             </Modal>
         </SearchStateProvider>

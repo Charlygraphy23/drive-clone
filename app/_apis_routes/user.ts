@@ -9,7 +9,7 @@ export const signupApi = ({ email, firstName, lastName }: CreateUser) => {
 }
 
 export const getUsersByEmail = async (email?: string): Promise<Record<keyof UserSchemaType, string>[]> => {
-    const { data } = await axiosInstance.post("/users", { email })
+    const { data } = await axiosInstance.get(`/users/email/${email}`)
 
     return data.data ?? []
 }

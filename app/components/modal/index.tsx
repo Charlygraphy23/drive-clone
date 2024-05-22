@@ -3,11 +3,12 @@
 import { BootstrapMethods } from "@/app/utils/index.utils";
 import {
 	PropsWithChildren,
+	memo,
 	useCallback,
 	useEffect,
 	useRef,
 } from "react";
-import ModalButton, { ModalCloseButton } from "./components/modalButton";
+import ModalButtonComponent, { ModalCloseButtonComponent } from "./components/modalButton";
 import ModalComponent from "./components/modalComponent";
 import { ModalSize } from "./interfaces/index.interface";
 
@@ -44,7 +45,6 @@ const Modal = (props: Props) => {
 	}, [getInstance, isOpen, toggle]);
 
 	useEffect(() => {
-		console.log("Show", instance?.current)
 		if (!instance?.current) return;
 
 		isOpen ? instance?.current?.show() : instance?.current?.hide();
@@ -58,20 +58,19 @@ const Modal = (props: Props) => {
 			if (toggle && isOpen) toggle(false);
 		};
 
-		const modals = document.querySelectorAll(".modal");
+		const modal = document.getElementById(id);
+		modal?.addEventListener("hidden.bs.modal", handleHidden)
 
-		modals.forEach((modal) =>
-			modal?.addEventListener("hidden.bs.modal", handleHidden)
-		);
+		// modals.forEach((modal) =>
+		// 	modal?.addEventListener("hidden.bs.modal", handleHidden)
+		// );
 
 		return () => {
-			const modals = document.querySelectorAll(".modal");
+			const modal = document.getElementById(id);
+			modal?.removeEventListener("hidden.bs.modal", handleHidden)
 
-			modals.forEach((modal) =>
-				modal?.removeEventListener("hidden.bs.modal", handleHidden)
-			);
 		};
-	}, [toggle, isOpen]);
+	}, [toggle, isOpen, id]);
 
 	return (
 		<ModalComponent centered={centered} isOpen={isOpen} id={id} size={size}>
@@ -80,7 +79,8 @@ const Modal = (props: Props) => {
 	);
 };
 
-Modal.Button = ModalButton;
-Modal.ButtonClose = ModalCloseButton;
 
-export default Modal;
+export const ModalButton = ModalButtonComponent;
+export const ButtonClose = ModalCloseButtonComponent;
+
+export default memo(Modal);

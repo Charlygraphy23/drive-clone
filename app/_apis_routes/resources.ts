@@ -56,3 +56,7 @@ export const moveToTrashResourceApi = async (resourceId: string) => {
 export const restoreFromTrashApi = async (resourceId: string) => {
     return await axiosInstance.post(`/resources/${resourceId}`, {})
 }
+
+export const deleteForeverApi = async (resourceId: string) => {
+    return await axiosInstance.delete(`/resources/${resourceId}`)
+}

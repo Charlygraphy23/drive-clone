@@ -2,7 +2,7 @@
 
 import ButtonGroup from "@/app/components/buttonGroup";
 import InputGroup from "@/app/components/inputGroup";
-import ModalComponent from "@/app/components/modal";
+import ModalComponent, { ButtonClose } from "@/app/components/modal";
 import { RENAME_MODAL_ID } from "@/app/config/const";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -17,6 +17,7 @@ import {
 	ChangeEvent,
 	FormEvent,
 	memo,
+	useCallback,
 	useEffect,
 	useRef,
 	useState,
@@ -36,7 +37,7 @@ const RenameModal = ({ isOpen, data }: Props) => {
 	const [name, setName] = useState<string>("");
 	const currName = useRef(name);
 
-	const toggleModal = (isOpen?: boolean) => {
+	const toggleModal = useCallback((isOpen?: boolean) => {
 		dispatch(
 			toggleModalState({
 				isOpen: !!isOpen,
@@ -47,7 +48,7 @@ const RenameModal = ({ isOpen, data }: Props) => {
 		const value = data?.value ?? "";
 
 		setName(value as string);
-	};
+	}, [data?.value, dispatch]);
 
 	const resetModal = () => {
 		toggleModal(false);
@@ -85,7 +86,7 @@ const RenameModal = ({ isOpen, data }: Props) => {
 			<form onSubmit={handleModalSubmit} className={style.renameModal}>
 				<h5>
 					<span>Rename</span>
-					<ModalComponent.ButtonClose />
+					<ButtonClose />
 				</h5>
 
 				<InputGroup type="text" value={name} onChange={onChange} className={style.inputWrapper} errorMessage={error} />
