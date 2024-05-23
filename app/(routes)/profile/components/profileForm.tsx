@@ -73,7 +73,7 @@ const ProfileForm = () => {
 			{isEditable && (
 				<section
 					className={`d-flex justify-content-end align-items-center mb-3 ${style.buttonGroup}`}>
-					<ButtonGroup submitText="cancel" className='button cancel me-3' handleSubmit={handleCancel} />
+					<ButtonGroup submitText="cancel" className='button cancel me-4' handleSubmit={handleCancel} />
 
 					<ButtonGroup disabled={mutation?.isPending} submitText={mutation?.isPending ? "..." : "OK"} className="button" handleSubmit={handleSubmit} />
 				</section>

@@ -41,4 +41,8 @@ export class UserService {
         await UserModel.findOneAndUpdate({ _id: new Types.ObjectId(userId) }, { ...info });
         return response.status(200).send("Updated")
     }
+
+    async updatePassword(userId: string, password: string) {
+        return await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, { password });
+    }
 }

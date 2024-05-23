@@ -1,11 +1,14 @@
 "use client";
 
+import { changePasswordApi } from "@/app/_apis_routes/user";
+import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
 import { CHANGE_PASSWORD_MODAL } from "@/app/config/const";
+import { PasswordChangeFormErrorStatType, PasswordChangeFormSchema } from "@/app/interfaces/index.interface";
 import { toggleModal as toggleModalState } from "@/app/store/actions";
+import { ErrorHandler } from "@/app/utils/index.utils";
 import { useMutation } from "@tanstack/react-query";
-import { ChangeEvent, FormEvent, useCallback, useState } from "react";
-import { Rings } from "react-loader-spinner";
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import style from "../../style.module.scss";
 
@@ -13,19 +16,24 @@ type Props = {
 	isOpen: boolean;
 };
 
-const changePasswordApi = () =>
-	new Promise((resolve) => setTimeout(() => resolve(true), 5000));
+const initialState = {
+	newPassword: "",
+	confirmPassword: "",
+}
 
 const ChangePasswordModal = ({ isOpen }: Props) => {
-	const [state, setState] = useState({
+	const [state, setState] = useState(initialState);
+	const [errors, setErrors] = useState<PasswordChangeFormErrorStatType>({
 		newPassword: "",
-		confirmPassword: "",
+		confirmPassword: ""
 	});
 
 	const { mutateAsync, isPending } = useMutation({
 		mutationFn: changePasswordApi,
 	});
 	const dispatch = useDispatch();
+
+
 	const toggleModal = useCallback((isOpen?: boolean) => {
 		dispatch(
 			toggleModalState({
@@ -37,12 +45,25 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 
 	const handleModalSubmit = async (event: FormEvent) => {
 		event.preventDefault();
-		console.log("Modal submit");
 
 		if (isPending) return;
 
-		await mutateAsync();
-		toggleModal(false);
+		try {
+			setErrors({} as PasswordChangeFormErrorStatType)
+			await PasswordChangeFormSchema.validate(state, { abortEarly: false })
+			await mutateAsync(state);
+			toggleModal(false);
+			console.log("Password change")
+		}
+		catch (err: unknown) {
+			const errors = ErrorHandler(err) as Record<string, string>
+			if (errors?._validationError) {
+				setErrors(errors as PasswordChangeFormErrorStatType)
+			}
+			console.error(err)
+
+		}
+
 	};
 
 	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +75,15 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 		toggleModal(false);
 	};
 
+	useEffect(() => {
+
+		return () => {
+			setState(initialState)
+			setErrors({} as PasswordChangeFormErrorStatType)
+
+		}
+	}, [isOpen])
+
 	return (
 		<ModalComponent
 			id={CHANGE_PASSWORD_MODAL}
@@ -61,7 +91,11 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 			toggle={toggleModal}>
 			<form onSubmit={handleModalSubmit} className={style.changePassword}>
 				<h5>
-					<span>Change Password</span>
+					<p className="m-0 w-100">
+						<span>Change Password</span> <br />
+						{errors?.confirmPassword || errors?.newPassword && <small>{errors?.newPassword}</small>}
+
+					</p>
 					<ButtonClose />
 				</h5>
 
@@ -79,6 +113,7 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 
 				<label htmlFor='confirmPassword'>
 					<span>Confirm Password</span>
+
 					<input
 						placeholder='Enter confirm password'
 						type='password'
@@ -89,29 +124,22 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 					/>
 				</label>
 
-				<div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
-					<button
-						type='button'
+				<div className={`d-flex justify-content-end align-items-center mt-4 mb-2 ${style.buttonGroup}`}>
+					<ButtonGroup
 						className='button cancel me-3'
-						onClick={handleCancel}
-						disabled={isPending}>
-						cancel
-					</button>
-					<button type='submit' className='button submit' disabled={isPending}>
-						{isPending ? (
-							<Rings
-								visible={true}
-								height='25'
-								width='25'
-								color='white'
-								ariaLabel='rings-loading'
-								wrapperStyle={{}}
-								wrapperClass=''
-							/>
-						) : (
-							<span>OK</span>
-						)}
-					</button>
+						handleSubmit={handleCancel}
+						disabled={isPending}
+						submitText="cancel"
+					/>
+
+
+					<ButtonGroup
+						className='button submit'
+						handleSubmit={handleModalSubmit}
+						disabled={isPending}
+						submitText={isPending ? "..." : "OK"}
+					/>
+
 				</div>
 			</form>
 		</ModalComponent>

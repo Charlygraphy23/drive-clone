@@ -2,15 +2,14 @@
 
 import ButtonGroup from '@/app/components/buttonGroup'
 import InputGroup from '@/app/components/inputGroup'
+import { PasswordChangeFormErrorStatType, PasswordChangeFormSchema, PasswordChangeFormStateType } from '@/app/interfaces/index.interface'
 import { ErrorHandler } from '@/app/utils/index.utils'
 import { ChangeEvent, useState } from 'react'
-import { PasswordChangeFormErrorStatType, PasswordChangeFormSchema, PasswordChangeFormStateType } from '../interfaces/index.interface'
 import style from '../style.module.scss'
 import ResetPasswordSuccess from './resetSuccess'
 
 
 const PasswordChangeForm = () => {
-
     const [state, setState] = useState<PasswordChangeFormStateType>({
         newPassword: "",
         confirmPassword: ""
@@ -23,14 +22,12 @@ const PasswordChangeForm = () => {
         confirmPassword: ""
     });
 
-
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setState(prev => ({
             ...prev,
             [event.target.id]: event.target.value
         }))
     }
-
 
     const handleSubmit = async () => {
         setErrors({} as PasswordChangeFormErrorStatType)

@@ -162,6 +162,16 @@
 .changePassword {
 	@include renameModalStyle.renameStyle;
 
+	h5 {
+		small {
+			font-size: 0.6rem;
+			color: color.$error;
+			&::before {
+				content: "*";
+			}
+		}
+	}
+
 	label {
 		width: 100%;
 		margin-bottom: 1rem;
@@ -173,6 +183,14 @@
 			font-size: 0.9rem;
 			font-weight: bold;
 			margin-bottom: 0.2rem;
+		}
+	}
+
+	.buttonGroup {
+		button {
+			width: fit-content;
+			width: 100px;
+			height: 2.5rem;
 		}
 	}
 }
