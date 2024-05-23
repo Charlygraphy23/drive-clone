@@ -3,12 +3,13 @@ import { UserService } from "@/app/lib/database/services/user.service"
 import { ApiResponse } from "@/app/utils/response"
 import { getServerSession } from "next-auth"
 import { NextRequest } from "next/server"
+import { SignupSchemaValidator } from "../_validation/user.validation"
 
 const service = new UserService();
 const response = new ApiResponse()
 
 
-export const POST = async (_req: NextRequest) => {
+export const PUT = async (_req: NextRequest) => {
 
     try {
         const session = await getServerSession(authOptions)
@@ -16,9 +17,20 @@ export const POST = async (_req: NextRequest) => {
         const user = session.user
 
         const body = await _req.json();
-        const { email } = body
-        const data = await service.fetchUserWithEmail(email, String(user._id));
-        return response.status(200).send({ data })
+        const { firstName, lastName, email } = body
+
+        const isValid = await SignupSchemaValidator.isValid({
+            firstName, lastName, email
+        })
+
+        if (!isValid) return response.status(422).send("Invalid email or name!")
+
+        return await service.updateProfile(String(user._id), {
+            firstName,
+            lastName,
+            email
+        });
+
     }
     catch (_err: unknown) {
         const err = _err as { message: string }

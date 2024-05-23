@@ -1,11 +1,20 @@
-import React from "react";
-import ProfileImageComponent from "./components/profileImage";
+import { authOptions } from "@/app/lib/authConfig";
+import { User, getServerSession } from "next-auth";
 import ProfileForm from "./components/profileForm";
-import { ProfileProvider } from "./store/provider";
+import ProfileImageComponent from "./components/profileImage";
+import { ProfileProvider } from "./provider";
 
-const ProfilePage = () => {
+
+const getUserSessionInfo = async () => {
+	const session = await getServerSession(authOptions)
+	return session?.user as User
+}
+
+const ProfilePage = async () => {
+	const user = await getUserSessionInfo()
+
 	return (
-		<ProfileProvider>
+		<ProfileProvider userInfo={user}>
 			<ProfileImageComponent />
 			<ProfileForm />
 		</ProfileProvider>

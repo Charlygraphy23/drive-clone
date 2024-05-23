@@ -1,158 +1,178 @@
 @use "/app/styles/variable.scss" as color;
 @use "/app/components/body/components/modals/rename/style.module.scss" as
-  renameModalStyle;
+	renameModalStyle;
 
 .layout {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 
-  header {
-    button {
-      border: 2px solid transparent;
-      background: transparent;
-      font-size: 1.4rem;
+	header {
+		button {
+			border: 2px solid transparent;
+			background: transparent;
+			font-size: 1.4rem;
 
-      &:active {
-        border-color: color.$primary-color;
-        border-radius: 6px;
-        font-weight: bold;
-      }
-    }
-  }
+			&:active {
+				border-color: color.$primary-color;
+				border-radius: 6px;
+				font-weight: bold;
+			}
+		}
+	}
 
-  .profileImage {
-    position: relative;
-    min-height: 200px;
-    $left: 50%;
-    padding: 2rem;
-    margin-bottom: 4rem;
+	.profileImage {
+		position: relative;
+		min-height: 200px;
+		$left: 50%;
+		padding: 2rem;
+		margin-bottom: 4rem;
 
-    .image {
-      left: $left !important;
-      top: 50% !important;
-      transform: translate(-50%, -50%);
-      object-fit: cover;
-      width: 200px !important;
-      height: 200px !important;
-      border-radius: 50%;
-    }
+		.image {
+			left: $left !important;
+			top: 50% !important;
+			transform: translate(-50%, -50%);
+			object-fit: cover;
+			width: 200px !important;
+			height: 200px !important;
+			border-radius: 50%;
+		}
 
-    button {
-      position: absolute;
-      bottom: 0;
-      left: calc(#{$left} + 5%);
-      border: 1px solid transparent;
-      box-shadow: 0px 0px 30px rgba(black, 0.2);
-      border-radius: 50%;
-      background-color: white;
-      font-size: 1.5rem;
-    }
-  }
+		button {
+			position: absolute;
+			bottom: 0;
+			left: calc(#{$left} + 5%);
+			border: 1px solid transparent;
+			box-shadow: 0px 0px 30px rgba(black, 0.2);
+			border-radius: 50%;
+			background-color: white;
+			font-size: 1.5rem;
+		}
+	}
 
-  .profileForm {
-    height: 100%;
-    overflow: auto;
-    padding: 0rem 0.5rem;
+	.profileForm {
+		height: 100%;
+		overflow: auto;
+		padding: 0rem 0.5rem;
 
-    .body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: white;
-      box-shadow: 0px 0px 5px rgba(black, 0.05);
-      padding: 2rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
+		.body {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background-color: white;
+			box-shadow: 0px 0px 5px rgba(black, 0.05);
+			padding: 2rem;
+			border-radius: 10px;
+			margin-bottom: 1rem;
 
-      .inputGroup {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        max-width: 400px;
-        margin-bottom: 1.5rem;
+			.inputGroup {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				max-width: 400px;
+				margin-bottom: 1.5rem;
 
-        p {
-          margin-bottom: 0rem;
-          font-size: 1.5rem;
-          line-height: -4;
-        }
+				&.error {
+					label {
+						color: color.$error1;
+					}
+				}
 
-        input {
-          font-size: 0.9rem;
-        }
+				.wrapper {
+					width: 100%;
 
-        label {
-          font-size: 0.9rem;
-          font-weight: bold;
-        }
-      }
+					span {
+						font-size: 0.7rem;
+						color: color.$error1;
 
-      .inputPasswordGroup {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
+						&::before {
+							content: "*";
+						}
+					}
 
-        p {
-          margin-bottom: 0rem;
-          font-size: 1.5rem;
-          line-height: 10px;
-        }
+					input {
+						font-size: 0.9rem;
+						width: inherit;
+					}
+				}
 
-        input {
-          font-size: 0.9rem;
-        }
+				p {
+					margin-bottom: 0rem;
+					font-size: 1.5rem;
+					line-height: -4;
+				}
 
-        label {
-          font-size: 0.9rem;
-          font-weight: bold;
-        }
+				label {
+					font-size: 0.9rem;
+					font-weight: bold;
+				}
+			}
 
-        button {
-          border-radius: 10px;
-          background-color: color.$error;
-          font-size: 0.8rem;
-          color: white;
-          cursor: pointer;
-        }
-      }
-    }
+			.inputPasswordGroup {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				width: 100%;
 
-    .buttonGroup {
-      button {
-        &:nth-child(2) {
-          background-color: color.$primary-color;
-          color: white;
-          font-size: 0.7rem;
-          min-width: 6rem;
-          border-radius: 10px;
-        }
-      }
-    }
+				p {
+					margin-bottom: 0rem;
+					font-size: 1.5rem;
+					line-height: 10px;
+				}
 
-    .editButton {
-      i {
-        cursor: pointer;
-      }
-    }
-  }
+				input {
+					font-size: 0.9rem;
+				}
+
+				label {
+					font-size: 0.9rem;
+					font-weight: bold;
+				}
+
+				button {
+					border-radius: 10px;
+					background-color: color.$error;
+					font-size: 0.8rem;
+					color: white;
+					cursor: pointer;
+				}
+			}
+		}
+
+		.buttonGroup {
+			button {
+				&:nth-child(2) {
+					background-color: color.$primary-color;
+					color: white;
+					font-size: 0.7rem;
+					border-radius: 10px;
+					max-width: 100px;
+				}
+			}
+		}
+
+		.editButton {
+			i {
+				cursor: pointer;
+			}
+		}
+	}
 }
 
 .changePassword {
-  @include renameModalStyle.renameStyle;
+	@include renameModalStyle.renameStyle;
 
-  label {
-    width: 100%;
-    margin-bottom: 1rem;
+	label {
+		width: 100%;
+		margin-bottom: 1rem;
 
-    display: flex;
-    flex-direction: column;
+		display: flex;
+		flex-direction: column;
 
-    span {
-      font-size: 0.9rem;
-      font-weight: bold;
-      margin-bottom: 0.2rem;
-    }
-  }
+		span {
+			font-size: 0.9rem;
+			font-weight: bold;
+			margin-bottom: 0.2rem;
+		}
+	}
 }

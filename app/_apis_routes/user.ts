@@ -13,3 +13,7 @@ export const getUsersByEmail = async (email?: string): Promise<Record<keyof User
 
     return data.data ?? []
 }
+
+export const updateProfileApi = async (payload: { email: string, firstName: string, lastName: string }) => {
+    return await axiosInstance.put(`/users`, payload)
+}

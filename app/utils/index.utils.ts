@@ -24,7 +24,7 @@ export const BootstrapMethods = {
 }
 
 
-export const ErrorHandler = (err: unknown): Record<string, string> | string | unknown => {
+export const ErrorHandler = (err: unknown): ({ _validationError: boolean } & Record<string, string>) | string | unknown => {
     if (err instanceof ValidationError) {
         const errors = (err as ValidationError).inner;
         return errors.reduce((prev, _err) => {

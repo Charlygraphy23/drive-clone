@@ -64,8 +64,12 @@ export const authOptions: AuthOptions = {
         error: '/login',
     },
     callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
+        async jwt({ token, user, trigger, session }) {
+
+            if (trigger === "update" && session?.user) {
+                // Note, that `session` can be any arbitrary object, remember to validate it!
+                token.user = session.user
+            } else if (user) {
                 token.user = user;
             }
             return token;

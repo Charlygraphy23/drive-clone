@@ -1,36 +1,41 @@
 "use client";
 
-import React, { ChangeEvent, useContext } from "react";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import { changeProfileData } from "@/app/store/actions";
+import { ProfileStateType } from "@/app/store/reducers/profile.reduce";
+import { ChangeEvent } from "react";
 import style from "../style.module.scss";
-import { ProfileStateContext } from "../store/context";
-import { ProfileContextStateType } from "../store/provider";
 
 type Props = {
 	label: string;
-	dataIndex: keyof ProfileContextStateType["data"];
+	dataIndex: keyof ProfileStateType["data"];
+	isEditable: boolean;
+	hasError?: string
 };
 
-const ProfileInputGroup = ({ label, dataIndex }: Props) => {
-	const { state, dispatch } = useContext(ProfileStateContext);
-	const value = state?.data?.[dataIndex];
+const ProfileInputGroup = ({ label, dataIndex, isEditable, hasError }: Props) => {
+	const { data } = useAppSelector(
+		(state) => state.profile
+	);
+	const dispatch = useAppDispatch()
+	const value = data?.[dataIndex]
 
 	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const val = e.target.value;
-		dispatch((prev) => ({
-			...prev,
-			data: {
-				...prev.data,
-				[dataIndex]: val,
-			},
+		dispatch(changeProfileData({
+			[dataIndex]: val
 		}));
 	};
 
 	return (
-		<div className={style.inputGroup}>
-			{state.isEditProfile && (
-				<input id={label} type='text' value={value} onChange={onChange} />
+		<div className={`${style.inputGroup} ${hasError ? style.error : ""}`}>
+			{isEditable && (
+				<div className={style.wrapper}>
+					{hasError && <span>{hasError}</span>}
+					<input id={label} type='text' value={value} onChange={onChange} />
+				</div>
 			)}
-			{!state.isEditProfile && <p>{value ?? "-"}</p>}
+			{!isEditable && <p>{value ?? "-"}</p>}
 			<label htmlFor=''>{label}</label>
 		</div>
 	);
