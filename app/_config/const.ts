@@ -5,3 +5,6 @@ export const NEW_FOLDER_MODAL_ID = "newfolder_modal";
 export const CONFIRM_MODAL_ID = "confirm_modal";
 export const CHANGE_PASSWORD_MODAL = "change_password_modal";
 export const SEARCH_MODAL = "search_modal";
+
+
+export const BUCKET_PATH = process.env.OBJECT_BUCKET_NAME

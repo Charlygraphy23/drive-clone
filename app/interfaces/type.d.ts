@@ -11,6 +11,8 @@ declare global {
             NEXTAUTH_SECRET: string
             OBJECT_SPACE_KEY: string
             OBJECT_SECRET_KEY: string
+            OBJECT_SPACE_ENDPOINT: string
+            OBJECT_BUCKET_NAME: string
             // add more environment variables and their types here
         }
     }
