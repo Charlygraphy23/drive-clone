@@ -1,9 +1,9 @@
 "use client";
 
+import { NEW_FOLDER_MODAL_ID } from "@/app/_config/const";
 import ButtonGroup from "@/app/components/buttonGroup";
 import InputGroup from "@/app/components/inputGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
-import { NEW_FOLDER_MODAL_ID } from "@/app/config/const";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
 	addFolderAsync,

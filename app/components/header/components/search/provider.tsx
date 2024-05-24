@@ -1,7 +1,7 @@
 "use client"
 
+import { SEARCH_MODAL } from '@/app/_config/const';
 import Modal, { ButtonClose } from '@/app/components/modal';
-import { SEARCH_MODAL } from '@/app/config/const';
 import { PropsWithChildren, useState } from 'react';
 import SearchStateProvider from './store/provider';
 import style from './style.module.scss';

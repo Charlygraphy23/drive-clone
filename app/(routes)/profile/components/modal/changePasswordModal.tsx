@@ -1,9 +1,9 @@
 "use client";
 
 import { changePasswordApi } from "@/app/_apis_routes/user";
+import { CHANGE_PASSWORD_MODAL } from "@/app/_config/const";
 import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
-import { CHANGE_PASSWORD_MODAL } from "@/app/config/const";
 import { PasswordChangeFormErrorStatType, PasswordChangeFormSchema } from "@/app/interfaces/index.interface";
 import { toggleModal as toggleModalState } from "@/app/store/actions";
 import { ErrorHandler } from "@/app/utils/index.utils";

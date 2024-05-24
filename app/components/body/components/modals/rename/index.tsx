@@ -1,9 +1,9 @@
 "use client";
 
+import { RENAME_MODAL_ID } from "@/app/_config/const";
 import ButtonGroup from "@/app/components/buttonGroup";
 import InputGroup from "@/app/components/inputGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
-import { RENAME_MODAL_ID } from "@/app/config/const";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {

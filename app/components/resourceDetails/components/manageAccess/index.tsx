@@ -2,10 +2,10 @@
 
 import { updateAccess } from "@/app/_apis_routes/resources";
 import { getUsersByEmail } from "@/app/_apis_routes/user";
+import { MANAGE_ACCESS_MODAL_ID } from "@/app/_config/const";
 import AvatarComponent from "@/app/components/avatar";
 import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
-import { MANAGE_ACCESS_MODAL_ID } from "@/app/config/const";
 import { SelectedAccessType } from "@/app/interfaces/index.interface";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { useAppDispatch, useAppSelector } from "@/app/store";

@@ -1,7 +1,7 @@
 "use client";
 
+import { CONFIRM_MODAL_ID } from "@/app/_config/const";
 import ModalComponent from "@/app/components/modal";
-import { CONFIRM_MODAL_ID } from "@/app/config/const";
 import { RootState } from "@/app/store";
 import { toggleModal as toggleModalState } from "@/app/store/actions";
 import { ModalStateType } from "@/app/store/reducers/modal.reducers";

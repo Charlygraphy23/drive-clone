@@ -1,6 +1,6 @@
+import { DELETE_CONFIRMATION } from '@/app/_config/const';
 import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
-import { DELETE_CONFIRMATION } from '@/app/config/const';
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
     moveToTrashAsync,
