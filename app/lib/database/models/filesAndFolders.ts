@@ -34,6 +34,16 @@ const schema = new mongoose.Schema<FilesAndFolderSchemaType>({
         index: true,
         default: false
     },
+    key: {
+        type: String,
+        select: false
+    },
+    fileSize: {
+        type: Number,
+    },
+    mimeType: {
+        type: String,
+    }
 }, { timestamps: true })
 
 

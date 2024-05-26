@@ -12,7 +12,10 @@ export interface FilesAndFolderSchemaType {
     lastModified?: string | Date;
     dataType: DATA_TYPE;
     parentFolderId?: string | mongoose.Types.ObjectId,
-    isDeleted?: boolean
+    isDeleted?: boolean,
+    key?: string,
+    fileSize?: number,
+    mimeType?: string
 }
 
 export interface FilesAndFolderDocument extends FilesAndFolderSchemaType, Document { }

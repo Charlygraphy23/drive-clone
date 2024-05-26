@@ -1,10 +1,8 @@
-import { BUCKET_PATH } from "@/app/_config/const";
+import { CRYPTO } from "@/app/utils/crypto";
 import { ApiResponse } from "@/app/utils/response";
-import { s3Client } from "@/app/utils/s3";
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { LOCAL_S3 } from "@/app/utils/s3";
 import { File } from "buffer";
 import { FilterQuery, Types } from "mongoose";
-import { NextResponse } from "next/server";
 import { generatePassword } from "../../lib";
 import { CreateUser, UserSchemaType } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
@@ -51,34 +49,19 @@ export class UserService {
         return await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, { password });
     }
 
-    async updateProfileImage(file: File) {
+    async updateProfileImage(file: File, userId: string) {
         const arrayBuffer = await file.arrayBuffer()
-        const buffer = Buffer.from(arrayBuffer);
-        const filename = file.name.replaceAll(" ", "_");
+        const key = `${userId}/profile__image__`
+        const encryptedKey = CRYPTO.encryptWithBase64(key)
 
-        const command = new PutObjectCommand({
-            Bucket: BUCKET_PATH,
-            Key: `randomuserId/${filename}`,
-            Body: buffer,
-            ServerSideEncryption: "AES256",
+        const s3 = new LOCAL_S3({
+            key,
+            body: arrayBuffer
         })
 
-
-
-        const res = await s3Client.send(command)
-
-        console.log(res)
-    }
-
-    async getProfileSignedUrl(_res: NextResponse) {
-
-        const command = new GetObjectCommand({
-            Bucket: BUCKET_PATH,
-            Key: `randomuserId/avatar.jpeg`,
+        await s3.put()
+        await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, {
+            imageUrl: encryptedKey
         })
-
-        const res = await s3Client.send(command)
-        const stream = res.Body?.transformToWebStream()
-        stream?.pipeThrough(_res)
     }
 }

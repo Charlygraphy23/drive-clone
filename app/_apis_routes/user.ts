@@ -21,3 +21,11 @@ export const updateProfileApi = async (payload: { email: string, firstName: stri
 export const changePasswordApi = async (payload: { newPassword: string, confirmPassword: string }) => {
     return await axiosInstance.post(`/users`, payload)
 }
+
+export const updateImageApi = async (formData: FormData) => {
+    return await axiosInstance.post(`/users/image`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}

@@ -1,7 +1,5 @@
-import { BUCKET_PATH } from "@/app/_config/const";
 import { getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
-import { s3Client } from "@/app/utils/s3";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { LOCAL_S3 } from "@/app/utils/s3";
 import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
 import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
@@ -330,12 +328,13 @@ export class ResourceService {
     async getResourceFromS3({ key }: {
         key: string
     }) {
-        const command = new GetObjectCommand({
-            Bucket: BUCKET_PATH,
-            Key: key,
+
+        const s3 = new LOCAL_S3({
+            encryptedKey: key
         })
 
-        const res = await s3Client.send(command)
+        const res = await s3.get()
+        console.log("res", res)
         const array = await res.Body?.transformToByteArray()
         return array
     }

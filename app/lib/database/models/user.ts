@@ -36,6 +36,11 @@ const schema = new mongoose.Schema<UserSchemaType>({
         default: LoginType.CREDENTIALS
     },
 
+    imageUrl: {
+        type: String,
+        default: "",
+    }
+
 }, { timestamps: true })
 
 
