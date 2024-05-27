@@ -1,6 +1,8 @@
+import { APP_CONFIG } from "@/app/_config";
 import { CRYPTO } from "@/app/utils/crypto";
 import { ApiResponse } from "@/app/utils/response";
 import { LOCAL_S3 } from "@/app/utils/s3";
+import { hash } from "bcryptjs";
 import { File } from "buffer";
 import { FilterQuery, Types } from "mongoose";
 import { generatePassword } from "../../lib";
@@ -46,7 +48,8 @@ export class UserService {
     }
 
     async updatePassword(userId: string, password: string) {
-        return await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, { password });
+        const hashedPassword = await hash(password, APP_CONFIG.BCRYPT_SALT);
+        return await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, { password: hashedPassword });
     }
 
     async updateProfileImage(file: File, userId: string) {

@@ -38,10 +38,10 @@ const decryptText = (encryptedText: string) => {
 export const CRYPTO = {
     encryptWithBase64: (plaintext: string) => {
         const encryptedText = encryptText(plaintext);
-        return Buffer.from(encryptedText, "utf8").toString('base64')
+        return btoa(Buffer.from(encryptedText, "utf8").toString('base64'))
     },
     decryptTextFromBase64: (bas64String: string) => {
-        const encryptedText = Buffer.from(bas64String, 'base64').toString('ascii')
+        const encryptedText = Buffer.from(atob(bas64String), 'base64').toString('ascii')
         const decryptedString = decryptText(encryptedText);
         return decryptedString
     }
