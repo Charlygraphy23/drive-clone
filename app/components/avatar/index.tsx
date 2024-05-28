@@ -5,7 +5,7 @@ import { Rings } from 'react-loader-spinner'
 import style from "./style.module.scss"
 
 type Props = {
-    user?: Pick<User, "_id" | "firstName" | "lastName" | "image">,
+    user?: Pick<User, "_id" | "firstName" | "lastName" | "imageUrl">,
     width?: number
     height?: number
     className?: string
@@ -24,8 +24,8 @@ const AvatarComponent = ({ user: _user, width, height, className = "", isLoading
             <div className={style.wrapper} style={{ width, height }}>
                 {
                     !isLoading ? <>
-                        {_user?.image && <Image
-                            src={_user?.image}
+                        {_user?.imageUrl && <Image
+                            src={_user?.imageUrl}
                             alt='avatar-image'
                             fill={true}
                         />}

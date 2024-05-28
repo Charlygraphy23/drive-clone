@@ -36,6 +36,7 @@ export const updateFolderNameApi = async (payload: UpdateFolderNamePayload) => {
 
 export const getFolderInfoByIdApi = async (resourceId: string, withDeleted?: boolean) => {
     let path = `/resources/${resourceId}`
+    console.log("path", path)
 
     if (withDeleted) {
         path = path + `?deleted=true`

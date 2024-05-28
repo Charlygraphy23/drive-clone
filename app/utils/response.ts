@@ -20,7 +20,7 @@ export class ApiResponse {
         return this
     }
 
-    send(message: string | Record<string, any> | boolean | number = "", status?: number) {
+    send(message: string | Record<string, any> | boolean | number = "", status?: number, withFile = false) {
         const _message = message ?? this._message
         const _status = status ?? this._status
         const options = {
@@ -36,6 +36,10 @@ export class ApiResponse {
 
         }
 
+        if (withFile) {
+            return new NextResponse(_message as BodyInit, options)
+        }
         return NextResponse.json(_message, options)
+
     }
 }

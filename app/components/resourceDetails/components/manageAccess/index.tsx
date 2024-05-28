@@ -51,7 +51,7 @@ const ManageAccess = () => {
     const mutation = useMutation({ mutationFn: updateAccess })
     const session = useSession()
     const user = session?.data?.user
-    const folderId = modalState?.value as NonNullable<string>
+    const folderId = modalState?.id
     const resourceInfoById = resourceInfo[folderId]
 
     const hasAccess = useMemo(() => {
@@ -166,6 +166,7 @@ const ManageAccess = () => {
         setSelectedAccess(resourceInfoById?.accessList ?? [])
     }, [resourceInfoById, manageAccessModal])
 
+
     return (
         <ModalComponent id={MANAGE_ACCESS_MODAL_ID} isOpen={manageAccessModal} toggle={toggleModal}>
             <div className={style.manageAccess}>
@@ -197,12 +198,7 @@ const ManageAccess = () => {
                             className={style.selectedUsersContainer}>
                             <AvatarComponent
                                 className={style.avatar}
-                                user={{
-                                    _id: access.userInfo?._id ?? "",
-                                    firstName: access?.userInfo?.firstName ?? "",
-                                    lastName: access?.userInfo?.lastName ?? "",
-                                    image: access?.userInfo?.imageUrl ?? "",
-                                }}
+                                user={access.userInfo}
                             />
                             <div className={style.selectedUsersWrapper}>
                                 <div className={style.info}>

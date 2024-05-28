@@ -21,8 +21,7 @@ const ResourceBody = () => {
                 isOpen: true,
                 name: "manageAccessModal",
                 data: {
-                    type: null,
-                    value: selectedFolderId
+                    id: selectedFolderId,
                 }
             })
         );
@@ -43,12 +42,7 @@ const ResourceBody = () => {
                     {folderInfo?.accessList?.map((access, index) => <AvatarComponent
                         key={access?._id ?? index}
                         className={style.avatar}
-                        user={{
-                            _id: access?.userInfo?._id,
-                            firstName: access?.userInfo?.firstName,
-                            lastName: access?.userInfo?.lastName,
-                            image: access?.userInfo?.imageUrl
-                        }} />)}
+                        user={access?.userInfo} />)}
                 </div>
 
                 <ButtonGroup type="button" className={style.manageAccess} submitText="Manage access" handleSubmit={toggleModal} />

@@ -2,6 +2,7 @@ import { getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
 import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
+import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
@@ -23,14 +24,7 @@ export class ResourceService {
                             }
                         },
 
-                        {
-                            $project: {
-                                firstName: 1,
-                                lastName: 1,
-                                email: 1,
-                                imageUrl: 1
-                            }
-                        }
+                        userInfoProjectionAggregationQuery()
                     ],
                     as: "userInfo"
                 }
@@ -227,15 +221,7 @@ export class ResourceService {
                                 $expr: { $eq: ["$_id", "$$userId"] }
                             }
                         },
-
-                        {
-                            $project: {
-                                firstName: 1,
-                                lastName: 1,
-                                email: 1,
-                                imageUrl: 1
-                            }
-                        }
+                        userInfoProjectionAggregationQuery()
                     ],
                     as: "ownerInfo"
                 }
@@ -330,11 +316,10 @@ export class ResourceService {
     }) {
 
         const s3 = new LOCAL_S3({
-            encryptedKey: key
+            key
         })
 
         const res = await s3.get()
-        console.log("res", res)
         const array = await res.Body?.transformToByteArray()
         return array
     }

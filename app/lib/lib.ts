@@ -24,3 +24,14 @@ export const generatePassword = async (length: number = 8) => {
 
     return password
 }
+
+export const userInfoProjectionAggregationQuery = () => {
+    return {
+        $project: {
+            firstName: 1,
+            lastName: 1,
+            email: 1,
+            imageUrl: { $concat: ["/api/users/image/", { $toString: "$_id" }] }
+        }
+    }
+}

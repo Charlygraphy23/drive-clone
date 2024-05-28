@@ -10,9 +10,10 @@ const encryptText = (plaintext: string) => {
     );
     let ciphertext = cipher.update(plaintext, 'utf8', 'base64');
     ciphertext += cipher.final('base64');
-    const tag = cipher.getAuthTag()
+    const tag = cipher.getAuthTag().toString("base64")
 
-    return `${ciphertext}-${tag}-${iv}-${key}`
+    const text = `${ciphertext}-${tag}-${iv}-${key}`
+    return text
 }
 
 
@@ -36,12 +37,14 @@ const decryptText = (encryptedText: string) => {
 
 
 export const CRYPTO = {
+    encrypt: (plaintext: string) => encryptText(plaintext),
+    decrypt: (encryptedText: string) => decryptText(encryptedText),
     encryptWithBase64: (plaintext: string) => {
         const encryptedText = encryptText(plaintext);
-        return btoa(Buffer.from(encryptedText, "utf8").toString('base64'))
+        return Buffer.from(encryptedText, "utf8").toString('base64')
     },
     decryptTextFromBase64: (bas64String: string) => {
-        const encryptedText = Buffer.from(atob(bas64String), 'base64').toString('ascii')
+        const encryptedText = Buffer.from(bas64String, 'base64').toString('ascii')
         const decryptedString = decryptText(encryptedText);
         return decryptedString
     }

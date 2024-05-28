@@ -23,12 +23,7 @@ const TopBarAvatar = () => {
 	return (
 		<MyDropdown
 			handler={{
-				render: () => <AvatarComponent isLoading={session.status === "loading"} user={{
-					_id: user?._id ?? "",
-					firstName: user?.firstName ?? "",
-					lastName: user?.lastName ?? "",
-					image: user?.imageUrl
-				}} />,
+				render: () => <AvatarComponent isLoading={session.status === "loading"} user={user} />,
 			}}>
 			<MyDropdown.Menu>
 				<MyDropdown.List className={isProfileRoute ? style.active : ""}>

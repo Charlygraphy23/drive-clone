@@ -11,6 +11,8 @@ const nextConfig = {
 				hostname: "images.pexels.com",
 			},
 		],
+		minimumCacheTTL: 60,
+
 	},
 
 	webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {

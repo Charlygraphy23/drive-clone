@@ -9,6 +9,7 @@ import { generatePassword } from "../../lib";
 import { CreateUser, UserSchemaType } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
 
+
 export class UserService {
     async findByEmail(email: string, select: string | Partial<Record<keyof UserSchemaType, number>> = "") {
         return await UserModel.findOne({ email }).select(select)
@@ -66,5 +67,21 @@ export class UserService {
         await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, {
             imageUrl: encryptedKey
         })
+    }
+
+    async getProfileImage(userId: string) {
+        const userData = await (UserModel.findById({ _id: new Types.ObjectId(userId) }).select("+imageUrl"));
+
+        const key = CRYPTO.decryptTextFromBase64(userData?.imageUrl);
+
+        const s3 = new LOCAL_S3({
+            key
+        })
+
+        const data = await s3.get()
+        const array = await data?.Body?.transformToByteArray()
+        if (!array) throw new Error("No Content")
+
+        return array
     }
 }

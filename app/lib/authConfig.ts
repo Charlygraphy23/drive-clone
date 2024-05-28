@@ -1,7 +1,8 @@
 import { connectDB } from "@/app/lib/database/db";
 import { UserService } from "@/app/lib/database/services/user.service";
 import { comparePasswordWithHash } from "@/app/lib/lib";
-import NextAuth, { AuthOptions, Session, User } from "next-auth";
+import { AuthOptions, Session, User } from "next-auth";
+import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { ValidationError } from "yup";
 import { CredentialsType, credentialSchema } from "../api/auth/[...nextauth]/interfaces/index.interface";
@@ -38,7 +39,7 @@ export const authOptions: AuthOptions = {
                     return {
                         _id: user?._id,
                         email: user?.email,
-                        imageUrl: user?.imageUrl,
+                        imageUrl: user?.imageUrl && `/api/users/image/${user?._id}`,
                         name: `${user?.firstName} ${user?.lastName}`,
                         loginType: user?.loginType,
                         firstName: user?.firstName,

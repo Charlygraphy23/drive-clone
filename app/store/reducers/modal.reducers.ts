@@ -1,4 +1,4 @@
-import { DATA_TYPE } from "@/app/interfaces/index.interface";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
 import { toggleModal } from "../actions";
 
