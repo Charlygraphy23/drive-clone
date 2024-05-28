@@ -74,6 +74,7 @@ export const moveToTrashAsync = createAsyncThunk<{ id: string }, { id: string }>
 	}
 	catch (err) {
 		const errors = ErrorHandler(err)
+		_thunkAPI.rejectWithValue(errors)
 		return Promise.reject(errors)
 	}
 })

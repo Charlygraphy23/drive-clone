@@ -5,7 +5,7 @@ import { LOCAL_S3 } from "@/app/utils/s3";
 import { hash } from "bcryptjs";
 import { File } from "buffer";
 import { FilterQuery, Types } from "mongoose";
-import { generatePassword } from "../../lib";
+import { generatePassword, userInfoProjectionAggregationQuery } from "../../lib";
 import { CreateUser, UserSchemaType } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
 
@@ -31,7 +31,13 @@ export class UserService {
         if (email) {
             filter.email = { $regex: email }
         }
-        return await UserModel.find(filter)
+        return await UserModel.aggregate([
+            {
+                $match: filter
+            },
+            userInfoProjectionAggregationQuery()
+        ])
+
     }
 
     async updateProfile(userId: string, info: { email: string, firstName: string, lastName: string }) {
@@ -72,7 +78,11 @@ export class UserService {
     async getProfileImage(userId: string) {
         const userData = await (UserModel.findById({ _id: new Types.ObjectId(userId) }).select("+imageUrl"));
 
+        if (!userData?.imageUrl) return ""
+
         const key = CRYPTO.decryptTextFromBase64(userData?.imageUrl);
+
+        if (!key) return ""
 
         const s3 = new LOCAL_S3({
             key

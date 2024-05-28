@@ -40,11 +40,20 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
 
         if (!data?.id) return;
 
-        setLoading(true)
-        await dispatch(moveToTrashAsync({ id: data?.id }))
-        setLoading(false)
-        router.refresh()
-        toggleModal()
+        try {
+            setLoading(true)
+            await dispatch(moveToTrashAsync({ id: data?.id })).then(data => {
+                if (data?.meta?.requestStatus === "rejected") return Promise.reject()
+                return data
+            })
+            setLoading(false)
+            router.refresh()
+            toggleModal()
+        }
+        catch (err) {
+            setLoading(false)
+
+        }
     };
 
     return (

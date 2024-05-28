@@ -4,7 +4,7 @@ import { ApiResponse } from "@/app/utils/response"
 import { getServerSession } from "next-auth"
 import { NextRequest } from "next/server"
 
-export const POST = async (_req: NextRequest, { params }: { params: { email: string } }) => {
+export const GET = async (_req: NextRequest, { params }: { params: { email: string } }) => {
     const service = new UserService();
     const response = new ApiResponse()
 

@@ -1,14 +1,16 @@
-import { getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
+import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
 import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
+import { AccessModal } from "../models/access";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
 import { AccessService } from "./access.service";
 
 const Model = FilesAndFolderModel
+
 export class ResourceService {
 
     private getUserInfo(userId: string | Types.ObjectId) {
@@ -78,11 +80,16 @@ export class ResourceService {
         }], options)
     }
 
-    async getResources(userId: string, resourceId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null) {
+    async getResources(userId: string, resourceId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null, shared: "only" | "show" | "off" = "off") {
 
         const initialQuery = {
-            createdBy: new Types.ObjectId(userId)
         } as FilterQuery<Partial<Record<keyof FilesAndFolderSchemaType, any>>>
+
+        if (shared === "off") {
+            initialQuery.createdBy = new Types.ObjectId(userId)
+        } else if (shared === "only") {
+            initialQuery.createdBy = { $ne: new Types.ObjectId(userId) }
+        }
 
         if (resourceId) {
             initialQuery["parentFolderId"] = new Types.ObjectId(resourceId);
@@ -108,7 +115,7 @@ export class ResourceService {
         }
 
         const pipelines = [
-            ...this.getUserInfo(new Types.ObjectId(userId)),
+            ...this.getUserInfo("$createdBy"),
             {
                 $unwind: {
                     path: "$userInfo",
@@ -302,13 +309,21 @@ export class ResourceService {
     }
 
     async deleteForever(resourceId: string, options?: SessionOption) {
-        const query = getListOfChildFoldersQuery(resourceId);
+        const folders = (await getChildrenAccessListByFolderId(resourceId, options)) as Array<{ _id: string, accesses: Array<{ _id: string } & AccessSchemaType> } & FilesAndFolderSchemaType>;
+        console.log("folders", JSON.stringify(folders));
 
-        const folders = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
-        const folderIdsToDelete = folders?.map(folder => folder?._id);
+        const accessIdsToDelete: string[] = [] as string[]
+        const folderIdsToDelete = folders?.map(folder => {
+            const accessIds = folder?.accesses?.map(access => access?._id)
+            accessIdsToDelete.push(...accessIds)
+            return folder?._id
+        });
 
         const _options = options as DefaultedQueryObserverOptions
-        return await Model.deleteMany({ _id: { $in: folderIdsToDelete } }, _options)
+        return await Promise.all([
+            Model.deleteMany({ _id: { $in: folderIdsToDelete } }, _options),
+            AccessModal.deleteMany({ _id: { $in: accessIdsToDelete } }, _options)
+        ])
     }
 
     async getResourceFromS3({ key }: {

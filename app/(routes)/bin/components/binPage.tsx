@@ -4,7 +4,7 @@ import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import BinTableComponent from "./binTableComponent";
 
 const api = async () => {
-	const dataset = await getResources("", DATA_TYPE.FOLDER, true);
+	const dataset = await getResources("", DATA_TYPE.FOLDER, true, "off");
 	return JSON.parse(JSON.stringify(dataset?.data)) as FileAndFolderDatasetType["folders"]
 };
 

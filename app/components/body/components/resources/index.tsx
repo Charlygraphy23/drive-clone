@@ -109,7 +109,7 @@ import style from "./style.module.scss";
 // };
 
 async function fetchData(folderId?: string) {
-	const dataset = await getResources(folderId, DATA_TYPE.FOLDER);
+	const dataset = await getResources(folderId, DATA_TYPE.FOLDER, false, "show");
 	return JSON.parse(JSON.stringify(dataset?.data)) as FileAndFolderDatasetType["folders"]
 
 }

@@ -11,7 +11,6 @@ const nextConfig = {
 				hostname: "images.pexels.com",
 			},
 		],
-		minimumCacheTTL: 60,
 
 	},
 

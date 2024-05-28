@@ -60,7 +60,7 @@ const ProfileImageComponent = () => {
 		<div className={style.profileImage}>
 			<Image
 				className={style.image}
-				src={(imageUrl) ?? ""}
+				src={imageUrl ?? ""}
 				alt='profile'
 				fill
 				sizes="(max-width: 50px) 50vw"

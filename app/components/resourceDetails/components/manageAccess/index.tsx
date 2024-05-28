@@ -167,6 +167,7 @@ const ManageAccess = () => {
     }, [resourceInfoById, manageAccessModal])
 
 
+
     return (
         <ModalComponent id={MANAGE_ACCESS_MODAL_ID} isOpen={manageAccessModal} toggle={toggleModal}>
             <div className={style.manageAccess}>

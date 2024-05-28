@@ -31,7 +31,13 @@ export const userInfoProjectionAggregationQuery = () => {
             firstName: 1,
             lastName: 1,
             email: 1,
-            imageUrl: { $concat: ["/api/users/image/", { $toString: "$_id" }] }
+            imageUrl: {
+                $cond: {
+                    if: { $and: [{ $gt: ["$imageUrl", null] }, { $gte: [{ $strLenCP: "$imageUrl" }, 1] }] },
+                    then: { $concat: ["/api/users/image/", { $toString: "$_id" }] },
+                    else: ""
+                }
+            }
         }
     }
 }

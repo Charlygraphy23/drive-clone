@@ -1,3 +1,4 @@
+import { DEFAULT_IMAGE } from '@/app/_config'
 import { User } from 'next-auth'
 import Image from 'next/image'
 import { useMemo } from 'react'
@@ -25,9 +26,13 @@ const AvatarComponent = ({ user: _user, width, height, className = "", isLoading
                 {
                     !isLoading ? <>
                         {_user?.imageUrl && <Image
-                            src={_user?.imageUrl}
+                            src={_user?.imageUrl ?? ""}
                             alt='avatar-image'
-                            fill={true}
+                            fill
+                            quality={75}
+                            placeholder='blur'
+                            loading='lazy'
+                            blurDataURL={DEFAULT_IMAGE}
                         />}
 
                         <p>{firstWord?.[0] + firstWord[1]}</p></>

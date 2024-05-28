@@ -10,7 +10,7 @@ import { MongoIdSchemaValidation } from "../_validation/data.validation"
 
 
 
-export const getResources = async (resourceId?: string, resourceType: DATA_TYPE | null = null, showDeleted = false) => {
+export const getResources = async (resourceId?: string, resourceType: DATA_TYPE | null = null, showDeleted = false, shared: "only" | "show" | "off" = "off") => {
     const service = new ResourceService()
 
     try {
@@ -37,7 +37,7 @@ export const getResources = async (resourceId?: string, resourceType: DATA_TYPE 
         }
 
 
-        const folders = await service.getResources(String(user._id), resourceId, showDeleted, resourceType)
+        const folders = await service.getResources(String(user._id), resourceId, showDeleted, resourceType, shared)
 
         return { message: "Un-authorized", status: 200, data: folders };
 
