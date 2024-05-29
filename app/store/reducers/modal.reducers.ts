@@ -11,6 +11,7 @@ const initialState = {
 	changePasswordModal: false,
 	manageAccessModal: false,
 	deleteModal: false,
+	fileUpload: false,
 	data: {} as ModalDataType,
 };
 

@@ -48,3 +48,15 @@ export const ErrorHandler = (err: unknown): ({ _validationError: boolean } & Rec
     return error.message ?? error?.msg ?? "Something went wrong"
 
 }
+
+export function formatBytes(size: number, decimals = 2) {
+    if (!size) return '0 Bytes'
+
+    const k = 1024
+    const dm = decimals < 0 ? 0 : decimals
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
+
+    const i = Math.floor(Math.log(size) / Math.log(k))
+
+    return `${parseFloat((size / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+}

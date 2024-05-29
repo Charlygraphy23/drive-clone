@@ -38,6 +38,7 @@ const Modal = (props: Props) => {
 
 			if (instance.current) {
 				instance.current.hide()
+				if (toggle && isOpen) toggle(false);
 				// instance.current.dispose()
 				// instance.current = null
 			}
