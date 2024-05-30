@@ -1,6 +1,7 @@
 import { formatBytes } from '@/app/utils/index.utils'
 import Image from 'next/image'
 import style from './style.module.scss'
+import { getFileIconByType } from './utils/index.utils'
 
 type Props = {
     className?: string
@@ -12,7 +13,7 @@ const FileListItem = ({ className, file }: Props) => {
         <div className={`${style.fileList} ${className}`}>
             <div className={style.info}>
                 <div className={style.icon}>
-                    <Image width={50} height={50} src="/app/assets/pdf-icon.svg" alt="file-ico" />
+                    <Image width={20} height={20} src={getFileIconByType(file?.type)} alt="file-ico" />
                 </div>
                 <div className={style.description}>
                     <p><strong>{file?.name}</strong></p>
