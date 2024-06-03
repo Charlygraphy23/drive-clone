@@ -1,15 +1,19 @@
 "use client"
 
+import { uploadFile } from "@/app/_apis_routes/resources";
 import { FILE_UPLOAD } from "@/app/_config/const";
 import ButtonGroup from "@/app/components/buttonGroup";
 import FileListItem from "@/app/components/fileListItem";
 import ModalComponent from "@/app/components/modal";
+import { FileUploadType } from "@/app/interfaces/index.interface";
 import { useAppDispatch } from "@/app/store";
 import {
     toggleModal as toggleModalState
 } from "@/app/store/actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
-import React, { useCallback, useState } from "react";
+import { AxiosProgressEvent } from "axios";
+import { useParams } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 import style from "./style.module.scss";
 
 type Props = {
@@ -17,16 +21,27 @@ type Props = {
     data: ModalDataType;
 };
 
+
+
 const FileUploadModal = ({ isOpen }: Props) => {
     const [isDragging, setIsDragging] = useState(false)
-    const [files, setFiles] = useState<File[]>([])
+    const [files, setFiles] = useState<FileUploadType[]>([])
+    const [uploading, setUploading] = useState(false)
+    const { folderId } = useParams<{ folderId: string }>()
+
+
     const dispatch = useAppDispatch();
 
     const handleFiles = (file?: File | null) => {
         if (file)
             setFiles(prev => {
-                const isSameName = prev?.find(f => f?.name === file?.name)
-                if (!isSameName) prev.push(file)
+                const isSameName = prev?.find(f => f?.file.name === file?.name)
+                if (!isSameName) prev.push({
+                    file,
+                    progress: 0,
+                    hasFinished: false,
+                    isUploading: false
+                })
 
                 return Array.from(prev)
             })
@@ -50,6 +65,8 @@ const FileUploadModal = ({ isOpen }: Props) => {
         e.preventDefault()
         setIsDragging(false)
 
+        if (uploading) return;
+
         const dropItems = e.dataTransfer.items;
         if (!dropItems?.length) return;
 
@@ -69,6 +86,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
     }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (uploading) return;
 
         const changedFiles = event.target.files
 
@@ -88,13 +106,78 @@ const FileUploadModal = ({ isOpen }: Props) => {
         setIsDragging(false)
     }
 
+    const handleSubmit = () => {
+        if (uploading) return;
+        setUploading(true)
+    }
+
+    const startUploading = useCallback(async () => {
+
+        let index = 0;
+        let hasMoreFile = !!files?.length;
+
+        while (hasMoreFile) {
+            const currantFile = files[index];
+
+            if (currantFile?.hasFinished || currantFile?.progress) {
+                console.log("Already complete!")
+                hasMoreFile = !!files?.[++index]
+                continue;
+
+            }
+
+            console.log("Uploading , ", currantFile.file.name)
+            const formData = new FormData();
+            if (folderId) {
+                formData.append("folderId", folderId)
+            }
+
+            try {
+                await uploadFile({
+                    formData,
+                    onUpload: (progressEvent: AxiosProgressEvent) => {
+                        const { loaded, total = 0 } = progressEvent;
+                        setFiles(prev => {
+                            prev[index].progress = Math.floor((loaded / total) * 100)
+                            return Array.from(prev)
+                        })
+                    }
+                })
+                setFiles(prev => {
+                    if (prev[index]) {
+                        prev[index].hasFinished = true
+                    }
+                    return Array.from(prev)
+                })
+            }
+            catch (err) {
+                setFiles(prev => {
+                    if (prev[index]) {
+                        prev[index].isFailed = true
+                    }
+                    return Array.from(prev)
+                })
+            }
+            hasMoreFile = !!files?.[++index]
+        }
+    }, [folderId])
+
+
+    useEffect(() => {
+        if (uploading) {
+            startUploading().finally(() => {
+                setUploading(false)
+            })
+        }
+    }, [startUploading, uploading])
+
     return (
         <ModalComponent
             id={FILE_UPLOAD}
             isOpen={true}
             toggle={toggleModal} size="lg">
             <section className={style.wrapper}>
-                <label
+                {!uploading && <label
                     htmlFor="upload-files"
                     className={`${style.upload} ${isDragging && style.dragging}`}
                     onDrop={handleDrop}
@@ -110,10 +193,10 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
                     <p><strong>Click here</strong> to upload your file or drag and drop</p>
                     <span>Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.</span>
-                </label>
+                </label> || null}
 
                 <div className={style.list}>
-                    {files?.length && files?.map((file) => <FileListItem className="mb-2" key={file.name} file={file} />) || null}
+                    {files?.length && files?.map((file) => <FileListItem className="mb-2" key={file.file?.name} media={file} />) || null}
                 </div>
 
                 {files?.length && <div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
@@ -126,6 +209,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
                         // loading={loading}
                         loader="spin"
                         order={-1}
+                        handleSubmit={handleSubmit}
                     />
                 </div> || null}
 

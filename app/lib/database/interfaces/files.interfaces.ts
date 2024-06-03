@@ -1,3 +1,4 @@
+import { File } from "buffer";
 import mongoose, { Document } from "mongoose";
 
 /* eslint-disable no-unused-vars */
@@ -26,4 +27,11 @@ export interface CreateDataType {
     createdBy: string;
     type: DATA_TYPE;
     parentFolderId?: string | null
+}
+
+export interface UploadFileType {
+    file: File;
+    createdBy: string;
+    parentFolderId?: string | null;
+    fileName: string
 }

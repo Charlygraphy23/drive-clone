@@ -4,7 +4,7 @@ import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
 import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
-import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType } from "../interfaces/files.interfaces";
+import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType, UploadFileType } from "../interfaces/files.interfaces";
 import { AccessModal } from "../models/access";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
 import { AccessService } from "./access.service";
@@ -63,10 +63,10 @@ export class ResourceService {
 
     }
 
-    async findFolderByName(name: string, parentFolderId: string, options?: SessionOption) {
+    async findResourceByName(name: string, parentFolderId: string, options?: SessionOption) {
         return await Model.findOne({
             name: name,
-            parentFolderId: parentFolderId ?? null
+            parentFolderId: parentFolderId || null
         }, null, options)
     }
 
@@ -337,6 +337,20 @@ export class ResourceService {
         const res = await s3.get()
         const array = await res.Body?.transformToByteArray()
         return array
+    }
+
+    async upload(payload: UploadFileType, options: SessionOption) {
+        return await Model.create([{
+            name: payload?.file?.name,
+            createdBy: payload?.createdBy,
+            lastModified: new Date(),
+            dataType: DATA_TYPE.FILE,
+            parentFolderId: payload?.parentFolderId || null,
+            mimeType: payload?.file?.type,
+            fileSize: payload?.file?.size,
+            fileName: payload?.fileName
+        }], options)
+
     }
 
 }

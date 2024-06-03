@@ -1,4 +1,5 @@
 import { passwordYupValidation } from "@/app/components/loginFlow/interfaces/index.interface";
+import { File } from "buffer";
 import { object, ref, string } from "yup";
 import { AccessList } from "../store/actions/info.actions";
 
@@ -20,8 +21,6 @@ export type ActionType = {
 
 export type SelectedAccessType = { _id?: string, } & Pick<AccessList, "accessType" | "userInfo" | "resourceId">
 
-
-
 export type PasswordChangeFormStateType = {
 	newPassword: string;
 	confirmPassword: string;
@@ -34,3 +33,10 @@ export const PasswordChangeFormSchema = object().shape({
 	confirmPassword: string().oneOf([ref("newPassword")], 'Passwords must match')
 })
 
+export type FileUploadType = {
+	file: File,
+	progress: number,
+	hasFinished: boolean,
+	isUploading: boolean,
+	isFailed: boolean
+}

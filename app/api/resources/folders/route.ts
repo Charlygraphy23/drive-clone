@@ -101,7 +101,7 @@ export const POST = async (req: NextRequest) => {
             return response.status(403).send("Unauthorized")
         }
 
-        const folderExists = await service.findFolderByName(name, parentFolderId, { session: mongoSession })
+        const folderExists = await service.findResourceByName(name, parentFolderId, { session: mongoSession })
 
         if (folderExists) return response.status(400).send("A folder is already exists with this name");
 

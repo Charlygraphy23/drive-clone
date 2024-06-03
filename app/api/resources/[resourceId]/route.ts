@@ -131,7 +131,6 @@ export const POST = async (req: NextRequest, { params }: { params: { resourceId:
     }
 }
 
-
 export const DELETE = async (req: NextRequest, { params }: { params: { resourceId: string } }) => {
     const response = new ApiResponse()
     const service = new ResourceService()

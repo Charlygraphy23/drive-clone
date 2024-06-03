@@ -3,6 +3,7 @@ import AVI_ICON from '@app/assets/icons/avi.svg';
 import CSS_ICON from '@app/assets/icons/css.svg';
 import CSV_ICON from '@app/assets/icons/csv.svg';
 import DOC_ICON from '@app/assets/icons/doc.svg';
+import EXCEL_ICON from "@app/assets/icons/excel.svg";
 import FONT_ICON from '@app/assets/icons/font.svg';
 import GIF_ICON from '@app/assets/icons/gif.svg';
 import HTML_ICON from '@app/assets/icons/html.svg';
@@ -69,6 +70,8 @@ export const getFileIconByType = (mimeType: File["type"]) => {
         if (type === "vnd.ms-powerpoint") return PPT_ICON
         if (type === "zip") return ZIP_ICON
         if (type === "vnd.rar") return RAR_ICON
+        if (type === "vnd.ms-excel") return EXCEL_ICON
+        if (type === "vnd.openxmlformats-officedocument.spreadsheetml.sheet") return EXCEL_ICON
         return ZIP_ICON
     }
 
