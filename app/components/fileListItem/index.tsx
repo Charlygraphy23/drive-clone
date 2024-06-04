@@ -1,5 +1,6 @@
 import { FileUploadType } from '@/app/interfaces/index.interface'
 import { formatBytes } from '@/app/utils/index.utils'
+import { Progress } from 'antd'
 import Image from 'next/image'
 import style from './style.module.scss'
 import { getFileIconByType } from './utils/index.utils'
@@ -21,8 +22,8 @@ const FileListItem = ({ className, media }: Props) => {
                     <span>{formatBytes(media?.file?.size)}</span>
                 </div>
             </div>
-            <div>
-                progress
+            <div className="d-flex justify-content-center align-items-center">
+                <Progress type="circle" percent={media.progress} size={30} status={media?.isFailed ? "exception" : "normal"} />
             </div>
         </div>
     )

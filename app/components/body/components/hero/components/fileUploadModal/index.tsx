@@ -13,7 +13,7 @@ import {
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { AxiosProgressEvent } from "axios";
 import { useParams } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import style from "./style.module.scss";
 
 type Props = {
@@ -37,10 +37,11 @@ const FileUploadModal = ({ isOpen }: Props) => {
             setFiles(prev => {
                 const isSameName = prev?.find(f => f?.file.name === file?.name)
                 if (!isSameName) prev.push({
-                    file,
+                    file: file,
                     progress: 0,
                     hasFinished: false,
-                    isUploading: false
+                    isUploading: false,
+                    isFailed: false
                 })
 
                 return Array.from(prev)
@@ -109,7 +110,21 @@ const FileUploadModal = ({ isOpen }: Props) => {
     const handleSubmit = () => {
         if (uploading) return;
         setUploading(true)
+        startUploading().finally(() => {
+            setUploading(false)
+        })
+
     }
+
+    const updateFileState = useCallback((updateCallback: (_files: FileUploadType[]) => void) => {
+        console.log("Called updateFileState")
+        setFiles(prev => {
+            const newFiles = Array.from(prev);
+            updateCallback(newFiles);
+            console.log("PREV ", newFiles);
+            return newFiles;
+        });
+    }, [])
 
     const startUploading = useCallback(async () => {
 
@@ -119,6 +134,14 @@ const FileUploadModal = ({ isOpen }: Props) => {
         while (hasMoreFile) {
             const currantFile = files[index];
 
+            console.log("hasMoreFile", hasMoreFile)
+            console.log("currantFile", currantFile)
+            console.log("folderId", folderId)
+            console.log("index", index)
+
+
+
+
             if (currantFile?.hasFinished || currantFile?.progress) {
                 console.log("Already complete!")
                 hasMoreFile = !!files?.[++index]
@@ -126,7 +149,6 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
             }
 
-            console.log("Uploading , ", currantFile.file.name)
             const formData = new FormData();
             if (folderId) {
                 formData.append("folderId", folderId)
@@ -137,39 +159,40 @@ const FileUploadModal = ({ isOpen }: Props) => {
                     formData,
                     onUpload: (progressEvent: AxiosProgressEvent) => {
                         const { loaded, total = 0 } = progressEvent;
-                        setFiles(prev => {
-                            prev[index].progress = Math.floor((loaded / total) * 100)
-                            return Array.from(prev)
+                        const progress = Math.round((loaded * 100) / total)
+                        console.log("progress", {
+                            loaded,
+                            total,
+                            progress
                         })
+
+                        // setFiles(prev => {
+                        //     prev[index].progress = progress
+
+                        //     if (progress === 100) {
+                        //         prev[index].hasFinished = true
+                        //     }
+
+                        //     return Array.from(prev)
+                        // })
                     }
-                })
-                setFiles(prev => {
-                    if (prev[index]) {
-                        prev[index].hasFinished = true
-                    }
-                    return Array.from(prev)
                 })
             }
             catch (err) {
-                setFiles(prev => {
-                    if (prev[index]) {
-                        prev[index].isFailed = true
-                    }
+                console.log("Error ", err)
+                updateFileState(prev => {
+                    // prev[index].isFailed = true
+                    // prev[index].progress = 0
+                    // prev[index].hasFinished = true
                     return Array.from(prev)
                 })
             }
             hasMoreFile = !!files?.[++index]
         }
-    }, [folderId])
 
 
-    useEffect(() => {
-        if (uploading) {
-            startUploading().finally(() => {
-                setUploading(false)
-            })
-        }
-    }, [startUploading, uploading])
+    }, [files, folderId, updateFileState])
+
 
     return (
         <ModalComponent

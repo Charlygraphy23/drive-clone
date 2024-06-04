@@ -1,5 +1,4 @@
 import { passwordYupValidation } from "@/app/components/loginFlow/interfaces/index.interface";
-import { File } from "buffer";
 import { object, ref, string } from "yup";
 import { AccessList } from "../store/actions/info.actions";
 
