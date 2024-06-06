@@ -5,10 +5,12 @@ import { AccessService } from "@/app/lib/database/services/access.service";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
 import { File } from "buffer";
+import { access, appendFile, readFile, unlink } from "fs/promises";
 import { startSession } from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
-import { extname } from "path";
+import { resolve } from "path";
+import { cwd } from "process";
 
 export const POST = async (req: NextRequest) => {
     const mongoSession = await startSession()
@@ -24,13 +26,14 @@ export const POST = async (req: NextRequest) => {
         const formData = await req?.formData?.();
         const file = formData.get("file");
         const folderId = formData.get("folderId") as string;
-
+        const totalSize = parseInt(formData.get("totalSize") as string)
+        const chunkIndex = parseInt(formData.get("chunkIndex") as string)
+        const totalChunks = parseInt(formData.get("totalChunks") as string)
+        const name = formData.get("name") as string;
 
         if (!file || !(file instanceof File)) {
             return response.status(400).send("No files received.")
         }
-
-        let fileName = file?.name
 
         await connectDB()
         mongoSession.startTransaction()
@@ -46,39 +49,65 @@ export const POST = async (req: NextRequest) => {
             return response.status(403).send("Unauthorized")
         }
 
-        const hasFile = await service.findResourceByName(fileName, folderId, { session: mongoSession })
+        const tempFileName = "temp_" + name
+        const fileName = name
+        const path = resolve(cwd(), `./app/_chunks/${tempFileName}`)
+        const buffer = await file.arrayBuffer()
+        const uint8Array = new Uint8Array(buffer)
 
-        if (hasFile) {
-            const ext = extname(fileName);
-            const name = fileName.split(ext)?.[0]
-            fileName = `${name} (1)${ext}`;
+        try {
+            await access(path)
+            if (chunkIndex === 0) {
+                console.log("Found first data as chunk")
+                await unlink(path)
+            }
+        } catch (err) {
+            console.log(`No temp File Exist with the name ${tempFileName}`)
+        }
+        await appendFile(path, uint8Array)
+
+        if (chunkIndex < totalChunks - 1) {
+            await mongoSession.commitTransaction()
+            return response.status(201).send("Uploaded")
         }
 
+        const localFile = await readFile(path)
+        console.log("Local file length", localFile.length)
+        // const hasFile = await service.findResourceByName(fileName, folderId, { session: mongoSession })
 
-        const [res] = await service.upload({
-            file: file,
-            fileName: fileName,
-            createdBy: String(user._id),
-            parentFolderId: folderId,
-        }, { session: mongoSession });
+        // if (hasFile) {
+        //     const ext = extname(fileName);
+        //     const name = fileName.split(ext)?.[0]
+        //     fileName = `${name} (1)${ext}`;
+        // }
 
-        const fileInfo = res?.toJSON()
-        await accessService.createWithParent({
-            userId: String(user._id), parentFolderId: folderId, resourceId: fileInfo?._id
-        }, { session: mongoSession })
+
+        // const [res] = await service.upload({
+        //     file: localFile,
+        //     fileName: fileName,
+        //     createdBy: String(user._id),
+        //     parentFolderId: folderId,
+        //     size: localFile.length
+        // }, { session: mongoSession });
+
+        // const fileInfo = res?.toJSON()
+        // await accessService.createWithParent({
+        //     userId: String(user._id), parentFolderId: folderId, resourceId: fileInfo?._id
+        // }, { session: mongoSession })
 
         await mongoSession.commitTransaction()
+        await unlink(path)
         return response.status(200).send("Updated")
 
     }
     catch (_err: unknown) {
         const err = _err as { message: string }
         console.error("Error - ", err)
-        await mongoSession.abortTransaction()
+        // await mongoSession.abortTransaction()
         return response.status(500).send(err?.message)
     }
     finally {
         console.log("Run finally")
-        await mongoSession.endSession()
+        // await mongoSession.endSession()
     }
 };

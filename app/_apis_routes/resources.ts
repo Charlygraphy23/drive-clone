@@ -1,4 +1,3 @@
-import { AxiosProgressEvent } from "axios";
 import { ACCESS_TYPE } from "../lib/database/interfaces/access.interface";
 import { DATA_TYPE, FilesAndFolderSchemaType } from "../lib/database/interfaces/files.interfaces";
 import { axiosInstance } from "./http";
@@ -63,11 +62,10 @@ export const deleteForeverApi = async (resourceId: string) => {
     return await axiosInstance.delete(`/resources/${resourceId}`)
 }
 
-export const uploadFile = async ({ formData, onUpload }: { formData: FormData, onUpload: (_progressEvent: AxiosProgressEvent) => void }) => {
+export const uploadFile = async ({ formData }: { formData: FormData }) => {
     await axiosInstance.post(`/resources/files`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         },
-        onUploadProgress: onUpload
     })
 }

@@ -11,7 +11,7 @@ import {
     toggleModal as toggleModalState
 } from "@/app/store/actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
-import { AxiosProgressEvent } from "axios";
+import { generateChunk } from "@/app/utils/fileUpload";
 import { useParams } from "next/navigation";
 import React, { useCallback, useState } from "react";
 import style from "./style.module.scss";
@@ -109,10 +109,12 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
     const handleSubmit = () => {
         if (uploading) return;
-        setUploading(true)
-        startUploading().finally(() => {
-            setUploading(false)
-        })
+        // setUploading(true)
+        // startUploading().finally(() => {
+        //     setUploading(false)
+        // })
+
+        breakIntoChunks(files[0].file)
 
     }
 
@@ -157,25 +159,25 @@ const FileUploadModal = ({ isOpen }: Props) => {
             try {
                 await uploadFile({
                     formData,
-                    onUpload: (progressEvent: AxiosProgressEvent) => {
-                        const { loaded, total = 0 } = progressEvent;
-                        const progress = Math.round((loaded * 100) / total)
-                        console.log("progress", {
-                            loaded,
-                            total,
-                            progress
-                        })
+                    // onUpload: (progressEvent: AxiosProgressEvent) => {
+                    //     const { loaded, total = 0 } = progressEvent;
+                    //     const progress = Math.round((loaded * 100) / total)
+                    //     console.log("progress", {
+                    //         loaded,
+                    //         total,
+                    //         progress
+                    //     })
 
-                        // setFiles(prev => {
-                        //     prev[index].progress = progress
+                    //     // setFiles(prev => {
+                    //     //     prev[index].progress = progress
 
-                        //     if (progress === 100) {
-                        //         prev[index].hasFinished = true
-                        //     }
+                    //     //     if (progress === 100) {
+                    //     //         prev[index].hasFinished = true
+                    //     //     }
 
-                        //     return Array.from(prev)
-                        // })
-                    }
+                    //     //     return Array.from(prev)
+                    //     // })
+                    // }
                 })
             }
             catch (err) {
@@ -192,6 +194,29 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
 
     }, [files, folderId, updateFileState])
+
+
+    const breakIntoChunks = async (file: File) => {
+        console.log("File size = ", file.size)
+        const chunks = await generateChunk(file)
+        const formData = new FormData();
+        formData.append("totalSize", String(file.size))
+        formData.append("name", file.name)
+        if (folderId) {
+            formData.append("folderId", folderId)
+        }
+
+        let idx = 0;
+        for await (const chunk of chunks) {
+            formData.set("file", new Blob([chunk]))
+            formData.set("chunkIndex", String(idx))
+            formData.set("totalChunks", String(chunks?.length))
+            await uploadFile({ formData })
+            idx++
+        }
+
+        console.log(chunks)
+    }
 
 
     return (

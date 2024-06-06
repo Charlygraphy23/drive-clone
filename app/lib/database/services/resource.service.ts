@@ -1,6 +1,7 @@
 import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
+import mimeType from "mime-types";
 import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
@@ -341,13 +342,13 @@ export class ResourceService {
 
     async upload(payload: UploadFileType, options: SessionOption) {
         return await Model.create([{
-            name: payload?.file?.name,
+            name: payload?.fileName,
             createdBy: payload?.createdBy,
             lastModified: new Date(),
             dataType: DATA_TYPE.FILE,
             parentFolderId: payload?.parentFolderId || null,
-            mimeType: payload?.file?.type,
-            fileSize: payload?.file?.size,
+            mimeType: mimeType.lookup(payload.fileName),
+            fileSize: payload?.size,
             fileName: payload?.fileName
         }], options)
 
