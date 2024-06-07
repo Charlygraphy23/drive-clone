@@ -206,6 +206,11 @@ const FileUploadModal = ({ isOpen }: Props) => {
         })
     }
 
+    const handleFileDelete = (index: number) => {
+        if (uploading) return;
+        setFiles(prev => [...prev.filter((_, idx) => idx !== index)])
+    }
+
 
     return (
         <ModalComponent
@@ -231,9 +236,9 @@ const FileUploadModal = ({ isOpen }: Props) => {
                     <span>Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.</span>
                 </label> || null}
 
-                <div className={style.list}>
-                    {files?.length && files?.map((file) => <FileListItem className="mb-2" key={file.file?.name} media={file} />) || null}
-                </div>
+                {files?.length && <div className={style.list}>
+                    {files?.length && files?.map((file, index) => <FileListItem className="mb-2" key={file.file?.name} media={file} index={index} onDelete={handleFileDelete} />) || null}
+                </div> || null}
 
                 {files?.length && <div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
                     <ButtonGroup handleSubmit={() => toggleModal(false)} submitText="cancel" className={`cancel me-4`} />

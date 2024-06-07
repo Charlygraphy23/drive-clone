@@ -1,32 +1,38 @@
 .fileList {
-  display: flex;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  box-shadow: 0px 0px 7px rgba(black, 0.1);
-  background-color: white;
+	display: flex;
+	padding: 0.5rem 1rem;
+	border-radius: 8px;
+	box-shadow: 0px 0px 7px rgba(black, 0.1);
+	background-color: white;
 
-  .info {
-    display: flex;
-    flex: 1;
+	.info {
+		display: flex;
+		flex: 1;
 
-    .icon {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-right: 15px;
-    }
+		.icon {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-right: 15px;
+		}
 
-    .description {
-      display: flex;
-      flex-direction: column;
+		.description {
+			display: flex;
+			flex-direction: column;
 
-      p {
-        margin: 0;
-      }
-      span {
-        font-size: 0.8rem;
-        color: rgba(black, 0.6);
-      }
-    }
-  }
+			p {
+				margin: 0;
+			}
+			span {
+				font-size: 0.8rem;
+				color: rgba(black, 0.6);
+			}
+		}
+	}
+
+	.progress {
+		& > i {
+			cursor: pointer;
+		}
+	}
 }
