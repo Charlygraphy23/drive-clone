@@ -9,7 +9,7 @@ import { access, appendFile, readFile, unlink } from "fs/promises";
 import { startSession } from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
-import { resolve } from "path";
+import { extname, resolve } from "path";
 import { cwd } from "process";
 
 export const POST = async (req: NextRequest) => {
@@ -18,18 +18,24 @@ export const POST = async (req: NextRequest) => {
     const response = new ApiResponse()
     const accessService = new AccessService()
 
+    const formData = await req?.formData?.();
+    const file = formData.get("file");
+    const folderId = formData.get("folderId") as string;
+    const totalSize = parseInt(formData.get("totalSize") as string)
+    const chunkIndex = parseInt(formData.get("chunkIndex") as string)
+    const totalChunks = parseInt(formData.get("totalChunks") as string)
+    const name = formData.get("name") as string;
+
+    const tempFileName = "temp_" + name
+    let fileName = name
+    const path = resolve(cwd(), `./app/_chunks/${tempFileName}`)
+
     try {
         const session = await getServerSession(authOptions)
         if (!session) return response.status(401).send("Unauthorized")
         const user = session.user
 
-        const formData = await req?.formData?.();
-        const file = formData.get("file");
-        const folderId = formData.get("folderId") as string;
-        const totalSize = parseInt(formData.get("totalSize") as string)
-        const chunkIndex = parseInt(formData.get("chunkIndex") as string)
-        const totalChunks = parseInt(formData.get("totalChunks") as string)
-        const name = formData.get("name") as string;
+
 
         if (!file || !(file instanceof File)) {
             return response.status(400).send("No files received.")
@@ -49,9 +55,7 @@ export const POST = async (req: NextRequest) => {
             return response.status(403).send("Unauthorized")
         }
 
-        const tempFileName = "temp_" + name
-        const fileName = name
-        const path = resolve(cwd(), `./app/_chunks/${tempFileName}`)
+
         const buffer = await file.arrayBuffer()
         const uint8Array = new Uint8Array(buffer)
 
@@ -73,41 +77,41 @@ export const POST = async (req: NextRequest) => {
 
         const localFile = await readFile(path)
         console.log("Local file length", localFile.length)
-        // const hasFile = await service.findResourceByName(fileName, folderId, { session: mongoSession })
+        const hasFile = await service.findResourceByName(fileName, folderId, { session: mongoSession })
 
-        // if (hasFile) {
-        //     const ext = extname(fileName);
-        //     const name = fileName.split(ext)?.[0]
-        //     fileName = `${name} (1)${ext}`;
-        // }
+        if (hasFile) {
+            const ext = extname(fileName);
+            const name = fileName.split(ext)?.[0]
+            fileName = `${name} (1)${ext}`;
+        }
 
 
-        // const [res] = await service.upload({
-        //     file: localFile,
-        //     fileName: fileName,
-        //     createdBy: String(user._id),
-        //     parentFolderId: folderId,
-        //     size: localFile.length
-        // }, { session: mongoSession });
+        const [res] = await service.upload({
+            file: localFile,
+            fileName: fileName,
+            createdBy: String(user._id),
+            parentFolderId: folderId,
+            size: totalSize
+        }, { session: mongoSession });
 
-        // const fileInfo = res?.toJSON()
-        // await accessService.createWithParent({
-        //     userId: String(user._id), parentFolderId: folderId, resourceId: fileInfo?._id
-        // }, { session: mongoSession })
+        const fileInfo = res?.toJSON()
+        await accessService.createWithParent({
+            userId: String(user._id), parentFolderId: folderId, resourceId: fileInfo?._id
+        }, { session: mongoSession })
 
         await mongoSession.commitTransaction()
-        await unlink(path)
         return response.status(200).send("Updated")
 
     }
     catch (_err: unknown) {
         const err = _err as { message: string }
         console.error("Error - ", err)
-        // await mongoSession.abortTransaction()
+        await mongoSession.abortTransaction()
         return response.status(500).send(err?.message)
     }
     finally {
         console.log("Run finally")
-        // await mongoSession.endSession()
+        await mongoSession.endSession()
+        await unlink(path)
     }
 };

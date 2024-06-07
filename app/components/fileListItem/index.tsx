@@ -8,9 +8,15 @@ import { getFileIconByType } from './utils/index.utils'
 type Props = {
     className?: string
     media: FileUploadType
+    onDelete?: () => void
 }
 
-const FileListItem = ({ className, media }: Props) => {
+const FileListItem = ({ className, media, onDelete }: Props) => {
+
+    const handleDelete = () => {
+        if (onDelete) onDelete()
+    }
+
     return (
         <div className={`${style.fileList} ${className}`}>
             <div className={style.info}>
@@ -23,7 +29,8 @@ const FileListItem = ({ className, media }: Props) => {
                 </div>
             </div>
             <div className="d-flex justify-content-center align-items-center">
-                <Progress type="circle" percent={media.progress} size={30} status={media?.isFailed ? "exception" : "normal"} />
+                {(media?.isUploading || media.hasFinished) && <Progress type="circle" percent={media.progress} size={media?.progress} status={media?.isFailed ? "exception" : "normal"} /> || null}
+                {(media && !media?.isUploading && !media.hasFinished) && <i className="bi bi-trash-fill" onClick={handleDelete}></i> || null}
             </div>
         </div>
     )

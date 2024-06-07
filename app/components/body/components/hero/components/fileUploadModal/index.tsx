@@ -13,7 +13,7 @@ import {
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { generateChunk } from "@/app/utils/fileUpload";
 import { useParams } from "next/navigation";
-import React, { useCallback, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import style from "./style.module.scss";
 
 type Props = {
@@ -28,27 +28,9 @@ const FileUploadModal = ({ isOpen }: Props) => {
     const [files, setFiles] = useState<FileUploadType[]>([])
     const [uploading, setUploading] = useState(false)
     const { folderId } = useParams<{ folderId: string }>()
-
-
     const dispatch = useAppDispatch();
 
-    const handleFiles = (file?: File | null) => {
-        if (file)
-            setFiles(prev => {
-                const isSameName = prev?.find(f => f?.file.name === file?.name)
-                if (!isSameName) prev.push({
-                    file: file,
-                    progress: 0,
-                    hasFinished: false,
-                    isUploading: false,
-                    isFailed: false
-                })
-
-                return Array.from(prev)
-            })
-    }
-
-    const handleDragOver = (event: any) => {
+    const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
         event.preventDefault();
         setIsDragging(true)
     }
@@ -86,6 +68,29 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
     }
 
+    const handleDragEnd = (e: React.DragEvent<HTMLLabelElement>) => {
+        const dropItems = e.dataTransfer.items;
+        dropItems.clear()
+        setIsDragging(false)
+    }
+
+    const handleFiles = (file?: File | null) => {
+        if (file)
+            setFiles(prev => {
+                console.log("Handle Files")
+                const isSameName = prev?.find(f => f?.file.name === file?.name)
+                if (!isSameName) prev.push({
+                    file: file,
+                    progress: 0,
+                    hasFinished: false,
+                    isUploading: false,
+                    isFailed: false
+                })
+
+                return Array.from(prev)
+            })
+    }
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (uploading) return;
 
@@ -97,106 +102,17 @@ const FileUploadModal = ({ isOpen }: Props) => {
         files.forEach(file => handleFiles(file))
     }
 
-    const handleDragEnd = (e: React.DragEvent<HTMLLabelElement>) => {
-        const dropItems = e.dataTransfer.items;
-        dropItems.clear()
-        setIsDragging(false)
-    }
-
     const handleDragLeave = () => {
         setIsDragging(false)
     }
 
-    const handleSubmit = () => {
-        if (uploading) return;
-        // setUploading(true)
-        // startUploading().finally(() => {
-        //     setUploading(false)
-        // })
-
-        breakIntoChunks(files[0].file)
-
-    }
-
-    const updateFileState = useCallback((updateCallback: (_files: FileUploadType[]) => void) => {
+    const updateFileState = useCallback((updateCallback: (_files: FileUploadType[]) => FileUploadType[]) => {
         console.log("Called updateFileState")
-        setFiles(prev => {
-            const newFiles = Array.from(prev);
-            updateCallback(newFiles);
-            console.log("PREV ", newFiles);
-            return newFiles;
-        });
+        setFiles(updateCallback);
     }, [])
 
-    const startUploading = useCallback(async () => {
 
-        let index = 0;
-        let hasMoreFile = !!files?.length;
-
-        while (hasMoreFile) {
-            const currantFile = files[index];
-
-            console.log("hasMoreFile", hasMoreFile)
-            console.log("currantFile", currantFile)
-            console.log("folderId", folderId)
-            console.log("index", index)
-
-
-
-
-            if (currantFile?.hasFinished || currantFile?.progress) {
-                console.log("Already complete!")
-                hasMoreFile = !!files?.[++index]
-                continue;
-
-            }
-
-            const formData = new FormData();
-            if (folderId) {
-                formData.append("folderId", folderId)
-            }
-
-            try {
-                await uploadFile({
-                    formData,
-                    // onUpload: (progressEvent: AxiosProgressEvent) => {
-                    //     const { loaded, total = 0 } = progressEvent;
-                    //     const progress = Math.round((loaded * 100) / total)
-                    //     console.log("progress", {
-                    //         loaded,
-                    //         total,
-                    //         progress
-                    //     })
-
-                    //     // setFiles(prev => {
-                    //     //     prev[index].progress = progress
-
-                    //     //     if (progress === 100) {
-                    //     //         prev[index].hasFinished = true
-                    //     //     }
-
-                    //     //     return Array.from(prev)
-                    //     // })
-                    // }
-                })
-            }
-            catch (err) {
-                console.log("Error ", err)
-                updateFileState(prev => {
-                    // prev[index].isFailed = true
-                    // prev[index].progress = 0
-                    // prev[index].hasFinished = true
-                    return Array.from(prev)
-                })
-            }
-            hasMoreFile = !!files?.[++index]
-        }
-
-
-    }, [files, folderId, updateFileState])
-
-
-    const breakIntoChunks = async (file: File) => {
+    const breakIntoChunks = useCallback(async (file: File, fileIndex: number, getProgress: (_progress: number, _fileIndex: number) => void) => {
         console.log("File size = ", file.size)
         const chunks = await generateChunk(file)
         const formData = new FormData();
@@ -207,15 +123,87 @@ const FileUploadModal = ({ isOpen }: Props) => {
         }
 
         let idx = 0;
+        const totalChunks = chunks?.length
         for await (const chunk of chunks) {
             formData.set("file", new Blob([chunk]))
             formData.set("chunkIndex", String(idx))
-            formData.set("totalChunks", String(chunks?.length))
+            formData.set("totalChunks", String(totalChunks))
             await uploadFile({ formData })
+            const progress = Math.floor((idx + 1) * 100 / totalChunks)
+            getProgress(progress, fileIndex)
             idx++
         }
+    }, [folderId])
 
-        console.log(chunks)
+    const startUploading = useCallback(async () => {
+
+        let index = 0, hasMoreFile = !!files?.length;
+
+        while (hasMoreFile) {
+            const currantFile = files[index];
+
+            console.log("hasMoreFile", hasMoreFile)
+            console.log("currantFile", currantFile)
+            console.log("folderId", folderId)
+            console.log("index", index)
+
+            if (currantFile?.hasFinished || currantFile?.progress) {
+                console.log("Already complete!")
+                hasMoreFile = !!files?.[++index]
+                continue;
+
+            }
+            try {
+                await breakIntoChunks(currantFile?.file, index, (progress: number, fileIndex: number) => {
+                    updateFileState((prev: FileUploadType[]) => {
+
+                        return prev.map((media, idx) => {
+                            if (idx === fileIndex) {
+
+                                if (progress === 100) {
+                                    media.hasFinished = true
+                                    media.isUploading = false
+                                } else {
+                                    media.hasFinished = false
+                                    media.isUploading = true
+                                }
+                                media.isFailed = false
+                                media.progress = progress
+                            }
+                            return media
+                        })
+                    })
+
+                    console.log("Progress", progress)
+                })
+            }
+            catch (err) {
+                console.log("PRREEVV Error ", err, index)
+                updateFileState((prev: FileUploadType[]) => {
+                    return prev.map((media, idx) => {
+                        if (idx === index) {
+                            media.isFailed = true
+                            media.hasFinished = true
+                            media.isUploading = false
+                        }
+                        return media
+                    })
+                })
+            }
+            hasMoreFile = !!files?.[++index]
+        }
+
+    }, [breakIntoChunks, files, folderId, updateFileState])
+
+    const handleSubmit = () => {
+        if (uploading) return;
+
+        if (!files?.length) return;
+
+        setUploading(true)
+        startUploading().finally(() => {
+            setUploading(false)
+        })
     }
 
 
@@ -266,4 +254,4 @@ const FileUploadModal = ({ isOpen }: Props) => {
     )
 }
 
-export default FileUploadModal
+export default memo(FileUploadModal)
