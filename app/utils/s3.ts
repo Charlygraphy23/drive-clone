@@ -1,5 +1,8 @@
-import { GetObjectCommand, PutObjectCommand, S3 } from "@aws-sdk/client-s3";
+import { AbortMultipartUploadCommand, CompleteMultipartUploadCommand, CreateMultipartUploadCommand, DeleteObjectCommand, GetObjectCommand, ListPartsCommand, PutObjectCommand, S3, UploadPartCommand } from "@aws-sdk/client-s3";
 import { BUCKET_PATH } from "../_config/const";
+import { UploadFileType } from "../lib/database/interfaces/files.interfaces";
+
+
 
 const s3Client = new S3({
     forcePathStyle: false, // Configures to use subdomain/virtual calling format.
@@ -17,15 +20,36 @@ export class LOCAL_S3 {
     private key: string = ""
     private body?: Buffer;
     private metadata: { isPublic?: boolean } & Record<string, any> = {}
+    uploadId?: string = ""
 
-    constructor({ key, body }: {
+    constructor({ key, body, uploadId }: {
         key: string,
-        body?: Buffer | ArrayBuffer
+        body?: Buffer | ArrayBuffer,
+        uploadId?: string
     }) {
         this.key = key
 
         if (body)
             this.body = Buffer.from(body)
+
+        if (uploadId) {
+            this.uploadId = uploadId
+        }
+    }
+
+    private async getListOfParts() {
+        if (!this.uploadId) throw new Error("UploadId is required!")
+        const command = new ListPartsCommand({
+            "Bucket": this.bucket,
+            "Key": this.key,
+            "UploadId": this.uploadId,
+        })
+        const lists = await s3Client.send(command)
+
+        return lists?.Parts?.map(part => ({
+            "ETag": part?.ETag,
+            "PartNumber": part?.PartNumber
+        }))
     }
 
     setMetadata(data: { isPublic: boolean } & Record<string, any>) {
@@ -57,5 +81,76 @@ export class LOCAL_S3 {
 
         return await s3Client.send(command)
     }
+
+    async delete() {
+        const command = new DeleteObjectCommand({
+            Bucket: this.bucket,
+            Key: this.key,
+        })
+
+        return await s3Client.send(command)
+    }
+
+    async createMultipartUpload() {
+        const input = {
+            "Bucket": this.bucket,
+            "Key": this.key
+        };
+        const command = new CreateMultipartUploadCommand(input);
+        const response = await s3Client.send(command);
+
+        this.uploadId = response.UploadId
+        return response
+    }
+
+    async uploadPart(params: Pick<UploadFileType, "file">, chunkIndex: number) {
+        if (!this.uploadId) new Error("UploadId is required!")
+
+        const input = {
+            "Bucket": this.bucket,
+            "Key": this.key,
+            "Body": params?.file,
+            "PartNumber": chunkIndex + 1,
+            "UploadId": this.uploadId
+        };
+        const command = new UploadPartCommand(input);
+        const response = await s3Client.send(command);
+        return response?.ETag
+    }
+
+    async completeMultipartUpload() {
+        if (!this.uploadId) new Error("UploadId is required!")
+        const parts = await this.getListOfParts()
+
+        const input = {
+            "Bucket": this.bucket,
+            "Key": this.key,
+            "UploadId": this.uploadId,
+            "MultipartUpload": {
+                "Parts": parts
+            },
+        };
+        const command = new CompleteMultipartUploadCommand(input);
+        await s3Client.send(command);
+        this.uploadId = ""
+    }
+
+
+    async abortMultipartUpload() {
+        if (!this.uploadId) {
+            await this.delete()
+            return
+        }
+
+        const input = {
+            "Bucket": this.bucket,
+            "Key": this.key,
+            "UploadId": this.uploadId,
+        };
+        const command = new AbortMultipartUploadCommand(input);
+        await s3Client.send(command);
+    }
+
+
 
 }

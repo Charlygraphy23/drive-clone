@@ -5,15 +5,15 @@ import { OwnerAccessObject } from "../interfaces/index.interface";
 
 
 type Props = {
-    data: OwnerAccessObject,
+    data: OwnerAccessObject["userInfo"],
     className: string
 }
 
 const OwnerSection = ({ data, className }: Props) => {
     return (
         <div className={className}>
-            <AvatarComponent user={data?.userInfo} style={{ fontSize: "0.7rem", marginRight: "10px", color: "black" }} />
-            <span>{data?.userInfo?.email}</span>
+            <AvatarComponent user={data} style={{ fontSize: "0.7rem", marginRight: "10px", color: "black" }} />
+            <span>{data?.email}</span>
         </div>
     )
 }

@@ -1,3 +1,4 @@
+import { memo, useCallback, useDeferredValue } from "react";
 import { Hourglass, HourglassProps, Rings, RingsProps } from "react-loader-spinner";
 import style from './style.module.scss';
 
@@ -13,10 +14,15 @@ type Props = {
 }
 
 const ButtonGroup = ({ handleSubmit, submitText, loading = false, className = "", loader = "hour", order = 1, disabled = false, type = "button" }: Props) => {
+    const deferredLoading = useDeferredValue(loading)
+    const deferredDisabled = useDeferredValue(disabled)
+    const deferredLoader = useDeferredValue(loader)
 
-    const GenLoader = (props: HourglassProps | RingsProps) => {
 
-        switch (loader) {
+
+    const GenLoader = useCallback((props: HourglassProps | RingsProps) => {
+
+        switch (deferredLoader) {
             case "hour":
                 return <Hourglass {...props} colors={['white', 'white']} />
             case "spin":
@@ -26,14 +32,20 @@ const ButtonGroup = ({ handleSubmit, submitText, loading = false, className = ""
                 return <Hourglass {...props} />
         }
 
-    }
+    }, [deferredLoader])
 
 
     return (
-        <button type={type} className={`button ${style.button} ${className}`} style={{ flexDirection: order === 1 ? "row" : "row-reverse" }} onClick={handleSubmit} disabled={loading || disabled}>
+        <button
+            type={type}
+            className={`button ${style.button} ${className}`}
+            style={{ flexDirection: order === 1 ? "row" : "row-reverse" }}
+            onClick={handleSubmit}
+            disabled={deferredLoading || deferredDisabled}
+        >
             <span>{submitText}</span>
 
-            {loading && <div className="mx-1 d-flex" >
+            {deferredLoading && <div className="mx-1 d-flex" >
                 <GenLoader
                     visible={loading}
                     height="15"
@@ -47,4 +59,4 @@ const ButtonGroup = ({ handleSubmit, submitText, loading = false, className = ""
     )
 }
 
-export default ButtonGroup
+export default memo(ButtonGroup)

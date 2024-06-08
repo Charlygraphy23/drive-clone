@@ -94,7 +94,6 @@ const FileUploadModal = ({ isOpen }: Props) => {
     const handleFiles = (file?: File | null) => {
         if (file)
             setFiles(prev => {
-                console.log("Handle Files")
                 const isSameName = prev?.find(f => f?.file.name === file?.name)
                 if (!isSameName) prev.push({
                     file: file,
@@ -141,9 +140,9 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
             }
 
-            await breakIntoChunks(currantFile?.file, index, folderId, (progress: number) => {
+            await breakIntoChunks(currantFile?.file, index, folderId, (progress: number, fileIndex: number) => {
                 setFiles((prev) => {
-                    const data = prev[index];
+                    const data = prev[fileIndex];
 
                     if (data) {
                         if (progress === 100) {
@@ -155,13 +154,12 @@ const FileUploadModal = ({ isOpen }: Props) => {
                         }
                         data.isFailed = false
                         data.progress = progress
-                        prev[index] = data
+                        prev[fileIndex] = data
                     }
                     return Array.from(prev)
 
                 })
 
-                console.log("Progress", progress)
             }).catch(err => {
                 const error = err as { err: AxiosError, index: number }
 
@@ -181,7 +179,9 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
     }, [files, folderId])
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+
         if (uploading) return;
         if (hasUploaded) {
             toggleModal(false)
@@ -195,7 +195,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
             setUploading(false)
             setHasUploaded(true)
         })
-    }
+    }, [files?.length, hasUploaded, startUploading, toggleModal, uploading])
 
     const handleFileDelete = (index: number) => {
         if (uploading) return;

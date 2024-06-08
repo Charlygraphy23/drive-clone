@@ -34,5 +34,8 @@ export interface UploadFileType {
     parentFolderId?: string | null;
     fileName: string;
     size: number;
-    userId: string
+    userId: string,
+    uploadId: string
+    chunkIndex: number,
+    totalChunks: number
 }

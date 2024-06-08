@@ -2,8 +2,9 @@
 import { getResources } from "@/app/api/resources/_fetch";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import EmptySection from "./components/emptySection";
+import FileSection from "./components/files";
 import FolderComponent from "./components/folders";
-import { FileAndFolderDatasetType } from "./interfaces/index.interface";
+import { ResourceDatasetType } from "./interfaces/index.interface";
 import FileAndFolderStateProvider from "./provider";
 import style from "./style.module.scss";
 
@@ -110,7 +111,13 @@ import style from "./style.module.scss";
 
 async function fetchData(folderId?: string) {
 	const dataset = await getResources(folderId, DATA_TYPE.FOLDER, false, "show");
-	return JSON.parse(JSON.stringify(dataset?.data)) as FileAndFolderDatasetType["folders"]
+	return JSON.parse(JSON.stringify(dataset?.data)) as ResourceDatasetType["folders"]
+
+}
+
+async function initialFileData(folderId?: string) {
+	const dataset = await getResources(folderId, DATA_TYPE.FILE, false, "show", 1, 10);
+	return JSON.parse(JSON.stringify(dataset?.data)) as ResourceDatasetType["files"]
 
 }
 
@@ -121,12 +128,13 @@ type Props = {
 
 const Resources = async ({ folderId }: Props) => {
 	const folderData = await fetchData(folderId)
+	const fileData = await initialFileData(folderId)
 
 	return (
-		<FileAndFolderStateProvider id={folderId} data={{ folders: folderData, files: [] } as FileAndFolderDatasetType}>
+		<FileAndFolderStateProvider id={folderId} data={{ folders: folderData, files: fileData } as ResourceDatasetType}>
 			<div className={style.filesAndFolders}>
 				<FolderComponent />
-				{/* <FileSection /> */}
+				<FileSection />
 				<EmptySection />
 			</div>
 		</FileAndFolderStateProvider>

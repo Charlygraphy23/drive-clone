@@ -17,8 +17,8 @@ const useFileColumns = () => {
 		},
 		{
 			title: "Owner",
-			dataIndex: "owner",
-			render: ({ record: _record, value }) => <OwnerSection data={value as OwnerAccessObject} className={style.owner} />
+			dataIndex: "userInfo",
+			render: ({ record: _record, value }) => <OwnerSection data={value as OwnerAccessObject["userInfo"]} className={style.owner} />
 		},
 
 		{

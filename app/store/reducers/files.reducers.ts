@@ -1,3 +1,4 @@
+import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
 import { addBulkFiles, createFile, renameFile } from "../actions";
 
@@ -7,13 +8,8 @@ const initialState = {
 	error: "",
 };
 
-export type FileDataType = {
-	_id: string;
-	name: string;
-	lastModified: string;
-	member?: string;
-};
-export type FolderStateType = {
+export type FileDataType = { _id: string } & Partial<FilesAndFolderSchemaType>;
+export type FileStateType = {
 	loading: boolean;
 	data: FileDataType[];
 	error: string;
@@ -26,7 +22,6 @@ export default createReducer(initialState, (builder) => {
 			state.data.push({
 				_id: Date.now().toString(),
 				name: payload?.name,
-				member: "",
 				lastModified: new Date().toLocaleDateString(),
 			});
 			return state;

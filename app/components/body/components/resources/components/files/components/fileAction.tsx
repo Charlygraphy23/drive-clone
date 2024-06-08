@@ -1,7 +1,7 @@
 "use client";
 
 import MyDropdown from "@/app/components/dropdown";
-import { DATA_TYPE } from "@/app/interfaces/index.interface";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { toggleModal } from "@/app/store/actions";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
 import { useDispatch } from "react-redux";

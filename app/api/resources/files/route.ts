@@ -1,22 +1,18 @@
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
-import { AccessService } from "@/app/lib/database/services/access.service";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
 import { File } from "buffer";
-import { access, appendFile, readFile, unlink } from "fs/promises";
 import { startSession } from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
-import { extname, resolve } from "path";
-import { cwd } from "process";
+import { extname } from "path";
 
 export const POST = async (req: NextRequest) => {
     const mongoSession = await startSession()
     const service = new ResourceService();
     const response = new ApiResponse()
-    const accessService = new AccessService()
 
     const formData = await req?.formData?.();
     const file = formData.get("file");
@@ -24,18 +20,19 @@ export const POST = async (req: NextRequest) => {
     const totalSize = parseInt(formData.get("totalSize") as string)
     const chunkIndex = parseInt(formData.get("chunkIndex") as string)
     const totalChunks = parseInt(formData.get("totalChunks") as string)
-    const name = formData.get("name") as string;
+    const uploadId = formData.get("uploadId") as string
 
-    const tempFileName = "temp_" + name
+    if (chunkIndex > 0 && !uploadId) {
+        return response.status(400).send("Please provide uploadId!")
+    }
+
+    const name = formData.get("name") as string;
     let fileName = name
-    const path = resolve(cwd(), `./app/_chunks/${tempFileName}`)
 
     try {
         const session = await getServerSession(authOptions)
         if (!session) return response.status(401).send("Unauthorized")
         const user = session.user
-
-
 
         if (!file || !(file instanceof File)) {
             return response.status(400).send("No files received.")
@@ -56,27 +53,7 @@ export const POST = async (req: NextRequest) => {
         }
 
 
-        const buffer = await file.arrayBuffer()
-        const uint8Array = new Uint8Array(buffer)
-
-        try {
-            await access(path)
-            if (chunkIndex === 0) {
-                console.log("Found first data as chunk")
-                await unlink(path)
-            }
-        } catch (err) {
-            console.log(`No temp File Exist with the name ${tempFileName}`)
-        }
-        await appendFile(path, uint8Array)
-
-        if (chunkIndex < totalChunks - 1) {
-            await mongoSession.commitTransaction()
-            return response.status(201).send("Uploaded")
-        }
-
-        const localFile = await readFile(path)
-        console.log("Local file length", localFile.length)
+        const buffer = Buffer.from(await file.arrayBuffer())
         const hasFile = await service.findResourceByName(fileName, folderId, { session: mongoSession })
 
         if (hasFile) {
@@ -85,25 +62,23 @@ export const POST = async (req: NextRequest) => {
             fileName = `${name} (1)${ext}`;
         }
 
-        // FIXME: proper file not uploaded
-
-
-        const [res] = await service.upload({
-            file: localFile,
+        const awsUploadId = await service.upload({
+            file: buffer,
             fileName: fileName,
             createdBy: String(user._id),
             parentFolderId: folderId,
             size: totalSize,
-            userId: String(user._id)
+            userId: String(user._id),
+            chunkIndex,
+            totalChunks,
+            uploadId
         }, { session: mongoSession });
 
-        const fileInfo = res?.toJSON()
-        await accessService.createWithParent({
-            userId: String(user._id), parentFolderId: folderId, resourceId: fileInfo?._id
-        }, { session: mongoSession })
-
         await mongoSession.commitTransaction()
-        return response.status(201).send("Updated")
+        return response.status(201).send({
+            uploadId: awsUploadId,
+            message: "Uploaded"
+        })
 
     }
     catch (_err: unknown) {
@@ -115,6 +90,5 @@ export const POST = async (req: NextRequest) => {
     finally {
         console.log("Run finally")
         await mongoSession.endSession()
-        await unlink(path)
     }
 };

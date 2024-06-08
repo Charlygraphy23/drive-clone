@@ -63,9 +63,13 @@ export const deleteForeverApi = async (resourceId: string) => {
 }
 
 export const uploadFile = async ({ formData }: { formData: FormData }) => {
-    await axiosInstance.post(`/resources/files`, formData, {
+    const { data } = await axiosInstance.post(`/resources/files`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         },
     })
+
+    console.log("Response from axios", data)
+
+    return data?.uploadId
 }

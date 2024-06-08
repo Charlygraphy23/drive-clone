@@ -13,7 +13,7 @@ const FileComponent = () => {
 		(state) => state?.files
 	);
 
-	return <MyTable<FolderDataType> columns={columns} data={data} />
+	return <MyTable<FolderDataType> dataKey={"_id"} columns={columns} data={data} />
 };
 
 export default FileComponent;

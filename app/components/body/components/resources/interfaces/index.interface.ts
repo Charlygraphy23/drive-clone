@@ -3,7 +3,7 @@ import { UserSchemaType } from "@/app/lib/database/interfaces/user.interface";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 
-export type FileAndFolderDatasetType = {
+export type ResourceDatasetType = {
 	files: FileDataType[];
 	folders: FolderDataType[];
 };

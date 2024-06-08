@@ -6,10 +6,10 @@ import { Fragment, PropsWithChildren, useRef } from "react";
 import DeleteConfirmationModal from "../modals/delete";
 import NewfolderModal from "../modals/newfolder";
 import RenameModal from "../modals/rename";
-import { FileAndFolderDatasetType } from "./interfaces/index.interface";
+import { ResourceDatasetType } from "./interfaces/index.interface";
 
 type Props = {
-	data: FileAndFolderDatasetType;
+	data: ResourceDatasetType;
 	id?: string | null
 } & PropsWithChildren;
 

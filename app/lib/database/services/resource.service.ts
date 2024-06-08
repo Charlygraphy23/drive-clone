@@ -82,7 +82,7 @@ export class ResourceService {
         }], options)
     }
 
-    async getResources(userId: string, resourceId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null, shared: "only" | "show" | "off" = "off") {
+    async getResources(userId: string, resourceId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null, shared: "only" | "show" | "off" = "off", page?: number, limit?: number) {
 
         const initialQuery = {
         } as FilterQuery<Partial<Record<keyof FilesAndFolderSchemaType, any>>>
@@ -188,6 +188,14 @@ export class ResourceService {
                 }
             },
         ] as PipelineStage[]
+
+
+        if (limit && page) {
+            const skip = (page - 1) * limit
+            pipelines.push({ $skip: skip }, {
+                $limit: limit
+            })
+        }
 
         return await Model.aggregate(pipelines, {
             withDeleted: showDeleted
@@ -342,26 +350,62 @@ export class ResourceService {
     }
 
     async upload(payload: UploadFileType, options: SessionOption) {
+        const accessService = new AccessService()
+
         const key = `${payload?.userId}/${payload?.fileName}`
         const encryptedKey = CRYPTO.encryptWithBase64(key)
 
         const s3 = new LOCAL_S3({
             key,
-            body: payload.file
+            body: payload.file,
+            uploadId: payload?.uploadId
         })
 
-        await s3.put()
-        return await Model.create([{
-            name: payload?.fileName,
-            createdBy: payload?.createdBy,
-            lastModified: new Date(),
-            dataType: DATA_TYPE.FILE,
-            parentFolderId: payload?.parentFolderId || null,
-            mimeType: mimeType.lookup(payload.fileName),
-            fileSize: payload?.size,
-            fileName: payload?.fileName,
-            key: encryptedKey
-        }], options)
+        try {
+            if (payload?.chunkIndex === 0) {
+                console.log("Found first data as chunk")
+                await s3.createMultipartUpload()
+            }
+
+            console.log("Uploading Chunk...")
+            await s3.uploadPart({
+                file: payload.file
+            }, payload?.chunkIndex)
+
+            if (payload?.chunkIndex === payload?.totalChunks - 1) {
+                console.log("Completing Upload...")
+                await s3.completeMultipartUpload()
+
+                console.log("Saving file info to DB")
+                const [res] = await Model.create([{
+                    name: payload?.fileName,
+                    createdBy: payload?.createdBy,
+                    lastModified: new Date(),
+                    dataType: DATA_TYPE.FILE,
+                    parentFolderId: payload?.parentFolderId || null,
+                    mimeType: mimeType.lookup(payload.fileName),
+                    fileSize: payload?.size,
+                    fileName: payload?.fileName,
+                    key: encryptedKey
+                }], options)
+
+                const fileInfo = res?.toJSON()
+                console.log("Saving access")
+                await accessService.createWithParent({
+                    userId: String(payload?.userId), parentFolderId: String(payload?.parentFolderId ?? ""), resourceId: fileInfo?._id
+                }, options)
+
+            }
+
+
+        }
+        catch (err) {
+            console.log("Aborting upload")
+            await s3.abortMultipartUpload()
+            throw err
+        }
+
+        return s3.uploadId
 
     }
 
