@@ -9,14 +9,16 @@ type Props = {
     className?: string
     media: FileUploadType
     onDelete?: (_index: number) => void
-    index: number
+    index: number,
+    uploading: boolean
 }
 
-const FileListItem = ({ className, media, onDelete, index }: Props) => {
+const FileListItem = ({ className, media, onDelete, index, uploading }: Props) => {
 
     const handleDelete = () => {
         if (onDelete) onDelete(index)
     }
+
 
     return (
         <div className={`${style.fileList} ${className}`}>
@@ -31,7 +33,7 @@ const FileListItem = ({ className, media, onDelete, index }: Props) => {
             </div>
             <div className={`d-flex justify-content-center align-items-center ${style.progress}`}>
                 {(media?.isUploading || media.hasFinished) && <Progress type="circle" percent={media.progress} size={28} status={media?.isFailed ? "exception" : media?.hasFinished ? "success" : "normal"} /> || null}
-                {(media && !media?.isUploading && !media.hasFinished) && <i className="bi bi-trash-fill" onClick={handleDelete}></i> || null}
+                {(media && !media?.isUploading && !uploading && !media.hasFinished) && <i className="bi bi-trash-fill" onClick={handleDelete}></i> || null}
             </div>
         </div>
     )

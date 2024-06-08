@@ -85,13 +85,16 @@ export const POST = async (req: NextRequest) => {
             fileName = `${name} (1)${ext}`;
         }
 
+        // FIXME: proper file not uploaded
+
 
         const [res] = await service.upload({
             file: localFile,
             fileName: fileName,
             createdBy: String(user._id),
             parentFolderId: folderId,
-            size: totalSize
+            size: totalSize,
+            userId: String(user._id)
         }, { session: mongoSession });
 
         const fileInfo = res?.toJSON()
@@ -100,7 +103,7 @@ export const POST = async (req: NextRequest) => {
         }, { session: mongoSession })
 
         await mongoSession.commitTransaction()
-        return response.status(200).send("Updated")
+        return response.status(201).send("Updated")
 
     }
     catch (_err: unknown) {

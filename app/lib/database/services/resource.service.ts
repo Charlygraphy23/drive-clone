@@ -1,4 +1,5 @@
 import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
+import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
 import mimeType from "mime-types";
@@ -341,6 +342,15 @@ export class ResourceService {
     }
 
     async upload(payload: UploadFileType, options: SessionOption) {
+        const key = `${payload?.userId}/${payload?.fileName}`
+        const encryptedKey = CRYPTO.encryptWithBase64(key)
+
+        const s3 = new LOCAL_S3({
+            key,
+            body: payload.file
+        })
+
+        await s3.put()
         return await Model.create([{
             name: payload?.fileName,
             createdBy: payload?.createdBy,
@@ -349,7 +359,8 @@ export class ResourceService {
             parentFolderId: payload?.parentFolderId || null,
             mimeType: mimeType.lookup(payload.fileName),
             fileSize: payload?.size,
-            fileName: payload?.fileName
+            fileName: payload?.fileName,
+            key: encryptedKey
         }], options)
 
     }

@@ -1,6 +1,5 @@
 "use client"
 
-import { uploadFile } from "@/app/_apis_routes/resources";
 import { FILE_UPLOAD } from "@/app/_config/const";
 import ButtonGroup from "@/app/components/buttonGroup";
 import FileListItem from "@/app/components/fileListItem";
@@ -11,10 +10,11 @@ import {
     toggleModal as toggleModalState
 } from "@/app/store/actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
-import { generateChunk } from "@/app/utils/fileUpload";
+import { AxiosError } from "axios";
 import { useParams } from "next/navigation";
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import style from "./style.module.scss";
+import { breakIntoChunks } from "./utils/index.util";
 
 type Props = {
     isOpen: boolean;
@@ -26,9 +26,18 @@ type Props = {
 const FileUploadModal = ({ isOpen }: Props) => {
     const [isDragging, setIsDragging] = useState(false)
     const [files, setFiles] = useState<FileUploadType[]>([])
+    const [hasUploaded, setHasUploaded] = useState<boolean>(false)
     const [uploading, setUploading] = useState(false)
     const { folderId } = useParams<{ folderId: string }>()
+    const ref = useRef<HTMLDivElement>(null)
     const dispatch = useAppDispatch();
+
+    const onClearState = () => {
+        setIsDragging(false)
+        setFiles([])
+        setHasUploaded(false)
+        setUploading(false)
+    }
 
     const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
         event.preventDefault();
@@ -42,6 +51,10 @@ const FileUploadModal = ({ isOpen }: Props) => {
                 name: "fileUpload",
             })
         );
+
+        if (!isOpen) {
+            onClearState()
+        }
     }, [dispatch]);
 
     const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
@@ -49,6 +62,10 @@ const FileUploadModal = ({ isOpen }: Props) => {
         setIsDragging(false)
 
         if (uploading) return;
+
+        if (hasUploaded) {
+            onClearState()
+        }
 
         const dropItems = e.dataTransfer.items;
         if (!dropItems?.length) return;
@@ -94,6 +111,11 @@ const FileUploadModal = ({ isOpen }: Props) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (uploading) return;
 
+        if (hasUploaded) {
+            onClearState()
+        }
+
+
         const changedFiles = event.target.files
 
         if (!changedFiles?.length) return;
@@ -106,103 +128,72 @@ const FileUploadModal = ({ isOpen }: Props) => {
         setIsDragging(false)
     }
 
-    const updateFileState = useCallback((updateCallback: (_files: FileUploadType[]) => FileUploadType[]) => {
-        console.log("Called updateFileState")
-        setFiles(updateCallback);
-    }, [])
-
-
-    const breakIntoChunks = useCallback(async (file: File, fileIndex: number, getProgress: (_progress: number, _fileIndex: number) => void) => {
-        console.log("File size = ", file.size)
-        const chunks = await generateChunk(file)
-        const formData = new FormData();
-        formData.append("totalSize", String(file.size))
-        formData.append("name", file.name)
-        if (folderId) {
-            formData.append("folderId", folderId)
-        }
-
-        let idx = 0;
-        const totalChunks = chunks?.length
-        for await (const chunk of chunks) {
-            formData.set("file", new Blob([chunk]))
-            formData.set("chunkIndex", String(idx))
-            formData.set("totalChunks", String(totalChunks))
-            await uploadFile({ formData })
-            const progress = Math.floor((idx + 1) * 100 / totalChunks)
-            getProgress(progress, fileIndex)
-            idx++
-        }
-    }, [folderId])
-
     const startUploading = useCallback(async () => {
 
         let index = 0, hasMoreFile = !!files?.length;
 
         while (hasMoreFile) {
             const currantFile = files[index];
-
-            console.log("hasMoreFile", hasMoreFile)
-            console.log("currantFile", currantFile)
-            console.log("folderId", folderId)
-            console.log("index", index)
-
             if (currantFile?.hasFinished || currantFile?.progress) {
                 console.log("Already complete!")
                 hasMoreFile = !!files?.[++index]
                 continue;
 
             }
-            try {
-                await breakIntoChunks(currantFile?.file, index, (progress: number, fileIndex: number) => {
-                    updateFileState((prev: FileUploadType[]) => {
 
-                        return prev.map((media, idx) => {
-                            if (idx === fileIndex) {
+            await breakIntoChunks(currantFile?.file, index, folderId, (progress: number) => {
+                setFiles((prev) => {
+                    const data = prev[index];
 
-                                if (progress === 100) {
-                                    media.hasFinished = true
-                                    media.isUploading = false
-                                } else {
-                                    media.hasFinished = false
-                                    media.isUploading = true
-                                }
-                                media.isFailed = false
-                                media.progress = progress
-                            }
-                            return media
-                        })
-                    })
-
-                    console.log("Progress", progress)
-                })
-            }
-            catch (err) {
-                console.log("PRREEVV Error ", err, index)
-                updateFileState((prev: FileUploadType[]) => {
-                    return prev.map((media, idx) => {
-                        if (idx === index) {
-                            media.isFailed = true
-                            media.hasFinished = true
-                            media.isUploading = false
+                    if (data) {
+                        if (progress === 100) {
+                            data.hasFinished = true
+                            data.isUploading = false
+                        } else {
+                            data.hasFinished = false
+                            data.isUploading = true
                         }
-                        return media
-                    })
+                        data.isFailed = false
+                        data.progress = progress
+                        prev[index] = data
+                    }
+                    return Array.from(prev)
+
                 })
-            }
+
+                console.log("Progress", progress)
+            }).catch(err => {
+                const error = err as { err: AxiosError, index: number }
+
+                setFiles((prev) => {
+                    const data = prev[error?.index];
+                    if (data) {
+                        data.isFailed = true
+                        data.hasFinished = true
+                        data.isUploading = false
+                        prev[error?.index] = data
+                    }
+                    return Array.from(prev)
+                })
+            })
             hasMoreFile = !!files?.[++index]
         }
 
-    }, [breakIntoChunks, files, folderId, updateFileState])
+    }, [files, folderId])
 
     const handleSubmit = () => {
         if (uploading) return;
+        if (hasUploaded) {
+            toggleModal(false)
+            return;
+        }
 
         if (!files?.length) return;
 
         setUploading(true)
         startUploading().finally(() => {
             setUploading(false)
+            setHasUploaded(true)
         })
     }
 
@@ -211,12 +202,18 @@ const FileUploadModal = ({ isOpen }: Props) => {
         setFiles(prev => [...prev.filter((_, idx) => idx !== index)])
     }
 
+    useEffect(() => {
+        if (uploading) {
+            ref.current?.scrollTo(0, 0)
+        }
+    }, [uploading])
+
 
     return (
         <ModalComponent
             id={FILE_UPLOAD}
-            isOpen={true}
-            toggle={toggleModal} size="lg">
+            isOpen={isOpen}
+            toggle={toggleModal} size="lg" blockHide>
             <section className={style.wrapper}>
                 {!uploading && <label
                     htmlFor="upload-files"
@@ -236,23 +233,23 @@ const FileUploadModal = ({ isOpen }: Props) => {
                     <span>Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.</span>
                 </label> || null}
 
-                {files?.length && <div className={style.list}>
-                    {files?.length && files?.map((file, index) => <FileListItem className="mb-2" key={file.file?.name} media={file} index={index} onDelete={handleFileDelete} />) || null}
+                {files?.length && <div className={style.list} ref={ref}>
+                    {files?.length && files?.map((file, index) => <FileListItem className="mb-2" uploading={uploading} key={file.file?.name} media={file} index={index} onDelete={handleFileDelete} />) || null}
                 </div> || null}
 
-                {files?.length && <div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
-                    <ButtonGroup handleSubmit={() => toggleModal(false)} submitText="cancel" className={`cancel me-4`} />
+                <div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
+                    {!hasUploaded && <ButtonGroup handleSubmit={() => toggleModal(false)} submitText="cancel" className={`cancel me-4`} />}
                     <ButtonGroup
                         type="submit"
-                        // disabled={!name}
+                        disabled={uploading}
                         submitText="OK"
                         className={`${style.submit} submit`}
-                        // loading={loading}
+                        loading={uploading}
                         loader="spin"
                         order={-1}
                         handleSubmit={handleSubmit}
                     />
-                </div> || null}
+                </div>
 
             </section>
         </ModalComponent>

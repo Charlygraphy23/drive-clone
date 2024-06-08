@@ -33,5 +33,6 @@ export interface UploadFileType {
     createdBy: string;
     parentFolderId?: string | null;
     fileName: string;
-    size: number
+    size: number;
+    userId: string
 }

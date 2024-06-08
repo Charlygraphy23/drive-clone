@@ -17,11 +17,12 @@ type Props = {
 	isOpen?: boolean;
 	toggle?: (_isOpen?: boolean) => void;
 	centered?: boolean
-	size?: ModalSize
+	size?: ModalSize,
+	blockHide?: boolean
 } & PropsWithChildren;
 
 const Modal = (props: Props) => {
-	const { id, isOpen, toggle, children, centered, size } = props;
+	const { id, isOpen, toggle, children, centered, size, blockHide } = props;
 	const instance = useRef<any>(null);
 
 	const getInstance = useCallback(() => {
@@ -74,7 +75,7 @@ const Modal = (props: Props) => {
 	}, [toggle, isOpen, id]);
 
 	return (
-		<ModalComponent centered={centered} isOpen={isOpen} id={id} size={size}>
+		<ModalComponent centered={centered} isOpen={isOpen} id={id} size={size} blockHide={blockHide}>
 			{children}
 		</ModalComponent>
 	);

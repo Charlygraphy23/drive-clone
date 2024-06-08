@@ -1,5 +1,5 @@
 export async function generateChunk(file: File) {
-    const CHUNK_SIZE = 1024 * 1024 * 10
+    const CHUNK_SIZE = 1024 * 514 // ~500kb
     const buffer = await file.arrayBuffer();
 
 
