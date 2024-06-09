@@ -197,9 +197,32 @@ export class ResourceService {
             })
         }
 
-        return await Model.aggregate(pipelines, {
+        const response = await Model.aggregate([
+            {
+                $facet: {
+                    totalDocuments: [{ $count: "total" }],
+                    "resources": pipelines
+                }
+            },
+            {
+                $project: {
+                    totalDocuments: { $arrayElemAt: ['$totalDocuments.total', 0] },
+                    resources: 1
+                }
+            }
+
+        ], {
             withDeleted: showDeleted
         })
+
+        const data = response?.[0]
+
+        return {
+            page: page,
+            limit: limit,
+            total: data?.totalDocuments,
+            resources: data?.resources
+        }
     }
 
     async findOne(filters: Partial<Record<keyof (FilesAndFolderSchemaType & { _id: string }), any>>, options?: SessionOption) {

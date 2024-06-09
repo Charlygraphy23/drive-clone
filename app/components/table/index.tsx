@@ -13,8 +13,9 @@ const MyTable = <T,>({
 	isLoading,
 	onRowClick,
 	selectedRowDataId,
-	dataKey
-}: TableProps<T>) => {
+	dataKey,
+	lastItemRef
+}: { lastItemRef?: React.Ref<any> } & TableProps<T>) => {
 
 	return (
 		<section className={style.table}>
@@ -28,6 +29,7 @@ const MyTable = <T,>({
 					onRowClick={onRowClick}
 					selectedRowDataId={selectedRowDataId}
 					dataKey={dataKey}
+					lastItemRef={lastItemRef}
 				/>
 			</table>
 			{isLoading && <FullTableLoader />}

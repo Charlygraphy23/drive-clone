@@ -1,27 +1,33 @@
-import { authOptions } from "@/app/lib/authConfig";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { ApiResponse } from "@/app/utils/response";
-import { fork } from "child_process";
-import { getServerSession } from "next-auth/next";
 import { NextRequest } from "next/server";
+import { getResources } from "./_fetch";
 
 export const GET = async (_req: NextRequest) => {
     const response = new ApiResponse()
 
     try {
-        const session = await getServerSession(authOptions)
-        if (!session) return response.status(401).send("Unauthorized")
+        const queryParams = _req.nextUrl.searchParams
+        const resourceId = queryParams.get("resourceId") as string
+        const page = parseInt(queryParams.get("page") as string)
+        const limit = parseInt(queryParams.get("limit") as string)
 
-        // const res = await getChildrenAccessListByFolderId("6643aafcc22b8756ce071c92")
+        const resources = await getResources(resourceId, DATA_TYPE.FILE, false, "show", page, limit)
 
-        fork("./.next/server/update_access.worker.js", ["hello"])
+        if (resources?.status !== 200) {
+            return response.status(resources?.status).send(resources?.message)
+        }
 
-        // if (res?.data) {
-        //     return response.status(res.status).send({
-        //         data: res?.data
-        //     })
-        // }
+        const data = resources?.data
+        // fork("./.next/server/update_access.worker.js", ["hello"])
+        const totalPages = Math.ceil(data?.total / limit)
 
-        return response.status(200).send("Done")
+        return response.status(200).send({
+            page: page,
+            limit: limit,
+            next: page < totalPages,
+            data: data?.resources
+        })
     }
     catch (_err: unknown) {
         const err = _err as { message: string }

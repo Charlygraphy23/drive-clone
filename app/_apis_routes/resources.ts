@@ -73,3 +73,26 @@ export const uploadFile = async ({ formData }: { formData: FormData }) => {
 
     return data?.uploadId
 }
+
+export const getResourcesApi = async ({ page, limit, resourceId }: { page: number, limit: number, resourceId?: string }) => {
+
+    const queryParams = new URLSearchParams();
+    if (resourceId) {
+        queryParams.set("resourceId", resourceId)
+    }
+
+    if (page) {
+        queryParams.set("page", String(page))
+    }
+
+    if (limit) {
+        queryParams.set("limit", String(limit))
+    }
+
+
+    const query = queryParams?.toString()
+    const { data } = await axiosInstance.get(`/resources?${query}`)
+    console.log("Response from axios", data)
+
+    return data
+}

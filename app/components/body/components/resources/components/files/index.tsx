@@ -4,9 +4,9 @@ import { useAppSelector } from "@/app/store";
 import style from "../../style.module.scss";
 import FileComponent from "./components/fileComponent";
 
+type Props = { lastItemRef?: React.Ref<any> }
 
-
-const FileSection = () => {
+const FileSection = ({ lastItemRef }: Props) => {
 	const { data: files } = useAppSelector(state => state.files)
 
 	return (
@@ -15,7 +15,7 @@ const FileSection = () => {
 				<h6>Files</h6>
 
 				<div className={style.filesContainer}>
-					<FileComponent />
+					<FileComponent lastItemRef={lastItemRef} />
 				</div>
 			</div> || null}
 		</>

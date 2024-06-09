@@ -39,7 +39,7 @@ export const getResources = async (resourceId?: string, resourceType: DATA_TYPE 
 
         const resources = await service.getResources(String(user._id), resourceId, showDeleted, resourceType, shared, page, limit)
 
-        return { message: "Un-authorized", status: 200, data: resources };
+        return { message: "Fetched", status: 200, data: resources };
 
     }
     catch (_err: unknown) {
