@@ -1,4 +1,5 @@
 import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
+import { ResourceDatasetType } from "@/app/components/body/components/resources/interfaces/index.interface";
 import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
@@ -82,7 +83,13 @@ export class ResourceService {
         }], options)
     }
 
-    async getResources(userId: string, resourceId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null, shared: "only" | "show" | "off" = "off", page?: number, limit?: number) {
+    async getResources(userId: string, resourceId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null, shared: "only" | "show" | "off" = "off", page?: number, limit?: number): Promise<{
+        page?: number
+        limit?: number
+        total?: number
+        resources: ResourceDatasetType["files"]
+        next?: boolean
+    }> {
 
         const initialQuery = {
         } as FilterQuery<Partial<Record<keyof FilesAndFolderSchemaType, any>>>
@@ -189,6 +196,8 @@ export class ResourceService {
             },
         ] as PipelineStage[]
 
+        console.log("Limit and page", limit, page)
+
 
         if (limit && page) {
             const skip = (page - 1) * limit
@@ -217,11 +226,25 @@ export class ResourceService {
 
         const data = response?.[0]
 
+        if (page && limit) {
+
+            const totalPages = Math.ceil(data?.totalDocuments / limit)
+            console.log("totalPages", totalPages)
+            return {
+                page: page,
+                limit: limit,
+                total: data?.totalDocuments,
+                resources: data?.resources,
+                next: page < totalPages,
+            }
+        }
+
         return {
             page: page,
             limit: limit,
             total: data?.totalDocuments,
-            resources: data?.resources
+            resources: data?.resources,
+            next: false
         }
     }
 

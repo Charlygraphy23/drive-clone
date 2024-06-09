@@ -8,10 +8,12 @@ import { useAppDispatch, useAppSelector } from '../store';
 type Props = {
     api: AsyncThunk<any, any, any>
     limit?: number,
-    startPage?: number
+    startPage?: number,
+    hasNextPage?: boolean
 }
 
-const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
+const useInfiniteLoop = ({ api, limit = 10, startPage = 1, hasNextPage }: Props) => {
+    console.log("hasNextPage", hasNextPage)
     const { loading } = useAppSelector(state => state.files)
     const dispatch = useAppDispatch()
 
@@ -19,33 +21,44 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
     const lastItemRef = useRef(null);
     const scrollRef = useRef(null);
     const [page, setPage] = useState(startPage)
+    const [isInserted, setIsInserted] = useState(false)
+    const [isNext, setIsNext] = useState(hasNextPage)
 
 
 
 
-    const callback = useCallback<IntersectionObserverCallback>((itemList, observer) => {
+    const callback = useCallback<IntersectionObserverCallback>(async (itemList, observer) => {
         for (const item of itemList) {
             console.log("item", item)
             const inserted = item?.isIntersecting
-            if (inserted && !loading) {
-                setPage(prev => prev + 1)
-                dispatch(api({
-                    limit,
-                    page: page + 1,
-                    folderId: params?.folderId
-                })).then(() => {
-                    console.log("Is Fetched")
-                }).catch(err => {
-                    console.log("ERROR", err)
+            if (inserted && !loading && !isInserted && isNext) {
+                setPage(prev => {
+                    prev = prev + 1
+                    return prev
                 })
+                try {
+                    const res = await dispatch(api({
+                        limit,
+                        page: page + 1,
+                        folderId: params?.folderId
+                    }))
+
+                    setIsNext(res.payload?.next)
+                    setIsInserted(false)
+                }
+                catch (err) {
+                    console.log("ERROR", err)
+                    setIsInserted(false)
+                }
             }
 
-            // if (inserted) {
-            //     observer.disconnect()
-            //     // observer.unobserve(item?.target)
-            // }
+            if (inserted) {
+                observer.disconnect()
+                observer.unobserve(item?.target)
+
+            }
         }
-    }, [api, dispatch, limit, loading, page, params?.folderId]);
+    }, [api, dispatch, isInserted, isNext, limit, loading, page, params?.folderId]);
 
     useEffect(() => {
         console.log("Iniitate use effect ",)
@@ -61,10 +74,10 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
 
 
         return () => {
-            // observer.disconnect()
-            // setInserting(false)
+            observer.disconnect()
+            setIsInserted(false)
         }
-    }, [])
+    }, [callback])
 
 
     return { lastItemRef, scrollRef }

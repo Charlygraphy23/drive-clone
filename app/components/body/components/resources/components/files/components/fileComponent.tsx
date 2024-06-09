@@ -14,8 +14,16 @@ const FileComponent = ({ lastItemRef }: Props) => {
 	const { data } = useAppSelector(
 		(state) => state?.files
 	);
+	const { loading } = useAppSelector(state => state.files)
 
-	return <MyTable<FolderDataType> dataKey={"_id"} columns={columns} data={data} lastItemRef={lastItemRef} />
+
+	return <MyTable<FolderDataType>
+		dataKey={"_id"}
+		columns={columns}
+		data={data}
+		lastItemRef={lastItemRef}
+		listLoading={loading}
+	/>
 };
 
 export default FileComponent;

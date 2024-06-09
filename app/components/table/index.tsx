@@ -1,5 +1,6 @@
 "use client";
 
+import FileLoader from "../loader/fileLoader";
 import FullTableLoader from "./components/fullTableLoader";
 import TableBody from "./components/tableBody";
 import TableHeader from "./components/tableHeader";
@@ -14,7 +15,8 @@ const MyTable = <T,>({
 	onRowClick,
 	selectedRowDataId,
 	dataKey,
-	lastItemRef
+	lastItemRef,
+	listLoading
 }: { lastItemRef?: React.Ref<any> } & TableProps<T>) => {
 
 	return (
@@ -30,9 +32,11 @@ const MyTable = <T,>({
 					selectedRowDataId={selectedRowDataId}
 					dataKey={dataKey}
 					lastItemRef={lastItemRef}
+					listLoading={listLoading}
 				/>
 			</table>
 			{isLoading && <FullTableLoader />}
+			{listLoading && <div><FileLoader /></div>}
 		</section>
 	);
 };

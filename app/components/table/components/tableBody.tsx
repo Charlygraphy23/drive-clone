@@ -7,16 +7,15 @@ import TableEmpty from "./tableEmpty";
 
 type Props<T> = { lastItemRef?: React.Ref<any> } & TableProps<T>
 
-const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, selectedRowDataId, dataKey, lastItemRef }: Props<T>) => {
+const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, selectedRowDataId, dataKey, lastItemRef, listLoading }: Props<T>) => {
 	const isSelectable = data?.length > 0
-
 
 
 	return (
 		<>
 			<tbody>
 				{data?.map((val, key) => {
-					if (key === data?.length - 1) {
+					if (key === data?.length - 1 && !listLoading) {
 						return <tr ref={lastItemRef} key={key} className={`${selectedRowDataId === val?.[dataKey] ? style.active : ""} ${isSelectable ? style.selectable : ""}`} onClick={() => {
 							if (onRowClick) onRowClick(val)
 						}}>

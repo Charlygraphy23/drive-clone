@@ -1,8 +1,10 @@
 "use client";
 
+import { getFileIconByType } from "@/app/components/fileListItem/utils/index.utils";
 import { ColumnType } from "@/app/components/table/interfaces/index.interface";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
-import PDFLogo from "@app/assets/pdf-icon.svg";
+import mimeType from "mime-types";
+import Image from "next/image";
 import { OwnerAccessObject } from "../../../interfaces/index.interface";
 import style from '../../../style.module.scss';
 import OwnerSection from "../../ownerSection";
@@ -13,7 +15,11 @@ const useFileColumns = () => {
 		{
 			title: "Name",
 			dataIndex: "name",
-			icon: PDFLogo,
+			render: ({ record }) => {
+				const name = record?.data?.name as string
+				const type = mimeType.lookup(name).toString()
+				return type ? <Image src={getFileIconByType(type)} width={20} height={20} alt="cions" /> : null
+			},
 		},
 		{
 			title: "Owner",

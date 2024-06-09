@@ -17,7 +17,7 @@ async function fetchData(folderId?: string) {
 async function initialFileData(folderId?: string) {
 	const dataset = await getResources(folderId, DATA_TYPE.FILE, false, "show", 1, 10);
 	const response = JSON.parse(JSON.stringify(dataset?.data))
-	return response?.resources as ResourceDatasetType["files"]
+	return response
 }
 
 type Props = {
@@ -30,7 +30,7 @@ const Resources = async ({ folderId }: Props) => {
 	const fileData = await initialFileData(folderId)
 
 	return (
-		<FileAndFolderStateProvider id={folderId} data={{ folders: folderData, files: fileData } as ResourceDatasetType}>
+		<FileAndFolderStateProvider id={folderId} data={{ folders: folderData, files: fileData?.resources } as ResourceDatasetType} hasNextPage={fileData?.next}>
 			<FolderComponent />
 			<FileSection />
 			<EmptySection />

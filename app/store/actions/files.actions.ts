@@ -21,11 +21,12 @@ export const createFile = createAction<CreateFileActionType>("createFile");
 export const renameFile = createAction<RenameFile>("renameFile")
 
 
-export const appendBulkFiles = createAsyncThunk<AddBulkFiles, { folderId?: string, page: number, limit: number }>("appendBulkFiles", async (payload, _thunkAPI) => {
+export const appendBulkFiles = createAsyncThunk<{ data: AddBulkFiles, next: boolean }, { folderId?: string, page: number, limit: number }>("appendBulkFiles", async (payload, _thunkAPI) => {
 	try {
 		const data = await getResourcesApi(payload)
 		return {
-			data: data?.data
+			data: data,
+			next: data?.next as boolean
 		}
 	}
 	catch (err) {

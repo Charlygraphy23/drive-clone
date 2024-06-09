@@ -13,13 +13,15 @@ import style from "./style.module.scss";
 type Props = {
 	data: ResourceDatasetType;
 	id?: string | null
+	hasNextPage?: boolean
 } & PropsWithChildren;
 
-const FileAndFolderStateProvider = ({ children, data, id }: Props) => {
+const FileAndFolderStateProvider = ({ children, data, id, hasNextPage }: Props) => {
 	const initializeData = useRef<string | null | undefined>(null);
 	const store = useAppStore()
 	const { lastItemRef, scrollRef } = useInfiniteLoop({
-		api: appendBulkFiles
+		api: appendBulkFiles,
+		hasNextPage
 	})
 
 	if (initializeData?.current !== id) {

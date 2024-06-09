@@ -48,8 +48,9 @@ export default createReducer(initialState, (builder) => {
 		})
 		.addCase(appendBulkFiles.fulfilled, (state, action) => {
 			const payload = action?.payload;
+			const data = payload.data.data
 			state.loading = false
-			state.data.push(...payload.data)
+			state.data.push(...data)
 			return state;
 		})
 		.addCase(appendBulkFiles.rejected, (state, action) => {

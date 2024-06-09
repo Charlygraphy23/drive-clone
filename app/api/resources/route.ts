@@ -20,12 +20,11 @@ export const GET = async (_req: NextRequest) => {
 
         const data = resources?.data
         // fork("./.next/server/update_access.worker.js", ["hello"])
-        const totalPages = Math.ceil(data?.total / limit)
 
         return response.status(200).send({
-            page: page,
-            limit: limit,
-            next: page < totalPages,
+            page: data?.page,
+            limit: data?.limit,
+            next: data?.next,
             data: data?.resources
         })
     }

@@ -30,4 +30,5 @@ export type TableProps<T> = {
 	onRowClick?: (_val: T) => void
 	selectedRowDataId?: string
 	dataKey: (keyof T) & string
+	listLoading?: boolean
 };
