@@ -12,7 +12,7 @@ const FileSection = ({ lastItemRef }: Props) => {
 	return (
 		<>
 			{files?.length && <div className={style.files}>
-				<h6>Files</h6>
+				<h6>Files {files?.length > 0 ? <>({files?.length})</> : null}</h6>
 
 				<div className={style.filesContainer}>
 					<FileComponent lastItemRef={lastItemRef} />

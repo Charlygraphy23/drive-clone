@@ -9,46 +9,37 @@ type Props = {
     api: AsyncThunk<any, any, any>
     limit?: number,
     startPage?: number,
-    hasNextPage?: boolean
 }
 
-const useInfiniteLoop = ({ api, limit = 10, startPage = 1, hasNextPage }: Props) => {
-    console.log("hasNextPage", hasNextPage)
-    const { loading } = useAppSelector(state => state.files)
+const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
+    const { isFetching, hasNext } = useAppSelector(state => state.files)
     const dispatch = useAppDispatch()
 
     const params = useParams<{ folderId: string }>()
     const lastItemRef = useRef(null);
     const scrollRef = useRef(null);
     const [page, setPage] = useState(startPage)
-    const [isInserted, setIsInserted] = useState(false)
-    const [isNext, setIsNext] = useState(hasNextPage)
-
 
 
 
     const callback = useCallback<IntersectionObserverCallback>(async (itemList, observer) => {
         for (const item of itemList) {
-            console.log("item", item)
             const inserted = item?.isIntersecting
-            if (inserted && !loading && !isInserted && isNext) {
+            if (inserted && !isFetching && hasNext) {
+                console.log("I next ", hasNext, page + 1)
                 setPage(prev => {
                     prev = prev + 1
                     return prev
                 })
                 try {
-                    const res = await dispatch(api({
+                    await dispatch(api({
                         limit,
                         page: page + 1,
                         folderId: params?.folderId
                     }))
-
-                    setIsNext(res.payload?.next)
-                    setIsInserted(false)
                 }
                 catch (err) {
                     console.log("ERROR", err)
-                    setIsInserted(false)
                 }
             }
 
@@ -58,7 +49,8 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, hasNextPage }: Props)
 
             }
         }
-    }, [api, dispatch, isInserted, isNext, limit, loading, page, params?.folderId]);
+
+    }, [isFetching, hasNext, page, dispatch, api, limit, params?.folderId]);
 
     useEffect(() => {
         console.log("Iniitate use effect ",)
@@ -67,15 +59,14 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, hasNextPage }: Props)
             rootMargin: "0px",
             threshold: 1.0,
         };
-
         const observer = new IntersectionObserver(callback, options);
+
         if (lastItemRef?.current)
             observer.observe(lastItemRef?.current);
 
 
         return () => {
             observer.disconnect()
-            setIsInserted(false)
         }
     }, [callback])
 

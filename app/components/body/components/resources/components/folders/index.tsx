@@ -55,7 +55,7 @@ const FolderComponent = () => {
 	return (
 		<>
 			{data?.length && <div className={`${style.folders} mb-5`}>
-				<h6>Folders</h6>
+				<h6>Folders {data?.length > 0 ? <>({data?.length})</> : null}</h6>
 
 				<div className={style.folderContainer}>
 					{data.map((folder) => (

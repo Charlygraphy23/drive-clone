@@ -21,12 +21,11 @@ const FileAndFolderStateProvider = ({ children, data, id, hasNextPage }: Props) 
 	const store = useAppStore()
 	const { lastItemRef, scrollRef } = useInfiniteLoop({
 		api: appendBulkFiles,
-		hasNextPage
 	})
 
 	if (initializeData?.current !== id) {
 		console.log("Before Initizing", id)
-		store.dispatch(addBulkFiles({ data: data?.files }))
+		store.dispatch(addBulkFiles({ data: data?.files, next: hasNextPage }))
 		store.dispatch(addBulkFolder({ data: data?.folders }))
 		initializeData.current = id
 	}
