@@ -1,4 +1,4 @@
-import { getFolderInfoByIdApi } from "@/app/_apis_routes/resources";
+import { getResourceInfoByIdApi } from "@/app/_apis_routes/resources";
 import { ACCESS_TYPE, AccessSchemaType } from "@/app/lib/database/interfaces/access.interface";
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { ErrorHandler } from "@/app/utils/index.utils";
@@ -40,16 +40,16 @@ export const updateInfo = createAction<UpdateInfoActionType>("updateInfo")
 
 
 
-export const getFolderInfoAsync = createAsyncThunk<ResourceInfoDataType, { folderId: string, withDeleted?: boolean }>("getResourceInfo", async (payload, _thunkAPI) => {
+export const getResourceInfoAsync = createAsyncThunk<ResourceInfoDataType, { resourceId: string, withDeleted?: boolean }>("getResourceInfo", async (payload, _thunkAPI) => {
     try {
 
-        const ID = payload.folderId;
+        const ID = payload.resourceId;
         const state = _thunkAPI.getState() as RootState
         const info = state?.resourceInfo?.data[ID];
 
         if (info) return info
 
-        const data = await getFolderInfoByIdApi(ID, payload?.withDeleted)
+        const data = await getResourceInfoByIdApi(ID, payload?.withDeleted)
         return data?.data?.data
     }
     catch (err) {

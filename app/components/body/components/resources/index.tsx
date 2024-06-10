@@ -29,6 +29,8 @@ const Resources = async ({ folderId }: Props) => {
 	const folderData = await fetchData(folderId)
 	const fileData = await initialFileData(folderId)
 
+	console.log("Folders ", folderData?.length)
+
 	return (
 		<FileAndFolderStateProvider id={folderId} data={{ folders: folderData, files: fileData?.resources } as ResourceDatasetType} hasNextPage={fileData?.next}>
 			<FolderComponent />

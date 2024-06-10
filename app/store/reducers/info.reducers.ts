@@ -1,13 +1,13 @@
 import { ACCESS_ORIGIN, ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { createReducer } from "@reduxjs/toolkit";
-import { AccessList, ResourceInfoDataType, clearSelectedFolderId, getFolderInfoAsync, invalidateCache, toggleInfo, updateInfo, updateInfoByFolderId } from "../actions/info.actions";
+import { AccessList, ResourceInfoDataType, clearSelectedFolderId, getResourceInfoAsync, invalidateCache, toggleInfo, updateInfo, updateInfoByFolderId } from "../actions/info.actions";
 
 const initialState = {
     loading: false,
     data: {} as Record<string, ResourceInfoDataType>,
     error: "",
     show: false,
-    selectedFolderId: "",
+    selectedResourceId: "",
 };
 
 
@@ -15,28 +15,28 @@ export type ResourceInfoStateType = typeof initialState;
 
 export default createReducer(initialState, (builder) => {
     builder
-        .addCase(getFolderInfoAsync.pending, (state, action) => {
+        .addCase(getResourceInfoAsync.pending, (state, action) => {
             state.loading = true;
-            state.selectedFolderId = action.meta.arg.folderId;
+            state.selectedResourceId = action.meta.arg.resourceId;
             state.error = "";
             return state
         })
 
-        .addCase(getFolderInfoAsync.fulfilled, (state, action) => {
+        .addCase(getResourceInfoAsync.fulfilled, (state, action) => {
             const ID = action.payload._id
             state.loading = false;
             state.error = "";
             state.data[ID] = action.payload
-            state.selectedFolderId = ID
+            state.selectedResourceId = ID
             return state;
         })
-        .addCase(getFolderInfoAsync.rejected, (state, action) => {
+        .addCase(getResourceInfoAsync.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error?.message ?? "";
             return state;
         })
         .addCase(clearSelectedFolderId, (state) => {
-            state.selectedFolderId = ""
+            state.selectedResourceId = ""
             return state;
         })
         .addCase(toggleInfo, (state) => {

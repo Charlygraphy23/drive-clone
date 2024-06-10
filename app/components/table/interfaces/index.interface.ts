@@ -31,4 +31,5 @@ export type TableProps<T> = {
 	selectedRowDataId?: string
 	dataKey: (keyof T) & string
 	listLoading?: boolean
+	id?: string
 };

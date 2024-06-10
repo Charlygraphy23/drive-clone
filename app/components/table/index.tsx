@@ -16,11 +16,12 @@ const MyTable = <T,>({
 	selectedRowDataId,
 	dataKey,
 	lastItemRef,
-	listLoading
+	listLoading,
+	id = ""
 }: { lastItemRef?: React.Ref<any> } & TableProps<T>) => {
 
 	return (
-		<section className={style.table}>
+		<section id={id} className={style.table}>
 			<table cellSpacing={10}>
 				<TableHeader columns={columns} />
 				<TableBody<T>

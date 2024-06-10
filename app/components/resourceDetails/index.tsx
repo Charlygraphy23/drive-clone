@@ -12,9 +12,9 @@ import style from './style.module.scss';
 
 
 const ResourceDetails = () => {
-    const { show, data, loading, selectedFolderId } = useAppSelector(state => state?.resourceInfo)
+    const { show, data, loading, selectedResourceId } = useAppSelector(state => state?.resourceInfo)
     const dispatch = useAppDispatch()
-    const folderInfo = data?.[selectedFolderId]
+    const folderInfo = data?.[selectedResourceId]
 
     const toggleResourceInfo = () => {
         dispatch(toggleInfo())

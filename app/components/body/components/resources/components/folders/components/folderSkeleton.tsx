@@ -6,7 +6,6 @@ import { useAppDispatch } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef } from "react";
 import style from "../../../style.module.scss";
 
 type Props = {
@@ -14,14 +13,11 @@ type Props = {
 	isSelected?: boolean;
 	href: string
 	onClick: (_id: string, _e: React.MouseEvent<HTMLDivElement>,) => void
-	clearState: () => void
 };
 
-const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) => {
+const FolderSkeleton = ({ data, isSelected, href, onClick }: Props) => {
 	const dispatch = useAppDispatch();
 	const router = useRouter()
-	const ref = useRef<HTMLDivElement>(null)
-
 
 	const handleRenameClient = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
@@ -50,32 +46,6 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 		onClick(data?._id, e,)
 	}
 
-	const findElements = useCallback((target: Node) => {
-		const IDs = ["resource-info-button", "resource-info", "more-option"]
-		const classes = [".ant-select-dropdown", ".selectAccessType", ".selectAccessList"]
-		const hasElementWithId = IDs.reduce((prev, Id) => {
-			const element = document.getElementById(Id)
-			const isContains = element?.contains(target)
-			if (isContains) return true;
-			if (prev) return prev;
-
-			return false;
-		}, false)
-
-		const hasElementWithClass = classes.reduce((prev, Id) => {
-			const element = document.querySelector(Id)
-			const isContains = element?.contains(target)
-			if (isContains) return true;
-			if (prev) return prev;
-
-			return false;
-		}, false)
-
-
-
-		return hasElementWithId || hasElementWithClass
-	}, [])
-
 	const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
 		e.preventDefault()
@@ -93,27 +63,8 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, clearState }: Props) 
 		);
 	}
 
-
-	useEffect(() => {
-		function checkClick(e: MouseEvent) {
-			if (!ref.current) return;
-
-			const target = e.target as Node
-			const hasElement = findElements(target)
-			const shouldReset = !ref?.current.contains(target) && !hasElement
-			if (shouldReset) {
-				clearState()
-			}
-		}
-
-		document.addEventListener("click", checkClick)
-		return () => {
-			document.removeEventListener("click", checkClick)
-		}
-	}, [clearState, findElements])
-
 	return (
-		<div ref={ref} className={`${style.skeleton} ${isSelected ? style.selected : ""}`}
+		<div id="my_folder" className={`${style.skeleton} ${isSelected ? style.selected : ""}`}
 			onDoubleClick={onDoubleClick}
 			onClick={onSingleClick}>
 			<div className={`${style.label} d-flex`}>

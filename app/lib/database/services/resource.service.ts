@@ -83,7 +83,7 @@ export class ResourceService {
         }], options)
     }
 
-    async getResources(userId: string, resourceId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null, shared: "only" | "show" | "off" = "off", page?: number, limit?: number): Promise<{
+    async getResources(userId: string, folderId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null, shared: "only" | "show" | "off" = "off", page?: number, limit?: number): Promise<{
         page?: number
         limit?: number
         total?: number
@@ -100,8 +100,8 @@ export class ResourceService {
             initialQuery.createdBy = { $ne: new Types.ObjectId(userId) }
         }
 
-        if (resourceId) {
-            initialQuery["parentFolderId"] = new Types.ObjectId(resourceId);
+        if (folderId) {
+            initialQuery["parentFolderId"] = new Types.ObjectId(folderId);
         } else {
             initialQuery.$expr = {
                 $or: [
@@ -113,6 +113,7 @@ export class ResourceService {
                     }
                 ]
             }
+
         }
 
         if (showDeleted) {
@@ -122,6 +123,8 @@ export class ResourceService {
         if (resourceType) {
             initialQuery["dataType"] = resourceType
         }
+
+        console.log("initialQuery ", JSON.stringify(initialQuery))
 
         const pipelines = [
             ...this.getUserInfo("$createdBy"),
@@ -199,9 +202,11 @@ export class ResourceService {
         console.log("Limit and page", limit, page)
 
 
+        const withPagination = [].concat(pipelines)
+
         if (limit && page) {
             const skip = (page - 1) * limit
-            pipelines.push({ $skip: skip }, {
+            withPagination.push({ $skip: skip }, {
                 $limit: limit
             })
         }
@@ -209,8 +214,8 @@ export class ResourceService {
         const response = await Model.aggregate([
             {
                 $facet: {
-                    totalDocuments: [{ $count: "total" }],
-                    "resources": pipelines
+                    totalDocuments: [...pipelines as FacetPipelineStage, { $count: "total" }],
+                    "resources": withPagination
                 }
             },
             {

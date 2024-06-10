@@ -34,9 +34,8 @@ export const updateFolderNameApi = async (payload: UpdateFolderNamePayload) => {
 }
 
 
-export const getFolderInfoByIdApi = async (resourceId: string, withDeleted?: boolean) => {
+export const getResourceInfoByIdApi = async (resourceId: string, withDeleted?: boolean) => {
     let path = `/resources/${resourceId}`
-    console.log("path", path)
 
     if (withDeleted) {
         path = path + `?deleted=true`
@@ -74,11 +73,11 @@ export const uploadFile = async ({ formData }: { formData: FormData }) => {
     return data?.uploadId
 }
 
-export const getResourcesApi = async ({ page, limit, resourceId }: { page: number, limit: number, resourceId?: string }) => {
+export const getResourcesApi = async ({ page, limit, folderId }: { page: number, limit: number, folderId?: string }) => {
 
     const queryParams = new URLSearchParams();
-    if (resourceId) {
-        queryParams.set("resourceId", resourceId)
+    if (folderId) {
+        queryParams.set("folderId", folderId)
     }
 
     if (page) {

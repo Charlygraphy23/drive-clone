@@ -13,7 +13,10 @@ type Props = {
 const FileAction = ({ data }: Props) => {
 	const dispatch = useDispatch();
 
-	const handleRenameClick = () => {
+	const handleRenameClick = (e: React.MouseEvent<HTMLElement>) => {
+		e.stopPropagation()
+		e.preventDefault()
+
 		dispatch(
 			toggleModal({
 				isOpen: true,
@@ -27,14 +30,17 @@ const FileAction = ({ data }: Props) => {
 		);
 	};
 
-	const handleTrash = () => {
+	const handleTrash = (e: React.MouseEvent<HTMLElement>) => {
 
 	}
 
 	return (
 		<MyDropdown
 			handler={{
-				render: () => <i className='bi bi-three-dots'></i>,
+				render: () => <i id="more-option-file" className='bi bi-three-dots' onClick={e => {
+					e.preventDefault()
+					e.stopPropagation()
+				}}></i>,
 			}}>
 			<MyDropdown.Menu>
 				<MyDropdown.List onClick={handleRenameClick}>Rename</MyDropdown.List>

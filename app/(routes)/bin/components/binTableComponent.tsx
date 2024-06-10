@@ -3,7 +3,7 @@
 import { deleteForeverApi, restoreFromTrashApi } from "@/app/_apis_routes/resources";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import { clearSelectedFolderId, getFolderInfoAsync } from "@/app/store/actions/info.actions";
+import { clearSelectedFolderId, getResourceInfoAsync } from "@/app/store/actions/info.actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import EmptyTableIcon from "@app/assets/emptyTableIcon.svg";
 import Table from "@app/components/table";
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const BinTableComponent = ({ data }: Props) => {
-	const { selectedFolderId } = useAppSelector(state => state.resourceInfo)
+	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
 	const mutation = useMutation({ mutationFn: restoreFromTrashApi });
 	const deleteMutation = useMutation({ mutationFn: deleteForeverApi });
 	const router = useRouter()
@@ -25,8 +25,8 @@ const BinTableComponent = ({ data }: Props) => {
 	const dispatch = useAppDispatch()
 
 	const onRowClick = (val: FolderDataType) => {
-		dispatch(getFolderInfoAsync({
-			folderId: val?._id,
+		dispatch(getResourceInfoAsync({
+			resourceId: val?._id,
 			withDeleted: true
 		}))
 
@@ -48,7 +48,7 @@ const BinTableComponent = ({ data }: Props) => {
 				emptyIcon={EmptyTableIcon}
 				isLoading={mutation?.isPending}
 				onRowClick={onRowClick}
-				selectedRowDataId={selectedFolderId}
+				selectedRowDataId={selectedResourceId}
 				dataKey={"_id"}
 			/>
 

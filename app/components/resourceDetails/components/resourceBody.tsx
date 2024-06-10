@@ -10,9 +10,9 @@ import style from '../style.module.scss'
 
 
 const ResourceBody = () => {
-    const { data, selectedFolderId } = useAppSelector(state => state?.resourceInfo)
+    const { data, selectedResourceId } = useAppSelector(state => state?.resourceInfo)
     const dispatch = useAppDispatch()
-    const folderInfo = data?.[selectedFolderId]
+    const folderInfo = data?.[selectedResourceId]
 
 
     const toggleModal = () => {
@@ -21,7 +21,7 @@ const ResourceBody = () => {
                 isOpen: true,
                 name: "manageAccessModal",
                 data: {
-                    id: selectedFolderId,
+                    id: selectedResourceId,
                 }
             })
         );

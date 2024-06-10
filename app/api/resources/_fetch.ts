@@ -10,7 +10,7 @@ import { MongoIdSchemaValidation } from "../_validation/data.validation"
 
 
 
-export const getResources = async (resourceId?: string, resourceType: DATA_TYPE | null = null, showDeleted = false, shared: "only" | "show" | "off" = "off", page?: number, limit?: number) => {
+export const getResources = async (folderId?: string, resourceType: DATA_TYPE | null = null, showDeleted = false, shared: "only" | "show" | "off" = "off", page?: number, limit?: number) => {
     const service = new ResourceService()
 
     try {
@@ -21,13 +21,13 @@ export const getResources = async (resourceId?: string, resourceType: DATA_TYPE 
 
         await connectDB();
 
-        if (resourceId) {
-            const isValidId = MongoIdSchemaValidation.isValid(resourceId)
+        if (folderId) {
+            const isValidId = MongoIdSchemaValidation.isValid(folderId)
 
             if (!isValidId) return { message: "Invalid folderId", status: 422 };
 
             const hasAccess = await service.checkAccess(String(user._id), {
-                resourceId: resourceId ?? ""
+                resourceId: folderId ?? ""
             })
 
             if (!hasAccess?.success) {
@@ -37,7 +37,7 @@ export const getResources = async (resourceId?: string, resourceType: DATA_TYPE 
         }
 
 
-        const resources = await service.getResources(String(user._id), resourceId, showDeleted, resourceType, shared, page, limit)
+        const resources = await service.getResources(String(user._id), folderId, showDeleted, resourceType, shared, page, limit)
 
         return { message: "Fetched", status: 200, data: resources };
 

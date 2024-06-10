@@ -1,8 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import { toggleModal } from "@/app/store/actions";
-import { clearSelectedFolderId, getFolderInfoAsync } from "@/app/store/actions/info.actions";
+import { getResourceInfoAsync } from "@/app/store/actions/info.actions";
 import { useParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import style from "../../style.module.scss";
@@ -11,8 +10,7 @@ import FolderSkeleton from "./components/folderSkeleton";
 
 const FolderComponent = () => {
 	const { data } = useAppSelector(state => state.folders)
-	const { selectedFolderId } = useAppSelector(state => state.resourceInfo)
-	const { manageAccessModal } = useAppSelector(state => state.modals)
+	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
 
 	const ref = useRef<string>("")
 
@@ -21,31 +19,19 @@ const FolderComponent = () => {
 
 
 	const handleClick = (folderId: string) => {
-		dispatch(getFolderInfoAsync({
-			folderId
+		dispatch(getResourceInfoAsync({
+			resourceId: folderId
 		}))
 	}
 
-	const onClear = () => {
-		if (selectedFolderId)
-			dispatch(clearSelectedFolderId())
-
-		if (manageAccessModal) {
-			dispatch(toggleModal({
-				isOpen: false,
-				name: "manageAccessModal",
-			}))
-		}
-
-	}
 
 	useEffect(() => {
 		const folderId = params?.folderId
 		if (ref.current === folderId) return
 		if (!folderId) return;
 
-		dispatch(getFolderInfoAsync({
-			folderId: params.folderId
+		dispatch(getResourceInfoAsync({
+			resourceId: params.folderId
 		}))
 
 		ref.current = folderId
@@ -62,10 +48,9 @@ const FolderComponent = () => {
 						<FolderSkeleton
 							key={folder?._id}
 							data={folder}
-							isSelected={selectedFolderId === folder?._id}
+							isSelected={selectedResourceId === folder?._id}
 							href={`/q/${folder?._id}`}
 							onClick={handleClick}
-							clearState={onClear}
 						/>
 					))}
 				</div>
