@@ -124,7 +124,6 @@ export class ResourceService {
             initialQuery["dataType"] = resourceType
         }
 
-        console.log("initialQuery ", JSON.stringify(initialQuery))
 
         const pipelines = [
             ...this.getUserInfo("$createdBy"),
@@ -199,10 +198,8 @@ export class ResourceService {
             },
         ] as PipelineStage[]
 
-        console.log("Limit and page", limit, page)
 
-
-        const withPagination = [].concat(pipelines)
+        const withPagination: PipelineStage[] = [].concat(pipelines)
 
         if (limit && page) {
             const skip = (page - 1) * limit
@@ -214,7 +211,7 @@ export class ResourceService {
         const response = await Model.aggregate([
             {
                 $facet: {
-                    totalDocuments: [...pipelines as FacetPipelineStage, { $count: "total" }],
+                    totalDocuments: [...pipelines as any[], { $count: "total" }],
                     "resources": withPagination
                 }
             },
@@ -234,7 +231,6 @@ export class ResourceService {
         if (page && limit) {
 
             const totalPages = Math.ceil(data?.totalDocuments / limit)
-            console.log("totalPages", totalPages)
             return {
                 page: page,
                 limit: limit,
@@ -438,7 +434,10 @@ export class ResourceService {
                     fileSize: payload?.size,
                     fileName: payload?.fileName,
                     key: encryptedKey
-                }], options)
+                }], {
+                    ...options,
+                    isNew: true
+                })
 
                 const fileInfo = res?.toJSON()
                 console.log("Saving access")
@@ -446,6 +445,7 @@ export class ResourceService {
                     userId: String(payload?.userId), parentFolderId: String(payload?.parentFolderId ?? ""), resourceId: fileInfo?._id
                 }, options)
 
+                return { uploadId: s3.uploadId, fileInfo: fileInfo }
             }
 
 
@@ -456,7 +456,7 @@ export class ResourceService {
             throw err
         }
 
-        return s3.uploadId
+        return { uploadId: s3.uploadId, fileInfo: null }
 
     }
 

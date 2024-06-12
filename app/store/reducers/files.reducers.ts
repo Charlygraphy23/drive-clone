@@ -1,6 +1,6 @@
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
-import { addBulkFiles, appendBulkFiles, createFile, renameFile } from "../actions";
+import { addBulkFiles, appendBulkFiles, createFile, pushFile, renameFile } from "../actions";
 
 const initialState = {
 	isFetching: false,
@@ -57,6 +57,11 @@ export default createReducer(initialState, (builder) => {
 			state.hasNext = false
 			return state;
 		})
+		.addCase(pushFile, (state, action) => {
+			const payload = action?.payload;
+			state.data.push(payload);
+			return state;
+		})
 		.addCase(appendBulkFiles.fulfilled, (state, action) => {
 			const payload = action?.payload;
 			const data = payload.data
@@ -77,5 +82,6 @@ export default createReducer(initialState, (builder) => {
 			state.loading = false
 			state.isFetching = false
 			return state;
-		});
+		})
+
 });

@@ -5,6 +5,7 @@ import { ResourceService } from "@/app/lib/database/services/resource.service"
 import { ApiResponse } from "@/app/utils/response"
 import mongoose from "mongoose"
 import { getServerSession } from "next-auth"
+import { revalidateTag } from "next/cache"
 import { NextRequest } from "next/server"
 
 
@@ -83,6 +84,7 @@ export const PATCH = async (req: NextRequest, { params }: { params: { resourceId
         }
 
         await service.softDeleteResourceById(resourceId)
+        revalidateTag("folders")
         return response.status(200).send("Deleted")
 
     }

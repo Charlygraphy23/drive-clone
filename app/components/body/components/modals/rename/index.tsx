@@ -12,7 +12,6 @@ import {
 	toggleModal as toggleModalState
 } from "@/app/store/actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
-import { useRouter } from "next/navigation";
 import {
 	ChangeEvent,
 	FormEvent,
@@ -32,7 +31,6 @@ type Props = {
 const RenameModal = ({ isOpen, data }: Props) => {
 	const dispatch = useAppDispatch();
 	const { loading, error } = useAppSelector(state => state.folders);
-	const router = useRouter()
 
 	const [name, setName] = useState<string>("");
 	const currName = useRef(name);
@@ -53,7 +51,6 @@ const RenameModal = ({ isOpen, data }: Props) => {
 	const resetModal = () => {
 		toggleModal(false);
 		setName("");
-		router.refresh()
 	}
 
 	const onChange = (event: ChangeEvent<HTMLInputElement>) => {

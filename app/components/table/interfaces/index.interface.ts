@@ -19,7 +19,7 @@ export type ColumnType = {
 		| undefined
 		| boolean;
 	title: string;
-	icon?: React.ReactElement | StaticImport | string;
+	icon?: React.ReactElement | StaticImport | string | ((_data: unknown) => React.ReactElement | null)
 };
 
 export type TableProps<T> = {

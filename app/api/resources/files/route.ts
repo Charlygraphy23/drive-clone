@@ -1,11 +1,14 @@
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
+import { UserSchemaType } from "@/app/lib/database/interfaces/user.interface";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
+import { FileDataType } from "@/app/store/reducers/files.reducers";
 import { ApiResponse } from "@/app/utils/response";
 import { File } from "buffer";
 import { startSession } from "mongoose";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
 import { extname } from "path";
 
@@ -62,7 +65,7 @@ export const POST = async (req: NextRequest) => {
             fileName = `${name} (1)${ext}`;
         }
 
-        const awsUploadId = await service.upload({
+        const { uploadId: awsUploadId, fileInfo } = await service.upload({
             file: buffer,
             fileName: fileName,
             createdBy: String(user._id),
@@ -75,6 +78,27 @@ export const POST = async (req: NextRequest) => {
         }, { session: mongoSession });
 
         await mongoSession.commitTransaction()
+
+
+        if (chunkIndex === totalChunks - 1) {
+            // means file has been uploaded fully
+            revalidateTag("files")
+            const data = fileInfo as { userInfo?: UserSchemaType } & FileDataType
+            data.userInfo = {
+                email: user?.email,
+                firstName: user?.firstName,
+                imageUrl: user?.imageUrl,
+                lastName: user?.lastName,
+                _id: user?._id
+            }
+
+            return response.status(201).send({
+                uploadId: awsUploadId,
+                message: "Uploaded",
+                data: data
+            })
+        }
+
         return response.status(201).send({
             uploadId: awsUploadId,
             message: "Uploaded"

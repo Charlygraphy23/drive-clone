@@ -7,8 +7,10 @@ import ModalComponent from "@/app/components/modal";
 import { FileUploadType } from "@/app/interfaces/index.interface";
 import { useAppDispatch } from "@/app/store";
 import {
+    pushFile,
     toggleModal as toggleModalState
 } from "@/app/store/actions";
+import { FileDataType } from "@/app/store/reducers/files.reducers";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { AxiosError } from "axios";
 import { useParams } from "next/navigation";
@@ -140,7 +142,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
             }
 
-            await breakIntoChunks(currantFile?.file, index, folderId, (progress: number, fileIndex: number) => {
+            const data = await breakIntoChunks(currantFile?.file, index, folderId, (progress: number, fileIndex: number) => {
                 setFiles((prev) => {
                     const data = prev[fileIndex];
 
@@ -174,10 +176,16 @@ const FileUploadModal = ({ isOpen }: Props) => {
                     return Array.from(prev)
                 })
             })
+
+
+            if (data) {
+                dispatch(pushFile(data as FileDataType))
+            }
+
             hasMoreFile = !!files?.[++index]
         }
 
-    }, [files, folderId])
+    }, [dispatch, files, folderId])
 
     const handleSubmit = useCallback((e: React.MouseEvent) => {
         e.preventDefault();

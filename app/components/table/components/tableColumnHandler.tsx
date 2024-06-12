@@ -34,6 +34,10 @@ const TableColumnHandler = <T,>({
 	const renderIcon = () => {
 		if (React.isValidElement(icon)) return icon;
 
+		if (typeof icon === "function") {
+			return icon(data as T)
+		}
+
 		return (
 			<Image className={style.icon} src={icon as StaticImport} alt='icon' />
 		);
@@ -49,7 +53,7 @@ const TableColumnHandler = <T,>({
 	return (
 		<div className={style.columnHandler}>
 			{icon && renderIcon()}
-			<span>{(handleDataMapping() as ReactElement) ?? "-"}</span>
+			<span className="ms-3">{(handleDataMapping() as ReactElement) ?? "-"}</span>
 		</div>
 	);
 };

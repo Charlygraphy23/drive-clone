@@ -7,6 +7,7 @@ import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
 import { startSession } from "mongoose";
 import { getServerSession } from "next-auth/next";
+import { revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
 import { DataCreateSchemaValidator, UpdateNamePayloadSchema } from "../../_validation/data.validation";
 
@@ -52,6 +53,8 @@ export const PATCH = async (req: NextRequest) => {
         if (folderExistWithName) return response.status(422).send("Folder Exists with the name!")
 
         await service.updateName(id, updatedName)
+
+        revalidateTag(`folders`)
 
         return response.status(200).send("Updated")
 
@@ -118,6 +121,7 @@ export const POST = async (req: NextRequest) => {
         }, { session: mongoSession })
 
         await mongoSession.commitTransaction()
+        revalidateTag("folders")
         return response.status(200).send({
             folderId: folderInfo?._id
         })

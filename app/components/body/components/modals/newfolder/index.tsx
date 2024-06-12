@@ -11,7 +11,7 @@ import {
 } from "@/app/store/actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { useSession } from "next-auth/react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { ChangeEvent, FormEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import style from "./style.module.scss";
 
@@ -29,7 +29,6 @@ const NewFolderModal = ({ isOpen }: Props) => {
 	const [name, setName] = useState<string>("");
 	const session = useSession()
 	const params = useParams()
-	const router = useRouter()
 	const user = session?.data?.user
 
 
@@ -49,7 +48,6 @@ const NewFolderModal = ({ isOpen }: Props) => {
 	const resetState = () => {
 		toggleModal(false);
 		setName("");
-		router.refresh()
 	}
 
 	const handleModalSubmit = (event: FormEvent) => {

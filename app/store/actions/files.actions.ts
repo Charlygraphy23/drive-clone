@@ -20,6 +20,8 @@ type RenameFile = {
 export const addBulkFiles = createAction<AddBulkFiles>("addBulkFiles");
 export const createFile = createAction<CreateFileActionType>("createFile");
 export const renameFile = createAction<RenameFile>("renameFile")
+export const pushFile = createAction<FileDataType>("pushFile")
+
 
 
 export const appendBulkFiles = createAsyncThunk<AddBulkFiles, { folderId?: string, page: number, limit: number }>("appendBulkFiles", async (payload, _thunkAPI) => {

@@ -68,9 +68,8 @@ export const uploadFile = async ({ formData }: { formData: FormData }) => {
         },
     })
 
-    console.log("Response from axios", data)
 
-    return data?.uploadId
+    return { uploadId: data?.uploadId, file: data?.data }
 }
 
 export const getResourcesApi = async ({ page, limit, folderId }: { page: number, limit: number, folderId?: string }) => {

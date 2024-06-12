@@ -15,8 +15,8 @@ const useFileColumns = () => {
 		{
 			title: "Name",
 			dataIndex: "name",
-			render: ({ record }) => {
-				const name = record?.data?.name as string
+			icon: (data: FileDataType) => {
+				const name = data?.name as string
 				const type = mimeType.lookup(name).toString()
 				return type ? <Image src={getFileIconByType(type)} width={20} height={20} alt="cions" /> : null
 			},

@@ -1,23 +1,22 @@
 "use client";
 
+import { fetchFileData, fetchFolderData } from "@/app/_actions/resource";
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
+import ResourceLoader from "@/app/components/loader/resourceLoader";
 import { useAppDispatch, useAppSelector, useAppStore } from "@/app/store";
 import { addBulkFiles, addBulkFolder, appendBulkFiles, toggleModal } from "@/app/store/actions";
 import { clearSelectedFolderId } from "@/app/store/actions/info.actions";
-import { Children, PropsWithChildren, cloneElement, memo, useCallback, useEffect, useRef } from "react";
+import { Children, PropsWithChildren, cloneElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import DeleteConfirmationModal from "../modals/delete";
 import NewfolderModal from "../modals/newfolder";
 import RenameModal from "../modals/rename";
-import { ResourceDatasetType } from "./interfaces/index.interface";
 import style from "./style.module.scss";
 
 type Props = {
-	data: ResourceDatasetType;
 	id?: string | null
-	hasNextPage?: boolean
 } & PropsWithChildren;
 
-const FileAndFolderStateProvider = ({ children, data, id, hasNextPage }: Props) => {
+const FileAndFolderStateProvider = ({ children, id }: Props) => {
 	const initializeData = useRef<string | null | undefined>(null);
 	const store = useAppStore()
 	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
@@ -33,6 +32,7 @@ const FileAndFolderStateProvider = ({ children, data, id, hasNextPage }: Props) 
 		api: appendBulkFiles,
 	})
 	const dispatch = useAppDispatch()
+	const [loader, setLoader] = useState(true)
 
 
 	const disabledClick = useCallback((target: Node) => {
@@ -111,21 +111,39 @@ const FileAndFolderStateProvider = ({ children, data, id, hasNextPage }: Props) 
 		}
 	}, [onClear, withParentElement])
 
+	const handleInitialDataLoad = useCallback(async () => {
+		const [folders, filesData] = await Promise.all([
+			fetchFolderData(id ?? ""),
+			fetchFileData(id ?? "")
+		])
+		console.log("filesData", filesData)
+		store.dispatch(addBulkFiles({ data: filesData?.resources, next: filesData?.next }))
+		store.dispatch(addBulkFolder({ data: folders }))
+		setLoader(false)
+	}, [id, store])
 
 
-	if (initializeData?.current !== id) {
-		store.dispatch(addBulkFiles({ data: data?.files, next: hasNextPage }))
-		store.dispatch(addBulkFolder({ data: data?.folders }))
-		initializeData.current = id
-	}
+
+	useEffect(() => {
+		if (initializeData?.current !== id) {
+			setLoader(true)
+			handleInitialDataLoad()
+
+			initializeData.current = id
+		}
+	}, [handleInitialDataLoad, id])
+
 
 	return (
-		<div className={style.filesAndFolders} ref={scrollRef}>
-			{Children.map(children, child => cloneElement(child as React.ReactElement, { lastItemRef }))}
-			<RenameModal isOpen={renameModal} data={modalState} />
-			<NewfolderModal isOpen={newFolderModal} data={modalState} />
-			<DeleteConfirmationModal isOpen={deleteModal} data={modalState} />
-		</div>
+		<>
+			{loader && <ResourceLoader /> || null}
+			{!loader && <div className={style.filesAndFolders} ref={scrollRef}>
+				{Children.map(children, child => cloneElement(child as React.ReactElement, { lastItemRef }))}
+				<RenameModal isOpen={renameModal} data={modalState} />
+				<NewfolderModal isOpen={newFolderModal} data={modalState} />
+				<DeleteConfirmationModal isOpen={deleteModal} data={modalState} />
+			</div>}
+		</>
 	);
 };
 

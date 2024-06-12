@@ -7,7 +7,6 @@ import {
     toggleModal as toggleModalState
 } from "@/app/store/actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
-import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useState } from "react";
 import style from './style.module.scss';
 
@@ -21,7 +20,6 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
     const dispatch = useAppDispatch();
     const { data } = useAppSelector(state => state.modals)
     const [loading, setLoading] = useState(false)
-    const router = useRouter()
 
     const toggleModal = useCallback((isOpen?: boolean) => {
         dispatch(
@@ -47,7 +45,6 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
                 return data
             })
             setLoading(false)
-            router.refresh()
             toggleModal()
         }
         catch (err) {

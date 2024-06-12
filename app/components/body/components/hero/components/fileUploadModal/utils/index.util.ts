@@ -15,6 +15,7 @@ export const breakIntoChunks = async (file: File, index: number, folderId = "", 
             let idx = 0;
 
             const totalChunks = chunks?.length
+            let data = null
             for await (const chunk of chunks) {
                 formData.set("file", new Blob([chunk]))
                 formData.set("chunkIndex", String(idx))
@@ -22,14 +23,19 @@ export const breakIntoChunks = async (file: File, index: number, folderId = "", 
                 if (uploadId) {
                     formData.set("uploadId", uploadId)
                 }
-                uploadId = await uploadFile({ formData })
+                const response = await uploadFile({ formData })
+                uploadId = response?.uploadId
+
+                if (response?.file) {
+                    data = response?.file
+                }
                 console.log("Received uploadId", uploadId)
                 const progress = Math.floor((idx + 1) * 100 / totalChunks)
                 getProgress(progress, index)
                 idx++
             }
 
-            resolve(totalChunks)
+            resolve(data)
         }
         catch (err) {
             // todo: abort the file upload with uploadId

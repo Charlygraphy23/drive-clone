@@ -1,6 +1,7 @@
 import BodyComponent from "./components/body";
 import RouteTemplate from "./routeTemplate";
 
+
 type Props = {
 	folderId?: string
 }
