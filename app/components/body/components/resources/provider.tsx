@@ -27,9 +27,12 @@ const FileAndFolderStateProvider = ({ children, id }: Props) => {
 		deleteModal,
 		data: modalState,
 	} = useAppSelector((state) => state.modals);
-
+	const { isFetching, hasNext } = useAppSelector(state => state.files)
 	const { lastItemRef, scrollRef } = useInfiniteLoop({
 		api: appendBulkFiles,
+		startPage: 2,
+		isFetching,
+		hasNext
 	})
 	const dispatch = useAppDispatch()
 	const [loader, setLoader] = useState(true)

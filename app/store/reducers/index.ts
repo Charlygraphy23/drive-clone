@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import binReducer from "./bin.reducer";
 import filesReducer from "./files.reducers";
 import FolderReducer from "./folders.reducers";
 import resourceInfo from "./info.reducers";
@@ -15,7 +16,8 @@ const rootReducer = () =>
 		files: filesReducer,
 		profile: profileReducer,
 		notification: notificationReducer,
-		resourceInfo: resourceInfo
+		resourceInfo: resourceInfo,
+		bin: binReducer
 	});
 
 export default rootReducer;

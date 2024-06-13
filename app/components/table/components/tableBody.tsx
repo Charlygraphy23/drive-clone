@@ -6,7 +6,7 @@ import TableRow from "./tableRow";
 
 type Props<T> = { lastItemRef?: React.Ref<any> } & TableProps<T>
 
-const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, selectedRowDataId, dataKey, lastItemRef, listLoading }: Props<T>) => {
+const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, selectedRowDataId, dataKey, lastItemRef, listLoading, isLoading }: Props<T>) => {
 	const isSelectable = data?.length > 0
 
 
@@ -38,7 +38,7 @@ const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, selectedRowDataId
 
 				})}
 
-				{!data?.length && (
+				{!data?.length && (!isLoading && !listLoading) && (
 					<TableEmpty columns={columns} emptyIcon={emptyIcon} />
 				)}
 			</tbody>

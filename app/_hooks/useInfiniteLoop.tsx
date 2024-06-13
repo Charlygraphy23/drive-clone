@@ -3,17 +3,20 @@
 import { AsyncThunk } from '@reduxjs/toolkit';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../store';
+import { useAppDispatch } from '../store';
 
 type Props = {
     api: AsyncThunk<any, any, any>
     limit?: number,
     startPage?: number,
+    triggerOnMount?: boolean,
+    hasNext: boolean,
+    isFetching: boolean
 }
 
-const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
-    const { isFetching, hasNext } = useAppSelector(state => state.files)
+const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = false, hasNext = false, isFetching = false }: Props) => {
     const dispatch = useAppDispatch()
+    const initialMount = useRef<boolean>()
 
     const params = useParams<{ folderId: string }>()
     const lastItemRef = useRef(null);
@@ -23,10 +26,10 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
 
 
     const callback = useCallback<IntersectionObserverCallback>(async (itemList, observer) => {
+        console.log("Has Next ", hasNext)
         for (const item of itemList) {
             const inserted = item?.isIntersecting
             if (inserted && !isFetching && hasNext) {
-                console.log("I next ", hasNext, page + 1)
                 setPage(prev => {
                     prev = prev + 1
                     return prev
@@ -34,7 +37,7 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
                 try {
                     await dispatch(api({
                         limit,
-                        page: page + 1,
+                        page: page,
                         folderId: params?.folderId
                     }))
                 }
@@ -53,7 +56,6 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
     }, [isFetching, hasNext, page, dispatch, api, limit, params?.folderId]);
 
     useEffect(() => {
-        console.log("Iniitate use effect ",)
         const options = {
             root: scrollRef?.current,
             rootMargin: "0px",
@@ -69,6 +71,18 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1 }: Props) => {
             observer.disconnect()
         }
     }, [callback])
+
+
+    useEffect(() => {
+        if (!triggerOnMount) return
+        if (initialMount?.current) return;
+        dispatch(api({
+            limit,
+            page: page,
+            folderId: params?.folderId
+        }))
+        initialMount.current = true
+    }, [api, dispatch, limit, page, params?.folderId, triggerOnMount])
 
 
     return { lastItemRef, scrollRef }
