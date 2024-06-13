@@ -51,8 +51,8 @@ const ManageAccess = () => {
     const mutation = useMutation({ mutationFn: updateAccess })
     const session = useSession()
     const user = session?.data?.user
-    const folderId = modalState?.id
-    const resourceInfoById = resourceInfo[folderId]
+    const resourceId = modalState?.id
+    const resourceInfoById = resourceInfo[resourceId]
 
     const hasAccess = useMemo(() => {
         const access = resourceInfoById?.accessList?.find(a => a?.userInfo?._id === user?._id)
@@ -88,7 +88,7 @@ const ManageAccess = () => {
             return {
                 userInfo,
                 accessType: ACCESS_TYPE.READ,
-                resourceId: folderId as NonNullable<string>
+                resourceId: resourceId as NonNullable<string>
             }
         })
 
@@ -98,7 +98,7 @@ const ManageAccess = () => {
 
     const handleSubmit = async () => {
 
-        if (!folderId) return;
+        if (!resourceId) return;
 
         setIsLoading(true)
         const formatData = selectedAccess.map(access => ({
@@ -110,13 +110,13 @@ const ManageAccess = () => {
 
         await mutation.mutateAsync({
             accessList: formatData,
-            resourceId: folderId,
+            resourceId,
             deletedUserIds
         })
         toggleModal();
 
         dispatch(updateInfoByFolderId({
-            folderId,
+            resourceId,
             accesses: formatData,
         }))
         router.refresh()
@@ -172,7 +172,7 @@ const ManageAccess = () => {
         <ModalComponent id={MANAGE_ACCESS_MODAL_ID} isOpen={manageAccessModal} toggle={toggleModal}>
             <div className={style.manageAccess}>
                 <div className={style.header}>
-                    <p>Share `Folder name`</p>
+                    <p>Share <strong><small>{resourceInfoById?.name}</small></strong></p>
                     <ButtonClose />
                 </div>
 

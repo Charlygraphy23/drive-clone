@@ -2,6 +2,7 @@ import { UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { AccessService } from "@/app/lib/database/services/access.service";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
@@ -48,7 +49,7 @@ export const PATCH = async (req: NextRequest) => {
 
         const folderData = foundFolder.toJSON()
 
-        const folderExistWithName = await service.findOne({ name: updatedName, parentFolderId: folderData?.parentFolderId, _id: { $ne: id } })
+        const folderExistWithName = await service.findOne({ name: updatedName, parentFolderId: folderData?.parentFolderId, _id: { $ne: id }, dataType: DATA_TYPE.FOLDER })
 
         if (folderExistWithName) return response.status(422).send("Folder Exists with the name!")
 

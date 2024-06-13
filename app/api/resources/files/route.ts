@@ -1,6 +1,7 @@
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { UserSchemaType } from "@/app/lib/database/interfaces/user.interface";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
@@ -11,6 +12,7 @@ import { getServerSession } from "next-auth";
 import { revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
 import { extname } from "path";
+import { UpdateNamePayloadSchema } from "../../_validation/data.validation";
 
 export const POST = async (req: NextRequest) => {
     const mongoSession = await startSession()
@@ -116,3 +118,59 @@ export const POST = async (req: NextRequest) => {
         await mongoSession.endSession()
     }
 };
+
+
+export const PATCH = async (req: NextRequest) => {
+    const service = new ResourceService()
+    const response = new ApiResponse()
+
+
+    try {
+        const session = await getServerSession(authOptions)
+
+        if (!session) return response.status(401).send("Unauthorized")
+        const user = session.user
+
+        const body = await req?.json()
+        const { id, updatedName } = body;
+
+        const isValid = await UpdateNamePayloadSchema.isValid(body, { abortEarly: false })
+
+        if (!isValid) return response.status(422).send("Invalid Data")
+
+        await connectDB();
+
+        const hasAccess = await service.checkAccess(String(user._id), {
+            resourceId: id ?? "",
+            accessType: ACCESS_TYPE.WRITE
+        })
+
+        if (!hasAccess?.success) {
+            //TODO: redirect to another page not found / no permissions
+            return response.status(403).send("Unauthorized")
+        }
+
+        const fileInfo = await service.findOne({ _id: id })
+
+        if (!fileInfo) return response.status(422).send("No folder found!")
+
+        const fileData = fileInfo.toJSON()
+
+        const fileExistWithName = await service.findOne({ name: updatedName, parentFolderId: fileData?.parentFolderId, _id: { $ne: id } , dataType : DATA_TYPE.FILE })
+
+        if (fileExistWithName) return response.status(422).send("Folder Exists with the name!")
+
+        await service.updateName(id, updatedName)
+
+        revalidateTag(`files`)
+
+        return response.status(200).send("Updated")
+
+    }
+    catch (_err: unknown) {
+        const err = _err as { message: string }
+        console.error("Error - ", err)
+        return response.status(500).send(err?.message)
+    }
+
+}

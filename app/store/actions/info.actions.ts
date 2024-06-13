@@ -24,7 +24,7 @@ export type UpdateInfoByFolderIdType = {
         createdFor: string,
         userInfo: UserInfoType
     }[],
-    folderId: string,
+    resourceId: string,
 }
 
 export type UpdateInfoActionType = {

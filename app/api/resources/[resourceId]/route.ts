@@ -1,6 +1,7 @@
 import { authOptions } from "@/app/lib/authConfig"
 import { connectDB } from "@/app/lib/database/db"
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface"
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces"
 import { ResourceService } from "@/app/lib/database/services/resource.service"
 import { ApiResponse } from "@/app/utils/response"
 import mongoose from "mongoose"
@@ -123,6 +124,9 @@ export const POST = async (req: NextRequest, { params }: { params: { resourceId:
         }
 
         await service.restoreDeletedResources(resourceId, { withDeleted: true })
+        if (hasAccess?.resource?.dataType === DATA_TYPE.FOLDER) {
+            revalidateTag("folders")
+        } else revalidateTag("files")
         return response.status(200).send("Restored")
 
     }

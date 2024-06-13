@@ -59,8 +59,8 @@ export default createReducer(initialState, (builder) => {
             return state;
         })
         .addCase(updateInfoByFolderId, (state, action) => {
-            const { folderId, accesses } = action.payload
-            const existingAccess = state?.data?.[folderId]?.accessList ?? [];
+            const { resourceId, accesses } = action.payload
+            const existingAccess = state?.data?.[resourceId]?.accessList ?? [];
 
             const updatedAccess = accesses.reduce<AccessList[]>((prev, curr) => {
                 const hasAccess = existingAccess?.find((access) => access?._id === curr?.accessId)
@@ -76,7 +76,7 @@ export default createReducer(initialState, (builder) => {
                     const newAccess = {
                         accessType: curr.accessType,
                         origin: ACCESS_ORIGIN.SELF,
-                        resourceId: folderId,
+                        resourceId,
                         userInfo: curr?.userInfo,
                     } as AccessList
                     prev.push(newAccess)
@@ -85,8 +85,8 @@ export default createReducer(initialState, (builder) => {
             }, [])
 
             state.data = {
-                [folderId]: {
-                    ...state.data[folderId],
+                [resourceId]: {
+                    ...state.data[resourceId],
                     accessList: updatedAccess
                 }
             }

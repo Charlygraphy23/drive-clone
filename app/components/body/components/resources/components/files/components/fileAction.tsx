@@ -31,7 +31,20 @@ const FileAction = ({ data }: Props) => {
 	};
 
 	const handleTrash = (e: React.MouseEvent<HTMLElement>) => {
+		e.stopPropagation()
+		e.preventDefault()
 
+		dispatch(
+			toggleModal({
+				isOpen: true,
+				data: {
+					id: data?._id,
+					type: DATA_TYPE.FILE,
+					value: data.name ?? ""
+				},
+				name: "deleteModal",
+			})
+		);
 	}
 
 	return (

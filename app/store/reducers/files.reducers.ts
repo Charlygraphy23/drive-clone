@@ -1,6 +1,6 @@
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
-import { addBulkFiles, appendBulkFiles, createFile, pushFile, renameFile } from "../actions";
+import { addBulkFiles, appendBulkFiles, createFile, moveToTrashFileAsync, pushFile, renameFileAsync } from "../actions";
 
 const initialState = {
 	isFetching: false,
@@ -8,7 +8,8 @@ const initialState = {
 	loading: false,
 	data: [] as FileDataType[],
 	error: "",
-	hasNext: false
+	hasNext: false,
+	isSubmitting: false
 };
 
 export type FileDataType = { _id: string } & Partial<FilesAndFolderSchemaType>;
@@ -19,6 +20,7 @@ export type FileStateType = {
 	data: FileDataType[];
 	error: string;
 	hasNext?: boolean;
+	isSubmitting?: boolean;
 };
 export default createReducer(initialState, (builder) => {
 	builder
@@ -32,14 +34,25 @@ export default createReducer(initialState, (builder) => {
 			});
 			return state;
 		})
-		.addCase(renameFile, (state, action) => {
-			const payload = action?.payload;
-
-			state.data.forEach((file) => {
-				if (file?._id === payload?.resourceId) {
-					file.name = payload?.name;
-				}
+		.addCase(renameFileAsync.pending, (state) => {
+			state.isSubmitting = true
+			state.error = ""
+			return state;
+		})
+		.addCase(renameFileAsync.fulfilled, (state, action) => {
+			const payload = action.payload;
+			state.isSubmitting = false
+			state.error = ""
+			state.data = state.data.map((folder) => {
+				if (folder?._id === payload?._id) folder.name = payload?.updatedName;
+				return folder;
 			});
+
+			return state;
+		})
+		.addCase(renameFileAsync.rejected, (state, action) => {
+			state.isSubmitting = false
+			state.error = action.error?.message ?? ""
 			return state;
 		})
 		.addCase(addBulkFiles, (state, action) => {
@@ -60,6 +73,11 @@ export default createReducer(initialState, (builder) => {
 		.addCase(pushFile, (state, action) => {
 			const payload = action?.payload;
 			state.data.push(payload);
+			return state;
+		})
+		.addCase(moveToTrashFileAsync.fulfilled, (state, action) => {
+			const fileId = action?.payload?.id
+			state.data = state?.data?.filter(file => file?._id !== fileId)
 			return state;
 		})
 		.addCase(appendBulkFiles.fulfilled, (state, action) => {

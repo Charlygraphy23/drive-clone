@@ -7,7 +7,7 @@ import ModalComponent, { ButtonClose } from "@/app/components/modal";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
-	renameFile,
+	renameFileAsync,
 	renameFolderAsync,
 	toggleModal as toggleModalState
 } from "@/app/store/actions";
@@ -31,6 +31,7 @@ type Props = {
 const RenameModal = ({ isOpen, data }: Props) => {
 	const dispatch = useAppDispatch();
 	const { loading, error } = useAppSelector(state => state.folders);
+	const { isSubmitting } = useAppSelector(state => state.files);
 
 	const [name, setName] = useState<string>("");
 	const currName = useRef(name);
@@ -60,12 +61,12 @@ const RenameModal = ({ isOpen, data }: Props) => {
 	const handleModalSubmit = (event: FormEvent) => {
 		event.preventDefault();
 
-		if (loading) return;
+		if (loading || isSubmitting) return;
 
 		if (!name) return;
 
 		if (data && data.type === DATA_TYPE.FILE) {
-			dispatch(renameFile({ resourceId: data?.id, name }));
+			dispatch(renameFileAsync({ id: data?.id, updatedName: name, reset: resetModal }));
 		} else {
 			dispatch(renameFolderAsync({ id: data?.id, updatedName: name, reset: resetModal }));
 		}
@@ -99,7 +100,7 @@ const RenameModal = ({ isOpen, data }: Props) => {
 						type='submit'
 						className={`${style.submit} submit`}
 						submitText="Ok"
-						loading={loading}
+						loading={loading || isSubmitting}
 						loader="spin"
 					/>
 

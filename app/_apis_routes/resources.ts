@@ -34,6 +34,11 @@ export const updateFolderNameApi = async (payload: UpdateFolderNamePayload) => {
 }
 
 
+export const updateFileNameApi = async (payload: UpdateFolderNamePayload) => {
+    return await axiosInstance.patch('/resources/files', payload)
+}
+
+
 export const getResourceInfoByIdApi = async (resourceId: string, withDeleted?: boolean) => {
     let path = `/resources/${resourceId}`
 

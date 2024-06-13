@@ -1,8 +1,11 @@
 "use client";
 
 import EmptyInfoAnimation from '@/app/assets/empty-info.json';
+import { DATA_TYPE } from '@/app/lib/database/interfaces/files.interfaces';
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { toggleInfo } from "@/app/store/actions/info.actions";
+import Image from 'next/image';
+import { getFileIconByType } from '../fileListItem/utils/index.utils';
 import ResourceInfoLoader from "../loader/resourceInfloLoader";
 import LottiePlayer from "../lottiePlayer";
 import ManageAccess from './components/manageAccess';
@@ -14,7 +17,7 @@ import style from './style.module.scss';
 const ResourceDetails = () => {
     const { show, data, loading, selectedResourceId } = useAppSelector(state => state?.resourceInfo)
     const dispatch = useAppDispatch()
-    const folderInfo = data?.[selectedResourceId]
+    const resourceInfo = data?.[selectedResourceId]
 
     const toggleResourceInfo = () => {
         dispatch(toggleInfo())
@@ -26,13 +29,13 @@ const ResourceDetails = () => {
             <div className={style.body}>
                 <div className={style.header}>
                     <div className="d-flex align-items-center">
-                        <i className="bi bi-folder-fill"></i>
-                        <span>{folderInfo?.name}</span>
+                        {resourceInfo?.dataType === DATA_TYPE.FOLDER ? <i className="bi bi-folder-fill"></i> : resourceInfo?.mimeType && <Image className='me-2' src={getFileIconByType(resourceInfo?.mimeType ?? "")} width={20} height={20} alt={"file-icon"} />}
+                        <span>{resourceInfo?.name}</span>
                     </div>
 
                     <i className="bi bi-x" onClick={toggleResourceInfo}></i>
                 </div>
-                {loading ? <ResourceInfoLoader /> : !folderInfo ? <div className="w-100 d-flex justify-content-center align-items-center mt-4">
+                {loading ? <ResourceInfoLoader /> : !resourceInfo ? <div className="w-100 d-flex justify-content-center align-items-center mt-4">
                     <LottiePlayer animationData={EmptyInfoAnimation} loop width={200} height={200} />
                 </div> : <ResourceBody />}
             </div>

@@ -66,7 +66,7 @@ export const renameFolderAsync = createAsyncThunk<{ _id: string, updatedName: st
 	}
 })
 
-export const moveToTrashAsync = createAsyncThunk<{ id: string }, { id: string }>("moveToTrash", async ({ id }, _thunkAPI) => {
+export const moveToTrashFolderAsync = createAsyncThunk<{ id: string }, { id: string }>("moveToTrash", async ({ id }, _thunkAPI) => {
 	try {
 		await moveToTrashResourceApi(id)
 		return {

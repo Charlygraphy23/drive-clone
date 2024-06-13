@@ -1,9 +1,11 @@
 import { DELETE_CONFIRMATION } from '@/app/_config/const';
 import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
+import { DATA_TYPE } from '@/app/lib/database/interfaces/files.interfaces';
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import {
-    moveToTrashAsync,
+    moveToTrashFileAsync,
+    moveToTrashFolderAsync,
     toggleModal as toggleModalState
 } from "@/app/store/actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
@@ -40,10 +42,21 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
 
         try {
             setLoading(true)
-            await dispatch(moveToTrashAsync({ id: data?.id })).then(data => {
-                if (data?.meta?.requestStatus === "rejected") return Promise.reject()
-                return data
-            })
+
+            if (data?.type === DATA_TYPE.FILE) {
+                await dispatch(moveToTrashFileAsync({ id: data?.id })).then(data => {
+                    if (data?.meta?.requestStatus === "rejected") return Promise.reject()
+                    return data
+                })
+            }
+            else {
+                await dispatch(moveToTrashFolderAsync({ id: data?.id })).then(data => {
+                    if (data?.meta?.requestStatus === "rejected") return Promise.reject()
+                    return data
+                })
+            }
+
+
             setLoading(false)
             toggleModal()
         }
