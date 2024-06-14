@@ -25,9 +25,18 @@ export type BinStateType = {
 };
 export default createReducer(initialState, (builder) => {
     builder
-        .addCase(restoreFromTrashAsync.pending, (state, action) => {
-            const payload = action?.meta.requestId
-            state.data = state?.data.filter(resource => resource?._id === payload)
+        .addCase(restoreFromTrashAsync.pending, (state) => {
+            state.isSubmitting = true
+            return state;
+        })
+        .addCase(restoreFromTrashAsync.fulfilled, (state, action) => {
+            const payload = action?.payload
+            state.isSubmitting = false
+            state.data = state?.data.filter(resource => resource?._id !== payload)
+            return state;
+        })
+        .addCase(restoreFromTrashAsync.rejected, (state) => {
+            state.isSubmitting = false
             return state;
         })
         .addCase(appendBulkResources.pending, (state) => {

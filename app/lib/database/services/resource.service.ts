@@ -1,10 +1,10 @@
-import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
+import { getChildrenAccessListByFolderId } from "@/app/api/resources/_fetch";
 import { ResourceDatasetType } from "@/app/components/body/components/resources/interfaces/index.interface";
 import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
 import mimeType from "mime-types";
-import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
+import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType, UploadFileType } from "../interfaces/files.interfaces";
@@ -103,17 +103,18 @@ export class ResourceService {
         if (folderId) {
             initialQuery["parentFolderId"] = new Types.ObjectId(folderId);
         } else {
-            initialQuery.$expr = {
-                $or: [
-                    {
-                        $eq: [{ $type: "$parentFolderId" }, "missing"]
-                    },
-                    {
-                        $lte: ["$parentFolderId", null]
-                    }
-                ]
+            if (!showDeleted) {
+                initialQuery.$expr = {
+                    $or: [
+                        {
+                            $eq: [{ $type: "$parentFolderId" }, "missing"]
+                        },
+                        {
+                            $lte: ["$parentFolderId", null]
+                        }
+                    ]
+                }
             }
-
         }
 
         if (showDeleted) {
@@ -346,23 +347,24 @@ export class ResourceService {
     }
 
     async softDeleteResourceById(resourceId: string, options?: SessionOption) {
-        const query = getListOfChildFoldersQuery(resourceId);
+        // const query = getListOfChildFoldersQuery(resourceId);
 
-        const folders = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
-        const folderIdsToDelete = folders?.map(folder => folder?._id);
+        // const folders = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
+        // const folderIdsToDelete = folders?.map(folder => folder?._id);
 
         const _options = options as MongooseUpdateQueryOptions
-        return await Model.updateMany({ _id: { $in: folderIdsToDelete } }, { isDeleted: true }, _options)
+        return await Model.updateMany({ _id: { $in: [new mongoose.Types.ObjectId(resourceId)] } }, { isDeleted: true }, _options)
     }
 
     async restoreDeletedResources(resourceId: string, options?: SessionOption) {
-        const query = getListOfChildFoldersQuery(resourceId);
+        // const query = getListOfChildFoldersQuery(resourceId);
 
-        const folders = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
-        const folderIdsToDelete = folders?.map(folder => folder?._id);
+        // const resources = (await Model.aggregate(query, options)) as Array<{ _id: string } & FilesAndFolderSchemaType>;
+        // const resourceIdsToDelete = resources?.map(folder => folder?._id);
+        // console.log("resourceIdsToDelete ", resourceIdsToDelete)
 
         const _options = options as MongooseUpdateQueryOptions
-        return await Model.updateMany({ _id: { $in: folderIdsToDelete } }, { isDeleted: false }, _options)
+        return await Model.updateMany({ _id: { $in: [new mongoose.Types.ObjectId(resourceId)] } }, { isDeleted: false }, _options)
     }
 
     async deleteForever(resourceId: string, options?: SessionOption) {

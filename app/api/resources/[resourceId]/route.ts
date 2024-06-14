@@ -85,7 +85,10 @@ export const PATCH = async (req: NextRequest, { params }: { params: { resourceId
         }
 
         await service.softDeleteResourceById(resourceId)
-        revalidateTag("folders")
+        if (hasAccess?.resource?.dataType === DATA_TYPE.FOLDER) {
+            revalidateTag("folders")
+        } else revalidateTag("files")
+        revalidateTag("resources")
         return response.status(200).send("Deleted")
 
     }
@@ -124,6 +127,7 @@ export const POST = async (req: NextRequest, { params }: { params: { resourceId:
         }
 
         await service.restoreDeletedResources(resourceId, { withDeleted: true })
+        revalidateTag("resources")
         if (hasAccess?.resource?.dataType === DATA_TYPE.FOLDER) {
             revalidateTag("folders")
         } else revalidateTag("files")
@@ -165,6 +169,7 @@ export const DELETE = async (req: NextRequest, { params }: { params: { resourceI
         }
 
         await service.deleteForever(resourceId, { withDeleted: true })
+        revalidateTag("resources")
         return response.status(200).send("Restored")
 
     }

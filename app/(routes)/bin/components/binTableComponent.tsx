@@ -18,7 +18,7 @@ import style from "../style.module.scss";
 
 const BinTableComponent = () => {
 	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
-	const { data, loading, isFetching, hasNext } = useAppSelector(state => state.bin)
+	const { data, loading, isFetching, hasNext, isSubmitting } = useAppSelector(state => state.bin)
 	const deleteMutation = useMutation({ mutationFn: deleteForeverApi });
 	const router = useRouter()
 	const { columns } = useTableColumns();
@@ -29,7 +29,8 @@ const BinTableComponent = () => {
 		startPage: 1,
 		triggerOnMount: true,
 		isFetching,
-		hasNext
+		hasNext,
+		showDeleted: true
 	})
 
 	const onRowClick = (val: FolderDataType) => {
@@ -55,7 +56,7 @@ const BinTableComponent = () => {
 				columns={columns}
 				data={data}
 				emptyIcon={EmptyTableIcon}
-				isLoading={mutation?.isPending}
+				isLoading={isSubmitting}
 				onRowClick={onRowClick}
 				selectedRowDataId={selectedResourceId}
 				dataKey={"_id"}

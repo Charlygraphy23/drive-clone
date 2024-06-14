@@ -2,7 +2,7 @@
 
 import { AsyncThunk } from '@reduxjs/toolkit';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAppDispatch } from '../store';
 
 type Props = {
@@ -11,10 +11,11 @@ type Props = {
     startPage?: number,
     triggerOnMount?: boolean,
     hasNext: boolean,
-    isFetching: boolean
+    isFetching: boolean,
+    showDeleted?: boolean
 }
 
-const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = false, hasNext = false, isFetching = false }: Props) => {
+const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = false, hasNext = false, isFetching = false, showDeleted }: Props) => {
     const dispatch = useAppDispatch()
     const initialMount = useRef<boolean>()
 
@@ -22,6 +23,13 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = fals
     const lastItemRef = useRef(null);
     const scrollRef = useRef(null);
     const [page, setPage] = useState(startPage)
+
+    const API = useMemo(() => api({
+        limit,
+        page: page,
+        folderId: params?.folderId ?? "",
+        showDeleted
+    }), [api, limit, page, params?.folderId, showDeleted])
 
 
 
@@ -35,11 +43,7 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = fals
                     return prev
                 })
                 try {
-                    await dispatch(api({
-                        limit,
-                        page: page,
-                        folderId: params?.folderId
-                    }))
+                    await dispatch(API)
                 }
                 catch (err) {
                     console.log("ERROR", err)
@@ -53,7 +57,7 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = fals
             }
         }
 
-    }, [isFetching, hasNext, page, dispatch, api, limit, params?.folderId]);
+    }, [hasNext, isFetching, dispatch, API]);
 
     useEffect(() => {
         const options = {
@@ -76,13 +80,9 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = fals
     useEffect(() => {
         if (!triggerOnMount) return
         if (initialMount?.current) return;
-        dispatch(api({
-            limit,
-            page: page,
-            folderId: params?.folderId
-        }))
+        dispatch(API)
         initialMount.current = true
-    }, [api, dispatch, limit, page, params?.folderId, triggerOnMount])
+    }, [API, api, dispatch, limit, page, params.folderId, triggerOnMount])
 
 
     return { lastItemRef, scrollRef }
