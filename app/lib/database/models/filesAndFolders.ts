@@ -43,7 +43,8 @@ const schema = new mongoose.Schema<FilesAndFolderSchemaType>({
     },
     mimeType: {
         type: String,
-    }
+    },
+
 }, { timestamps: true })
 
 

@@ -19,6 +19,18 @@ export type FetchAllResourceResponseType = {
     next?: boolean;
 }
 
+export const addBulkResources = createAsyncThunk<FetchAllResourceResponseType, FetchAllResourceType>("addBulkResources", async (payload, _thunkAPI) => {
+    try {
+        const data = await fetchAllResource(payload)
+        return data as FetchAllResourceResponseType
+    }
+    catch (err) {
+        const errors = ErrorHandler(err)
+        _thunkAPI.rejectWithValue(errors)
+        return Promise.reject(errors)
+    }
+})
+
 export const appendBulkResources = createAsyncThunk<FetchAllResourceResponseType, FetchAllResourceType>("appendBulkResources", async (payload, _thunkAPI) => {
     try {
         const data = await fetchAllResource(payload)

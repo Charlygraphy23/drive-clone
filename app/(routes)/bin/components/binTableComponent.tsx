@@ -4,7 +4,7 @@ import { deleteForeverApi } from "@/app/_apis_routes/resources";
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import { appendBulkResources } from "@/app/store/actions/bin.actions";
+import { addBulkResources, appendBulkResources } from "@/app/store/actions/bin.actions";
 import { clearSelectedFolderId, getResourceInfoAsync } from "@/app/store/actions/info.actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import EmptyTableIcon from "@app/assets/emptyTableIcon.svg";
@@ -27,7 +27,7 @@ const BinTableComponent = () => {
 		api: appendBulkResources,
 		limit: 10,
 		startPage: 1,
-		triggerOnMount: true,
+		triggerOnMount: addBulkResources,
 		isFetching,
 		hasNext,
 		showDeleted: true

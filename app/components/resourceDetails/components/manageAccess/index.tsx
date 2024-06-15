@@ -125,6 +125,10 @@ const ManageAccess = () => {
     }
 
     const onAccessTypeChange = (type: ACCESS_TYPE, index: number) => {
+
+        if (!hasAccess || selectedAccess?.[index]?.userInfo?._id === user?._id) return;
+
+
         setSelectedAccess(prev => {
             const newArray = Array.from(prev)
             newArray[index] = {
@@ -207,32 +211,34 @@ const ManageAccess = () => {
                                     <span>{access?.userInfo?.email}</span>
                                 </div>
 
-                                {resourceInfoById?.ownerInfo?._id === access?.userInfo?._id ?
-                                    <p style={{ opacity: 0.4 }}>Owner</p> :
-                                    <Select
-                                        className={style.selectAccess}
-                                        defaultValue={access?.accessType}
-                                        disabled={!hasAccess}
-                                        options={[
-                                            { value: ACCESS_TYPE.WRITE, label: 'Write', disabled: !hasAccess },
-                                            { value: ACCESS_TYPE.READ, label: 'Read', disabled: !hasAccess },
-                                        ]}
-                                        popupClassName="selectAccessType"
-                                        onSelect={(value) => onAccessTypeChange(value, i)}
-                                        dropdownRender={(menu) => (
-                                            <>
-                                                {menu}
-                                                <Divider style={{ margin: '8px 0' }} />
-                                                <Space style={{ padding: '0 8px 4px', cursor: "pointer" }} onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    e.preventDefault()
-                                                    handleRemove(access)
-                                                }}>
-                                                    Remove Access
-                                                </Space>
-                                            </>
-                                        )}
-                                    />}
+                                {resourceInfoById?.ownerInfo?._id === access?.userInfo?._id
+                                    ? <p style={{ opacity: 0.4 }}>Owner</p>
+                                    : (!hasAccess || access?.userInfo?._id === user?._id)
+                                        ? null
+                                        : <Select
+                                            className={style.selectAccess}
+                                            defaultValue={access?.accessType}
+                                            disabled={!hasAccess || access?.userInfo?._id === user?._id}
+                                            options={[
+                                                { value: ACCESS_TYPE.WRITE, label: 'Write', disabled: !hasAccess || access?.userInfo?._id === user?._id },
+                                                { value: ACCESS_TYPE.READ, label: 'Read', disabled: !hasAccess || access?.userInfo?._id === user?._id },
+                                            ]}
+                                            popupClassName="selectAccessType"
+                                            onSelect={(value) => onAccessTypeChange(value, i)}
+                                            dropdownRender={(menu) => (
+                                                <>
+                                                    {menu}
+                                                    <Divider style={{ margin: '8px 0' }} />
+                                                    <Space style={{ padding: '0 8px 4px', cursor: "pointer" }} onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        e.preventDefault()
+                                                        handleRemove(access)
+                                                    }}>
+                                                        Remove Access
+                                                    </Space>
+                                                </>
+                                            )}
+                                        />}
                             </div>
                         </div>)
                     }

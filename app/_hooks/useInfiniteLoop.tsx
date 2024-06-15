@@ -9,13 +9,13 @@ type Props = {
     api: AsyncThunk<any, any, any>
     limit?: number,
     startPage?: number,
-    triggerOnMount?: boolean,
+    triggerOnMount?: AsyncThunk<any, any, any>,
     hasNext: boolean,
     isFetching: boolean,
     showDeleted?: boolean
 }
 
-const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = false, hasNext = false, isFetching = false, showDeleted }: Props) => {
+const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNext = false, isFetching = false, showDeleted }: Props) => {
     const dispatch = useAppDispatch()
     const initialMount = useRef<boolean>()
 
@@ -80,9 +80,14 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount = fals
     useEffect(() => {
         if (!triggerOnMount) return
         if (initialMount?.current) return;
-        dispatch(API)
+        dispatch(triggerOnMount({
+            limit,
+            page: page,
+            folderId: params?.folderId ?? "",
+            showDeleted
+        }))
         initialMount.current = true
-    }, [API, api, dispatch, limit, page, params.folderId, triggerOnMount])
+    }, [API, api, dispatch, limit, page, params?.folderId, showDeleted, triggerOnMount])
 
 
     return { lastItemRef, scrollRef }

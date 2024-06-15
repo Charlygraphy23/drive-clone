@@ -1,6 +1,6 @@
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
-import { appendBulkResources, restoreFromTrashAsync } from "../actions/bin.actions";
+import { addBulkResources, appendBulkResources, restoreFromTrashAsync } from "../actions/bin.actions";
 import { FileDataType } from "./files.reducers";
 
 const initialState = {
@@ -39,6 +39,30 @@ export default createReducer(initialState, (builder) => {
             state.isSubmitting = false
             return state;
         })
+        .addCase(addBulkResources.pending, (state) => {
+            state.loading = true
+            state.isFetching = true
+            state.isFetched = false
+            state.error = ""
+            state.hasNext = false
+            return state;
+        })
+        .addCase(addBulkResources.fulfilled, (state, action) => {
+            const payload = action?.payload;
+            const data = payload.resources
+            state.data = data
+            state.isFetched = true
+            state.hasNext = !!payload.next
+            return state;
+        })
+        .addCase(addBulkResources.rejected, (state, action) => {
+            const payload = action?.error.message;
+            state.isFetched = false
+            state.error = payload ?? ""
+            state.hasNext = false
+
+            return state;
+        })
         .addCase(appendBulkResources.pending, (state) => {
             state.loading = true
             state.isFetching = true
@@ -64,6 +88,11 @@ export default createReducer(initialState, (builder) => {
             return state;
         })
         .addMatcher(appendBulkResources.settled, (state) => {
+            state.loading = false
+            state.isFetching = false
+            return state;
+        })
+        .addMatcher(addBulkResources.settled, (state) => {
             state.loading = false
             state.isFetching = false
             return state;
