@@ -2,13 +2,11 @@ import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/a
 import { ResourceDatasetType } from "@/app/components/body/components/resources/interfaces/index.interface";
 import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
-import { DefaultedQueryObserverOptions } from "@tanstack/react-query";
 import mimeType from "mime-types";
 import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType, UploadFileType } from "../interfaces/files.interfaces";
-import { AccessModal } from "../models/access";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
 import { AccessService } from "./access.service";
 
@@ -35,6 +33,11 @@ export class ResourceService {
                 }
             },
         ]
+    }
+
+
+    async find(filter: FilterQuery<FilesAndFolderDocument>, limit = 0, options?: SessionOption) {
+        return Model.find(filter, null, options).limit(limit);
     }
 
     async checkAccess(userId: string, filters: Partial<AccessSchemaType>, options?: SessionOption): Promise<{ data: AccessDocumentType | null, success: boolean, resource?: FilesAndFolderDocument | null }> {
@@ -117,6 +120,7 @@ export class ResourceService {
 
         if (showDeleted) {
             initialQuery["isDeleted"] = { $eq: true }
+            initialQuery["deletedForever"] = { $ne: true }
         }
 
         if (resourceType) {
@@ -401,19 +405,11 @@ export class ResourceService {
     async deleteForever(resourceId: string, options?: SessionOption) {
         const folders = (await getChildrenAccessListByFolderId(resourceId, options)) as Array<{ _id: string, accesses: Array<{ _id: string } & AccessSchemaType> } & FilesAndFolderSchemaType>;
         console.log("folders", JSON.stringify(folders));
-
-        const accessIdsToDelete: string[] = [] as string[]
         const folderIdsToDelete = folders?.map(folder => {
-            const accessIds = folder?.accesses?.map(access => access?._id)
-            accessIdsToDelete.push(...accessIds)
             return folder?._id
         });
-
-        const _options = options as DefaultedQueryObserverOptions
-        return await Promise.all([
-            Model.deleteMany({ _id: { $in: folderIdsToDelete } }, _options),
-            AccessModal.deleteMany({ _id: { $in: accessIdsToDelete } }, _options)
-        ])
+        const updateOptions = options as MongooseUpdateQueryOptions
+        return Model.updateMany({ _id: { $in: folderIdsToDelete } }, { deletedForever: true }, updateOptions)
     }
 
     async getResourceFromS3({ key }: {
@@ -432,7 +428,7 @@ export class ResourceService {
     async upload(payload: UploadFileType, options: SessionOption) {
         const accessService = new AccessService()
 
-        const key = `${payload?.userId}/${payload?.fileName}`
+        const key = `${payload?.userId}/${Date.now() + "_" + payload?.fileName}`
         const encryptedKey = CRYPTO.encryptWithBase64(key)
 
         const s3 = new LOCAL_S3({

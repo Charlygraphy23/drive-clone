@@ -9,7 +9,7 @@ import { FetchAllResourceResponseType } from "../store/actions";
 
 
 
-export const fetchFolderData = unstable_cache(async (folderId?: string) => {
+export const fetchFolderData = unstable_cache(async (folderId?: string, _userId?: string) => {
     "use server"
     const dataset = await getResources(folderId, DATA_TYPE.FOLDER, false, "show");
 
@@ -19,10 +19,10 @@ export const fetchFolderData = unstable_cache(async (folderId?: string) => {
     }
     return redirect("/", RedirectType.replace)
 }, ["folders"], {
-    tags: ["folders"]
+    tags: ["folders",]
 })
 
-export const fetchFileData = unstable_cache(async (folderId?: string) => {
+export const fetchFileData = unstable_cache(async (folderId?: string, _userId?: string) => {
     "use server"
     const dataset = await getResources(folderId, DATA_TYPE.FILE, false, "off", 1, 10);
 
@@ -48,7 +48,7 @@ export const fetchAllResource = unstable_cache(async ({
     limit: number;
     showDeleted?: boolean;
     shared?: "only" | "show" | "off"
-}) => {
+}, _userId?: string) => {
     "use server"
     const dataset = await getResources("", null, showDeleted, shared, page, limit);
 

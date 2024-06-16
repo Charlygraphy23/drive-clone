@@ -44,6 +44,16 @@ const schema = new mongoose.Schema<FilesAndFolderSchemaType>({
     mimeType: {
         type: String,
     },
+    deletedForever: {
+        type: Boolean,
+        index: true,
+        default: false
+    },
+    pickedAtForDelete: {
+        type: Date,
+        index: true,
+        default: null
+    }
 
 }, { timestamps: true })
 
@@ -53,56 +63,56 @@ schema.pre('find', function () {
     const options = this.getOptions()
 
     if (!options?.withDeleted) {
-        this.where({ isDeleted: { $ne: true } });
+        this.where({ isDeleted: { $ne: true }, deletedForever: { $ne: true } });
     }
 });
 schema.pre('findOneAndDelete', function () {
     const options = this.getOptions()
 
     if (!options?.withDeleted) {
-        this.where({ isDeleted: { $ne: true } });
+        this.where({ isDeleted: { $ne: true }, deletedForever: { $ne: true } });
     }
 });
 schema.pre('findOneAndUpdate', function () {
     const options = this.getOptions()
 
     if (!options?.withDeleted) {
-        this.where({ isDeleted: { $ne: true } });
+        this.where({ isDeleted: { $ne: true }, deletedForever: { $ne: true } });
     }
 });
 schema.pre('updateMany', function () {
     const options = this.getOptions()
 
     if (!options?.withDeleted) {
-        this.where({ isDeleted: { $ne: true } });
+        this.where({ isDeleted: { $ne: true }, deletedForever: { $ne: true } });
     }
 });
 schema.pre('updateOne', function () {
     const options = this.getOptions()
 
     if (!options?.withDeleted) {
-        this.where({ isDeleted: { $ne: true } });
+        this.where({ isDeleted: { $ne: true }, deletedForever: { $ne: true } });
     }
 });
 schema.pre('findOneAndReplace', function () {
     const options = this.getOptions()
 
     if (!options?.withDeleted) {
-        this.where({ isDeleted: { $ne: true } });
+        this.where({ isDeleted: { $ne: true }, deletedForever: { $ne: true } });
     }
 });
 schema.pre('findOne', function () {
     const options = this.getOptions()
 
     if (!options?.withDeleted) {
-        this.where({ isDeleted: { $ne: true } });
+        this.where({ isDeleted: { $ne: true }, deletedForever: { $ne: true } });
     }
 });
 schema.pre('aggregate', function () {
     const options = this.options
 
     if (!options?.withDeleted) {
-        this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+        this.pipeline().unshift({ $match: { isDeleted: { $ne: true }, deletedForever: { $ne: true } } });
     }
 });
 

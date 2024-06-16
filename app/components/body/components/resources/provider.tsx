@@ -6,6 +6,7 @@ import ResourceLoader from "@/app/components/loader/resourceLoader";
 import { useAppDispatch, useAppSelector, useAppStore } from "@/app/store";
 import { addBulkFiles, addBulkFolder, appendBulkFiles, toggleModal } from "@/app/store/actions";
 import { clearSelectedFolderId } from "@/app/store/actions/info.actions";
+import { Session } from "next-auth";
 import { Children, PropsWithChildren, cloneElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import DeleteConfirmationModal from "../modals/delete";
 import NewfolderModal from "../modals/newfolder";
@@ -14,9 +15,10 @@ import style from "./style.module.scss";
 
 type Props = {
 	id?: string | null
+	user?: Session["user"]
 } & PropsWithChildren;
 
-const FileAndFolderStateProvider = ({ children, id }: Props) => {
+const FileAndFolderStateProvider = ({ children, id, user }: Props) => {
 	const initializeData = useRef<string | null | undefined>(null);
 	const store = useAppStore()
 	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
@@ -115,15 +117,16 @@ const FileAndFolderStateProvider = ({ children, id }: Props) => {
 	}, [onClear, withParentElement])
 
 	const handleInitialDataLoad = useCallback(async () => {
+		console.log({ user })
 		const [folders, filesData] = await Promise.all([
-			fetchFolderData(id ?? ""),
-			fetchFileData(id ?? "")
+			fetchFolderData(id ?? "", String(user?._id)),
+			fetchFileData(id ?? "", String(user?._id))
 		])
 		console.log("filesData", filesData)
 		store.dispatch(addBulkFiles({ data: filesData?.resources, next: filesData?.next }))
 		store.dispatch(addBulkFolder({ data: folders }))
 		setLoader(false)
-	}, [id, store])
+	}, [id, store, user])
 
 
 

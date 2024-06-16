@@ -52,7 +52,7 @@ export const getListOfChildFoldersQuery = (folderId: string): PipelineStage[] =>
     return [
         {
             $match: {
-                _id: new Types.ObjectId(folderId)
+                _id: new Types.ObjectId(folderId),
             }
         },
 
@@ -109,6 +109,10 @@ export const getListOfChildFoldersQuery = (folderId: string): PipelineStage[] =>
                 createdBy: 1,
                 parentFolderId: 1,
                 dataType: 1,
+                isDeleted: 1,
+                key: 1,
+                fileSize: 1,
+                mimeType: 1,
                 depth: {
                     $cond: {
                         if: {

@@ -1,36 +1,37 @@
 "use client";
 
-import { deleteForeverApi } from "@/app/_apis_routes/resources";
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import { addBulkResources, appendBulkResources } from "@/app/store/actions/bin.actions";
+import { addBulkResourcesAsync, appendBulkResources, deleteBinResourceByIdAsync } from "@/app/store/actions/bin.actions";
 import { clearSelectedFolderId, getResourceInfoAsync } from "@/app/store/actions/info.actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
 import EmptyTableIcon from "@app/assets/emptyTableIcon.svg";
 import Table from "@app/components/table";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
+import { useState } from "react";
 import useTableColumns from "../hooks/useTableColumns";
 import style from "../style.module.scss";
 
+type Props = {
+	user?: Session["user"]
+}
 
-
-const BinTableComponent = () => {
+const BinTableComponent = ({ user }: Props) => {
+	const [isDeleting, setIsDeleting] = useState(false)
 	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
 	const { data, loading, isFetching, hasNext, isSubmitting } = useAppSelector(state => state.bin)
-	const deleteMutation = useMutation({ mutationFn: deleteForeverApi });
-	const router = useRouter()
 	const { columns } = useTableColumns();
 	const dispatch = useAppDispatch()
 	const { lastItemRef, scrollRef } = useInfiniteLoop({
 		api: appendBulkResources,
 		limit: 10,
 		startPage: 1,
-		triggerOnMount: addBulkResources,
+		triggerOnMount: addBulkResourcesAsync,
 		isFetching,
 		hasNext,
-		showDeleted: true
+		showDeleted: true,
+		user
 	})
 
 	const onRowClick = (val: FolderDataType) => {
@@ -42,11 +43,13 @@ const BinTableComponent = () => {
 	}
 
 	const handleSubmit = async (toggle: () => void, resourceId: string) => {
-		if (deleteMutation?.isPending) return;
-		await deleteMutation?.mutateAsync(resourceId);
-		toggle();
+		if (isDeleting) return;
+
+		setIsDeleting(true)
+		await dispatch(deleteBinResourceByIdAsync({ resourceId }))
+		setIsDeleting(false)
 		dispatch(clearSelectedFolderId())
-		router.refresh()
+		toggle();
 	}
 
 	return (
@@ -66,7 +69,7 @@ const BinTableComponent = () => {
 			<ConfirmationModalComponent
 				onSubmit={handleSubmit}
 				message='Are you want to delete?'
-				isLoading={deleteMutation?.isPending}
+				isLoading={isDeleting}
 			/>
 		</div>
 	);

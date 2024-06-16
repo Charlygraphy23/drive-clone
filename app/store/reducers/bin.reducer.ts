@@ -1,6 +1,6 @@
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
-import { addBulkResources, appendBulkResources, restoreFromTrashAsync } from "../actions/bin.actions";
+import { addBulkResourcesAsync, appendBulkResources, deleteBinResourceByIdAsync, restoreFromTrashAsync } from "../actions/bin.actions";
 import { FileDataType } from "./files.reducers";
 
 const initialState = {
@@ -25,6 +25,20 @@ export type BinStateType = {
 };
 export default createReducer(initialState, (builder) => {
     builder
+        .addCase(deleteBinResourceByIdAsync.pending, (state) => {
+            state.isSubmitting = true
+            return state;
+        })
+        .addCase(deleteBinResourceByIdAsync.fulfilled, (state, action) => {
+            const payload = action?.payload
+            state.isSubmitting = false
+            state.data = state?.data.filter(resource => resource?._id !== payload)
+            return state;
+        })
+        .addCase(deleteBinResourceByIdAsync.rejected, (state) => {
+            state.isSubmitting = true
+            return state;
+        })
         .addCase(restoreFromTrashAsync.pending, (state) => {
             state.isSubmitting = true
             return state;
@@ -39,7 +53,7 @@ export default createReducer(initialState, (builder) => {
             state.isSubmitting = false
             return state;
         })
-        .addCase(addBulkResources.pending, (state) => {
+        .addCase(addBulkResourcesAsync.pending, (state) => {
             state.loading = true
             state.isFetching = true
             state.isFetched = false
@@ -47,7 +61,7 @@ export default createReducer(initialState, (builder) => {
             state.hasNext = false
             return state;
         })
-        .addCase(addBulkResources.fulfilled, (state, action) => {
+        .addCase(addBulkResourcesAsync.fulfilled, (state, action) => {
             const payload = action?.payload;
             const data = payload.resources
             state.data = data
@@ -55,7 +69,7 @@ export default createReducer(initialState, (builder) => {
             state.hasNext = !!payload.next
             return state;
         })
-        .addCase(addBulkResources.rejected, (state, action) => {
+        .addCase(addBulkResourcesAsync.rejected, (state, action) => {
             const payload = action?.error.message;
             state.isFetched = false
             state.error = payload ?? ""
@@ -92,7 +106,7 @@ export default createReducer(initialState, (builder) => {
             state.isFetching = false
             return state;
         })
-        .addMatcher(addBulkResources.settled, (state) => {
+        .addMatcher(addBulkResourcesAsync.settled, (state) => {
             state.loading = false
             state.isFetching = false
             return state;

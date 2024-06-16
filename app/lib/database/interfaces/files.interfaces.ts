@@ -16,7 +16,9 @@ export interface FilesAndFolderSchemaType {
     key?: string,
     fileSize?: number,
     mimeType?: string,
-    deletedParentFolderId?: string | mongoose.Types.ObjectId
+    deletedParentFolderId?: string | mongoose.Types.ObjectId,
+    deletedForever?: boolean,
+    pickedAtForDelete?: Date | string | null
 }
 
 export interface FilesAndFolderDocument extends FilesAndFolderSchemaType, Document { }

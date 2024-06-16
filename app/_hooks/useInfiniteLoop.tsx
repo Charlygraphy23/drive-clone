@@ -1,6 +1,7 @@
 "use client"
 
 import { AsyncThunk } from '@reduxjs/toolkit';
+import { Session } from 'next-auth';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAppDispatch } from '../store';
@@ -13,9 +14,10 @@ type Props = {
     hasNext: boolean,
     isFetching: boolean,
     showDeleted?: boolean
+    user?: Session["user"]
 }
 
-const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNext = false, isFetching = false, showDeleted }: Props) => {
+const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNext = false, isFetching = false, showDeleted, user }: Props) => {
     const dispatch = useAppDispatch()
     const initialMount = useRef<boolean>()
 
@@ -28,8 +30,9 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
         limit,
         page: page,
         folderId: params?.folderId ?? "",
-        showDeleted
-    }), [api, limit, page, params?.folderId, showDeleted])
+        showDeleted,
+        user
+    }), [api, limit, page, params?.folderId, showDeleted, user])
 
 
 
@@ -84,10 +87,11 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
             limit,
             page: page,
             folderId: params?.folderId ?? "",
-            showDeleted
+            showDeleted,
+            user
         }))
         initialMount.current = true
-    }, [API, api, dispatch, limit, page, params?.folderId, showDeleted, triggerOnMount])
+    }, [API, api, dispatch, limit, page, params?.folderId, showDeleted, triggerOnMount, user])
 
 
     return { lastItemRef, scrollRef }
