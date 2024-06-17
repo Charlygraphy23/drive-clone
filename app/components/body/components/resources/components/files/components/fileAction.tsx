@@ -1,6 +1,7 @@
 "use client";
 
 import MyDropdown from "@/app/components/dropdown";
+import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { toggleModal } from "@/app/store/actions";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
@@ -8,10 +9,12 @@ import { useDispatch } from "react-redux";
 
 type Props = {
 	data: FileDataType;
+	isShared?: boolean;
 };
 
-const FileAction = ({ data }: Props) => {
+const FileAction = ({ data, isShared }: Props) => {
 	const dispatch = useDispatch();
+	const access = data?.access
 
 	const handleRenameClick = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
@@ -30,9 +33,26 @@ const FileAction = ({ data }: Props) => {
 		);
 	};
 
+	const handleRemoveAccess = () => {
+		dispatch(
+			toggleModal({
+				isOpen: true,
+				data: {
+					id: data?._id,
+					type: DATA_TYPE.FILE,
+					value: data?.access?._id
+				},
+				name: "confirmModal",
+			})
+		);
+	}
+
 	const handleTrash = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
 		e.preventDefault()
+
+		if (isShared) return handleRemoveAccess()
+
 
 		dispatch(
 			toggleModal({
@@ -56,9 +76,11 @@ const FileAction = ({ data }: Props) => {
 				}}></i>,
 			}}>
 			<MyDropdown.Menu>
-				<MyDropdown.List onClick={handleRenameClick}>Rename</MyDropdown.List>
-				<MyDropdown.List divider></MyDropdown.List>
-				<MyDropdown.List onClick={handleTrash}>Move to trash</MyDropdown.List>
+				{(!isShared || (isShared && access.accessType === ACCESS_TYPE.WRITE)) && <>
+					<MyDropdown.List onClick={handleRenameClick}>Rename</MyDropdown.List>
+					<MyDropdown.List divider></MyDropdown.List>
+				</> || <></>}
+				<MyDropdown.List onClick={handleTrash}>{isShared ? <span> Remove </span> : <span> Move to trash </span>}</MyDropdown.List>
 			</MyDropdown.Menu>
 		</MyDropdown>
 	);

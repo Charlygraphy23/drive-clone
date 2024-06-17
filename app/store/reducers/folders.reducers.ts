@@ -1,7 +1,7 @@
-import { AccessSchemaType } from "@/app/lib/database/interfaces/access.interface";
+import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType } from "@/app/lib/database/interfaces/access.interface";
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
-import { addBulkFolder, addFolderAsync, moveToTrashFolderAsync, renameFolderAsync } from "../actions";
+import { addBulkFolder, addFolderAsync, moveToTrashFolderAsync, removeAccessFromFolderAsync, renameFolderAsync } from "../actions";
 
 const initialState = {
 	loading: false,
@@ -9,7 +9,7 @@ const initialState = {
 	error: "",
 };
 
-export type FolderDataType = { _id: string, access: { _id: string } & Pick<AccessSchemaType, "createdFor" | "rootId" | "accessType" | "origin"> } & Partial<FilesAndFolderSchemaType>;
+export type FolderDataType = { _id: string, access: { _id: string } & Partial<Record<keyof AccessSchemaType, string>> } & Partial<FilesAndFolderSchemaType>;
 
 export type FolderStateType = {
 	loading: boolean;
@@ -19,6 +19,12 @@ export type FolderStateType = {
 
 export default createReducer(initialState, (builder) => {
 	builder
+		.addCase(removeAccessFromFolderAsync.fulfilled, (state, action) => {
+			const payload = action?.payload;
+			state.data = state.data.filter(item => item._id !== payload?.resourceId)
+			return state;
+
+		})
 		.addCase(addFolderAsync.pending, (state) => {
 			state.loading = true
 			state.error = ""
@@ -31,7 +37,14 @@ export default createReducer(initialState, (builder) => {
 				_id: action?.payload?.id,
 				name: action.payload.name,
 				createdBy: action.payload.createdBy,
-				dataType: action.payload.type
+				dataType: action.payload.type,
+				access: {
+					_id: Date.now().toString(),
+					rootId: "",
+					createdFor: "",
+					accessType: ACCESS_TYPE.WRITE,
+					origin: ACCESS_ORIGIN.SELF
+				}
 			});
 			return state;
 		})

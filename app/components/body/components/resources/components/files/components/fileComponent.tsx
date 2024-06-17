@@ -6,10 +6,10 @@ import { getResourceInfoAsync } from "@/app/store/actions/info.actions";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
 import useFileColumns from "../hooks/useFileColumns";
 
-type Props = { lastItemRef?: React.Ref<any> }
+type Props = { lastItemRef?: React.Ref<any>, isShared?: boolean }
 
-const FileComponent = ({ lastItemRef }: Props) => {
-	const { columns } = useFileColumns();
+const FileComponent = ({ lastItemRef, isShared }: Props) => {
+	const { columns } = useFileColumns({ isShared });
 	const { data } = useAppSelector(
 		(state) => state?.files
 	);

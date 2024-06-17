@@ -9,9 +9,11 @@ import { FetchAllResourceResponseType } from "../store/actions";
 
 
 
-export const fetchFolderData = unstable_cache(async (folderId?: string, _userId?: string) => {
+export const fetchFolderData = unstable_cache(async (folderId?: string, _userId?: string, isShared?: boolean) => {
     "use server"
-    const dataset = await getResources(folderId, DATA_TYPE.FOLDER, false, "off");
+
+    const shared = isShared ? "only" : "off"
+    const dataset = await getResources(folderId, DATA_TYPE.FOLDER, false, shared);
 
     if (dataset?.status === 200) {
         const response = JSON.parse(JSON.stringify(dataset?.data))
@@ -22,9 +24,11 @@ export const fetchFolderData = unstable_cache(async (folderId?: string, _userId?
     tags: ["folders",]
 })
 
-export const fetchFileData = unstable_cache(async (folderId?: string, _userId?: string) => {
+export const fetchFileData = unstable_cache(async (folderId?: string, _userId?: string, isShared?: boolean) => {
     "use server"
-    const dataset = await getResources(folderId, DATA_TYPE.FILE, false, "off", 1, 10);
+
+    const shared = isShared ? "only" : "off"
+    const dataset = await getResources(folderId, DATA_TYPE.FILE, false, shared, 1, 10);
 
     if (dataset?.status === 200) {
         const response = JSON.parse(JSON.stringify(dataset?.data))

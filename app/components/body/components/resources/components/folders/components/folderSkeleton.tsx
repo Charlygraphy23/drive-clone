@@ -1,6 +1,7 @@
 "use client";
 
 import MyDropdown from "@/app/components/dropdown";
+import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
@@ -48,9 +49,25 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, isShared }: Props) =>
 		onClick(data?._id, e,)
 	}
 
+	const handleRemoveAccess = () => {
+		dispatch(
+			toggleModal({
+				isOpen: true,
+				data: {
+					id: data?._id,
+					type: DATA_TYPE.FOLDER,
+					value: data?.access?._id
+				},
+				name: "confirmModal",
+			})
+		);
+	}
+
 	const handleDelete = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
 		e.preventDefault()
+
+		if (isShared) return handleRemoveAccess()
 
 		dispatch(
 			toggleModal({
@@ -84,12 +101,13 @@ const FolderSkeleton = ({ data, isSelected, href, onClick, isShared }: Props) =>
 					}}></i>,
 				}}>
 				<MyDropdown.Menu>
-					<MyDropdown.List className='d-flex' onClick={handleRenameClient}>
-						<i className='bi bi-pen-fill'></i>
-						<span> Rename </span>
-					</MyDropdown.List>
-
-					<MyDropdown.List divider></MyDropdown.List>
+					{(!isShared || (isShared && access.accessType === ACCESS_TYPE.WRITE)) && <>
+						<MyDropdown.List className='d-flex' onClick={handleRenameClient}>
+							<i className='bi bi-pen-fill'></i>
+							<span> Rename </span>
+						</MyDropdown.List>
+						<MyDropdown.List divider></MyDropdown.List>
+					</> || <></>}
 
 					<MyDropdown.List className='d-flex' onClick={handleDelete}>
 						<i className='bi bi-trash3-fill'></i>

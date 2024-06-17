@@ -2,13 +2,15 @@ import { UpdateAccessTypePayload } from "@/app/_apis_routes/resources";
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
 import { ACCESS_ORIGIN, ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { AccessService } from "@/app/lib/database/services/access.service";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
 import mongoose, { SessionOption } from "mongoose";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
-import { UpdateAccessPayloadValidator } from "../../_validation/access.validation";
+import { RemoveAlertPayloadValidator, UpdateAccessPayloadValidator } from "../../_validation/access.validation";
 
 
 const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAccessTypePayload["accessList"] = [], deletedUserIds: string[] = [], options?: SessionOption) => {
@@ -124,11 +126,17 @@ export const PATCH = async (req: NextRequest) => {
 
         const hasResource = hasAccess.resource
         const accessListWithoutOwner = accessList.filter((access) => access.createdFor !== hasResource?.createdBy?.toString())
-        console.log("accessListWithoutOwner", accessListWithoutOwner)
-        console.log("hasResource", hasResource)
 
         await handleAccessManagement(resourceId, accessListWithoutOwner, deletedUserIds, { session: mongoSession, withDeleted: true })
         await mongoSession.commitTransaction()
+
+        if (hasAccess?.resource?.dataType === DATA_TYPE.FILE) {
+            revalidateTag("files")
+
+        }
+        else {
+            revalidateTag("folders")
+        }
         return response.status(200).send("Updated")
 
     }
@@ -142,4 +150,59 @@ export const PATCH = async (req: NextRequest) => {
         await mongoSession.endSession()
     }
 
+}
+
+export const PUT = async (req: NextRequest,) => {
+    const response = new ApiResponse()
+    const resourceService = new ResourceService()
+    const accessService = new AccessService()
+    try {
+        const session = await getServerSession(authOptions)
+
+        if (!session) return response.status(401).send("Unauthorized")
+        const user = session.user
+
+        const body = await req?.json()
+
+        const isValid = await RemoveAlertPayloadValidator.isValid(body, { abortEarly: false })
+
+        if (!isValid) return response.status(422).send("Invalid Data")
+
+        const { accessId, resourceId } = body
+
+        await connectDB();
+        const hasAccess = await resourceService.checkAccess(String(user._id), {
+            resourceId,
+        }, { withDeleted: true })
+
+        if (!hasAccess?.success) {
+            //TODO: redirect to another page not found / no permissions
+            return response.status(403).send("Unauthorized")
+        }
+
+        const accessData = hasAccess.data
+
+        console.log("accessData ", accessData)
+
+        if (String(accessData?._id) !== accessId) {
+            return response.status(422).send("Unable to remove the resource")
+        }
+
+        await accessService.deleteById(accessId)
+
+        if (hasAccess?.resource?.dataType === DATA_TYPE.FILE) {
+            revalidateTag("files")
+
+        }
+        else {
+            revalidateTag("folders")
+        }
+        return response.status(200).send("Deleted")
+
+    }
+    catch (_err: unknown) {
+        const err = _err as { message: string }
+        console.error("Error - ", err)
+        return response.status(500).send(err?.message)
+    }
 }

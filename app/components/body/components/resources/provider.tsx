@@ -3,9 +3,12 @@
 import { fetchFileData, fetchFolderData } from "@/app/_actions/resource";
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
 import ResourceLoader from "@/app/components/loader/resourceLoader";
+import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
+import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch, useAppSelector, useAppStore } from "@/app/store";
-import { addBulkFiles, addBulkFolder, appendBulkFiles, toggleModal } from "@/app/store/actions";
+import { addBulkFiles, addBulkFolder, appendBulkFiles, removeAccessFromFileAsync, removeAccessFromFolderAsync, toggleModal } from "@/app/store/actions";
 import { clearSelectedFolderId } from "@/app/store/actions/info.actions";
+import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { Session } from "next-auth";
 import { Children, PropsWithChildren, cloneElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import DeleteConfirmationModal from "../modals/delete";
@@ -16,9 +19,10 @@ import style from "./style.module.scss";
 type Props = {
 	id?: string | null
 	user?: Session["user"]
+	isShared?: boolean
 } & PropsWithChildren;
 
-const FileAndFolderStateProvider = ({ children, id, user }: Props) => {
+const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => {
 	const initializeData = useRef<string | null | undefined>(null);
 	const store = useAppStore()
 	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
@@ -38,6 +42,7 @@ const FileAndFolderStateProvider = ({ children, id, user }: Props) => {
 	})
 	const dispatch = useAppDispatch()
 	const [loader, setLoader] = useState(true)
+	const [isRemoving, setIsRemoving] = useState(false)
 
 
 	const disabledClick = useCallback((target: Node) => {
@@ -98,6 +103,40 @@ const FileAndFolderStateProvider = ({ children, id, user }: Props) => {
 
 	}, [dispatch, manageAccessModal, selectedResourceId])
 
+	const handleInitialDataLoad = useCallback(async () => {
+		const [folders, filesData] = await Promise.all([
+			fetchFolderData(id ?? "", String(user?._id), isShared),
+			fetchFileData(id ?? "", String(user?._id), isShared)
+		])
+		store.dispatch(addBulkFiles({ data: filesData?.resources, next: filesData?.next }))
+		store.dispatch(addBulkFolder({ data: folders }))
+		setLoader(false)
+	}, [id, isShared, store, user?._id])
+
+	const handleRemoveAccess = (toggle: () => void, payload: ModalDataType) => {
+		if (isRemoving) return;
+
+		const { id, type, value } = payload
+
+		setIsRemoving(true)
+
+		if (type === DATA_TYPE.FILE) {
+			dispatch(removeAccessFromFileAsync({ resourceId: id, accessId: value ?? "" })).then(() => {
+				setIsRemoving(false)
+				toggle()
+			}).catch(err => {
+				setIsRemoving(false)
+			})
+		} else {
+			dispatch(removeAccessFromFolderAsync({ resourceId: id, accessId: value ?? "" })).then(() => {
+				setIsRemoving(false)
+				toggle()
+			}).catch(err => {
+				setIsRemoving(false)
+			})
+		}
+
+	}
 
 
 	useEffect(() => {
@@ -115,20 +154,6 @@ const FileAndFolderStateProvider = ({ children, id, user }: Props) => {
 			document.removeEventListener("click", checkClick)
 		}
 	}, [onClear, withParentElement])
-
-	const handleInitialDataLoad = useCallback(async () => {
-		console.log({ user })
-		const [folders, filesData] = await Promise.all([
-			fetchFolderData(id ?? "", String(user?._id)),
-			fetchFileData(id ?? "", String(user?._id))
-		])
-		console.log("filesData", filesData)
-		store.dispatch(addBulkFiles({ data: filesData?.resources, next: filesData?.next }))
-		store.dispatch(addBulkFolder({ data: folders }))
-		setLoader(false)
-	}, [id, store, user])
-
-
 
 	useEffect(() => {
 		if (initializeData?.current !== id) {
@@ -148,6 +173,11 @@ const FileAndFolderStateProvider = ({ children, id, user }: Props) => {
 				<RenameModal isOpen={renameModal} data={modalState} />
 				<NewfolderModal isOpen={newFolderModal} data={modalState} />
 				<DeleteConfirmationModal isOpen={deleteModal} data={modalState} />
+				{isShared && <ConfirmationModalComponent
+					onSubmit={handleRemoveAccess}
+					message='Do you want to remove?'
+					isLoading={isRemoving}
+				/>}
 			</div>}
 		</>
 	);

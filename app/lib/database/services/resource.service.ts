@@ -100,6 +100,7 @@ export class ResourceService {
         if (shared === "off" || showDeleted) {
             initialQuery.createdBy = new Types.ObjectId(userId)
         } else if (shared === "only" && !showDeleted) {
+            console.log("Shared")
             initialQuery.createdBy = { $ne: new Types.ObjectId(userId) }
         }
 
@@ -181,11 +182,11 @@ export class ResourceService {
                 }
             },
 
-            {
-                $project: {
-                    access: 0,
-                }
-            },
+            // {
+            //     $project: {
+            //         access: 0,
+            //     }
+            // },
 
             {
                 $match: {
@@ -200,34 +201,6 @@ export class ResourceService {
                 }
             },
 
-            {
-                $lookup: {
-                    from: "accesses",
-                    let: { createdFor: new Types.ObjectId(userId), folderId: "$_id" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        { $eq: ["$createdFor", "$$createdFor"] },
-                                        { $eq: ["$resourceId", "$$folderId"] }
-                                    ]
-                                }
-                            }
-                        },
-
-                        {
-                            $project: {
-                                rootId: 1,
-                                createdFor: 1,
-                                accessType: 1,
-                                origin: 1
-                            }
-                        }
-                    ],
-                    as: "access"
-                }
-            },
         ] as PipelineStage[]
 
 

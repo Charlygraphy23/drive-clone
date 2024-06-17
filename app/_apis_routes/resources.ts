@@ -95,7 +95,9 @@ export const getResourcesApi = async ({ page, limit, folderId }: { page: number,
 
     const query = queryParams?.toString()
     const { data } = await axiosInstance.get(`/resources?${query}`)
-    console.log("Response from axios", data)
-
     return data
+}
+
+export const removeAccessFromResourceApi = async (payload: { accessId: string, resourceId: string }) => {
+    return axiosInstance.put(`/resources/access`, payload)
 }

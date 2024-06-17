@@ -1,8 +1,8 @@
-import { getResourcesApi, moveToTrashResourceApi, updateFileNameApi, UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
+import { getResourcesApi, moveToTrashResourceApi, removeAccessFromResourceApi, updateFileNameApi, UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
 import { ErrorHandler } from "@/app/utils/index.utils";
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { FileDataType } from "../reducers/files.reducers";
-import { updateInfo } from "./info.actions";
+import { invalidateCacheById, updateInfo } from "./info.actions";
 
 type CreateFileActionType = {
 	name: string;
@@ -65,6 +65,20 @@ export const moveToTrashFileAsync = createAsyncThunk<{ id: string }, { id: strin
 	catch (err) {
 		const errors = ErrorHandler(err)
 		_thunkAPI.rejectWithValue(errors)
+		return Promise.reject(errors)
+	}
+})
+
+
+export const removeAccessFromFileAsync = createAsyncThunk<{ accessId: string, resourceId: string }, { accessId: string, resourceId: string }>("removeAccessFromFolderAsync", async (payload, _thunkAPI) => {
+	try {
+		await removeAccessFromResourceApi(payload)
+		_thunkAPI.dispatch(invalidateCacheById(payload?.resourceId))
+		return payload
+	}
+	catch (err) {
+		const errors = ErrorHandler(err)
+		_thunkAPI.rejectWithValue(err)
 		return Promise.reject(errors)
 	}
 })

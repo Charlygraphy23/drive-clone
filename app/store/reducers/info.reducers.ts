@@ -1,6 +1,6 @@
 import { ACCESS_ORIGIN, ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { createReducer } from "@reduxjs/toolkit";
-import { AccessList, ResourceInfoDataType, clearSelectedFolderId, getResourceInfoAsync, invalidateCache, toggleInfo, updateInfo, updateInfoByFolderId } from "../actions/info.actions";
+import { AccessList, ResourceInfoDataType, clearSelectedFolderId, getResourceInfoAsync, invalidateCache, invalidateCacheById, toggleInfo, updateInfo, updateInfoByFolderId } from "../actions/info.actions";
 
 const initialState = {
     loading: false,
@@ -45,6 +45,11 @@ export default createReducer(initialState, (builder) => {
         })
         .addCase(invalidateCache, (state) => {
             state.data = {} as Record<string, ResourceInfoDataType>
+            return state;
+        })
+        .addCase(invalidateCacheById, (state, action) => {
+            const payload = action.payload
+            delete state.data[payload]
             return state;
         })
         .addCase(updateInfo, (state, action) => {

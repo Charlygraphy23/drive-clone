@@ -36,3 +36,24 @@ export const UpdateAccessPayloadValidator = object().shape({
     })),
 
 })
+
+export const RemoveAlertPayloadValidator = object().shape({
+    resourceId: string().test({
+        name: "valid-mongodb-id",
+        message: "Invalid item ID",
+        test: (value) => {
+            if (value === null || value === undefined) return true
+            return mongoose.Types.ObjectId.isValid(value ?? "");
+
+        },
+    }),
+    accessId: string().test({
+        name: "valid-mongodb-id",
+        message: "Invalid item ID",
+        test: (value) => {
+            if (value === null || value === undefined) return true
+            return mongoose.Types.ObjectId.isValid(value ?? "");
+
+        },
+    }),
+})

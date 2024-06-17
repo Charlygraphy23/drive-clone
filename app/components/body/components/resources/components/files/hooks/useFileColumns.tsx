@@ -10,7 +10,11 @@ import style from '../../../style.module.scss';
 import OwnerSection from "../../ownerSection";
 import FileAction from "../components/fileAction";
 
-const useFileColumns = () => {
+type Props = {
+	isShared?: boolean
+}
+
+const useFileColumns = ({ isShared }: Props) => {
 	const columns: ColumnType[] = [
 		{
 			title: "Name",
@@ -36,7 +40,7 @@ const useFileColumns = () => {
 			title: "",
 			dataIndex: "",
 			render: ({ record }) => {
-				return <FileAction data={record?.data as FileDataType} />;
+				return <FileAction data={record?.data as FileDataType} isShared={isShared} />;
 			},
 		},
 	];

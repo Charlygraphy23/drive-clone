@@ -12,9 +12,9 @@ const SharedPageComponent = async () => {
     const user = session?.user
 
     return (
-        <FileAndFolderStateProvider user={user}>
+        <FileAndFolderStateProvider isShared user={user}>
             <FolderComponent isShared />
-            <FileSection />
+            <FileSection isShared />
             <EmptySection />
         </FileAndFolderStateProvider>
     )

@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/app/store";
 import { addBulkResourcesAsync, appendBulkResources, deleteBinResourceByIdAsync } from "@/app/store/actions/bin.actions";
 import { clearSelectedFolderId, getResourceInfoAsync } from "@/app/store/actions/info.actions";
 import { FolderDataType } from "@/app/store/reducers/folders.reducers";
+import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import EmptyTableIcon from "@app/assets/emptyTableIcon.svg";
 import Table from "@app/components/table";
 import { Session } from "next-auth";
@@ -42,11 +43,11 @@ const BinTableComponent = ({ user }: Props) => {
 
 	}
 
-	const handleSubmit = async (toggle: () => void, resourceId: string) => {
+	const handleSubmit = async (toggle: () => void, payload: ModalDataType) => {
 		if (isDeleting) return;
 
 		setIsDeleting(true)
-		await dispatch(deleteBinResourceByIdAsync({ resourceId }))
+		await dispatch(deleteBinResourceByIdAsync({ resourceId: payload?.id }))
 		setIsDeleting(false)
 		dispatch(clearSelectedFolderId())
 		toggle();

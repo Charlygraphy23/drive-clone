@@ -1,7 +1,7 @@
 import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType } from "@/app/lib/database/interfaces/access.interface";
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
-import { addBulkFiles, appendBulkFiles, createFile, moveToTrashFileAsync, pushFile, renameFileAsync } from "../actions";
+import { addBulkFiles, appendBulkFiles, createFile, moveToTrashFileAsync, pushFile, removeAccessFromFileAsync, renameFileAsync } from "../actions";
 
 const initialState = {
 	isFetching: false,
@@ -13,7 +13,7 @@ const initialState = {
 	isSubmitting: false
 };
 
-export type FileDataType = { _id: string, access: Array<{ _id: string } & Partial<AccessSchemaType>> } & Partial<FilesAndFolderSchemaType>;
+export type FileDataType = { _id: string, access: { _id: string } & Partial<Record<keyof AccessSchemaType, string>> } & Partial<FilesAndFolderSchemaType>;
 export type FileStateType = {
 	isFetching: boolean,
 	isFetched: boolean,
@@ -25,6 +25,12 @@ export type FileStateType = {
 };
 export default createReducer(initialState, (builder) => {
 	builder
+		.addCase(removeAccessFromFileAsync.fulfilled, (state, action) => {
+			const payload = action?.payload;
+			state.data = state.data.filter(item => item._id !== payload?.resourceId)
+			return state;
+
+		})
 		.addCase(createFile, (state, action) => {
 			const payload = action?.payload;
 
@@ -32,15 +38,13 @@ export default createReducer(initialState, (builder) => {
 				_id: Date.now().toString(),
 				name: payload?.name,
 				lastModified: new Date().toLocaleDateString(),
-				access: [
-					{
-						_id: Date.now().toString(),
-						rootId: "",
-						createdFor: "",
-						accessType: ACCESS_TYPE.WRITE,
-						origin: ACCESS_ORIGIN.SELF
-					}
-				]
+				access: {
+					_id: Date.now().toString(),
+					rootId: "",
+					createdFor: "",
+					accessType: ACCESS_TYPE.WRITE,
+					origin: ACCESS_ORIGIN.SELF
+				}
 			});
 			return state;
 		})

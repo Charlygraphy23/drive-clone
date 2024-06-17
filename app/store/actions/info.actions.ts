@@ -34,6 +34,7 @@ export type UpdateInfoActionType = {
 
 export const toggleInfo = createAction("showInfo")
 export const clearSelectedFolderId = createAction("clearSelectedFolderId")
+export const invalidateCacheById = createAction<string>("invalidateCacheById")
 export const updateInfoByFolderId = createAction<UpdateInfoByFolderIdType>("updateInfoByFolderId")
 export const invalidateCache = createAction("invalidateCache")
 export const updateInfo = createAction<UpdateInfoActionType>("updateInfo")

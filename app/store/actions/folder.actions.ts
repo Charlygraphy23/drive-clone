@@ -1,9 +1,9 @@
-import { addFolderApi, moveToTrashResourceApi, updateFolderNameApi, UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
+import { addFolderApi, moveToTrashResourceApi, removeAccessFromResourceApi, updateFolderNameApi, UpdateFolderNamePayload } from "@/app/_apis_routes/resources";
 import { DATA_TYPE, FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { ErrorHandler } from "@/app/utils/index.utils";
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { FolderDataType } from "../reducers/folders.reducers";
-import { updateInfo } from "./info.actions";
+import { invalidateCacheById, updateInfo } from "./info.actions";
 
 type AddFolderType = {
 	reset: () => void;
@@ -15,7 +15,6 @@ type AddBulkFolder = {
 };
 
 export const addBulkFolder = createAction<AddBulkFolder>("addBulkFolder");
-
 
 export const addFolderAsync = createAsyncThunk<{ id: string, type: DATA_TYPE } & Omit<AddFolderType, "reset">, AddFolderType>("addFolder", async (payload, _thunkAPI) => {
 	try {
@@ -76,6 +75,19 @@ export const moveToTrashFolderAsync = createAsyncThunk<{ id: string }, { id: str
 	catch (err) {
 		const errors = ErrorHandler(err)
 		_thunkAPI.rejectWithValue(errors)
+		return Promise.reject(errors)
+	}
+})
+
+export const removeAccessFromFolderAsync = createAsyncThunk<{ accessId: string, resourceId: string }, { accessId: string, resourceId: string }>("removeAccessFromFolderAsync", async (payload, _thunkAPI) => {
+	try {
+		await removeAccessFromResourceApi(payload)
+		_thunkAPI.dispatch(invalidateCacheById(payload?.resourceId))
+		return payload
+	}
+	catch (err) {
+		const errors = ErrorHandler(err)
+		_thunkAPI.rejectWithValue(err)
 		return Promise.reject(errors)
 	}
 })

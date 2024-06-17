@@ -4,14 +4,14 @@ import { CONFIRM_MODAL_ID } from "@/app/_config/const";
 import ModalComponent from "@/app/components/modal";
 import { RootState } from "@/app/store";
 import { toggleModal as toggleModalState } from "@/app/store/actions";
-import { ModalStateType } from "@/app/store/reducers/modal.reducers";
+import { ModalDataType, ModalStateType } from "@/app/store/reducers/modal.reducers";
 import { FormEvent, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ButtonGroup from "../../buttonGroup";
 import style from "../style.module.scss";
 
 type Props = {
-	onSubmit: (_toggle: () => void, _resourceId: string) => void,
+	onSubmit: (_toggle: () => void, _paylaod: ModalDataType) => void,
 	message: string;
 	isLoading?: boolean;
 };
@@ -33,7 +33,7 @@ const ConfirmationModalComponent = ({ onSubmit, message, isLoading = false }: Pr
 
 	const handleModalSubmit = async (event: FormEvent) => {
 		event.preventDefault();
-		onSubmit(toggleModal, data?.id)
+		onSubmit(toggleModal, data)
 	};
 
 	return (
