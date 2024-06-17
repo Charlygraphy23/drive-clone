@@ -1,6 +1,5 @@
-import React from "react";
-import style from "./style.module.scss";
 import NavRoute from "./components/navRoute";
+import style from "./style.module.scss";
 
 const SidebarNavigation = () => {
 	return (
@@ -9,6 +8,12 @@ const SidebarNavigation = () => {
 				path='/'
 				icon={<i className='bi bi-house-fill'></i>}
 				label='Home'
+			/>
+
+			<NavRoute
+				path='/shared'
+				icon={<i className="bi bi-people-fill"></i>}
+				label='Shared with me'
 			/>
 
 			<NavRoute
@@ -22,6 +27,8 @@ const SidebarNavigation = () => {
 				icon={<i className='bi bi-gear-fill'></i>}
 				label='Settings'
 			/>
+
+
 		</div>
 	);
 };

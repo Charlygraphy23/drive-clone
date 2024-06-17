@@ -199,6 +199,35 @@ export class ResourceService {
                     hasAccess: 0,
                 }
             },
+
+            {
+                $lookup: {
+                    from: "accesses",
+                    let: { createdFor: new Types.ObjectId(userId), folderId: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ["$createdFor", "$$createdFor"] },
+                                        { $eq: ["$resourceId", "$$folderId"] }
+                                    ]
+                                }
+                            }
+                        },
+
+                        {
+                            $project: {
+                                rootId: 1,
+                                createdFor: 1,
+                                accessType: 1,
+                                origin: 1
+                            }
+                        }
+                    ],
+                    as: "access"
+                }
+            },
         ] as PipelineStage[]
 
 

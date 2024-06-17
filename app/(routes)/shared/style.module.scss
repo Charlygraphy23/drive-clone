@@ -1,0 +1,24 @@
+@use "../../components/body/components/resources/style.module.scss" as fileClass;
+
+.shared {
+	padding-top: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	h1 {
+		font-weight: 900;
+		font-size: 2rem;
+	}
+
+	// .tableWrapper {
+	// 	margin-top: 4rem;
+	// 	overflow: auto;
+	// 	padding-bottom: 2rem;
+	// 	min-height: 200px;
+	// }
+
+	// .owner {
+	// 	@include fileClass.tableOwner;
+	// }
+}

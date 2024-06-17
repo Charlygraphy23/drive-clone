@@ -12,12 +12,14 @@ type Props = {
 	data: FolderDataType;
 	isSelected?: boolean;
 	href: string
-	onClick: (_id: string, _e: React.MouseEvent<HTMLDivElement>,) => void
+	onClick: (_id: string, _e: React.MouseEvent<HTMLDivElement>,) => void;
+	isShared?: boolean;
 };
 
-const FolderSkeleton = ({ data, isSelected, href, onClick }: Props) => {
+const FolderSkeleton = ({ data, isSelected, href, onClick, isShared }: Props) => {
 	const dispatch = useAppDispatch();
 	const router = useRouter()
+	const access = data?.access
 
 	const handleRenameClient = (e: React.MouseEvent<HTMLElement>) => {
 		e.stopPropagation()
@@ -91,7 +93,7 @@ const FolderSkeleton = ({ data, isSelected, href, onClick }: Props) => {
 
 					<MyDropdown.List className='d-flex' onClick={handleDelete}>
 						<i className='bi bi-trash3-fill'></i>
-						<span> Move to trash </span>
+						{isShared ? <span> Remove </span> : <span> Move to trash </span>}
 					</MyDropdown.List>
 				</MyDropdown.Menu>
 			</MyDropdown>

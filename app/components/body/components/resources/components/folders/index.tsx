@@ -7,8 +7,11 @@ import { useEffect, useRef } from "react";
 import style from "../../style.module.scss";
 import FolderSkeleton from "./components/folderSkeleton";
 
+type Props = {
+	isShared?: boolean;
+}
 
-const FolderComponent = () => {
+const FolderComponent = ({ isShared }: Props) => {
 	const { data } = useAppSelector(state => state.folders)
 	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
 
@@ -51,6 +54,7 @@ const FolderComponent = () => {
 							isSelected={selectedResourceId === folder?._id}
 							href={`/q/${folder?._id}`}
 							onClick={handleClick}
+							isShared={isShared}
 						/>
 					))}
 				</div>

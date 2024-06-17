@@ -1,3 +1,4 @@
+import { AccessSchemaType } from "@/app/lib/database/interfaces/access.interface";
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
 import { addBulkFolder, addFolderAsync, moveToTrashFolderAsync, renameFolderAsync } from "../actions";
@@ -8,7 +9,7 @@ const initialState = {
 	error: "",
 };
 
-export type FolderDataType = { _id: string } & Partial<FilesAndFolderSchemaType>;
+export type FolderDataType = { _id: string, access: { _id: string } & Pick<AccessSchemaType, "createdFor" | "rootId" | "accessType" | "origin"> } & Partial<FilesAndFolderSchemaType>;
 
 export type FolderStateType = {
 	loading: boolean;

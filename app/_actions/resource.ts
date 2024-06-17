@@ -11,7 +11,7 @@ import { FetchAllResourceResponseType } from "../store/actions";
 
 export const fetchFolderData = unstable_cache(async (folderId?: string, _userId?: string) => {
     "use server"
-    const dataset = await getResources(folderId, DATA_TYPE.FOLDER, false, "show");
+    const dataset = await getResources(folderId, DATA_TYPE.FOLDER, false, "off");
 
     if (dataset?.status === 200) {
         const response = JSON.parse(JSON.stringify(dataset?.data))

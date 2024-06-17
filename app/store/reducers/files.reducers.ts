@@ -1,3 +1,4 @@
+import { ACCESS_ORIGIN, ACCESS_TYPE, AccessSchemaType } from "@/app/lib/database/interfaces/access.interface";
 import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { createReducer } from "@reduxjs/toolkit";
 import { addBulkFiles, appendBulkFiles, createFile, moveToTrashFileAsync, pushFile, renameFileAsync } from "../actions";
@@ -12,7 +13,7 @@ const initialState = {
 	isSubmitting: false
 };
 
-export type FileDataType = { _id: string } & Partial<FilesAndFolderSchemaType>;
+export type FileDataType = { _id: string, access: Array<{ _id: string } & Partial<AccessSchemaType>> } & Partial<FilesAndFolderSchemaType>;
 export type FileStateType = {
 	isFetching: boolean,
 	isFetched: boolean,
@@ -31,6 +32,15 @@ export default createReducer(initialState, (builder) => {
 				_id: Date.now().toString(),
 				name: payload?.name,
 				lastModified: new Date().toLocaleDateString(),
+				access: [
+					{
+						_id: Date.now().toString(),
+						rootId: "",
+						createdFor: "",
+						accessType: ACCESS_TYPE.WRITE,
+						origin: ACCESS_ORIGIN.SELF
+					}
+				]
 			});
 			return state;
 		})
