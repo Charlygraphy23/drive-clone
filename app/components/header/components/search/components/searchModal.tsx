@@ -1,5 +1,8 @@
 "use client"
 
+import { fetchFileData, fetchFolderData } from '@/app/_actions/resource';
+import { ResourceDatasetType } from '@/app/components/body/components/resources/interfaces/index.interface';
+import { DATA_TYPE } from '@/app/lib/database/interfaces/files.interfaces';
 import { useQuery } from '@tanstack/react-query';
 import { useContext, useMemo, useState } from 'react';
 import { toggleFilterView } from '../store/actions';
@@ -31,20 +34,31 @@ const data = {
     ]
 }
 
-const api = async (): Promise<any> => {
-    return new Promise((resolve) => setTimeout(() => resolve(data), 3000))
+const api = async (search: string,) => {
+    const [folders, files] = await Promise.all([
+        fetchFolderData("", "", false, search),
+        fetchFileData("", "", false, search)
+    ])
+
+    return {
+        folders,
+        files: files.resources
+    }
 }
 
 
 const SearchModal = () => {
     const { state } = useContext(SearchContext);
     const [search, setSearch] = useState("")
-    const { isFetched, data = {}, isFetching } = useQuery({ queryKey: ["search", search, state.filters], queryFn: api, retry: false, enabled: !!search || !!state?.filters, staleTime: 3000 })
+    const { isFetched, data = {} as {
+        files: ResourceDatasetType["files"],
+        folders: ResourceDatasetType["folders"]
+    }, isFetching } = useQuery({ queryKey: ["search", search, state.filters], queryFn: () => api(search), retry: false, enabled: !!search || !!state?.filters, staleTime: 3000 })
     const { dispatch } = useContext(SearchContext)
 
     const hasData = useMemo(() => {
-        const { files = {}, folders = {} } = data
-        return !!(files?.length && folders?.length && isFetched)
+        const { files = {} as ResourceDatasetType["files"], folders = {} as ResourceDatasetType["folders"] } = data
+        return !!((files?.length || folders?.length) && isFetched)
     }, [data, isFetched])
 
 
@@ -61,16 +75,16 @@ const SearchModal = () => {
 
             {isFetching && <SearchLoader />}
             {!hasData && !isFetching && <span className="px-1 text-center">No result found!</span>}
-            {hasData && !isFetching && <section className={style.listWrapper}>
+            {!!data?.files?.length && !isFetching && <section className={style.listWrapper}>
                 <h6>Files</h6>
                 <div className={style.lists}>
-                    {data?.files?.map((val: any, index: number) => <ResultComponent key={index} selected={index === 0} type={val?.type} title={val?.title} path={val?.path} />)}
+                    {data?.files?.map((val, index) => <ResultComponent key={index} selected={index === 0} type={DATA_TYPE.FILE} title={val?.name ?? ""} path={`q/${val?._id}`} mimeType={val.mimeType} />)}
                 </div>
             </section>}
-            {hasData && !isFetching && <section className={style.listWrapper}>
+            {!!data?.folders?.length && !isFetching && <section className={style.listWrapper}>
                 <h6>Folders</h6>
                 <div className={style.lists}>
-                    {data?.folders?.map((val: any, index: number) => <ResultComponent key={index} type={"folder"} title={val?.title} path={val?.path} />)}
+                    {data?.folders?.map((val, index) => <ResultComponent key={index} type={DATA_TYPE.FOLDER} title={val?.name ?? ""} path={`q/${val?._id}`} />)}
                 </div>
             </section>}
         </div>

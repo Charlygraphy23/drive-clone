@@ -1,5 +1,6 @@
 import { passwordYupValidation } from "@/app/components/loginFlow/interfaces/index.interface";
 import { object, ref, string } from "yup";
+import { DATA_TYPE } from "../lib/database/interfaces/files.interfaces";
 import { AccessList } from "../store/actions/info.actions";
 
 /* eslint-disable no-unused-vars */
@@ -38,4 +39,16 @@ export type FileUploadType = {
 	hasFinished: boolean,
 	isUploading: boolean,
 	isFailed: boolean
+}
+
+
+export type ResourcePayloadType = {
+	folderId?: string;
+	resourceType?: DATA_TYPE | null;
+	showDeleted?: boolean;
+	shared: "only" | "show" | "off";
+	page?: number;
+	limit?: number
+	userId?: string
+	search?: string
 }

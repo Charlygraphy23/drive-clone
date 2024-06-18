@@ -1,5 +1,6 @@
 import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
 import { ResourceDatasetType } from "@/app/components/body/components/resources/interfaces/index.interface";
+import { ResourcePayloadType } from "@/app/interfaces/index.interface";
 import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import mimeType from "mime-types";
@@ -86,7 +87,16 @@ export class ResourceService {
         }], options)
     }
 
-    async getResources(userId: string, folderId?: string, showDeleted = false, resourceType: DATA_TYPE | null = null, shared: "only" | "show" | "off" = "off", page?: number, limit?: number): Promise<{
+    async getResources({
+        folderId = "",
+        resourceType = null,
+        showDeleted = false,
+        shared = "off",
+        page = 1,
+        limit = 10,
+        userId,
+        search
+    }: ResourcePayloadType): Promise<{
         page?: number
         limit?: number
         total?: number
@@ -96,6 +106,10 @@ export class ResourceService {
 
         const initialQuery = {
         } as FilterQuery<Partial<Record<keyof FilesAndFolderSchemaType, any>>>
+
+        if (search) {
+            initialQuery.name = { $regex: search }
+        }
 
         if (shared === "off" || showDeleted) {
             initialQuery.createdBy = new Types.ObjectId(userId)
@@ -127,6 +141,7 @@ export class ResourceService {
         if (resourceType) {
             initialQuery["dataType"] = resourceType
         }
+
 
 
         const pipelines = [
@@ -237,7 +252,6 @@ export class ResourceService {
             )
         }
 
-
         const withPagination: PipelineStage[] = [].concat(pipelines)
 
         if (limit && page) {
@@ -246,7 +260,6 @@ export class ResourceService {
                 $limit: limit
             })
         }
-
         const response = await Model.aggregate([
             {
                 $facet: {

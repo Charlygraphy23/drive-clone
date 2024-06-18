@@ -9,11 +9,15 @@ import { FetchAllResourceResponseType } from "../store/actions";
 
 
 
-export const fetchFolderData = unstable_cache(async (folderId?: string, _userId?: string, isShared?: boolean) => {
+export const fetchFolderData = unstable_cache(async (folderId?: string, _userId?: string, isShared?: boolean, search?: string) => {
     "use server"
 
+    console.log('Search ', search)
+
     const shared = isShared ? "only" : "off"
-    const dataset = await getResources(folderId, DATA_TYPE.FOLDER, false, shared);
+    const dataset = await getResources({
+        folderId, resourceType: DATA_TYPE.FOLDER, showDeleted: false, shared, search
+    });
 
     if (dataset?.status === 200) {
         const response = JSON.parse(JSON.stringify(dataset?.data))
@@ -24,15 +28,20 @@ export const fetchFolderData = unstable_cache(async (folderId?: string, _userId?
     tags: ["folders",]
 })
 
-export const fetchFileData = unstable_cache(async (folderId?: string, _userId?: string, isShared?: boolean) => {
+export const fetchFileData = unstable_cache(async (folderId?: string, _userId?: string, isShared?: boolean, search?: string) => {
     "use server"
 
     const shared = isShared ? "only" : "off"
-    const dataset = await getResources(folderId, DATA_TYPE.FILE, false, shared, 1, 10);
+    const dataset = await getResources({
+        folderId, resourceType: DATA_TYPE.FILE, showDeleted: false, shared, page: 1, limit: 10, search
+    });
 
     if (dataset?.status === 200) {
         const response = JSON.parse(JSON.stringify(dataset?.data))
-        return response
+        return response as {
+            resources: ResourceDatasetType["files"],
+            next: boolean
+        }
     }
 
     return redirect("/", RedirectType.replace)
@@ -54,7 +63,9 @@ export const fetchAllResource = unstable_cache(async ({
     shared?: "only" | "show" | "off"
 }, _userId?: string) => {
     "use server"
-    const dataset = await getResources("", null, showDeleted, shared, page, limit);
+    const dataset = await getResources({
+        showDeleted, shared, page, limit
+    });
 
     if (dataset?.status === 200) {
         const response = JSON.parse(JSON.stringify(dataset?.data)) as FetchAllResourceResponseType;

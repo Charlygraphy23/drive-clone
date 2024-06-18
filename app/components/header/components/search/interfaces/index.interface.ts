@@ -2,7 +2,6 @@ import { ActionType } from "@/app/interfaces/index.interface"
 import { Dayjs } from "dayjs"
 import { Dispatch } from "react"
 
-export type ResultType = "folder" | "pdf" | "txt" | "img"
 
 export interface FilterStateType {
     createdAt: [typeof Dayjs, typeof Dayjs],

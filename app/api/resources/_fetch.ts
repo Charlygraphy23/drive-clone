@@ -1,7 +1,8 @@
+import { ResourcePayloadType } from "@/app/interfaces/index.interface"
 import { authOptions } from "@/app/lib/authConfig"
 import { connectDB } from "@/app/lib/database/db"
 import { AccessSchemaType } from "@/app/lib/database/interfaces/access.interface"
-import { DATA_TYPE, FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces"
+import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces"
 import { FilesAndFolderModel } from "@/app/lib/database/models/filesAndFolders"
 import { ResourceService } from "@/app/lib/database/services/resource.service"
 import { PipelineStage, SessionOption, Types } from "mongoose"
@@ -10,7 +11,13 @@ import { MongoIdSchemaValidation } from "../_validation/data.validation"
 
 
 
-export const getResources = async (folderId?: string, resourceType: DATA_TYPE | null = null, showDeleted = false, shared: "only" | "show" | "off" = "off", page?: number, limit?: number) => {
+export const getResources = async ({
+    folderId = "",
+    resourceType = null,
+    showDeleted = false,
+    ...rest
+
+}: ResourcePayloadType) => {
     const service = new ResourceService()
 
     try {
@@ -27,8 +34,8 @@ export const getResources = async (folderId?: string, resourceType: DATA_TYPE | 
             if (!isValidId) return { message: "Invalid folderId", status: 422 };
 
             const hasAccess = await service.checkAccess(String(user._id), {
-                resourceId: folderId ?? ""
-            })
+                resourceId: folderId ?? "",
+            }, { withDeleted: showDeleted })
 
             if (!hasAccess?.success) {
                 //TODO: redirect to another page not found / no permissions
@@ -37,7 +44,13 @@ export const getResources = async (folderId?: string, resourceType: DATA_TYPE | 
         }
 
 
-        const resources = await service.getResources(String(user._id), folderId, showDeleted, resourceType, shared, page, limit)
+        const resources = await service.getResources({
+            ...rest,
+            userId: String(user._id),
+            folderId,
+            showDeleted,
+            resourceType,
+        })
 
         return { message: "Fetched", status: 200, data: resources };
 
