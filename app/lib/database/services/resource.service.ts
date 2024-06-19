@@ -95,7 +95,9 @@ export class ResourceService {
         page = 1,
         limit = 10,
         userId,
-        search
+        search,
+        filters,
+        fileId
     }: ResourcePayloadType): Promise<{
         page?: number
         limit?: number
@@ -104,11 +106,40 @@ export class ResourceService {
         next?: boolean
     }> {
 
+        console.log("Filters ", filters)
+
         const initialQuery = {
         } as FilterQuery<Partial<Record<keyof FilesAndFolderSchemaType, any>>>
 
         if (search) {
-            initialQuery.name = { $regex: search }
+            initialQuery.name = { $regex: search, $options: 'i' }
+        }
+
+        if (filters && Object.keys(filters)?.length) {
+            const createdAt = filters?.createdAt ?? [];
+            const type = filters?.type ?? []
+
+            if (createdAt?.length) {
+                const [from, to] = createdAt;
+
+                initialQuery.createdAt = {
+                    $lte: new Date(to),
+                    $gte: new Date(from)
+                }
+            }
+
+            if (type?.length) {
+                const convertedToDataTypes = type?.reduce<string[]>((prev, curr) => {
+                    const mime = mimeType.lookup(curr) || ""
+                    if (mime) prev.push(mime)
+
+                    return prev
+                }, [])
+
+                initialQuery.mimeType = {
+                    $in: convertedToDataTypes
+                }
+            }
         }
 
         if (shared === "off" || showDeleted) {
@@ -131,6 +162,10 @@ export class ResourceService {
                     }
                 ]
             }
+        }
+
+        if (fileId && resourceType === DATA_TYPE.FILE) {
+            initialQuery["_id"] = new Types.ObjectId(fileId)
         }
 
         if (showDeleted) {
@@ -252,7 +287,9 @@ export class ResourceService {
             )
         }
 
-        const withPagination: PipelineStage[] = [].concat(pipelines)
+
+        const withPagination: PipelineStage[] = Array.from([] as PipelineStage[]).concat(pipelines)
+
 
         if (limit && page) {
             const skip = (page - 1) * limit
@@ -264,7 +301,7 @@ export class ResourceService {
             {
                 $facet: {
                     totalDocuments: [...pipelines as any[], { $count: "total" }],
-                    "resources": withPagination
+                    "resources": withPagination as PipelineStage.FacetPipelineStage[]
                 }
             },
             {
@@ -419,7 +456,6 @@ export class ResourceService {
 
     async deleteForever(resourceId: string, options?: SessionOption) {
         const folders = (await getChildrenAccessListByFolderId(resourceId, options)) as Array<{ _id: string, accesses: Array<{ _id: string } & AccessSchemaType> } & FilesAndFolderSchemaType>;
-        console.log("folders", JSON.stringify(folders));
         const folderIdsToDelete = folders?.map(folder => {
             return folder?._id
         });

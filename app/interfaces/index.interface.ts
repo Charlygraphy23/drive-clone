@@ -6,7 +6,7 @@ import { AccessList } from "../store/actions/info.actions";
 /* eslint-disable no-unused-vars */
 export type ActionType = {
 	type: string;
-	payload:
+	payload?:
 	| Record<string, any>
 	| string
 	| boolean
@@ -51,4 +51,9 @@ export type ResourcePayloadType = {
 	limit?: number
 	userId?: string
 	search?: string
+	fileId?: string;
+	filters?: {
+		createdAt?: Array<string>,
+		type?: string[]
+	}
 }

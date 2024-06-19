@@ -9,12 +9,12 @@ import { SearchContext } from '../../store/context';
 import FilterSelect from './components/filterSelect';
 import FilterWrapper from './components/filterWrapper';
 import style from './style.module.scss';
-import { CONTENT_TYPE, HASHTAGS, getContentType, getTagsForSearch } from './utils/index.utils';
+import { CONTENT_TYPE, getContentType } from './utils/index.utils';
 
 
 const { RangePicker } = DatePicker;
 const typeOptions: SelectProps['options'] = getContentType(CONTENT_TYPE)
-const hashtagsOptions: SelectProps['options'] = getTagsForSearch(HASHTAGS)
+// const hashtagsOptions: SelectProps['options'] = getTagsForSearch(HASHTAGS)
 
 
 const SearchFilters = () => {
@@ -67,7 +67,7 @@ const SearchFilters = () => {
                     />
                 </FilterWrapper>
 
-                <FilterWrapper label='By File Date'>
+                {/* <FilterWrapper label='By Resource Date'>
                     <RangePicker
                         popupClassName="antd__appTheme"
                         className="antd__appTheme"
@@ -75,9 +75,9 @@ const SearchFilters = () => {
                         allowClear
                         onChange={(dates) => onChange(dates, "exifDate")}
                     />
-                </FilterWrapper>
+                </FilterWrapper> */}
 
-                <FilterWrapper label='By File Date'>
+                <FilterWrapper label='By Resource Type'>
                     <FilterSelect
                         value={state?.type}
                         onChange={onChange}
@@ -88,14 +88,14 @@ const SearchFilters = () => {
                 </FilterWrapper>
 
 
-                <FilterWrapper label='By File Date'>
+                {/* <FilterWrapper label='By File Date'>
                     <FilterSelect
                         value={state?.hashtags}
                         onChange={onChange}
                         options={hashtagsOptions}
                         type={"hashtags"}
                     />
-                </FilterWrapper>
+                </FilterWrapper> */}
             </div>
 
             <div className={style.buttonGroup}>

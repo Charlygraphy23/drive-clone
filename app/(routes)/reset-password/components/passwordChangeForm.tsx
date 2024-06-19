@@ -33,7 +33,6 @@ const PasswordChangeForm = () => {
         setErrors({} as PasswordChangeFormErrorStatType)
         try {
             await PasswordChangeFormSchema.validate(state, { abortEarly: false })
-            console.log("Password change")
             setResetSuccess(true)
         }
         catch (err: unknown) {

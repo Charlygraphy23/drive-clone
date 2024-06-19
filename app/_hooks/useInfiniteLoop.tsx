@@ -36,7 +36,7 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
 
 
 
-    const callback = useCallback<IntersectionObserverCallback>(async (itemList, observer) => {
+    const callback = useCallback<IntersectionObserverCallback>(async (itemList, _observer) => {
         console.log("Has Next ", hasNext)
         for (const item of itemList) {
             const inserted = item?.isIntersecting
@@ -53,11 +53,9 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
                 }
             }
 
-            if (inserted) {
-                observer.disconnect()
-                observer.unobserve(item?.target)
-
-            }
+            // if (inserted) {
+            //     observer.disconnect()
+            // }
         }
 
     }, [hasNext, isFetching, dispatch, API]);

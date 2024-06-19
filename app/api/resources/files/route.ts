@@ -1,10 +1,9 @@
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
-import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
+import { DATA_TYPE, FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { UserSchemaType } from "@/app/lib/database/interfaces/user.interface";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
-import { FileDataType } from "@/app/store/reducers/files.reducers";
 import { ApiResponse } from "@/app/utils/response";
 import { File } from "buffer";
 import { startSession } from "mongoose";
@@ -85,7 +84,8 @@ export const POST = async (req: NextRequest) => {
         if (chunkIndex === totalChunks - 1) {
             // means file has been uploaded fully
             revalidateTag("files")
-            const data = fileInfo as { userInfo?: UserSchemaType } & FileDataType
+
+            const data = fileInfo as unknown as { userInfo?: UserSchemaType } & FilesAndFolderSchemaType
             data.userInfo = {
                 email: user?.email,
                 firstName: user?.firstName,
@@ -156,7 +156,7 @@ export const PATCH = async (req: NextRequest) => {
 
         const fileData = fileInfo.toJSON()
 
-        const fileExistWithName = await service.findOne({ name: updatedName, parentFolderId: fileData?.parentFolderId, _id: { $ne: id } , dataType : DATA_TYPE.FILE })
+        const fileExistWithName = await service.findOne({ name: updatedName, parentFolderId: fileData?.parentFolderId, _id: { $ne: id }, dataType: DATA_TYPE.FILE })
 
         if (fileExistWithName) return response.status(422).send("Folder Exists with the name!")
 

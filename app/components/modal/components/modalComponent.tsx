@@ -15,7 +15,7 @@ type Props = {
 
 const ModalComponent = ({ id, children, centered = true, size, blockHide = false }: Props) => {
 	const modalSize = useMemo(() => getModalSize(size), [size])
-	const ref = useRef<string>(null)
+	const ref = useRef<string>("")
 
 	useEffect(() => {
 
@@ -26,8 +26,7 @@ const ModalComponent = ({ id, children, centered = true, size, blockHide = false
 
 			if (modal) {
 				modal.dataset.bsBackdrop = "static"
-				// @ts-expect-error
-				ref["current"] = id
+				ref.current = id
 			}
 		}
 

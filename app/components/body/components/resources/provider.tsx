@@ -10,6 +10,7 @@ import { addBulkFiles, addBulkFolder, appendBulkFiles, removeAccessFromFileAsync
 import { clearSelectedFolderId } from "@/app/store/actions/info.actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { Session } from "next-auth";
+import { useSearchParams } from "next/navigation";
 import { Children, PropsWithChildren, cloneElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import DeleteConfirmationModal from "../modals/delete";
 import NewfolderModal from "../modals/newfolder";
@@ -23,6 +24,7 @@ type Props = {
 } & PropsWithChildren;
 
 const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => {
+	const searchParams = useSearchParams()
 	const initializeData = useRef<string | null | undefined>(null);
 	const store = useAppStore()
 	const { selectedResourceId } = useAppSelector(state => state.resourceInfo)
@@ -43,6 +45,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 	const dispatch = useAppDispatch()
 	const [loader, setLoader] = useState(true)
 	const [isRemoving, setIsRemoving] = useState(false)
+	const fileIdFromSearch = searchParams.get('file')
 
 
 	const disabledClick = useCallback((target: Node) => {
@@ -105,8 +108,17 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 
 	const handleInitialDataLoad = useCallback(async () => {
 		const [folders, filesData] = await Promise.all([
-			fetchFolderData(id ?? "", String(user?._id), isShared),
-			fetchFileData(id ?? "", String(user?._id), isShared)
+			fetchFolderData({
+				folderId: id ?? "",
+				userId: String(user?._id),
+				shared: isShared ? "only" : "off"
+			}),
+			fetchFileData({
+				folderId: id ?? "",
+				userId: String(user?._id),
+				shared: isShared ? "only" : "off",
+				fileId: fileIdFromSearch ?? ""
+			})
 		])
 		store.dispatch(addBulkFiles({ data: filesData?.resources, next: filesData?.next }))
 		store.dispatch(addBulkFolder({ data: folders }))
@@ -124,14 +136,14 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 			dispatch(removeAccessFromFileAsync({ resourceId: id, accessId: value ?? "" })).then(() => {
 				setIsRemoving(false)
 				toggle()
-			}).catch(err => {
+			}).catch(_err => {
 				setIsRemoving(false)
 			})
 		} else {
 			dispatch(removeAccessFromFolderAsync({ resourceId: id, accessId: value ?? "" })).then(() => {
 				setIsRemoving(false)
 				toggle()
-			}).catch(err => {
+			}).catch(_err => {
 				setIsRemoving(false)
 			})
 		}

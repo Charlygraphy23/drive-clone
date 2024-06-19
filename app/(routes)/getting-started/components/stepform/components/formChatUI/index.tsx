@@ -30,7 +30,6 @@ const StepFormChatUI = ({ data }: Props) => {
         activePageRef.current = contextState.activePage
 
     }, [activePageRef, contextState?.activePage, data])
-    console.log
 
     return (
         <div className={style.chatUI}>

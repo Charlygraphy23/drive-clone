@@ -42,7 +42,6 @@ const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAcce
                             const accessId = hasAccess?._id?.toString() ?? "";
                             console.log("Find - accessId ", accessId)
 
-                            console.log("Updating Access ", hasAccess);
                             await service.updateById(accessId, {
                                 accessType: accesses?.accessType
                             })
@@ -72,7 +71,6 @@ const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAcce
 
                     for await (const usersNeedToBeRemoved of deletedUserIds) {
                         const foundAccess = accessListOfDB.find(a => a?.createdFor?.toString() === usersNeedToBeRemoved)
-                        console.log("Find - found Access that needs to be deleted ", foundAccess);
 
                         if (!foundAccess) continue;
                         console.log("Deleting... ", foundAccess?._id)

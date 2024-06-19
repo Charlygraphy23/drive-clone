@@ -17,7 +17,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Divider, Select, SelectProps, Space } from "antd";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import style from "./style.module.scss";
 
@@ -46,7 +45,6 @@ const ManageAccess = () => {
         staleTime: Infinity
     })
     const [isLoading, setIsLoading] = useState(false)
-    const router = useRouter()
     const dispatch = useAppDispatch()
     const mutation = useMutation({ mutationFn: updateAccess })
     const session = useSession()
@@ -119,7 +117,6 @@ const ManageAccess = () => {
             resourceId,
             accesses: formatData,
         }))
-        router.refresh()
         setIsLoading(false)
 
     }

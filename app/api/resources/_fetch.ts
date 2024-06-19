@@ -43,7 +43,6 @@ export const getResources = async ({
             }
         }
 
-
         const resources = await service.getResources({
             ...rest,
             userId: String(user._id),

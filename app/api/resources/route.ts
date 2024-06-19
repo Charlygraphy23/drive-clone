@@ -11,8 +11,13 @@ export const GET = async (_req: NextRequest) => {
         const folderId = queryParams.get("folderId") as string
         const page = parseInt(queryParams.get("page") as string)
         const limit = parseInt(queryParams.get("limit") as string)
-
-        const resources = await getResources(folderId, DATA_TYPE.FILE, false, "show", page, limit)
+        const resources = await getResources({
+            folderId,
+            resourceType: DATA_TYPE.FILE,
+            shared: "show",
+            page,
+            limit
+        })
 
         if (resources?.status !== 200) {
             return response.status(resources?.status).send(resources?.message)

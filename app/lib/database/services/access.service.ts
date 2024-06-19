@@ -59,7 +59,6 @@ export class AccessService {
 
     async create(payload: Partial<AccessSchemaType>) {
         const { createdFor, resourceId, accessType, origin = ACCESS_ORIGIN.SELF, rootId = null } = payload
-        console.log("Payload created", payload)
         return await Model.create({
             createdFor,
             accessType,

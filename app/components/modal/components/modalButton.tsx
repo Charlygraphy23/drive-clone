@@ -23,12 +23,13 @@ const ModalButtonComponent = ({ className, children, modalId }: Props) => {
 export const ModalCloseButtonComponent = ({
 	className,
 	children,
-}: Pick<Props, "className"> & PropsWithChildren) => {
+	onClick
+}: { onClick?: () => void } & Pick<Props, "className"> & PropsWithChildren) => {
 	return (
 		<button
 			type='button'
 			className={`${style.modalButton} ${className} btn-close`}
-			data-bs-dismiss='modal'>
+			data-bs-dismiss='modal' onClick={onClick}>
 			{children}
 		</button>
 	);

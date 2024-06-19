@@ -10,7 +10,7 @@ export const getContentType = (types: string[]) => types.map(val => ({
     value: val
 }));
 
-export const getTagsForSearch = (tags: string[]) => tags.map(val => ({
-    label: `#${val}`,
-    value: val
-}));
+// export const getTagsForSearch = (tags: string[]) => tags.map(val => ({
+//     label: `#${val}`,
+//     value: val
+// }));

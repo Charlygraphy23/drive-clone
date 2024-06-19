@@ -13,6 +13,8 @@ export interface FilterStateType {
 export type SearchReducerStateType = {
     filters: FilterStateType,
     isFilterShown: boolean,
+    search: string
+    isOpen: boolean
 }
 
 export type SearchContextType = {

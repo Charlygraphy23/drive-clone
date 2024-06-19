@@ -3,18 +3,28 @@ import { getFileIconByType } from '@/app/components/fileListItem/utils/index.uti
 import { DATA_TYPE } from '@/app/lib/database/interfaces/files.interfaces'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import style from '../style.module.scss'
 
 type Props = {
     type: DATA_TYPE
     title: string
-    path: string,
+    path?: string,
     selected?: boolean;
     mimeType?: string;
+    fileId?: string;
 }
 
-const ResultComponent = ({ type, title, path, selected = false, mimeType }: Props) => {
+const ResultComponent = ({ type, title, path, selected = false, mimeType, fileId }: Props) => {
+    const url = useMemo(() => {
+        if (type === DATA_TYPE.FILE) {
+            if (path) return `q/${path}?file=${fileId}`
+            return `/?file=${fileId}`
+        }
+
+        if (path) return `q/${path}`
+        return "/"
+    }, [path])
 
     const fileIcon = useCallback(() => {
         if (mimeType) {
@@ -24,7 +34,7 @@ const ResultComponent = ({ type, title, path, selected = false, mimeType }: Prop
     }, [mimeType])
 
     return (
-        <Link href={path} className={`${style.option} ${selected ? style.selected : ""}`}>
+        <Link href={url} className={`${style.option} ${selected ? style.selected : ""}`}>
             {fileIcon()}
             <p>{title}</p>
             <i className="bi bi-arrow-return-left"></i>
