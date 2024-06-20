@@ -105,7 +105,7 @@ const SearchModal = ({ user }: Props) => {
 
 
 
-    return <div id="cs-search" className={style.wrapper}>
+    return <div className={style.wrapper}>
         <div className={style.inputGroup}>
             <input type="text" placeholder='Search..' value={state?.search ?? ""} onChange={(e) => dispatch(handleSearch(e.target.value))} />
             <button className="button" onClick={() => dispatch(toggleFilterView())}>Filter</button>

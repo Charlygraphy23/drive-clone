@@ -41,7 +41,7 @@ export const GET = async (req: NextRequest, { params }: { params: { resourceId: 
             return response.status(403).send("Unauthorized")
         }
 
-        const data = await service.folderInfo(resourceId, String(user._id), {
+        const data = await service.resourceInfo(resourceId, String(user._id), {
             withDeleted: searchWithDeleted
         })
 

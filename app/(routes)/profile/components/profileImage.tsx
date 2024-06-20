@@ -53,6 +53,7 @@ const ProfileImageComponent = () => {
 	}
 
 	useEffect(() => {
+		console.log("Image Url ", user?.imageUrl)
 		if (!user?.imageUrl) return;
 		setImageUrl(user?.imageUrl ?? "")
 	}, [user?.imageUrl])
@@ -65,7 +66,6 @@ const ProfileImageComponent = () => {
 				alt='profile'
 				fill
 				sizes="(max-width: 50px) 50vw"
-				quality={75}
 				placeholder='blur'
 				loading='lazy'
 				blurDataURL={DEFAULT_IMAGE}

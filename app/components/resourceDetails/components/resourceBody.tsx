@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/app/store'
 import {
     toggleModal as toggleModalState
 } from "@/app/store/actions"
+import { formatBytes } from '@/app/utils/index.utils'
 import Image from 'next/image'
 import AvatarComponent from '../../avatar'
 import ButtonGroup from '../../buttonGroup'
@@ -56,7 +57,7 @@ const ResourceBody = () => {
 
                 <div>
                     <p>Owner</p>
-                    <span>{resourceInfo?.isOwner ? "me" : `${resourceInfo?.ownerInfo?.firstName} ${resourceInfo?.ownerInfo?.lastName}`}</span>
+                    <span><small>{resourceInfo?.isOwner ? "me" : `${resourceInfo?.ownerInfo?.firstName} ${resourceInfo?.ownerInfo?.lastName}`}</small></span>
                 </div>
 
                 <div>
@@ -64,13 +65,24 @@ const ResourceBody = () => {
                     <span>{resourceInfo?.lastModified && new Date(resourceInfo?.lastModified ?? "").toLocaleDateString()}</span>
                 </div>
 
+                {resourceInfo?.dataType === DATA_TYPE.FILE && <div>
+                    <p>Size</p>
+                    <span><small>{formatBytes(resourceInfo?.fileSize ?? 0)}</small></span>
+                </div>}
+
+
+                {resourceInfo?.dataType === DATA_TYPE.FILE && <div>
+                    <p>Type</p>
+                    <div className='d-flex align-items-center mt-1'><Image className='me-2' src={getFileIconByType(resourceInfo?.mimeType ?? "")} width={20} height={20} alt='icon-image' /> <span><small>{resourceInfo?.mimeType}</small></span></div>
+                </div>}
+
                 <div>
                     <p>Created</p>
-                    <span>{resourceInfo?.createdAt && new Date(resourceInfo?.createdAt).toLocaleDateString()}</span>
+                    <span><small>{resourceInfo?.createdAt && new Date(resourceInfo?.createdAt).toLocaleDateString()}</small></span>
                 </div>
-            </section>
+            </section >
 
-        </div>
+        </div >
     )
 }
 

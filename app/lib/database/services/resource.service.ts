@@ -342,11 +342,11 @@ export class ResourceService {
         return await Model.findOne(filters, null, options)
     }
 
-    async folderInfo(folderId: string, loggedUserId: string, options?: SessionOption) {
-        const folderList = await Model.aggregate([
+    async resourceInfo(resourceId: string, loggedUserId: string, options?: SessionOption) {
+        const resourceList = await Model.aggregate([
             {
                 $match: {
-                    _id: new Types.ObjectId(folderId)
+                    _id: new Types.ObjectId(resourceId)
                 }
             },
 
@@ -392,6 +392,7 @@ export class ResourceService {
             {
                 $project: {
                     createdBy: 0,
+                    key: 0
                 }
             },
 
@@ -427,7 +428,7 @@ export class ResourceService {
 
         ], options)
 
-        return folderList?.[0] ?? null
+        return resourceList?.[0] ?? null
     }
 
     async updateName(_id: string, name: string) {

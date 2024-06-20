@@ -37,9 +37,12 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
 
 
     const callback = useCallback<IntersectionObserverCallback>(async (itemList, _observer) => {
-        console.log("Has Next ", hasNext)
+        console.log("Inside Callback ", itemList)
         for (const item of itemList) {
-            const inserted = item?.isIntersecting
+            const inserted = item?.isIntersecting;
+
+            console.log('Is Inserting , ', inserted)
+            console.log('hasNext , ', hasNext)
             if (inserted && !isFetching && hasNext) {
                 setPage(prev => {
                     prev = prev + 1
@@ -63,11 +66,11 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
     useEffect(() => {
         const options = {
             root: scrollRef?.current,
-            rootMargin: "0px",
+            rootMargin: "10px",
             threshold: 1.0,
         };
         const observer = new IntersectionObserver(callback, options);
-
+        console.log("Current Eleemnet ", lastItemRef?.current)
         if (lastItemRef?.current)
             observer.observe(lastItemRef?.current);
 

@@ -1,6 +1,5 @@
 "use client";
 
-import FileLoader from "../loader/fileLoader";
 import FullTableLoader from "./components/fullTableLoader";
 import TableBody from "./components/tableBody";
 import TableHeader from "./components/tableHeader";
@@ -37,7 +36,12 @@ const MyTable = <T,>({
 				/>
 			</table>
 			{isLoading && <FullTableLoader />}
-			{listLoading && <div><FileLoader /></div>}
+			{listLoading && <div className="d-flex align-items-center justify-content-center">
+				<div className="spinner-border  text-dark" role="status">
+					<span className="visually-hidden">Loading...</span>
+				</div>
+			</div>}
+			{/* {listLoading && <div><FileLoader /></div>} */}
 		</section>
 	);
 };

@@ -50,8 +50,8 @@ export const getResourceInfoAsync = createAsyncThunk<ResourceInfoDataType, { res
 
         if (info) return info
 
-        const data = await getResourceInfoByIdApi(ID, payload?.withDeleted)
-        return data?.data?.data
+        const response = await getResourceInfoByIdApi(ID, payload?.withDeleted)
+        return response?.data?.data
     }
     catch (err) {
         const errors = ErrorHandler(err)
