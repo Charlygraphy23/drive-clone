@@ -4,7 +4,7 @@ import { ApiResponse } from "@/app/utils/response";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { hash } from "bcryptjs";
 import { File } from "buffer";
-import { FilterQuery, Types } from "mongoose";
+import mongoose, { FilterQuery, Types } from "mongoose";
 import { generatePassword, userInfoProjectionAggregationQuery } from "../../lib";
 import { CreateUser, UserSchemaType } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
@@ -14,6 +14,11 @@ export class UserService {
     async findByEmail(email: string, select: string | Partial<Record<keyof UserSchemaType, number>> = "") {
         return await UserModel.findOne({ email }).select(select)
     }
+
+    async findById(userId: string) {
+        return UserModel.findOne({ _id: new mongoose.Types.ObjectId(userId) })
+    }
+
 
     async createUserWithoutPass({ email, firstName, lastName }: CreateUser) {
         const randomString = await generatePassword();
@@ -60,9 +65,22 @@ export class UserService {
     }
 
     async updateProfileImage(file: File, userId: string) {
+        const hasUser = await this.findById(userId)
+
+        if (!hasUser) throw new Error("User not found")
+
         const arrayBuffer = await file.arrayBuffer()
-        const key = `${userId}/profile__image__`
+        const key = `${userId}/profile__image__${Date.now()}`
         const encryptedKey = CRYPTO.encryptWithBase64(key)
+        const oldImageUrl = hasUser?.imageUrl
+
+        if (oldImageUrl) {
+            const decryptKey = CRYPTO.decryptTextFromBase64(oldImageUrl);
+            const s3 = new LOCAL_S3({
+                key: decryptKey,
+            })
+            await s3.delete();
+        }
 
         const s3 = new LOCAL_S3({
             key,

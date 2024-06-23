@@ -20,6 +20,7 @@ const AvatarComponent = ({ user: _user, width, height, className = "", isLoading
         return `${_user?.firstName?.charAt(0)}${_user?.lastName?.charAt(0)}`
     }, [_user])
 
+
     return (
         <div className={`${style.avatar} ${className}`} style={rest?.style}>
             <div className={style.wrapper} style={{ width, height }}>

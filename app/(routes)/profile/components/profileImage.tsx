@@ -25,17 +25,19 @@ const ProfileImageComponent = () => {
 			const formData = new FormData();
 			formData.append("image", file)
 
-			mutation.mutate(formData)
+
 
 			const node = document.getElementById("profile-image") as HTMLInputElement
 			node.value = ""
 
 			const url = URL.createObjectURL(file)
 			setImageUrl(url)
+
+			await mutation.mutateAsync(formData)
 			update({
 				user: {
 					...data?.user,
-					imageUrl: "/api/users/image"
+					imageUrl: `/api/users/image/${data?.user?._id}?time=${Date.now()}`
 				}
 			})
 		}
@@ -53,7 +55,6 @@ const ProfileImageComponent = () => {
 	}
 
 	useEffect(() => {
-		console.log("Image Url ", user?.imageUrl)
 		if (!user?.imageUrl) return;
 		setImageUrl(user?.imageUrl ?? "")
 	}, [user?.imageUrl])
