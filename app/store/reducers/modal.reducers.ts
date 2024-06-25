@@ -12,6 +12,7 @@ const initialState = {
 	manageAccessModal: false,
 	deleteModal: false,
 	fileUpload: false,
+	previewModal: true,
 	data: {} as ModalDataType,
 };
 

@@ -6,7 +6,7 @@ type ToggleModal = {
 	data?: ModalDataType | null;
 	name: keyof Pick<
 		ModalStateType,
-		"renameModal" | "confirmModal" | "newFolderModal" | "changePasswordModal" | "manageAccessModal" | "deleteModal" | "fileUpload"
+		"renameModal" | "confirmModal" | "newFolderModal" | "changePasswordModal" | "manageAccessModal" | "deleteModal" | "fileUpload" | "previewModal"
 	>;
 };
 

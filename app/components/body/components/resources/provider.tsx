@@ -4,6 +4,7 @@ import { fetchFileData, fetchFolderData } from "@/app/_actions/resource";
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
 import ResourceLoader from "@/app/components/loader/resourceLoader";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
+import PreviewFiles from "@/app/components/preview";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch, useAppSelector, useAppStore } from "@/app/store";
 import { addBulkFiles, addBulkFolder, appendBulkFiles, removeAccessFromFileAsync, removeAccessFromFolderAsync, toggleModal } from "@/app/store/actions";
@@ -77,6 +78,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 	const withParentElement = useCallback((target: Node) => {
 		const myFolder = document.getElementById("my_folder")
 		const myTable = document.getElementById("my_table")
+
 
 		const isDisabled = disabledClick(target)
 		console.log("isDisabled", isDisabled)
@@ -190,6 +192,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 					message='Do you want to remove?'
 					isLoading={isRemoving}
 				/>}
+				<PreviewFiles />
 			</div>}
 		</>
 	);

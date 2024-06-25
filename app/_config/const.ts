@@ -6,6 +6,7 @@ export const CONFIRM_MODAL_ID = "confirm_modal";
 export const CHANGE_PASSWORD_MODAL = "change_password_modal";
 export const SEARCH_MODAL = "search_modal";
 export const FILE_UPLOAD = "file_upload";
+export const PREVIEW_MODAL = "preview_modal";
 
 
 

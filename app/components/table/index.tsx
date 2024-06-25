@@ -36,7 +36,7 @@ const MyTable = <T,>({
 				/>
 			</table>
 			{isLoading && <FullTableLoader />}
-			{listLoading && <div className="d-flex align-items-center justify-content-center">
+			{listLoading && <div className="d-flex align-items-center justify-content-center my-2">
 				<div className="spinner-border  text-dark" role="status">
 					<span className="visually-hidden">Loading...</span>
 				</div>
