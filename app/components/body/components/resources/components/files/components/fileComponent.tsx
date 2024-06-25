@@ -2,6 +2,7 @@
 
 import MyTable from "@/app/components/table";
 import { useAppDispatch, useAppSelector } from "@/app/store";
+import { toggleModal } from "@/app/store/actions";
 import { getResourceInfoAsync } from "@/app/store/actions/info.actions";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
 import useFileColumns from "../hooks/useFileColumns";
@@ -22,6 +23,15 @@ const FileComponent = ({ lastItemRef, isShared }: Props) => {
 
 		dispatch(getResourceInfoAsync({
 			resourceId: val?._id
+		}))
+
+		dispatch(toggleModal({
+			isOpen: true,
+			name: "previewModal",
+			data: {
+				id: val?._id,
+				...val
+			}
 		}))
 	}
 

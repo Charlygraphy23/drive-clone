@@ -46,7 +46,7 @@ const PreviewFiles = () => {
                         }}
                         fill
                         alt="random"
-                        src="https://images.pexels.com/photos/20643866/pexels-photo-20643866/free-photo-of-modern-skyscraper-building.jpeg?auto=compress&cs=tinysrgb&w=800&lazy=load"
+                        src={`/api/users/image/662cf46427dadd5aab49e7a5`}
                     />
                 </div>
             </main>
