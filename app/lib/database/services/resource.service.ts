@@ -4,7 +4,7 @@ import { ResourcePayloadType } from "@/app/interfaces/index.interface";
 import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import mimeType from "mime-types";
-import { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
+import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType, UploadFileType } from "../interfaces/files.interfaces";
@@ -539,6 +539,26 @@ export class ResourceService {
 
         return { uploadId: s3.uploadId, fileInfo: null }
 
+    }
+
+    async getFile(fileId: string) {
+
+        const fileInfo = await Model.findById({ _id: new mongoose.Types.ObjectId(fileId) }).select("+key")
+
+        if (!fileInfo) throw new Error("No Content");
+
+        const key = CRYPTO.decryptTextFromBase64(fileInfo?.key ?? "");
+
+        if (!key) throw new Error("No Content")
+
+        const s3 = new LOCAL_S3({
+            key
+        })
+        const data = await s3.get()
+        const array = await data?.Body?.transformToByteArray()
+        if (!array) throw new Error("No Content")
+
+        return [array, fileInfo?.mimeType]
     }
 
 }
