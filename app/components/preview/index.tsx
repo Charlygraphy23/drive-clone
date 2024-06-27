@@ -4,9 +4,10 @@ import { PREVIEW_MODAL } from "@/app/_config/const";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getFileIconByType } from "../fileListItem/utils/index.utils";
 import ImagePreview from "./components/imagePreview";
+import OtherPreview from "./components/otherPreview";
 import style from "./style.module.scss";
 
 
@@ -19,6 +20,9 @@ const PreviewFiles = () => {
         data: fileInfo,
     } = useAppSelector((state) => state.modals);
     const dispatch = useAppDispatch()
+
+    const fileUrl = useMemo(() => `/api/resources/files/${fileInfo?._id}`, [fileInfo])
+    const isImageFile = useMemo(() => fileInfo?.mimeType && fileInfo?.mimeType?.startsWith?.("image"), [fileInfo])
 
     const handleClick = useCallback(() => {
         dispatch(toggleModal({
@@ -80,7 +84,8 @@ const PreviewFiles = () => {
                 <i className="bi bi-download"></i>
             </header>
             <main>
-                <ImagePreview isLoading={isLoadingFile} toggle={toggleFileLoading} fileId={fileInfo?._id} />
+                {isImageFile && <ImagePreview isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />}
+                {!isImageFile && <OtherPreview url={fileUrl} fileName={fileInfo?.name} />}
             </main>
         </section>
     )

@@ -7,10 +7,10 @@ import style from '../style.module.scss';
 type Props = {
     isLoading: boolean,
     toggle: (_isLoading?: boolean) => void,
-    fileId: string
+    url: string
 }
 
-const ImagePreview = ({ isLoading, toggle, fileId }: Props) => {
+const ImagePreview = ({ isLoading, toggle, url }: Props) => {
     return (
         <div className={style.imageWrapper}>
             {isLoading && <div style={{ minHeight: "100px" }} className="d-flex align-items-center justify-content-center">
@@ -22,10 +22,10 @@ const ImagePreview = ({ isLoading, toggle, fileId }: Props) => {
                 }}
                 fill
                 alt="random"
-                src={`/api/resources/files/${fileId}`}
+                src={`${url}`}
                 sizes="100vw"
                 priority
-                onLoadingComplete={() => {
+                onLoad={() => {
                     toggle(false)
                 }}
             />

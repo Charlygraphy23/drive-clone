@@ -78,7 +78,7 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
         return () => {
             observer.disconnect()
         }
-    }, [callback])
+    }, [callback, lastItemRef?.current])
 
 
     useEffect(() => {

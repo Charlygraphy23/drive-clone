@@ -101,3 +101,9 @@ export const getResourcesApi = async ({ page, limit, folderId }: { page: number,
 export const removeAccessFromResourceApi = async (payload: { accessId: string, resourceId: string }) => {
     return axiosInstance.put(`/resources/access`, payload)
 }
+
+export const fileDownloadApi = async (url: string) => {
+    return axiosInstance.get(url, {
+        responseType: "blob"
+    })
+}
