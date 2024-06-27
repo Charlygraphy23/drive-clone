@@ -16,7 +16,8 @@ const MyTable = <T,>({
 	dataKey,
 	lastItemRef,
 	listLoading,
-	id = ""
+	id = "",
+	onRowDoubleClick
 }: { lastItemRef?: React.Ref<any> } & TableProps<T>) => {
 
 	return (
@@ -29,6 +30,7 @@ const MyTable = <T,>({
 					emptyIcon={emptyIcon}
 					isLoading={isLoading}
 					onRowClick={onRowClick}
+					onRowDoubleClick={onRowDoubleClick}
 					selectedRowDataId={selectedRowDataId}
 					dataKey={dataKey}
 					lastItemRef={lastItemRef}

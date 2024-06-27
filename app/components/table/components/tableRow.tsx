@@ -8,13 +8,15 @@ type Props<T> = {
     isActive: boolean,
     isSelectable: boolean,
     val: T
-} & Partial<Pick<TableProps<T>, "columns" | "onRowClick">>
+} & Partial<Pick<TableProps<T>, "columns" | "onRowClick" | "onRowDoubleClick">>
 
-const TableRow = <T,>({ columns, onRowClick, lastItemRef, isActive, isSelectable, val }: Props<T>) => {
+const TableRow = <T,>({ columns, onRowClick, lastItemRef, isActive, isSelectable, val, onRowDoubleClick }: Props<T>) => {
 
     return (
         <tr ref={lastItemRef} className={`${isActive ? style.active : ""} ${isSelectable ? style.selectable : ""}`} onClick={() => {
             if (onRowClick) onRowClick(val)
+        }} onDoubleClick={() => {
+            if (onRowDoubleClick) onRowDoubleClick(val)
         }}>
             {columns?.map((column, i) => {
                 if (i === 0)

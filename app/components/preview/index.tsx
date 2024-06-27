@@ -4,21 +4,21 @@ import { PREVIEW_MODAL } from "@/app/_config/const";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
 import Image from "next/image";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getFileIconByType } from "../fileListItem/utils/index.utils";
+import ImagePreview from "./components/imagePreview";
 import style from "./style.module.scss";
 
 
 
 
 const PreviewFiles = () => {
+    const [isLoadingFile, setIsLoadingFile] = useState(true)
     const {
         previewModal,
         data: fileInfo,
     } = useAppSelector((state) => state.modals);
-
     const dispatch = useAppDispatch()
-
 
     const handleClick = useCallback(() => {
         dispatch(toggleModal({
@@ -26,6 +26,10 @@ const PreviewFiles = () => {
             name: "previewModal"
         }))
     }, [dispatch])
+
+    const toggleFileLoading = useCallback((isLoading = false) => {
+        setIsLoadingFile(isLoading)
+    }, [])
 
     useEffect(() => {
         if (!previewModal) return;
@@ -48,8 +52,10 @@ const PreviewFiles = () => {
 
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
+            setIsLoadingFile(true)
         }
     }, [handleClick, previewModal])
+
 
     if (!previewModal) return <></>;
 
@@ -74,20 +80,7 @@ const PreviewFiles = () => {
                 <i className="bi bi-download"></i>
             </header>
             <main>
-                <div className={style.imageWrapper}>
-                    <Image
-                        onLoad={(e) => console.log(e.target)}
-                        style={{
-                            objectFit: 'contain',
-
-                        }}
-                        fill
-                        alt="random"
-                        src={`/api/resources/files/${fileInfo?._id}`}
-                        sizes="100vw"
-                        priority
-                    />
-                </div>
+                <ImagePreview isLoading={isLoadingFile} toggle={toggleFileLoading} fileId={fileInfo?._id} />
             </main>
         </section>
     )

@@ -21,9 +21,15 @@ const FileComponent = ({ lastItemRef, isShared }: Props) => {
 	const handleRowClick = (val: FileDataType) => {
 		if (!val) return;
 
+		if (selectedResourceId === val?._id) return handleRowDoubleClick(val)
+
 		dispatch(getResourceInfoAsync({
 			resourceId: val?._id
 		}))
+	}
+
+	const handleRowDoubleClick = (val: FileDataType) => {
+		if (!val) return;
 
 		dispatch(toggleModal({
 			isOpen: true,
@@ -42,6 +48,7 @@ const FileComponent = ({ lastItemRef, isShared }: Props) => {
 		lastItemRef={lastItemRef}
 		listLoading={loading}
 		onRowClick={handleRowClick}
+		onRowDoubleClick={handleRowDoubleClick}
 		selectedRowDataId={selectedResourceId}
 		id="my_table"
 

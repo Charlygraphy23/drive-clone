@@ -6,11 +6,8 @@ import TableRow from "./tableRow";
 
 type Props<T> = { lastItemRef?: React.Ref<any> } & TableProps<T>
 
-const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, selectedRowDataId, dataKey, lastItemRef, listLoading, isLoading }: Props<T>) => {
+const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, onRowDoubleClick, selectedRowDataId, dataKey, lastItemRef, listLoading, isLoading }: Props<T>) => {
 	const isSelectable = data?.length > 0
-
-	console.log("TableBody - lastItemRef", lastItemRef)
-	console.log("TableBody - listLoading", listLoading)
 
 	return (
 		<>
@@ -25,6 +22,7 @@ const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, selectedRowDataId
 							lastItemRef={lastItemRef}
 							columns={columns}
 							onRowClick={onRowClick}
+							onRowDoubleClick={onRowDoubleClick}
 						/>
 					}
 
@@ -35,6 +33,7 @@ const TableBody = <T,>({ columns, data, emptyIcon, onRowClick, selectedRowDataId
 						val={val}
 						columns={columns}
 						onRowClick={onRowClick}
+						onRowDoubleClick={onRowDoubleClick}
 					/>
 
 
