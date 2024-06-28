@@ -79,8 +79,6 @@ export const POST = async (req: NextRequest) => {
         }, { session: mongoSession });
 
         await mongoSession.commitTransaction()
-
-
         if (chunkIndex === totalChunks - 1) {
             // means file has been uploaded fully
             revalidateTag("files")

@@ -9,6 +9,7 @@ import { getFileIconByType } from "../fileListItem/utils/index.utils";
 import ImagePreview from "./components/imagePreview";
 import OtherPreview from "./components/otherPreview";
 import style from "./style.module.scss";
+import { downloadFile } from "./utils/index.utils";
 
 
 
@@ -21,7 +22,10 @@ const PreviewFiles = () => {
     } = useAppSelector((state) => state.modals);
     const dispatch = useAppDispatch()
 
-    const fileUrl = useMemo(() => `/api/resources/files/${fileInfo?._id}`, [fileInfo])
+    const fileUrl = useMemo(() => {
+        if (!fileInfo?._id) return ""
+        return `/api/resources/files/${fileInfo?._id}`
+    }, [fileInfo])
     const isImageFile = useMemo(() => fileInfo?.mimeType && fileInfo?.mimeType?.startsWith?.("image"), [fileInfo])
 
     const handleClick = useCallback(() => {
@@ -34,6 +38,10 @@ const PreviewFiles = () => {
     const toggleFileLoading = useCallback((isLoading = false) => {
         setIsLoadingFile(isLoading)
     }, [])
+
+    const handleDownload = () => {
+        downloadFile({ url: fileUrl, fileName: fileInfo?.name })
+    }
 
     useEffect(() => {
         if (!previewModal) return;
@@ -81,7 +89,7 @@ const PreviewFiles = () => {
                     </p>
                 </div>
 
-                <i className="bi bi-download"></i>
+                <i className="bi bi-download" onClick={handleDownload}></i>
             </header>
             <main>
                 {isImageFile && <ImagePreview isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />}

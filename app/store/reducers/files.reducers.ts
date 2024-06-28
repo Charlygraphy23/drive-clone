@@ -86,7 +86,11 @@ export default createReducer(initialState, (builder) => {
 		})
 		.addCase(pushFile, (state, action) => {
 			const payload = action?.payload;
-			state.data.push(payload);
+
+			if (!state.hasNext) {
+				state.data.push(payload);
+			}
+
 			return state;
 		})
 		.addCase(moveToTrashFileAsync.fulfilled, (state, action) => {

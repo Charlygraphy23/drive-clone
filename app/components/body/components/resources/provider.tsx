@@ -1,6 +1,7 @@
 "use client";
 
 import { fetchFileData, fetchFolderData } from "@/app/_actions/resource";
+import { FILE_LIMIT } from "@/app/_config/const";
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
 import ResourceLoader from "@/app/components/loader/resourceLoader";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
@@ -41,7 +42,8 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 		api: appendBulkFiles,
 		startPage: 2,
 		isFetching,
-		hasNext
+		hasNext,
+		limit: FILE_LIMIT
 	})
 	const dispatch = useAppDispatch()
 	const [loader, setLoader] = useState(true)

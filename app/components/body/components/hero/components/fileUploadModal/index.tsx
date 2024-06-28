@@ -129,6 +129,12 @@ const FileUploadModal = ({ isOpen }: Props) => {
         setIsDragging(false)
     }
 
+    const clearInputFiles = () => {
+        const input = document.getElementById("upload-files") as HTMLInputElement
+        if (input)
+            input.value = ""
+    }
+
     const startUploading = useCallback(async () => {
 
         let index = 0, hasMoreFile = !!files?.length;
@@ -193,6 +199,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
         if (uploading) return;
         if (hasUploaded) {
             toggleModal(false)
+            clearInputFiles()
             return;
         }
 
@@ -246,7 +253,10 @@ const FileUploadModal = ({ isOpen }: Props) => {
                 </div> || null}
 
                 <div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
-                    {!hasUploaded && <ButtonGroup handleSubmit={() => toggleModal(false)} submitText="cancel" className={`cancel me-4`} />}
+                    {!hasUploaded && <ButtonGroup handleSubmit={() => {
+                        toggleModal(false)
+                        clearInputFiles()
+                    }} submitText="cancel" className={`cancel me-4`} />}
                     <ButtonGroup
                         type="submit"
                         disabled={uploading}

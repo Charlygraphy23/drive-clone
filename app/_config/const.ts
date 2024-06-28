@@ -11,3 +11,4 @@ export const PREVIEW_MODAL = "preview_modal";
 
 
 export const BUCKET_PATH = process.env.OBJECT_BUCKET_NAME
+export const FILE_LIMIT = 10

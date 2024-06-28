@@ -78,4 +78,6 @@ export const getFileIconByType = (mimeType: File["type"]) => {
     if (mimeType && mimeType?.startsWith("font")) {
         return FONT_ICON
     }
+
+    return ZIP_ICON
 }

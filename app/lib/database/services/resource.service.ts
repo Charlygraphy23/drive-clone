@@ -480,7 +480,7 @@ export class ResourceService {
     async upload(payload: UploadFileType, options: SessionOption) {
         const accessService = new AccessService()
 
-        const key = `${payload?.userId}/${Date.now() + "_" + payload?.fileName}`
+        const key = `${payload?.userId}/${payload?.fileName}`
         const encryptedKey = CRYPTO.encryptWithBase64(key)
 
         const s3 = new LOCAL_S3({
@@ -558,7 +558,7 @@ export class ResourceService {
         const array = await data?.Body?.transformToByteArray()
         if (!array) throw new Error("No Content")
 
-        return [array, fileInfo?.mimeType]
+        return [array, fileInfo?.mimeType, fileInfo?.name]
     }
 
 }

@@ -6,9 +6,11 @@ import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 
 
-export const GET = async (_req: NextRequest, { params }: { params: { fileId: string } }) => {
+export const GET = async (req: NextRequest, { params }: { params: { fileId: string } }) => {
     const service = new ResourceService();
     const response = new ApiResponse()
+
+
     try {
         const session = await getServerSession(authOptions)
         if (!session) return response.status(401).send("Unauthorized")
@@ -19,10 +21,12 @@ export const GET = async (_req: NextRequest, { params }: { params: { fileId: str
 
         await connectDB()
 
-        const [array, type] = await service.getFile(fileId);
+        const [array, type, name] = await service.getFile(fileId);
 
         return response.setHeaders({
-            "Content-Type": type as string
+            "Content-Type": type as string,
+            "Content-Length": String(array?.length ?? 0),
+            "Content-Disposition": `attachment; filename=${name}`
         }).send(array, 200, true)
 
     }

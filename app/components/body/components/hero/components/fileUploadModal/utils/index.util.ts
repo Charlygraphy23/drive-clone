@@ -3,11 +3,12 @@ import { uploadFile } from "@/app/_apis_routes/resources";
 export const breakIntoChunks = async (file: File, index: number, folderId = "", getProgress: (_progress: number, _fileIndex: number) => void) => {
     return new Promise(async (resolve, reject) => {
         let uploadId = ""
+        const time = Date.now()
         try {
             const chunks = await generateChunk(file)
             const formData = new FormData();
             formData.append("totalSize", String(file.size))
-            formData.append("name", file.name)
+            formData.append("name", `${time}-${file.name}`)
             if (folderId) {
                 formData.append("folderId", folderId)
             }
