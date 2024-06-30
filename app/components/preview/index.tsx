@@ -3,13 +3,15 @@
 import { PREVIEW_MODAL } from "@/app/_config/const";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
+import { Progress } from "antd";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getFileIconByType } from "../fileListItem/utils/index.utils";
 import ImagePreview from "./components/imagePreview";
 import OtherPreview from "./components/otherPreview";
+import VideoPreview from "./components/videoPreview";
+import useDownload from "./hooks/useDownload";
 import style from "./style.module.scss";
-import { downloadFile } from "./utils/index.utils";
 
 
 
@@ -21,12 +23,15 @@ const PreviewFiles = () => {
         data: fileInfo,
     } = useAppSelector((state) => state.modals);
     const dispatch = useAppDispatch()
+    const { startDownload, isDownloading, progress } = useDownload()
 
     const fileUrl = useMemo(() => {
         if (!fileInfo?._id) return ""
         return `/api/resources/files/${fileInfo?._id}`
     }, [fileInfo])
     const isImageFile = useMemo(() => fileInfo?.mimeType && fileInfo?.mimeType?.startsWith?.("image"), [fileInfo])
+    const isVideoFile = useMemo(() => fileInfo?.mimeType && fileInfo?.mimeType?.startsWith?.("video"), [fileInfo])
+
 
     const handleClick = useCallback(() => {
         dispatch(toggleModal({
@@ -40,7 +45,8 @@ const PreviewFiles = () => {
     }, [])
 
     const handleDownload = () => {
-        downloadFile({ url: fileUrl, fileName: fileInfo?.name })
+        if (isDownloading) return;
+        startDownload(fileUrl, fileInfo?.name)
     }
 
     useEffect(() => {
@@ -89,11 +95,17 @@ const PreviewFiles = () => {
                     </p>
                 </div>
 
-                <i className="bi bi-download" onClick={handleDownload}></i>
+                <div className="d-flex justify-content-center align-items-center">
+                    {isDownloading ?
+                        <Progress status="active" trailColor="white" type="circle" percent={progress} size={20} strokeColor="#6a29ff" />
+                        : <i className="bi bi-download" onClick={handleDownload}></i>
+                    }
+                </div>
             </header>
             <main>
                 {isImageFile && <ImagePreview isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />}
-                {!isImageFile && <OtherPreview url={fileUrl} fileName={fileInfo?.name} />}
+                {isVideoFile && <VideoPreview url={fileUrl} />}
+                {!isImageFile && !isVideoFile && <OtherPreview url={fileUrl} fileName={fileInfo?.name} />}
             </main>
         </section>
     )

@@ -1,6 +1,6 @@
 import ButtonGroup from "../../buttonGroup";
+import useDownload from "../hooks/useDownload";
 import style from "../style.module.scss";
-import { downloadFile } from "../utils/index.utils";
 
 
 type Props = {
@@ -9,15 +9,18 @@ type Props = {
 }
 
 const OtherPreview = ({ url, fileName }: Props) => {
-
+    const { startDownload, isDownloading, progress } = useDownload()
     const onClick = () => {
-        downloadFile({ url, fileName })
+        if (isDownloading) return;
+        startDownload(url, fileName)
     }
 
     return (
         <div className={style.noPreviewWrapper}>
             <p>No Preview Available</p>
-            <ButtonGroup submitText="Download" handleSubmit={onClick} />
+            <ButtonGroup submitText={
+                isDownloading ? `${progress}% Downloading..` : "Download"
+            } handleSubmit={onClick} />
         </div>
     )
 }
