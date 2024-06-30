@@ -94,6 +94,7 @@ export class UserService {
     }
 
     async getProfileImage(userId: string) {
+
         const userData = await (UserModel.findById({ _id: new Types.ObjectId(userId) }).select("+imageUrl"));
 
         if (!userData?.imageUrl) return ""
@@ -105,11 +106,10 @@ export class UserService {
         const s3 = new LOCAL_S3({
             key
         })
-
         const data = await s3.get()
-        const array = await data?.Body?.transformToByteArray()
-        if (!array) throw new Error("No Content")
 
-        return array
+        const body = data?.Body as ReadableStream
+        if (!body) throw new Error("No Content")
+        return body
     }
 }

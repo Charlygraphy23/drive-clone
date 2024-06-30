@@ -29,6 +29,11 @@ const PreviewFiles = () => {
         if (!fileInfo?._id) return ""
         return `/api/resources/files/${fileInfo?._id}`
     }, [fileInfo])
+
+    const downloadUrl = useMemo(() => {
+        if (!fileInfo?._id) return ""
+        return `/api/resources/files/download/${fileInfo?._id}`
+    }, [fileInfo])
     const isImageFile = useMemo(() => fileInfo?.mimeType && fileInfo?.mimeType?.startsWith?.("image"), [fileInfo])
     const isVideoFile = useMemo(() => fileInfo?.mimeType && fileInfo?.mimeType?.startsWith?.("video"), [fileInfo])
 
@@ -46,7 +51,7 @@ const PreviewFiles = () => {
 
     const handleDownload = () => {
         if (isDownloading) return;
-        startDownload(fileUrl, fileInfo?.name)
+        startDownload(downloadUrl, fileInfo?.name)
     }
 
     useEffect(() => {
@@ -105,7 +110,7 @@ const PreviewFiles = () => {
             <main>
                 {isImageFile && <ImagePreview isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />}
                 {isVideoFile && <VideoPreview url={fileUrl} />}
-                {!isImageFile && !isVideoFile && <OtherPreview url={fileUrl} fileName={fileInfo?.name} />}
+                {!isImageFile && !isVideoFile && <OtherPreview url={downloadUrl} fileName={fileInfo?.name} />}
             </main>
         </section>
     )

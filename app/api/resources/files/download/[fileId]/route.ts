@@ -1,27 +1,34 @@
 import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
-import { UserService } from "@/app/lib/database/services/user.service";
+import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 
 
-export const GET = async (_req: NextRequest, { params }: { params: { userId: string } }) => {
-    const service = new UserService();
+export const GET = async (req: NextRequest, { params }: { params: { fileId: string } }) => {
+    const service = new ResourceService();
     const response = new ApiResponse()
+
+
     try {
         const session = await getServerSession(authOptions)
         if (!session) return response.status(401).send("Unauthorized")
 
-        const userId = params?.userId;
+        const fileId = params?.fileId;
 
-        if (!userId) return response.status(422).send("Invalid url")
+        if (!fileId) return response.status(422).send("Invalid url")
 
         await connectDB()
-        const stream = await service.getProfileImage(String(userId));
+
+        const [array, type, name] = await service.getFile(fileId);
+
         return response.setHeaders({
-            "Content-Type": "image/png"
-        }).send(stream, 200, true)
+            "Content-Type": type as string,
+            "Content-Length": String(array?.length ?? 0),
+            "Content-Disposition": `attachment; filename=${name}`
+        }).send(array, 200, true)
+
     }
     catch (_err: unknown) {
         const err = _err as { message: string }

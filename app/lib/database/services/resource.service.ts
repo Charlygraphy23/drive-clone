@@ -561,4 +561,23 @@ export class ResourceService {
         return [array, fileInfo?.mimeType, fileInfo?.name]
     }
 
+    async getFileStream(fileId: string) {
+
+        const fileInfo = await Model.findById({ _id: new mongoose.Types.ObjectId(fileId) }).select("+key")
+
+        if (!fileInfo) throw new Error("No Content");
+        const key = CRYPTO.decryptTextFromBase64(fileInfo?.key ?? "");
+
+        if (!key) throw new Error("No Content")
+
+        const s3 = new LOCAL_S3({
+            key
+        })
+        const data = await s3.get()
+        const body = data?.Body as ReadableStream
+        if (!body) throw new Error("No Content")
+
+        return [body, fileInfo?.mimeType, fileInfo?.name]
+    }
+
 }

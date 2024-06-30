@@ -10,7 +10,6 @@ export const GET = async (req: NextRequest, { params }: { params: { fileId: stri
     const service = new ResourceService();
     const response = new ApiResponse()
 
-
     try {
         const session = await getServerSession(authOptions)
         if (!session) return response.status(401).send("Unauthorized")
@@ -21,13 +20,11 @@ export const GET = async (req: NextRequest, { params }: { params: { fileId: stri
 
         await connectDB()
 
-        const [array, type, name] = await service.getFile(fileId);
+        const [stream, type] = await service.getFileStream(fileId);
 
         return response.setHeaders({
             "Content-Type": type as string,
-            "Content-Length": String(array?.length ?? 0),
-            "Content-Disposition": `attachment; filename=${name}`
-        }).send(array, 200, true)
+        }).send(stream, 200, true)
 
     }
     catch (_err: unknown) {
