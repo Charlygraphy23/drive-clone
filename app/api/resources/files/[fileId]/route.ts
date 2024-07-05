@@ -18,12 +18,25 @@ export const GET = async (req: NextRequest, { params }: { params: { fileId: stri
 
         if (!fileId) return response.status(422).send("Invalid url")
 
+        const range = req?.headers?.get('Range') ?? "";
+
         await connectDB()
 
-        const [stream, type] = await service.getFileStream(fileId);
+        const {
+            stream, fileInfo, ...rest
+        } = await service.getFileStream(fileId, range);
+
+        if (fileInfo?.mimeType && fileInfo?.mimeType?.startsWith("video") && range) {
+            const { start, end, size } = rest
+            return response.setHeaders({
+                "Content-Type": fileInfo?.mimeType as string,
+                "Content-Range": `bytes ${start}-${end}/${size}`,
+                "Accept-Ranges": "bytes",
+            }).send(stream, 206, true)
+        }
 
         return response.setHeaders({
-            "Content-Type": type as string,
+            "Content-Type": fileInfo?.mimeType as string,
         }).send(stream, 200, true)
 
     }

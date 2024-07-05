@@ -1,4 +1,4 @@
-import { AbortMultipartUploadCommand, CompleteMultipartUploadCommand, CreateMultipartUploadCommand, DeleteObjectCommand, GetObjectCommand, ListPartsCommand, PutObjectCommand, S3, UploadPartCommand } from "@aws-sdk/client-s3";
+import { AbortMultipartUploadCommand, CompleteMultipartUploadCommand, CreateMultipartUploadCommand, DeleteObjectCommand, GetObjectCommand, GetObjectCommandInput, ListPartsCommand, PutObjectCommand, S3, UploadPartCommand } from "@aws-sdk/client-s3";
 import { BUCKET_PATH } from "../_config/const";
 import { UploadFileType } from "../lib/database/interfaces/files.interfaces";
 
@@ -73,11 +73,20 @@ export class LOCAL_S3 {
         return await s3Client.send(command)
     }
 
-    async get() {
-        const command = new GetObjectCommand({
+    async get(payload?: {
+        Range?: string
+    }) {
+
+        const params: GetObjectCommandInput = {
             Bucket: this.bucket,
             Key: this.key,
-        })
+        }
+
+        if (payload?.Range) {
+            params.Range = payload?.Range
+        }
+
+        const command = new GetObjectCommand(params)
 
         return await s3Client.send(command)
     }

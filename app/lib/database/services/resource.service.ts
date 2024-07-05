@@ -3,6 +3,7 @@ import { ResourceDatasetType } from "@/app/components/body/components/resources/
 import { ResourcePayloadType } from "@/app/interfaces/index.interface";
 import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
+import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import mimeType from "mime-types";
 import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { userInfoProjectionAggregationQuery } from "../../lib";
@@ -14,6 +15,38 @@ import { AccessService } from "./access.service";
 const Model = FilesAndFolderModel
 
 export class ResourceService {
+
+    private handleVideoStream = async ({ fileInfo, range, key }: {
+        fileInfo: FilesAndFolderSchemaType, range: string, key: string
+    }) => {
+
+        if (!fileInfo?.mimeType || !fileInfo?.mimeType?.startsWith("video/")) {
+            throw new Error("Required a video file!")
+        }
+
+        const CHUNK_SIZE = 10 ** 6 - (10 ** 5 * 2); // 800Kb
+        const size = fileInfo?.fileSize ?? 0
+        const start = Number(range.replace(/\D/g, ""));
+        const end = Math.min(start + CHUNK_SIZE, size - 1);
+        const contentLength = end - start + 1;
+
+        const streamRange = `bytes=${start}-${end}`
+
+        const s3 = new LOCAL_S3({
+            key
+        })
+        const data = await s3.get({
+            Range: streamRange
+        })
+
+        return {
+            stream: data?.Body,
+            contentLength,
+            size,
+            start,
+            end
+        }
+    }
 
     private getUserInfo(userId: string | Types.ObjectId) {
         return [
@@ -551,6 +584,7 @@ export class ResourceService {
 
         if (!key) throw new Error("No Content")
 
+
         const s3 = new LOCAL_S3({
             key
         })
@@ -561,7 +595,15 @@ export class ResourceService {
         return [array, fileInfo?.mimeType, fileInfo?.name]
     }
 
-    async getFileStream(fileId: string) {
+    async getFileStream(fileId: string, range: string): Promise<{
+        stream?: GetObjectCommandOutput["Body"],
+        contentLength?: number,
+        fileInfo: FilesAndFolderSchemaType,
+        end?: number,
+        start?: number,
+        size?: number,
+
+    }> {
 
         const fileInfo = await Model.findById({ _id: new mongoose.Types.ObjectId(fileId) }).select("+key")
 
@@ -570,14 +612,32 @@ export class ResourceService {
 
         if (!key) throw new Error("No Content")
 
+        if (fileInfo?.mimeType && fileInfo?.mimeType?.startsWith("video") && range) {
+            const { stream, contentLength, end, size, start } = await this.handleVideoStream({
+                fileInfo, range: range, key
+            })
+
+            return {
+                stream,
+                fileInfo,
+                contentLength,
+                end,
+                size,
+                start
+            }
+
+        }
+
         const s3 = new LOCAL_S3({
             key
         })
         const data = await s3.get()
-        const body = data?.Body as ReadableStream
+        const body = data?.Body
         if (!body) throw new Error("No Content")
 
-        return [body, fileInfo?.mimeType, fileInfo?.name]
+        return {
+            stream: body, fileInfo
+        }
     }
 
 }
