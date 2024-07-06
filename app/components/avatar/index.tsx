@@ -1,8 +1,8 @@
 import { DEFAULT_IMAGE } from '@/app/_config'
 import { User } from 'next-auth'
-import Image from 'next/image'
 import { useMemo } from 'react'
 import { Rings } from 'react-loader-spinner'
+import LocalImage from '../LocalImage'
 import style from "./style.module.scss"
 
 type Props = {
@@ -26,11 +26,10 @@ const AvatarComponent = ({ user: _user, width, height, className = "", isLoading
             <div className={style.wrapper} style={{ width, height }}>
                 {
                     !isLoading ? <>
-                        {_user?.imageUrl && <Image
+                        {_user?.imageUrl && <LocalImage
                             src={_user?.imageUrl ?? ""}
                             alt='avatar-image'
                             fill
-                            quality={75}
                             placeholder='blur'
                             loading='lazy'
                             blurDataURL={DEFAULT_IMAGE}
