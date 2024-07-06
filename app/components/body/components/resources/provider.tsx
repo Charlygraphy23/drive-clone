@@ -35,6 +35,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 		renameModal,
 		newFolderModal,
 		deleteModal,
+		previewModal,
 		data: modalState,
 	} = useAppSelector((state) => state.modals);
 	const { isFetching, hasNext } = useAppSelector(state => state.files)
@@ -194,7 +195,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 					message='Do you want to remove?'
 					isLoading={isRemoving}
 				/>}
-				<PreviewFiles />
+				{previewModal && <PreviewFiles />}
 			</div>}
 		</>
 	);

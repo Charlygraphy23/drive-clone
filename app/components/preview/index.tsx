@@ -6,9 +6,11 @@ import { toggleModal } from "@/app/store/actions";
 import { Progress } from "antd";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { flushSync } from "react-dom";
 import { getFileIconByType } from "../fileListItem/utils/index.utils";
 import ImagePreview from "./components/imagePreview";
 import OtherPreview from "./components/otherPreview";
+import TextPreview from "./components/txtPreview";
 import VideoPreview from "./components/videoPreview";
 import useDownload from "./hooks/useDownload";
 import style from "./style.module.scss";
@@ -24,6 +26,7 @@ const PreviewFiles = () => {
     } = useAppSelector((state) => state.modals);
     const dispatch = useAppDispatch()
     const { startDownload, isDownloading, progress } = useDownload()
+    const [isMounted, setMounted] = useState(true)
 
     const fileUrl = useMemo(() => {
         if (!fileInfo?._id) return ""
@@ -34,11 +37,11 @@ const PreviewFiles = () => {
         if (!fileInfo?._id) return ""
         return `/api/resources/files/download/${fileInfo?._id}`
     }, [fileInfo])
-    const isImageFile = useMemo(() => fileInfo?.mimeType && fileInfo?.mimeType?.startsWith?.("image"), [fileInfo])
-    const isVideoFile = useMemo(() => fileInfo?.mimeType && fileInfo?.mimeType?.startsWith?.("video"), [fileInfo])
-
 
     const handleClick = useCallback(() => {
+        flushSync(() => {
+            setMounted(false)
+        })
         dispatch(toggleModal({
             isOpen: false,
             name: "previewModal"
@@ -53,6 +56,29 @@ const PreviewFiles = () => {
         if (isDownloading) return;
         startDownload(downloadUrl, fileInfo?.name)
     }
+
+    const Component = useCallback(() => {
+
+        const isImage = fileInfo?.mimeType?.startsWith?.("image")
+        const isVideo = fileInfo?.mimeType?.startsWith?.("video")
+        const isText = fileInfo?.mimeType?.startsWith?.("text") || fileInfo?.mimeType?.startsWith?.("application/json")
+        console.log("fileInfo?.mimeType", fileInfo?.mimeType)
+
+        if (isImage) {
+            return <ImagePreview isOpen={isMounted} isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />
+        }
+
+        if (isVideo) {
+            return <VideoPreview isOpen={isMounted} url={fileUrl} />
+        }
+
+        if (isText) {
+            return <TextPreview url={downloadUrl} isOpen={isMounted} />
+        }
+
+
+        return <OtherPreview url={downloadUrl} fileName={fileInfo?.name} />
+    }, [downloadUrl, fileInfo?.mimeType, fileInfo?.name, fileUrl, isLoadingFile, isMounted, toggleFileLoading])
 
     useEffect(() => {
         if (!previewModal) return;
@@ -78,9 +104,6 @@ const PreviewFiles = () => {
             setIsLoadingFile(true)
         }
     }, [handleClick, previewModal])
-
-
-    if (!previewModal) return <></>;
 
     return (
         <section id={PREVIEW_MODAL} className={style.preview}>
@@ -108,9 +131,7 @@ const PreviewFiles = () => {
                 </div>
             </header>
             <main>
-                {isImageFile && <ImagePreview isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />}
-                {isVideoFile && <VideoPreview url={fileUrl} />}
-                {!isImageFile && !isVideoFile && <OtherPreview url={downloadUrl} fileName={fileInfo?.name} />}
+                <Component />
             </main>
         </section>
     )

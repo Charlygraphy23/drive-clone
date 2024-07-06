@@ -20,7 +20,7 @@ export const downloadFile = ({ url, fileName }: {
     })
 }
 
-export async function fetchWithProgress(url: string, progressCallback: (_progress: number, _total: number) => void) {
+export async function fetchWithProgress(url: string, progressCallback?: (_progress: number, _total: number) => void) {
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -47,7 +47,7 @@ export async function fetchWithProgress(url: string, progressCallback: (_progres
                     }
 
                     loaded += value.byteLength;
-                    progressCallback(loaded, total);
+                    if (progressCallback) progressCallback(loaded, total);
 
                     controller.enqueue(value);
                     read();

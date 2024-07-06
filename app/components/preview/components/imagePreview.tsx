@@ -8,6 +8,7 @@ type Props = {
     isLoading: boolean,
     toggle: (_isLoading?: boolean) => void,
     url: string
+    isOpen?: boolean
 }
 
 const ImagePreview = ({ isLoading, toggle, url }: Props) => {

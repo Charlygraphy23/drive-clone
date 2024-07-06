@@ -3,6 +3,7 @@
 import { getFileIconByType } from "@/app/components/fileListItem/utils/index.utils";
 import { ColumnType } from "@/app/components/table/interfaces/index.interface";
 import { FileDataType } from "@/app/store/reducers/files.reducers";
+import dayjs from "dayjs";
 import mimeType from "mime-types";
 import Image from "next/image";
 import { OwnerAccessObject } from "../../../interfaces/index.interface";
@@ -34,6 +35,7 @@ const useFileColumns = ({ isShared }: Props) => {
 		{
 			title: "Last Modified",
 			dataIndex: "lastModified",
+			render: ({ value }) => dayjs(value as string).fromNow()
 		},
 
 		{
