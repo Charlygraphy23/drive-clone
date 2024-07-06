@@ -2,9 +2,9 @@
 
 import { updateImageApi } from "@/app/_apis_routes/user";
 import { DEFAULT_IMAGE } from "@/app/_config";
+import LocalImage from "@/app/components/LocalImage";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import style from "../style.module.scss";
 
@@ -61,7 +61,7 @@ const ProfileImageComponent = () => {
 
 	return (
 		<div className={style.profileImage}>
-			<Image
+			<LocalImage
 				className={style.image}
 				src={imageUrl ?? ""}
 				alt='profile'

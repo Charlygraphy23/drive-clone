@@ -16,9 +16,10 @@ type Props = {
     placeholder?: "blur" | "empty"
     loading?: "lazy" | "eager",
     blurDataURL?: string
+    className?: string
 }
 
-const LocalImage = ({ style, fill, alt, sizes, priority, onLoad, src, placeholder, loading, blurDataURL }: Props) => {
+const LocalImage = ({ style, fill, alt, sizes, priority, onLoad, src, placeholder, loading, blurDataURL, className }: Props) => {
     const imageLoader: ImageLoader = ({ src, width, quality }) => {
         const origin = window.location.origin
         return `${origin}/${src}?w=${width}&q=${quality || 75}`
@@ -26,6 +27,7 @@ const LocalImage = ({ style, fill, alt, sizes, priority, onLoad, src, placeholde
 
     return (
         <Image
+            className={className}
             src={src}
             loader={imageLoader}
             style={style}

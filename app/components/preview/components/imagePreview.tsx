@@ -1,5 +1,5 @@
 import ImageLoader from "@app/assets/image_loader.json";
-import Image from 'next/image';
+import LocalImage from "../../LocalImage";
 import LottiePlayer from '../../lottiePlayer';
 import style from '../style.module.scss';
 
@@ -16,7 +16,7 @@ const ImagePreview = ({ isLoading, toggle, url }: Props) => {
             {isLoading && <div style={{ minHeight: "100px" }} className="d-flex align-items-center justify-content-center">
                 <LottiePlayer width={80} height={80} animationData={ImageLoader} loop />
             </div>}
-            <Image
+            <LocalImage
                 style={{
                     objectFit: 'contain',
                 }}
