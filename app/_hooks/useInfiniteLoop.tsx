@@ -20,11 +20,15 @@ type Props = {
 const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNext = false, isFetching = false, showDeleted, user }: Props) => {
     const dispatch = useAppDispatch()
     const initialMount = useRef<boolean>()
+    console.log("StartPage ", startPage)
+
 
     const params = useParams<{ folderId: string }>()
     const lastItemRef = useRef(null);
     const scrollRef = useRef(null);
     const [page, setPage] = useState(startPage)
+    console.log("Page outside", page)
+
 
     const API = useMemo(() => api({
         limit,
@@ -55,10 +59,6 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
                     console.log("ERROR", err)
                 }
             }
-
-            // if (inserted) {
-            //     observer.disconnect()
-            // }
         }
 
     }, [hasNext, isFetching, dispatch, API]);
@@ -67,7 +67,7 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
         const options = {
             root: scrollRef?.current,
             rootMargin: "10px",
-            threshold: 1.0,
+            threshold: 0.2,
         };
         const observer = new IntersectionObserver(callback, options);
         console.log("Current Eleemnet ", lastItemRef?.current)
@@ -78,7 +78,7 @@ const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNe
         return () => {
             observer.disconnect()
         }
-    }, [callback, lastItemRef?.current])
+    }, [callback])
 
 
     useEffect(() => {

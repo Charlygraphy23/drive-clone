@@ -1,8 +1,6 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import type { Metadata } from "next";
-import Head from "next/head";
-import Script from "next/script";
 import "nprogress/nprogress.css";
 import TopBarLoader from "./components/loader/topbarLoader";
 import "./globals.scss";
@@ -20,20 +18,12 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang='en'>
-			<Head>
-				<link
-					href="https://unpkg.com/video.js@7/dist/video-js.min.css"
-					rel="stylesheet"
-				/>
-			</Head>
 			<body suppressHydrationWarning={true}>
 				<TopBarLoader />
 				{/* <NextTopLoader color="#6a29ff" /> */}
 				<AppClientProvider>
 					{children}
 				</AppClientProvider>
-
-				<Script src="https://vjs.zencdn.net/8.12.0/video.min.js"></Script>
 			</body>
 		</html>
 	);
