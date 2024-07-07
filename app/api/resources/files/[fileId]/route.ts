@@ -5,6 +5,7 @@ import { ApiResponse } from "@/app/utils/response";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 import sharp from "sharp";
+import { Stream } from "stream";
 
 function getQualityForSharp(quality: "high" | "medium" | "low") {
     switch (quality) {
@@ -49,10 +50,9 @@ export const GET = async (req: NextRequest, { params }: { params: { fileId: stri
             }).send(stream, 206, true)
         }
 
-        console.log('Quality', quality)
 
         if (fileInfo?.mimeType && fileInfo?.mimeType?.startsWith("image")) {
-            const readStream = stream as ReadableStream;
+            const readStream = stream as Stream;
             const sharpQuality = getQualityForSharp(quality as "high" | "medium" | "low")
             const transformStream = sharp().resize({ width: sharpQuality.width });
             console.log("Sharp Quality ", sharpQuality)
