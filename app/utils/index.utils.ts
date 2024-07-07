@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { ValidationError } from "yup";
+import { EffectiveConnectionType } from "../interfaces/index.interface";
 
 export const BootstrapMethods = {
     getBootstarp() {
@@ -59,4 +60,65 @@ export function formatBytes(size: number, decimals = 2) {
     const i = Math.floor(Math.log(size) / Math.log(k))
 
     return `${parseFloat((size / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+}
+
+
+function getNetworkSpeedByBps(speedInBps: number) {
+    const speedKbps = speedInBps / 1024;
+    console.log("NETWORK-SPEED: ", `${speedKbps}kbps`)
+    if (speedKbps < 100) {
+        return EffectiveConnectionType.SPEED_2G;
+    } else if (speedKbps < 1000) {
+        return EffectiveConnectionType.SPEED_3G;
+    } else {
+        return EffectiveConnectionType.SPEED_4G;
+    }
+}
+
+async function handleManualConnection(): Promise<EffectiveConnectionType> {
+    const startTime = performance.now();
+
+    try {
+        const response = await fetch('/favicon.ico', { cache: 'no-store' });
+        if (!response.ok) throw new Error('Network response was not ok');
+        const blob = await response.blob();
+        const endTime = performance.now();
+        const duration = endTime - startTime;
+        const fileSizeInBits = blob.size * 8;
+        console.log("Blob size- ", blob.size)
+        const speedInBps = fileSizeInBits / (duration / 1000);
+        return getNetworkSpeedByBps(speedInBps)
+    }
+    catch (err) {
+        console.error("Error getting network speed!", err);
+        return EffectiveConnectionType.UNKNOWN
+    }
+
+}
+
+async function getNetworkSpeed() {
+    if ("connection" in navigator) {
+        const connection = navigator.connection as { effectiveType: EffectiveConnectionType };
+
+        if (connection) return connection.effectiveType;
+        else return await handleManualConnection()
+    }
+    return await handleManualConnection()
+}
+
+export async function getImageQuality() {
+    const networkSpeed = await getNetworkSpeed();
+
+    switch (networkSpeed) {
+        case "":
+        case 'slow-2g':
+        case '2g':
+            return "low"
+        case '3g':
+            return "medium"
+        case '4g':
+        case '5g':
+        default:
+            return "high"
+    }
 }

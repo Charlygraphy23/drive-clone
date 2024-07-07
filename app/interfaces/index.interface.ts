@@ -57,3 +57,15 @@ export type ResourcePayloadType = {
 		type?: string[]
 	}
 }
+
+
+export enum EffectiveConnectionType {
+	SLOW_2G = "slow-2g",
+	SPEED_2G = "2g",
+	SPEED_3G = "3g",
+	SPEED_4G = "4g",
+	SPEED_5G = "5g",
+	UNKNOWN = "",
+
+
+}

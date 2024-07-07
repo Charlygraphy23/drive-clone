@@ -4,6 +4,7 @@ import filesReducer from "./files.reducers";
 import FolderReducer from "./folders.reducers";
 import resourceInfo from "./info.reducers";
 import ModalReducer from "./modal.reducers";
+import networkReducer from "./network.reducer";
 import notificationReducer from "./notification.reducer";
 import profileReducer from "./profile.reduce";
 
@@ -17,7 +18,8 @@ const rootReducer = () =>
 		profile: profileReducer,
 		notification: notificationReducer,
 		resourceInfo: resourceInfo,
-		bin: binReducer
+		bin: binReducer,
+		network: networkReducer
 	});
 
 export default rootReducer;

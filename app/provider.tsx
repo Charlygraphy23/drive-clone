@@ -1,13 +1,16 @@
 "use client";
 
-import makeStore, { AppStore } from "@app/store";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import makeStore, { AppStore, useAppDispatch } from "@app/store";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ConfigProvider } from "antd";
 import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 import Notifications from "./components/notification";
+import { EffectiveConnectionType } from "./interfaces/index.interface";
+import { addNetworkQuality } from "./store/actions/network.actions";
+import { getImageQuality } from "./utils/index.utils";
 
 const queryClient = new QueryClient();
 
@@ -31,9 +34,9 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 						{children}
 					</ConfigProvider>
 					<Notifications />
-
+					<NetworkSpeedMonitor />
 				</StoreProvider>
-				<ReactQueryDevtools initialIsOpen={false} />
+				<ReactQueryDevtools initialIsOpen={true} />
 			</QueryClientProvider>
 			<BootstrapClient />
 		</SessionProvider>
@@ -46,6 +49,21 @@ function BootstrapClient() {
 	}, []);
 
 	return null;
+}
+
+
+function NetworkSpeedMonitor() {
+	const { isFetched, data } = useQuery({ queryFn: getImageQuality, queryKey: ["network"], refetchOnWindowFocus: true, staleTime: 1000 * 15 })
+	const dispatch = useAppDispatch()
+
+	useEffect(() => {
+		if (isFetched && data) {
+			dispatch(addNetworkQuality(data as EffectiveConnectionType))
+		}
+	}, [isFetched, data, dispatch])
+
+	return null
+
 }
 
 export default AppClientProvider;

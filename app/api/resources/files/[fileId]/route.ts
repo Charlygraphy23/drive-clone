@@ -4,11 +4,25 @@ import { ResourceService } from "@/app/lib/database/services/resource.service";
 import { ApiResponse } from "@/app/utils/response";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
+import sharp from "sharp";
 
+function getQualityForSharp(quality: "high" | "medium" | "low") {
+    switch (quality) {
+        case 'low':
+            return { width: 200, quality: 40 }
+        case 'medium':
+            return { width: 500, quality: 60 }
+        case 'high':
+        default:
+            return { width: 1000, quality: 100 }
+    }
+}
 
 export const GET = async (req: NextRequest, { params }: { params: { fileId: string } }) => {
     const service = new ResourceService();
     const response = new ApiResponse()
+
+    const quality = new URL(req?.url)?.searchParams.get('quality') ?? "high"
 
     try {
         const session = await getServerSession(authOptions)
@@ -33,6 +47,28 @@ export const GET = async (req: NextRequest, { params }: { params: { fileId: stri
                 "Content-Range": `bytes ${start}-${end}/${size}`,
                 "Accept-Ranges": "bytes",
             }).send(stream, 206, true)
+        }
+
+        console.log('Quality', quality)
+
+        if (fileInfo?.mimeType && fileInfo?.mimeType?.startsWith("image")) {
+            const readStream = stream as ReadableStream;
+            const sharpQuality = getQualityForSharp(quality as "high" | "medium" | "low")
+            const transformStream = sharp().resize({ width: sharpQuality.width });
+            console.log("Sharp Quality ", sharpQuality)
+
+            if (fileInfo?.mimeType.endsWith("jpeg")) {
+                transformStream.jpeg({ quality: sharpQuality.quality })
+            }
+            else if (fileInfo?.mimeType.endsWith("png")) {
+                transformStream.png({ quality: sharpQuality.quality })
+            }
+
+            readStream.pipe(transformStream)
+
+            return response.setHeaders({
+                "Content-Type": fileInfo?.mimeType as string,
+            }).send(transformStream, 200, true)
         }
 
         return response.setHeaders({

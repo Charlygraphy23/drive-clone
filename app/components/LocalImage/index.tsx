@@ -1,7 +1,8 @@
 "use client"
 
+import { useAppSelector } from '@/app/store';
 import Image, { ImageLoader } from 'next/image';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 type Props = {
     style?: React.CSSProperties;
@@ -20,15 +21,16 @@ type Props = {
 }
 
 const LocalImage = ({ style, fill, alt, sizes, priority, onLoad, src, placeholder, loading, blurDataURL, className }: Props) => {
-    const imageLoader: ImageLoader = ({ src, width, quality }) => {
+    const { type } = useAppSelector(state => state.network)
+    const imageLoader: ImageLoader = useCallback(({ src, width }) => {
         const origin = window.location.origin
-        return `${origin}/${src}?w=${width}&q=${quality || 75}`
-    }
+        return `${origin}/${src}?w=${width}&quality=${type}`
+    }, [type])
 
     return (
         <Image
             className={className}
-            src={src}
+            src={`${src}`}
             loader={imageLoader}
             style={style}
             fill={fill}
