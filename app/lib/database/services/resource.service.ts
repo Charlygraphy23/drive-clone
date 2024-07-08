@@ -4,8 +4,11 @@ import { ResourcePayloadType } from "@/app/interfaces/index.interface";
 import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
+import { ReadStream, createReadStream } from "fs";
+import fs from "fs/promises";
 import mimeType from "mime-types";
 import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
+import path from "path";
 import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType, UploadFileType } from "../interfaces/files.interfaces";
@@ -15,6 +18,39 @@ import { AccessService } from "./access.service";
 const Model = FilesAndFolderModel
 
 export class ResourceService {
+
+    private async handleLocalFileUpload(uploadId: string, buffer: Buffer | string) {
+
+        if (!uploadId) {
+            console.log("No uploadId returning...")
+            return {
+                sizeInMB: 0,
+                size: 0
+            };
+        }
+
+        const filePath = path.resolve(`temp_${uploadId}`);
+        await fs.appendFile(filePath, buffer)
+        console.log("Local file appended")
+
+        const fileInfo = await fs.stat(filePath)
+
+        const sizeInMB = fileInfo.size / 10 ** 6;
+        console.log(sizeInMB, "MB");
+
+        return {
+            read: function () {
+                const stream = createReadStream(filePath)
+                return stream
+            },
+            delete: async function () {
+                await fs.unlink(filePath)
+                console.log("LocalFile Deleted")
+            },
+            sizeInMB: sizeInMB,
+            size: fileInfo.size
+        }
+    }
 
     private handleVideoStream = async ({ fileInfo, range, key }: {
         fileInfo: FilesAndFolderSchemaType, range: string, key: string
@@ -518,9 +554,10 @@ export class ResourceService {
 
         const s3 = new LOCAL_S3({
             key,
-            body: payload.file,
             uploadId: payload?.uploadId
         })
+
+        const localFileInfo = await this.handleLocalFileUpload(s3?.uploadId ?? "", payload.file as Buffer);
 
         try {
             if (payload?.chunkIndex === 0) {
@@ -528,12 +565,25 @@ export class ResourceService {
                 await s3.createMultipartUpload()
             }
 
+            const isLastChunk = payload?.chunkIndex === payload?.totalChunks - 1
+
+            if (localFileInfo?.sizeInMB < 5 && !isLastChunk) {
+                // less than 5MB
+                return { uploadId: s3.uploadId, fileInfo: null }
+            }
+
+            const stream = localFileInfo?.read?.() as ReadStream
+
             console.log("Uploading Chunk...")
             await s3.uploadPart({
-                file: payload.file
+                file: stream
             }, payload?.chunkIndex)
 
-            if (payload?.chunkIndex === payload?.totalChunks - 1) {
+
+            // if local file size is more thant 5MB
+            if (localFileInfo.delete) await localFileInfo.delete()
+
+            if (isLastChunk) {
                 console.log("Completing Upload...")
                 await s3.completeMultipartUpload()
 
@@ -567,6 +617,8 @@ export class ResourceService {
         catch (err) {
             console.log("Aborting upload")
             await s3.abortMultipartUpload()
+            // if local file size is more thant 5MB
+            if (localFileInfo.delete) await localFileInfo.delete()
             throw err
         }
 

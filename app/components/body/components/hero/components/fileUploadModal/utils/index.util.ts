@@ -46,7 +46,7 @@ export const breakIntoChunks = async (file: File, index: number, folderId = "", 
 }
 
 export async function generateChunk(file: File) {
-    const CHUNK_SIZE = 1024 * 1024 * 5 // ~500kb
+    const CHUNK_SIZE = 1024 * 1024 * 1 // ~1MB
     const buffer = await file.arrayBuffer();
 
 

@@ -28,6 +28,7 @@ export const GET = async (req: NextRequest, { params }: { params: { fileId: stri
     try {
         const session = await getServerSession(authOptions)
         if (!session) return response.status(401).send("Unauthorized")
+        const user = session.user
 
         const fileId = params?.fileId;
 
@@ -36,6 +37,17 @@ export const GET = async (req: NextRequest, { params }: { params: { fileId: stri
         const range = req?.headers?.get('Range') ?? "";
 
         await connectDB()
+
+        const hasAccess = await service.checkAccess(String(user._id), {
+            resourceId: fileId ?? "",
+        }, { withDeleted: true })
+
+
+        if (!hasAccess?.success) {
+            //TODO: redirect to another page not found / no permissions
+            return response.status(403).send("Unauthorized")
+        }
+
 
         const {
             stream, fileInfo, ...rest

@@ -101,7 +101,7 @@ export const POST = async (req: NextRequest) => {
 
         return response.status(201).send({
             uploadId: awsUploadId,
-            message: "Uploaded"
+            message: "Uploading..."
         })
 
     }
