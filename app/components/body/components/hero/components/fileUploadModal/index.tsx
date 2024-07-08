@@ -1,5 +1,6 @@
 "use client"
 
+import { abortFileUploadApi } from "@/app/_apis_routes/resources";
 import { FILE_UPLOAD } from "@/app/_config/const";
 import ButtonGroup from "@/app/components/buttonGroup";
 import FileListItem from "@/app/components/fileListItem";
@@ -33,6 +34,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
     const { folderId } = useParams<{ folderId: string }>()
     const ref = useRef<HTMLDivElement>(null)
     const dispatch = useAppDispatch();
+    const [abortController, setAbortController] = useState(new AbortController())
 
     const onClearState = () => {
         setIsDragging(false)
@@ -102,7 +104,9 @@ const FileUploadModal = ({ isOpen }: Props) => {
                     progress: 0,
                     hasFinished: false,
                     isUploading: false,
-                    isFailed: false
+                    isFailed: false,
+                    uploadId: "",
+                    updatedFileName: ""
                 })
 
                 return Array.from(prev)
@@ -148,7 +152,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
 
             }
 
-            const data = await breakIntoChunks(currantFile?.file, index, folderId, (progress: number, fileIndex: number) => {
+            const data = await breakIntoChunks(currantFile?.file, index, folderId, (progress: number, fileIndex: number, uploadId: string, updatedFileName: string) => {
                 setFiles((prev) => {
                     const data = prev[fileIndex];
 
@@ -162,13 +166,15 @@ const FileUploadModal = ({ isOpen }: Props) => {
                         }
                         data.isFailed = false
                         data.progress = progress
+                        data.uploadId = uploadId
+                        data.updatedFileName = updatedFileName
                         prev[fileIndex] = data
                     }
                     return Array.from(prev)
 
                 })
 
-            }).catch(err => {
+            }, abortController.signal).catch(err => {
                 const error = err as { err: AxiosError, index: number }
 
                 setFiles((prev) => {
@@ -191,7 +197,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
             hasMoreFile = !!files?.[++index]
         }
 
-    }, [dispatch, files, folderId])
+    }, [abortController?.signal, dispatch, files, folderId])
 
     const handleSubmit = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
@@ -212,6 +218,20 @@ const FileUploadModal = ({ isOpen }: Props) => {
         })
     }, [files?.length, hasUploaded, startUploading, toggleModal, uploading])
 
+    const handleCancel = useCallback(() => {
+        if (!files?.length) return;
+
+        abortController.abort()
+        const getCurrentFile = files?.find(file => file.isUploading)
+        console.log("getCurrentFile", getCurrentFile)
+        if (getCurrentFile) {
+            abortFileUploadApi(getCurrentFile?.uploadId, getCurrentFile?.updatedFileName)
+        }
+
+        toggleModal(false)
+        clearInputFiles()
+    }, [abortController, files, toggleModal])
+
     const handleFileDelete = (index: number) => {
         if (uploading) return;
         setFiles(prev => [...prev.filter((_, idx) => idx !== index)])
@@ -222,6 +242,12 @@ const FileUploadModal = ({ isOpen }: Props) => {
             ref.current?.scrollTo(0, 0)
         }
     }, [uploading])
+
+    useEffect(() => {
+        if (isOpen) {
+            setAbortController(new AbortController())
+        }
+    }, [isOpen])
 
 
     return (
@@ -253,10 +279,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
                 </div> || null}
 
                 <div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
-                    {!hasUploaded && <ButtonGroup handleSubmit={() => {
-                        toggleModal(false)
-                        clearInputFiles()
-                    }} submitText="cancel" className={`cancel me-4`} />}
+                    {!hasUploaded && <ButtonGroup handleSubmit={handleCancel} submitText="cancel" className={`cancel me-4`} />}
                     <ButtonGroup
                         type="submit"
                         disabled={uploading}

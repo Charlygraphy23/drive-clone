@@ -1,14 +1,16 @@
 import { uploadFile } from "@/app/_apis_routes/resources";
+import { GenericAbortSignal } from "axios";
 
-export const breakIntoChunks = async (file: File, index: number, folderId = "", getProgress: (_progress: number, _fileIndex: number) => void) => {
+export const breakIntoChunks = async (file: File, index: number, folderId = "", getProgress: (_progress: number, _fileIndex: number, _uploadId: string, _updatedFileName: string) => void, signal: GenericAbortSignal) => {
     return new Promise(async (resolve, reject) => {
         let uploadId = ""
         const time = Date.now()
         try {
+            const updatedFileName = `${time}-${file.name}`
             const chunks = await generateChunk(file)
             const formData = new FormData();
             formData.append("totalSize", String(file.size))
-            formData.append("name", `${time}-${file.name}`)
+            formData.append("name", updatedFileName)
             if (folderId) {
                 formData.append("folderId", folderId)
             }
@@ -24,7 +26,7 @@ export const breakIntoChunks = async (file: File, index: number, folderId = "", 
                 if (uploadId) {
                     formData.set("uploadId", uploadId)
                 }
-                const response = await uploadFile({ formData })
+                const response = await uploadFile({ formData, signal })
                 uploadId = response?.uploadId
 
                 if (response?.file) {
@@ -32,7 +34,7 @@ export const breakIntoChunks = async (file: File, index: number, folderId = "", 
                 }
                 console.log("Received uploadId", uploadId)
                 const progress = Math.floor((idx + 1) * 100 / totalChunks)
-                getProgress(progress, index)
+                getProgress(progress, index, uploadId, updatedFileName)
                 idx++
             }
 

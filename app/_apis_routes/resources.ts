@@ -1,3 +1,4 @@
+import { GenericAbortSignal } from "axios";
 import { ACCESS_TYPE } from "../lib/database/interfaces/access.interface";
 import { DATA_TYPE, FilesAndFolderSchemaType } from "../lib/database/interfaces/files.interfaces";
 import { axiosInstance } from "./http";
@@ -66,11 +67,12 @@ export const deleteForeverApi = async (resourceId: string) => {
     return await axiosInstance.delete(`/resources/${resourceId}`)
 }
 
-export const uploadFile = async ({ formData }: { formData: FormData }) => {
+export const uploadFile = async ({ formData, signal }: { formData: FormData, signal: GenericAbortSignal }) => {
     const { data } = await axiosInstance.post(`/resources/files`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
         },
+        signal
     })
 
 
@@ -105,5 +107,11 @@ export const removeAccessFromResourceApi = async (payload: { accessId: string, r
 export const fileDownloadApi = async (url: string) => {
     return axiosInstance.get(url, {
         responseType: "blob"
+    })
+}
+
+export const abortFileUploadApi = (uploadId: string, fileName: string) => {
+    return axiosInstance.post("/resources/files/abort", {
+        s3UploadId: uploadId, fileName
     })
 }

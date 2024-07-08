@@ -39,6 +39,8 @@ export type FileUploadType = {
 	hasFinished: boolean,
 	isUploading: boolean,
 	isFailed: boolean
+	uploadId: string
+	updatedFileName: string
 }
 
 

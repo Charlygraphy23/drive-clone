@@ -697,4 +697,12 @@ export class ResourceService {
         }
     }
 
+    async abortFileUpload(fileKey: string, uploadId: string) {
+        const s3 = new LOCAL_S3({
+            key: fileKey,
+            uploadId
+        })
+
+        return await s3.abortMultipartUpload()
+    }
 }

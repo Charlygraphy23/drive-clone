@@ -117,7 +117,6 @@ export const POST = async (req: NextRequest) => {
     }
 };
 
-
 export const PATCH = async (req: NextRequest) => {
     const service = new ResourceService()
     const response = new ApiResponse()
