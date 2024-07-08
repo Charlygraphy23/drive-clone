@@ -25,13 +25,13 @@ const LocalImage = ({ style, fill, alt, sizes, priority, onLoad, src, placeholde
     const imageLoader: ImageLoader = useCallback(({ src, width }) => {
         const origin = window.location.origin
         return `${origin}/${src}?w=${width}&quality=${type}`
-    }, [type])
+    }, [])
 
     return (
         <Image
             className={className}
-            src={`${src}`}
-            loader={imageLoader}
+            src={src}
+            // loader={imageLoader}
             style={style}
             fill={fill}
             alt={alt}
