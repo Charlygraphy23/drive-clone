@@ -5,7 +5,7 @@ import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { ReadStream, createReadStream } from "fs";
-import fs from "fs/promises";
+import { appendFile, stat, unlink } from "fs/promises";
 import mimeType from "mime-types";
 import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import path from "path";
@@ -19,7 +19,8 @@ const Model = FilesAndFolderModel
 
 export class ResourceService {
 
-    private async handleLocalFileUpload(uploadId: string, buffer: Buffer | string) {
+    private async handleLocalFileUpload(uploadId: string, buffer: Buffer | string, name: string) {
+        console.log("Called handleLocalFileUpload")
 
         if (!uploadId) {
             console.log("No uploadId returning...")
@@ -29,22 +30,23 @@ export class ResourceService {
             };
         }
 
-        const filePath = path.resolve(`temp_${uploadId}`);
-        await fs.appendFile(filePath, buffer)
+        const filePath = path.resolve(`_chunked/${name}`);
+        await appendFile(filePath, buffer)
         console.log("Local file appended")
 
-        const fileInfo = await fs.stat(filePath)
+        const fileInfo = await stat(filePath)
 
         const sizeInMB = fileInfo.size / 10 ** 6;
+        console.log(fileInfo.size, "Og file size");
         console.log(sizeInMB, "MB");
 
         return {
             read: function () {
-                const stream = createReadStream(filePath)
-                return stream
+                const readStream = createReadStream(filePath)
+                return readStream
             },
             delete: async function () {
-                await fs.unlink(filePath)
+                await unlink(filePath)
                 console.log("LocalFile Deleted")
             },
             sizeInMB: sizeInMB,
@@ -557,13 +559,16 @@ export class ResourceService {
             uploadId: payload?.uploadId
         })
 
-        const localFileInfo = await this.handleLocalFileUpload(s3?.uploadId ?? "", payload.file as Buffer);
+        let localFileInfo = null
 
         try {
             if (payload?.chunkIndex === 0) {
                 console.log("Found first data as chunk")
                 await s3.createMultipartUpload()
             }
+
+            localFileInfo = await this.handleLocalFileUpload(s3?.uploadId ?? "", payload.file as Buffer, payload.fileName);
+
 
             const isLastChunk = payload?.chunkIndex === payload?.totalChunks - 1
 
@@ -618,7 +623,7 @@ export class ResourceService {
             console.log("Aborting upload")
             await s3.abortMultipartUpload()
             // if local file size is more thant 5MB
-            if (localFileInfo.delete) await localFileInfo.delete()
+            if (localFileInfo && localFileInfo?.delete) await localFileInfo.delete?.()
             throw err
         }
 
