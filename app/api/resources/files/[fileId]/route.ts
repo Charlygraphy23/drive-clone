@@ -65,22 +65,31 @@ export const GET = async (req: NextRequest, { params }: { params: { fileId: stri
 
         if (fileInfo?.mimeType && fileInfo?.mimeType?.startsWith("image")) {
             const readStream = stream as Stream;
-            const sharpQuality = getQualityForSharp(quality as "high" | "medium" | "low")
-            const transformStream = sharp().resize({ width: sharpQuality.width });
-            console.log("Sharp Quality ", sharpQuality)
 
-            if (fileInfo?.mimeType.endsWith("jpeg")) {
-                transformStream.jpeg({ quality: sharpQuality.quality })
-            }
-            else if (fileInfo?.mimeType.endsWith("png")) {
-                transformStream.png({ quality: sharpQuality.quality })
-            }
+            let transformStream: any = undefined
+            try {
+                const sharpQuality = getQualityForSharp(quality as "high" | "medium" | "low")
+                transformStream = sharp().resize({ width: sharpQuality.width });
+                console.log("Sharp Quality ", sharpQuality)
 
-            readStream.pipe(transformStream)
+                if (fileInfo?.mimeType.endsWith("jpeg")) {
+                    transformStream.jpeg({ quality: sharpQuality.quality })
+                }
+                else if (fileInfo?.mimeType.endsWith("png")) {
+                    transformStream.png({ quality: sharpQuality.quality })
+                }
+
+                readStream.pipe(transformStream)
+
+            }
+            catch (err: any) {
+                const message = err?.message
+                console.error("message >>>>", message)
+            }
 
             return response.setHeaders({
                 "Content-Type": fileInfo?.mimeType as string,
-            }).send(transformStream, 200, true)
+            }).send(transformStream ?? readStream, 200, true)
         }
 
         return response.setHeaders({

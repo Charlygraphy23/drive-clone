@@ -17,54 +17,79 @@ const VideoPreview = ({ url, isOpen }: Props) => {
     const dispose = useCallback(() => {
         console.log("Is Opening", isOpen)
         const player = playerRef.current;
+        console.log("Player ", player)
+        // console.log("!player.isDisposed() ", !player.isDisposed())
 
-        if (player && !player.isDisposed() && !isOpen) {
-            console.log('Called Dispose ',)
-            player.dispose();
-            playerRef.current = null;
-        }
+
+        // if (player && !player.isDisposed() && !isOpen) {
+        //     console.log('Called Dispose ',)
+        //     player.dispose();
+        //     playerRef.current = null;
+        // }
     }, [isOpen])
 
 
     useEffect(() => {
+        console.log("UL==> VIDEO mouted")
         if (!url) return;
         if (!videoRef.current) return;
 
-        if (mountOnce?.current === url) return;
+        // if (mountOnce?.current === url) return;
 
         if (playerRef.current) {
             playerRef.current.src(url)
-            return
+        }
+        else {
+            const player = videojs(videoRef.current, {
+                autoplay: false,
+                controls: true,
+                sources: [
+                    {
+                        src: url,
+                        type: 'video/mp4'
+                    }
+                ]
+            }, () => {
+                videojs.log('player is ready');
+            });
+
+            playerRef.current = player
+            mountOnce.current = url
+
+            console.log('player is ready', playerRef.current)
         }
 
-        const player = videojs(videoRef.current, {
-            autoplay: false,
-            controls: true,
-            sources: [
-                {
-                    src: url,
-                    type: 'video/mp4'
-                }
-            ]
-        }, () => {
-            videojs.log('player is ready');
-        });
-
-        playerRef.current = player
-        mountOnce.current = url
-
-        console.log('player is ready')
-
-    }, [url])
 
 
-    useEffect(() => {
 
         return () => {
-            dispose()
+            console.log("UL==>  PLAYER", playerRef.current)
+            console.log("UL==>  player.isDisposed()", playerRef.current.isDisposed())
+            console.log("UL==>  isOpen", isOpen)
+
+
+            if (playerRef.current && !playerRef.current.isDisposed() && !isOpen) {
+                console.log('UL==> Called Dispose ',)
+                playerRef.current.dispose();
+                playerRef.current = null;
+                console.log('UL==> player is unmounted')
+
+            }
         }
 
-    }, [dispose]);
+    }, [url, isOpen])
+
+
+    // useEffect(() => {
+
+    //     console.log("UL==> Mount")
+
+    //     return () => {
+    //         // dispose()
+    //         console.log("UL==> Un-Mount")
+    //     }
+
+    // }, [dispose]);
 
     return (
         <section className={style.videoWrapper}>

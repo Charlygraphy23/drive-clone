@@ -1,8 +1,10 @@
 "use client";
 
 import { PREVIEW_MODAL } from "@/app/_config/const";
+import { FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { toggleModal } from "@/app/store/actions";
+import { ModalDataType } from "@/app/store/reducers/modal.reducers";
 import { Progress } from "antd";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -28,10 +30,7 @@ const PreviewFiles = () => {
     const { startDownload, isDownloading, progress } = useDownload()
     const [isMounted, setMounted] = useState(true)
 
-    const fileUrl = useMemo(() => {
-        if (!fileInfo?._id) return ""
-        return `/api/resources/files/${fileInfo?._id}`
-    }, [fileInfo])
+
 
     const downloadUrl = useMemo(() => {
         if (!fileInfo?._id) return ""
@@ -56,29 +55,6 @@ const PreviewFiles = () => {
         if (isDownloading) return;
         startDownload(downloadUrl, fileInfo?.name)
     }
-
-    const Component = useCallback(() => {
-
-        const isImage = fileInfo?.mimeType?.startsWith?.("image")
-        const isVideo = fileInfo?.mimeType?.startsWith?.("video")
-        const isText = fileInfo?.mimeType?.startsWith?.("text") || fileInfo?.mimeType?.startsWith?.("application/json")
-        console.log("fileInfo?.mimeType", fileInfo?.mimeType)
-
-        if (isImage) {
-            return <ImagePreview isOpen={isMounted} isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />
-        }
-
-        if (isVideo) {
-            return <VideoPreview isOpen={isMounted} url={fileUrl} />
-        }
-
-        if (isText) {
-            return <TextPreview url={downloadUrl} isOpen={isMounted} />
-        }
-
-
-        return <OtherPreview url={downloadUrl} fileName={fileInfo?.name} />
-    }, [downloadUrl, fileInfo?.mimeType, fileInfo?.name, fileUrl, isLoadingFile, isMounted, toggleFileLoading])
 
     useEffect(() => {
         if (!previewModal) return;
@@ -131,10 +107,47 @@ const PreviewFiles = () => {
                 </div>
             </header>
             <main>
-                <Component />
+                <RenderPreview
+                    isMounted={isMounted}
+                    downloadUrl={downloadUrl}
+                    fileInfo={fileInfo as ModalDataType & FilesAndFolderSchemaType}
+                    isLoadingFile={isLoadingFile}
+                    toggleFileLoading={toggleFileLoading}
+                />
             </main>
         </section>
     )
 }
 
 export default PreviewFiles
+
+
+
+
+function RenderPreview({ fileInfo, isMounted, downloadUrl, isLoadingFile, toggleFileLoading }: { fileInfo: ModalDataType & FilesAndFolderSchemaType, isMounted: boolean, downloadUrl: string, toggleFileLoading: () => void, isLoadingFile: boolean }) {
+
+    const fileUrl = useMemo(() => {
+        if (!fileInfo?._id) return ""
+        return `/api/resources/files/${fileInfo?._id}`
+    }, [fileInfo])
+
+    const isImage = fileInfo?.mimeType?.startsWith?.("image")
+    const isVideo = fileInfo?.mimeType?.startsWith?.("video")
+    const isText = fileInfo?.mimeType?.startsWith?.("text") || fileInfo?.mimeType?.startsWith?.("application/json")
+    console.log("fileInfo?.mimeType", fileInfo?.mimeType)
+
+    if (isImage) {
+        return <ImagePreview isOpen={isMounted} isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />
+    }
+
+    if (isVideo) {
+        return <VideoPreview isOpen={isMounted} url={fileUrl} />
+    }
+
+    if (isText) {
+        return <TextPreview url={downloadUrl} isOpen={isMounted} />
+    }
+
+
+    return <OtherPreview url={downloadUrl} fileName={fileInfo?.name} />
+}
