@@ -2,6 +2,7 @@ import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/a
 import { ResourceDatasetType } from "@/app/components/body/components/resources/interfaces/index.interface";
 import { ResourcePayloadType } from "@/app/interfaces/index.interface";
 import { CRYPTO } from "@/app/utils/crypto";
+import { formatBytes } from "@/app/utils/index.utils";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { ReadStream, createReadStream } from "fs";
@@ -704,5 +705,24 @@ export class ResourceService {
         })
 
         return await s3.abortMultipartUpload()
+    }
+
+    async getTotalStorageConsumed(userId: string) {
+        const resources = await Model.find({
+            createdBy: new mongoose.Types.ObjectId(userId),
+            deletedForever: false,
+            dataType: DATA_TYPE.FILE
+        }, { fileSize: 1 })
+
+
+        const totalConsumedFile = resources?.reduce((prev, item) => {
+            const file = item.toJSON();
+            return prev + (file?.fileSize ?? 0)
+        }, 0);
+
+
+        console.log("totalConsumedFile ", formatBytes(totalConsumedFile))
+
+        return totalConsumedFile
     }
 }
