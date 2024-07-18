@@ -4,6 +4,7 @@ import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { DATA_TYPE, FilesAndFolderSchemaType } from "@/app/lib/database/interfaces/files.interfaces";
 import { UserSchemaType } from "@/app/lib/database/interfaces/user.interface";
 import { ResourceService } from "@/app/lib/database/services/resource.service";
+import { StorageService } from "@/app/lib/database/services/storage.service";
 import { ApiResponse } from "@/app/utils/response";
 import { File } from "buffer";
 import { startSession } from "mongoose";
@@ -17,6 +18,7 @@ export const POST = async (req: NextRequest) => {
     const mongoSession = await startSession()
     const service = new ResourceService();
     const response = new ApiResponse()
+    const storageService = new StorageService()
 
     const formData = await req?.formData?.();
     const file = formData.get("file");
@@ -56,6 +58,10 @@ export const POST = async (req: NextRequest) => {
             return response.status(403).send("Unauthorized")
         }
 
+
+        const hasFreeSpaceToUpload = await storageService.hasUserStorage(String(user?._id), totalSize)
+
+        if (!hasFreeSpaceToUpload) return response.status(422).send("You don't have any free space left!")
 
         const buffer = Buffer.from(await file.arrayBuffer())
         const hasFile = await service.findResourceByName(fileName, folderId, { session: mongoSession })

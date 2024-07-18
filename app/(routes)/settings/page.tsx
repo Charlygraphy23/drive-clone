@@ -1,8 +1,6 @@
-import React, { Suspense } from "react";
-import style from "./style.module.scss";
 import HeaderComponent from "@/app/components/header";
 import StorageComponent from "./components/storage";
-import { StorageLoader } from "./components/loader";
+import style from "./style.module.scss";
 
 const SettingsPage = () => {
 	return (
@@ -15,9 +13,8 @@ const SettingsPage = () => {
 			<div className={style.settingComponent}>
 				<div className={style.wrapper}>
 					<h5>Storage</h5>
-					<Suspense fallback={<StorageLoader />}>
-						<StorageComponent />
-					</Suspense>
+					<StorageComponent />
+
 
 					<button className={`button`}> Buy storage</button>
 				</div>

@@ -8,6 +8,7 @@ export const SEARCH_MODAL = "search_modal";
 export const FILE_UPLOAD = "file_upload";
 export const PREVIEW_MODAL = "preview_modal";
 
+export const TOTAL_FREE_SPACE = 1024 ** 2 * 10 * 2// 1GB
 
 
 export const BUCKET_PATH = process.env.OBJECT_BUCKET_NAME

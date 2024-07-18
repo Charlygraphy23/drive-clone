@@ -708,21 +708,34 @@ export class ResourceService {
     }
 
     async getTotalStorageConsumed(userId: string) {
-        const resources = await Model.find({
-            createdBy: new mongoose.Types.ObjectId(userId),
-            deletedForever: false,
-            dataType: DATA_TYPE.FILE
-        }, { fileSize: 1 })
+        const sizeArray = await Model.aggregate([
+            {
+                $match: {
+                    createdBy: new mongoose.Types.ObjectId(userId),
+                    deletedForever: false,
+                    dataType: DATA_TYPE.FILE
+                }
+            },
+            {
+                $project: {
+                    fileSize: 1
+                }
+            },
 
+            {
+                $group: {
+                    _id: null,
+                    sum: {
+                        $sum: "$fileSize"
+                    }
+                }
+            }
+        ])
 
-        const totalConsumedFile = resources?.reduce((prev, item) => {
-            const file = item.toJSON();
-            return prev + (file?.fileSize ?? 0)
-        }, 0);
+        const totalConsumedSize = sizeArray?.[0]?.sum as number
 
+        console.log("totalConsumedSize ", formatBytes(totalConsumedSize))
 
-        console.log("totalConsumedFile ", formatBytes(totalConsumedFile))
-
-        return totalConsumedFile
+        return totalConsumedSize ?? 0
     }
 }

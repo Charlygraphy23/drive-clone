@@ -1,27 +1,34 @@
+"use client";
+
+import { getStorageApi } from "@/app/_apis_routes/storage";
+import { TOTAL_FREE_SPACE } from "@/app/_config/const";
+import { formatBytes } from "@/app/utils/index.utils";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import style from "../style.module.scss";
+import { StorageLoader } from "./loader";
 
-function calculateStorage(): Promise<Record<string, number>> {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve({
-				total: 15,
-				used: 6.98,
-			});
-		}, 4000);
-	});
-}
+const StorageComponent = () => {
+	const { data, isFetching } = useQuery({ queryFn: getStorageApi, queryKey: ["getStorage"], staleTime: 30000 })
+	const response = data?.data?.data ?? 0
+	const consumedStorageSpace = useMemo(() => formatBytes(response), [response])
+	const totalSpace = useMemo(() => formatBytes(TOTAL_FREE_SPACE), [])
+	const progress = useMemo(() => Math.floor((response / TOTAL_FREE_SPACE) * 100), [response])
 
-const StorageComponent = async () => {
-	const data = await calculateStorage();
 
 	return (
 		<>
-			<div className={style.volume}>
-				<span></span>
-			</div>
-			<p>
-				{data?.used} GB of {data?.total} GB used
-			</p>
+
+
+			{isFetching && <StorageLoader />}
+
+			{!isFetching && <div className={style.volume}>
+				<span style={{ width: `${progress}%` }}></span>
+			</div>}
+
+			{!isFetching && <p>
+				{consumedStorageSpace} of {totalSpace} used
+			</p>}
 		</>
 	);
 };
