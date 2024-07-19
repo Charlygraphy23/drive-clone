@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import crypto from 'crypto';
 
 const encryptText = (plaintext: string) => {
     const key = crypto.randomBytes(32).toString('base64');

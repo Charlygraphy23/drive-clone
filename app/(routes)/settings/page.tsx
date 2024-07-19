@@ -1,8 +1,10 @@
+
 import HeaderComponent from "@/app/components/header";
 import StorageComponent from "./components/storage";
 import style from "./style.module.scss";
 
 const SettingsPage = () => {
+
 	return (
 		<section className={style.settings}>
 			<header className='d-flex justify-content-between align-items-center'>
@@ -14,9 +16,6 @@ const SettingsPage = () => {
 				<div className={style.wrapper}>
 					<h5>Storage</h5>
 					<StorageComponent />
-
-
-					<button className={`button`}> Buy storage</button>
 				</div>
 			</div>
 		</section>

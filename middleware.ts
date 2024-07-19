@@ -6,7 +6,8 @@ import { publicAppRoutes } from "./app/middlewre/app.middleware";
 async function middleware(request: NextRequestWithAuth) {
     const url = new URL(request.url);
     const path = url?.pathname
-    const inPublicPath = publicAppRoutes.find(p => path.startsWith(p))
+    const inPublicPath = publicAppRoutes.find(p => path.startsWith(p) && !path.startsWith("/plans"))
+    console.log('inPublicPath', inPublicPath, path)
     const isApiRoute = path.startsWith("/api")
 
     if (request?.nextauth?.token && inPublicPath && !isApiRoute) {
