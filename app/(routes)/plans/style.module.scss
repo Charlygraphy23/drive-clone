@@ -88,12 +88,26 @@
 				font-weight: 200;
 			}
 
-			& > ul {
+			.benefits {
+				display: flex;
+				font-size: 0.7rem;
+				font-weight: 300;
+				list-style-type: none;
+
+				padding: 0;
+
+				li {
+					margin-right: 1rem;
+				}
+			}
+
+			.description {
 				flex: 1;
 				border-top: 1px solid rgba(black, 0.2);
 				width: 100%;
-
 				padding-top: 2rem;
+				padding-left: 1rem;
+				font-size: 0.9rem;
 
 				li {
 					font-weight: 300;

@@ -1,4 +1,7 @@
 import { authOptions } from "@/app/lib/authConfig";
+import { BenefitsSchemaType } from "@/app/lib/database/interfaces/benefits.interface";
+import { PlaneSchemaType } from "@/app/lib/database/interfaces/plan.interface";
+import { PlanService } from "@/app/lib/database/services/plan.service";
 import { getServerSession } from "next-auth";
 import PlanCard from "./components/plan";
 import style from "./style.module.scss";
@@ -45,6 +48,9 @@ const plans = [
 
 const PlanPage = async () => {
     const session = await getServerSession(authOptions);
+    const planService = new PlanService()
+    const plans = (await planService.getAllPlans()) as Array<{ _id: string, benefits: BenefitsSchemaType } & PlaneSchemaType>
+
     return (
         <main className={style?.wrapper} style={!session?.user ? { height: "100vh" } : {}}>
             <h1>Our Plans</h1>
@@ -53,10 +59,10 @@ const PlanPage = async () => {
 
             <div className={style?.plans}>
                 {plans?.map(plan => <PlanCard
-                    key={plan.id}
+                    key={plan._id}
                     benefits={plan.benefits}
                     description={plan.description}
-                    isActivated={plan?.isActivated}
+                    isActivated={false}
                     isPopular={plan.isPopular}
                     title={plan?.title}
                     price={plan?.price}

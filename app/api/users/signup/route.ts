@@ -16,6 +16,7 @@ export const POST = async (req: Request) => {
         const { email, firstName, lastName } = data;
 
         await connectDB();
+        // TODO: create a free free storage with subscription
 
         const hasUser = await service.findByEmail(email)
 
