@@ -1,5 +1,5 @@
 import mongoose, { Model, Types } from "mongoose";
-import { ORDER_TYPE, OrderDocumentType, OrderSchemaType } from "../interfaces/order.interface";
+import { ORDER_STATUS, OrderDocumentType, OrderSchemaType } from "../interfaces/order.interface";
 import { MODEL_NAME as PLAN_MODEL } from "./plans";
 
 export const MODEL_NAME = "Order" as const;
@@ -27,10 +27,10 @@ const schema = new mongoose.Schema<OrderSchemaType>({
         type: Number,
         default: 0
     },
-    orderType: {
+    orderStatus: {
         type: String,
-        enum: ORDER_TYPE,
-        default: ORDER_TYPE.PENDING
+        enum: ORDER_STATUS,
+        default: ORDER_STATUS.PENDING
     }
 }, { timestamps: true })
 

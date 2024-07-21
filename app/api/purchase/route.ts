@@ -1,12 +1,10 @@
 import { connectDB } from "@/app/lib/database/db";
-import { ORDER_TYPE } from "@/app/lib/database/interfaces/order.interface";
-import { RECURRING_TYPE } from "@/app/lib/database/interfaces/plan.interface";
+import { ORDER_STATUS } from "@/app/lib/database/interfaces/order.interface";
 import { OrderModel } from "@/app/lib/database/models/order";
 import { PlanModel } from "@/app/lib/database/models/plans";
-import { SubscriptionModal } from "@/app/lib/database/models/subscription";
+import { SubscriptionService } from "@/app/lib/database/services/subscription.service";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-
 
 const sleep = async (sec: number) => {
     return new Promise((resolve, _) => {
@@ -22,6 +20,7 @@ export const GET = async () => {
 
     await connectDB()
     const session = await mongoose.startSession();
+    const subscrionService = new SubscriptionService()
 
     try {
 
@@ -38,52 +37,31 @@ export const GET = async () => {
                 subTotal: planDetails?.price,
                 total: planDetails?.price,
                 tax: 0,
-                orderType: ORDER_TYPE.PENDING
+                orderStatus: ORDER_STATUS.PENDING,
+                transactionId: Date.now().toString(),
             }], {
                 session,
             });
 
             const orderId = order?._id;
-
             await sleep(5);
+
+            console.log("orderId", orderId)
 
             await OrderModel.findByIdAndUpdate({
                 _id: orderId,
             }, {
-                orderType: ORDER_TYPE.DONE
+                orderStatus: ORDER_STATUS.DONE
             }, {
                 session
             })
 
-            let endDate = new Date();
+            await subscrionService.activeNewSubscription({
+                userId,
+                orderId,
+                planId
+            }, { session })
 
-            if (planDetails.recurringType === RECURRING_TYPE.MONTHLY) {
-                endDate = new Date(new Date().setDate(endDate.getDate() + 30))
-            }
-            else if (planDetails.recurringType === RECURRING_TYPE.YEARLY) {
-                endDate = new Date(new Date().setFullYear(endDate.getFullYear() + 1))
-            }
-
-
-            await SubscriptionModal.updateMany({ userId: new mongoose.Types.ObjectId(userId), isActive: true }, { isActive: true })
-            await SubscriptionModal.create([{
-                isActive: true,
-                userId: new mongoose.Types.ObjectId(userId),
-                planId: planDetails?._id,
-                planDetails: {
-                    planType: planDetails.planType,
-                    recurringType: planDetails?.recurringType,
-                    isFree: planDetails?.isFree,
-                    price: planDetails?.price,
-                    benefitId: planDetails?.benefitId,
-                    benefitDetails: {
-                        maxSize: planDetails?.benefitId?.maxSize,
-                        downloads: planDetails?.benefitId?.downloads
-                    }
-                },
-                endDate,
-                orderId
-            }], { session })
 
             await session.commitTransaction();
             await session.endSession();

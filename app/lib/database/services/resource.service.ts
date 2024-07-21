@@ -707,7 +707,7 @@ export class ResourceService {
         return await s3.abortMultipartUpload()
     }
 
-    async getTotalStorageConsumed(userId: string) {
+    async getStorageConsumedByUser(userId: string, options?: SessionOption) {
         const sizeArray = await Model.aggregate([
             {
                 $match: {
@@ -730,7 +730,7 @@ export class ResourceService {
                     }
                 }
             }
-        ])
+        ], options)
 
         const totalConsumedSize = sizeArray?.[0]?.sum as number
 

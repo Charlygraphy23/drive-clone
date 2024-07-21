@@ -3,6 +3,12 @@
 import { ObjectId } from "mongoose";
 import { PLAN_TYPE, RECURRING_TYPE } from "./plan.interface";
 
+export interface ActiveNewSubscriptionType {
+    userId: string;
+    planId: string;
+    orderId: string;
+}
+
 export interface SubscriptionSchemaType {
     isActive: boolean;
     userId: string | ObjectId;

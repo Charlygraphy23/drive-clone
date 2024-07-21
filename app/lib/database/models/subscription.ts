@@ -70,4 +70,4 @@ const schema = new mongoose.Schema<SubscriptionSchemaType>({
 
 }, { timestamps: true })
 
-export const SubscriptionModal = mongoose.models.User_Subscription as Model<SubscriptionDocumentType> || mongoose.model<SubscriptionDocumentType>(MODEL_NAME, schema)
+export const SubscriptionModel = mongoose.models.User_Subscription as Model<SubscriptionDocumentType> || mongoose.model<SubscriptionDocumentType>(MODEL_NAME, schema)
