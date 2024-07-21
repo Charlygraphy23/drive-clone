@@ -6,50 +6,11 @@ import { getServerSession } from "next-auth";
 import PlanCard from "./components/plan";
 import style from "./style.module.scss";
 
-const plans = [
-    {
-        id: "plan-123",
-        isActivated: true,
-        isPopular: false,
-        price: 0,
-        title: "FREE",
-        benefits: [
-            "Access upto 1GB of free space",
-            "100 downloads available per day"
-        ],
-        description: "This is a free plan"
-    },
-    {
-        id: "plan-234",
-        isActivated: false,
-        isPopular: true,
-        price: 49.50,
-        title: "Starter",
-        benefits: [
-            "Access upto 5GB of free space",
-            "200 downloads available per day"
-        ],
-        description: "This is a Starter plan"
-    },
-    {
-        id: "plan-345",
-        isActivated: false,
-        isPopular: false,
-        price: 99.50,
-        title: "Premium",
-        benefits: [
-            "Access upto 20GB of free space",
-            "500 downloads available per day"
-        ],
-        description: "This is a Premium plan"
-    }
-]
-
-
 const PlanPage = async () => {
     const session = await getServerSession(authOptions);
     const planService = new PlanService()
-    const plans = (await planService.getAllPlans()) as Array<{ _id: string, benefits: BenefitsSchemaType } & PlaneSchemaType>
+    const data = (await planService.getAllPlans())
+    const plans = JSON.parse(JSON.stringify(data)) as Array<{ _id: string, benefits: BenefitsSchemaType } & PlaneSchemaType>
 
     return (
         <main className={style?.wrapper} style={!session?.user ? { height: "100vh" } : {}}>

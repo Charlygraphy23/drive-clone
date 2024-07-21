@@ -219,13 +219,13 @@ const FileUploadModal = ({ isOpen }: Props) => {
     }, [files?.length, hasUploaded, startUploading, toggleModal, uploading])
 
     const handleCancel = useCallback(() => {
-        if (!files?.length) return;
-
-        abortController.abort()
-        const getCurrentFile = files?.find(file => file.isUploading)
-        console.log("getCurrentFile", getCurrentFile)
-        if (getCurrentFile) {
-            abortFileUploadApi(getCurrentFile?.uploadId, getCurrentFile?.updatedFileName)
+        if (files?.length) {
+            abortController.abort()
+            const getCurrentFile = files?.find(file => file.isUploading)
+            console.log("getCurrentFile", getCurrentFile)
+            if (getCurrentFile) {
+                abortFileUploadApi(getCurrentFile?.uploadId, getCurrentFile?.updatedFileName)
+            }
         }
 
         toggleModal(false)
