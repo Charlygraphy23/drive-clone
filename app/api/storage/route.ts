@@ -19,13 +19,15 @@ export const GET = async () => {
 
         await connectDB();
 
-        const activeSubscription = await subscriptionService.getActiveSubscription(String(user?._id));
-
-        const storageConsumed = await service.getStorageConsumedByUser(String(user?._id))
+        const [activeSubscription, storageConsumed] = await Promise.all([
+            subscriptionService.getUserSubscription(String(user?._id)),
+            service.getStorageConsumedByUser(String(user?._id))
+        ])
         const totalAvailableStorage = activeSubscription?.planDetails?.benefitDetails?.maxSize;
 
         return response.status(200).send({
-            data: totalStorageConsumed
+            total: totalAvailableStorage,
+            used: storageConsumed
         })
 
     }

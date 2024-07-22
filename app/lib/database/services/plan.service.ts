@@ -1,4 +1,4 @@
-import mongoose, { SessionOption } from "mongoose";
+import mongoose, { PipelineStage, SessionOption } from "mongoose";
 import { BenefitsSchemaType } from "../interfaces/benefits.interface";
 import { PlaneSchemaType } from "../interfaces/plan.interface";
 import { PlanModel } from "../models/plans";
@@ -6,8 +6,9 @@ import { PlanModel } from "../models/plans";
 const Model = PlanModel
 
 export class PlanService {
-    getAllPlans() {
+    getAllPlans(filterArr: PipelineStage[] = [] as PipelineStage[]) {
         return Model.aggregate([
+            ...filterArr,
             {
                 $lookup: {
                     from: "benefits",

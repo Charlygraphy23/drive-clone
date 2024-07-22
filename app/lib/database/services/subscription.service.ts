@@ -110,4 +110,25 @@ export class SubscriptionService {
         const lastSubscription = await Model.findOne({ userId: new mongoose.Types.ObjectId(userId) }).sort({ createdAt: -1 });
         return lastSubscription
     }
+
+    async activeInitialFreeSubscription(userId: string, options?: SessionOption) {
+        console.log('Initial subscription being active')
+        const userHadSubscription = await this.getUserSubscription(userId);
+        if (userHadSubscription) throw new Error("User already had subscription!, not eligible for initial free subscription");
+
+        const [freePlan] = await this.planService.getAllPlans([
+            {
+                $match: {
+                    isFree: true
+                }
+            },
+            {
+                $limit: 1
+            }
+        ]);
+
+        if (!freePlan) throw new Error("No Plan found!")
+
+        return await this.activeNewSubscription({ userId, planId: freePlan?._id?.toString() }, options)
+    }
 }

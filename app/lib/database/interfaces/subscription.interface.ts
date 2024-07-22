@@ -6,7 +6,7 @@ import { PLAN_TYPE, RECURRING_TYPE } from "./plan.interface";
 export interface ActiveNewSubscriptionType {
     userId: string;
     planId: string;
-    orderId: string;
+    orderId?: string;
 }
 
 export interface SubscriptionSchemaType {

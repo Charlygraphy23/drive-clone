@@ -4,15 +4,15 @@ import { ApiResponse } from "@/app/utils/response";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { hash } from "bcryptjs";
 import { File } from "buffer";
-import mongoose, { FilterQuery, Types } from "mongoose";
+import mongoose, { FilterQuery, SessionOption, Types } from "mongoose";
 import { generatePassword, userInfoProjectionAggregationQuery } from "../../lib";
 import { CreateUser, UserSchemaType } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
 
 
 export class UserService {
-    async findByEmail(email: string, select: string | Partial<Record<keyof UserSchemaType, number>> = "") {
-        return await UserModel.findOne({ email }).select(select)
+    async findByEmail(email: string, select: string | Partial<Record<keyof UserSchemaType, number>> = "", options?: SessionOption) {
+        return await UserModel.findOne({ email }, {}, options).select(select)
     }
 
     async findById(userId: string) {
@@ -20,10 +20,10 @@ export class UserService {
     }
 
 
-    async createUserWithoutPass({ email, firstName, lastName }: CreateUser) {
+    async createUserWithoutPass({ email, firstName, lastName }: CreateUser, options?: SessionOption) {
         const randomString = await generatePassword();
         console.log("Password-", randomString)
-        return await UserModel.create([{ email, firstName, lastName, password: randomString }])
+        return await UserModel.create([{ email, firstName, lastName, password: randomString }], options)
     }
 
 
