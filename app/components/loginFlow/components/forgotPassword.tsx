@@ -38,6 +38,7 @@ const ForgotPassword = ({
             await ForgotPasswordSchema.validate(value, { abortEarly: false })
             onNext && onNext()
 
+            // TODO forget password logic with API
             // TODO: redirect to success page
         }
         catch (err: any) {

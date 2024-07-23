@@ -1,6 +1,7 @@
 "use client"
 
 import { fetchFileData, fetchFolderData } from '@/app/_actions/resource';
+import useDebounceValue from '@/app/_hooks/useDebounce';
 import { ResourceDatasetType } from '@/app/components/body/components/resources/interfaces/index.interface';
 import { DATA_TYPE } from '@/app/lib/database/interfaces/files.interfaces';
 import { useQuery } from '@tanstack/react-query';
@@ -45,28 +46,31 @@ const api = async (search: string, filters: string, userId: string) => {
 
 const SearchModal = ({ user }: Props) => {
     const { state, dispatch } = useContext(SearchContext);
-    const enableSearch = useMemo(() => {
-        return !!state?.isOpen && (!!state?.search || !!Object.keys(state?.filters ?? {})?.length)
-    }, [state?.isOpen, state?.search, state?.filters])
+    const debounceValue = useDebounceValue<string>(state?.search);
 
+    const enableSearch = useMemo(() => {
+        return !!state?.isOpen && (!!debounceValue || !!Object.keys(state?.filters ?? {})?.length)
+    }, [state?.isOpen, debounceValue, state?.filters])
+
+    console.log("enableSearch", enableSearch)
 
     const [selectedIdx, setSelectedIndex] = useState(-1)
-
-
     const { isFetched, data = {} as {
         files: ResourceDatasetType["files"],
         folders: ResourceDatasetType["folders"]
     }, isFetching } = useQuery({
-        queryKey: ["search", state?.search, state.filters], queryFn: () => api(state?.search, JSON.stringify(state?.filters), String(user?._id)), retry: false, enabled: enableSearch, staleTime: 3000
+        queryKey: ["search", debounceValue, state.filters],
+        queryFn: () => api(debounceValue, JSON.stringify(state?.filters), String(user?._id)),
+        retry: false,
+        enabled: enableSearch,
+        staleTime: 3000
     })
 
     const totalLengthOfData = (data?.files?.length ?? 0) + (data?.folders?.length ?? 0)
-
     const hasData = useMemo(() => {
         const { files = {} as ResourceDatasetType["files"], folders = {} as ResourceDatasetType["folders"] } = data
         return !!((files?.length || folders?.length) && isFetched)
     }, [data, isFetched])
-
 
     useEffect(() => {
         if (!state?.isOpen) return;
@@ -102,9 +106,7 @@ const SearchModal = ({ user }: Props) => {
         }
     }, [state?.isOpen, totalLengthOfData])
 
-
-
-
+    console.log("debounceValue", debounceValue)
     return <div className={style.wrapper}>
         <div className={style.inputGroup}>
             <input type="text" placeholder='Search..' value={state?.search ?? ""} onChange={(e) => dispatch(handleSearch(e.target.value))} />
