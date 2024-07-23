@@ -94,58 +94,64 @@ const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAcce
 export const PATCH = async (req: NextRequest) => {
     const response = new ApiResponse()
     const resourceService = new ResourceService()
-    const mongoSession = await mongoose.startSession()
     try {
-        const session = await getServerSession(authOptions)
-
-        if (!session) return response.status(401).send("Unauthorized")
-        const user = session.user
-
-        const body = await req?.json()
-        const { accessList, resourceId, deletedUserIds } = body as UpdateAccessTypePayload
-
-        const isValid = await UpdateAccessPayloadValidator.isValid(body, { abortEarly: false })
-        console.log(isValid)
-
-        if (!isValid) return response.status(422).send("Invalid Data")
-
         await connectDB();
-        mongoSession.startTransaction()
+        const mongoSession = await mongoose.startSession()
+        try {
+            const session = await getServerSession(authOptions)
 
-        const hasAccess = await resourceService.checkAccess(String(user._id), {
-            resourceId,
-            accessType: ACCESS_TYPE.WRITE
-        }, { session: mongoSession, withDeleted: true })
+            if (!session) return response.status(401).send("Unauthorized")
+            const user = session.user
 
-        if (!hasAccess?.success) {
-            //TODO: redirect to another page not found / no permissions
-            return response.status(403).send("Unauthorized")
+            const body = await req?.json()
+            const { accessList, resourceId, deletedUserIds } = body as UpdateAccessTypePayload
+
+            const isValid = await UpdateAccessPayloadValidator.isValid(body, { abortEarly: false })
+            console.log(isValid)
+
+            if (!isValid) return response.status(422).send("Invalid Data")
+
+
+            mongoSession.startTransaction()
+
+            const hasAccess = await resourceService.checkAccess(String(user._id), {
+                resourceId,
+                accessType: ACCESS_TYPE.WRITE
+            }, { session: mongoSession, withDeleted: true })
+
+            if (!hasAccess?.success) {
+                //TODO: redirect to another page not found / no permissions
+                return response.status(403).send("Unauthorized")
+            }
+
+            const hasResource = hasAccess.resource
+            const accessListWithoutOwner = accessList.filter((access) => access.createdFor !== hasResource?.createdBy?.toString())
+
+            await handleAccessManagement(resourceId, accessListWithoutOwner, deletedUserIds, { session: mongoSession, withDeleted: true })
+            await mongoSession.commitTransaction()
+
+            if (hasAccess?.resource?.dataType === DATA_TYPE.FILE) {
+                revalidateTag("files")
+
+            }
+            else {
+                revalidateTag("folders")
+            }
+            return response.status(200).send("Updated")
+
         }
-
-        const hasResource = hasAccess.resource
-        const accessListWithoutOwner = accessList.filter((access) => access.createdFor !== hasResource?.createdBy?.toString())
-
-        await handleAccessManagement(resourceId, accessListWithoutOwner, deletedUserIds, { session: mongoSession, withDeleted: true })
-        await mongoSession.commitTransaction()
-
-        if (hasAccess?.resource?.dataType === DATA_TYPE.FILE) {
-            revalidateTag("files")
-
+        catch (_err: unknown) {
+            const err = _err as { message: string }
+            console.error("Error - ", err)
+            await mongoSession.abortTransaction()
+            return response.status(500).send(err?.message)
         }
-        else {
-            revalidateTag("folders")
+        finally {
+            await mongoSession.endSession()
         }
-        return response.status(200).send("Updated")
-
     }
-    catch (_err: unknown) {
-        const err = _err as { message: string }
-        console.error("Error - ", err)
-        await mongoSession.abortTransaction()
+    catch (err: any) {
         return response.status(500).send(err?.message)
-    }
-    finally {
-        await mongoSession.endSession()
     }
 
 }

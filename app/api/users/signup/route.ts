@@ -9,43 +9,50 @@ export const POST = async (req: Request) => {
     const response = new ApiResponse()
     const subscriptionService = new SubscriptionService()
 
-    const session = await mongoose.startSession()
-
     try {
-        const data = await req.json();
-        const service = new UserService()
-        const isValid = await SignupSchemaValidator.isValid(data)
-
-        if (!isValid) return response.status(422).send("Invalid email or name!")
-
-        const { email, firstName, lastName } = data;
-
         await connectDB();
-        session.startTransaction()
-        // TODO: create a free free storage with subscription
+        const session = await mongoose.startSession()
 
-        const hasUser = await service.findByEmail(email, "", { session })
+        try {
+            session.startTransaction();
 
-        if (hasUser) return response.status(400).send("This email is already registered!");
+            const data = await req.json();
+            const service = new UserService()
+            const isValid = await SignupSchemaValidator.isValid(data)
 
-        const [user] = await service.createUserWithoutPass({
-            email,
-            firstName,
-            lastName,
-        }, { session })
+            if (!isValid) return response.status(422).send("Invalid email or name!")
 
-        await subscriptionService.activeInitialFreeSubscription(user?._id, { session })
-        return response.status(200).send("Done")
+            const { email, firstName, lastName } = data;
+            console.log("Validated")
+            console.log("Transaction Started")
 
-    }
-    catch (_err: unknown) {
-        const err = _err as { message: string }
-        console.error("Error - ", err)
-        await session.abortTransaction()
-        return response.status(500).send(err?.message)
-    }
-    finally {
-        session.endSession()
+            const hasUser = await service.findByEmail(email, "", { session })
+
+            if (hasUser) return response.status(400).send("This email is already registered!");
+            console.log("hasUser")
+            const [user] = await service.createUserWithoutPass({
+                email,
+                firstName,
+                lastName,
+            }, { session })
+            console.log("UserCreated")
+
+            await subscriptionService.activeInitialFreeSubscription(user?._id, { session })
+            await session.commitTransaction()
+            return response.status(200).send("Done")
+
+        }
+        catch (_err: unknown) {
+            const err = _err as { message: string }
+            console.error("Error - ", err)
+            await session.abortTransaction()
+            return response.status(500).send(err?.message)
+        }
+        finally {
+            await session.endSession()
+        }
+    } catch (err: any) {
+        return response.status(500).send(err?.message ?? "Something went wrong")
     }
 
 }

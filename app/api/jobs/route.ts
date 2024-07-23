@@ -4,6 +4,7 @@
  * Free tire has Max Requests per Day - 500
  */
 
+import { connectDB } from "@/app/lib/database/db";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { AccessModal } from "@/app/lib/database/models/access";
 import { FilesAndFolderModel } from "@/app/lib/database/models/filesAndFolders";
@@ -113,6 +114,7 @@ const handleFileDelete = async () => {
 async function handler() {
     try {
         console.log("Trigger handler")
+        await connectDB()
         handleFileDelete().then(() => {
             console.log("Resource deleted")
         }).catch(err => {
