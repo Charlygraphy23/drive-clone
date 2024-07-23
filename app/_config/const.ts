@@ -10,6 +10,8 @@ export const PREVIEW_MODAL = "preview_modal";
 
 export const TOTAL_FREE_SPACE = 1024 ** 2 * 10 * 2// 1GB
 
+export const TAX = 18 // %
+
 
 export const BUCKET_PATH = process.env.OBJECT_BUCKET_NAME
 export const FILE_LIMIT = 10
