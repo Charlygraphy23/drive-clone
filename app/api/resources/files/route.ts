@@ -59,9 +59,12 @@ export const POST = async (req: NextRequest) => {
         }
 
 
-        const hasFreeSpaceToUpload = await storageService.hasUserStorage(String(user?._id), totalSize)
+        const canUpload = await storageService.hasUserStorage(String(user?._id), totalSize)
 
-        if (!hasFreeSpaceToUpload) return response.status(422).send("You don't have any free space left!")
+        if (!canUpload) return response.status(422).send({
+            message: "You don't have any active subscription space left!",
+            subscription: false
+        })
 
         const buffer = Buffer.from(await file.arrayBuffer())
         const hasFile = await service.findResourceByName(fileName, folderId, { session: mongoSession })

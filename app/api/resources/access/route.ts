@@ -32,9 +32,8 @@ const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAcce
                     console.log("Pick - access ", accessListOfDB)
 
 
-
                     for await (const accesses of updateAccessList) {
-                        const hasAccess = accessListOfDB.find(a => a?.createdFor?.toString() === accesses?.createdFor)
+                        const hasAccess = accessListOfDB.find(a => a?.createdFor?.toString() === String(accesses?.createdFor))
                         console.log("Local Access -  ", accesses)
                         console.log("Find - hasAccess ", hasAccess)
 
@@ -44,16 +43,16 @@ const handleAccessManagement = (resourceId: string, updateAccessList: UpdateAcce
 
                             await service.updateById(accessId, {
                                 accessType: accesses?.accessType
-                            })
+                            }, options)
                         }
                         else {
-                            const accessData = await service.create({
+                            const [accessData] = await service.create({
                                 accessType: accesses?.accessType,
                                 createdFor: accesses?.createdFor,
                                 resourceId: folder?._id,
                                 origin: rootAccessId ? ACCESS_ORIGIN.PARENT : ACCESS_ORIGIN.SELF,
                                 rootId: rootAccessId ?? null
-                            })
+                            }, options)
                             rootAccessId = accessData?._id?.toString()
                         }
 

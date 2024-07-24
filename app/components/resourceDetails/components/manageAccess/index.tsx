@@ -3,6 +3,7 @@
 import { updateAccess } from "@/app/_apis_routes/resources";
 import { getUsersByEmail } from "@/app/_apis_routes/user";
 import { MANAGE_ACCESS_MODAL_ID } from "@/app/_config/const";
+import useDebounceValue from "@/app/_hooks/useDebounce";
 import AvatarComponent from "@/app/components/avatar";
 import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
@@ -35,11 +36,12 @@ const ManageAccess = () => {
     const [selectedAccess, setSelectedAccess] = useState<SelectedAccessType[]>([])
     const [deletedUserIds, setDeletedUserIds] = useState<string[]>([])
     const [selectEmails, setSelectEmails] = useState<string[]>([])
+    const debounceSearchValue = useDebounceValue(search)
 
     const { data, isFetching } = useQuery({
-        queryFn: () => getUsersByEmail(search),
+        queryFn: () => getUsersByEmail(debounceSearchValue),
         queryKey: ["search-users", search],
-        enabled: !!search,
+        enabled: !!debounceSearchValue,
         refetchOnWindowFocus: false,
         refetchIntervalInBackground: false,
         staleTime: Infinity
@@ -80,7 +82,17 @@ const ManageAccess = () => {
     };
 
     const onChange = (values: string[]) => {
-        const contractData = values?.map((value) => {
+
+        const filterSelectedValues = values?.filter(val => {
+            const data = JSON.parse(val) as User
+            const userInfo = data as AccessList["userInfo"]
+            const hasPermission = selectedAccess?.find(access => access?.userInfo?._id === userInfo?._id);
+            return !hasPermission
+        })
+
+        console.log("AIG: filterSelectedValues", filterSelectedValues)
+
+        const contractData = filterSelectedValues?.map((value) => {
             const data = JSON.parse(value) as User
             const userInfo = data as AccessList["userInfo"]
             return {
@@ -91,7 +103,7 @@ const ManageAccess = () => {
         })
 
         setSelectedAccess([...accessList, ...contractData])
-        setSelectEmails(values)
+        setSelectEmails(filterSelectedValues)
     }
 
     const handleSubmit = async () => {

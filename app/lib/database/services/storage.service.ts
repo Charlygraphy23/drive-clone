@@ -1,44 +1,30 @@
 
-import { TOTAL_FREE_SPACE } from "@/app/_config/const"
-import mongoose from "mongoose"
-import { StorageModal } from "../models/storage"
 import { ResourceService } from "./resource.service"
+import { SubscriptionService } from "./subscription.service"
 
-const Model = StorageModal
 
 export class StorageService {
 
-    private async createStorageOfAUser(userId: string) {
-        return await Model.create({
-            userId: userId,
-            totalStorageInBytes: TOTAL_FREE_SPACE,
-        })
+    private subscriptionService: SubscriptionService;
+
+    constructor() {
+        this.subscriptionService = new SubscriptionService()
     }
 
     async hasUserStorage(userId: string, fileSizeInBytes: number) {
-        const hasStorage = await Model.findOne({ userId: new mongoose.Types.ObjectId(userId) });
+        const hasSubscription = await this.subscriptionService.getUserSubscription(userId);
+
+        if (!hasSubscription?.isActive) return false;
+
         const resourceService = new ResourceService();
-        const consumedSize = await resourceService.getTotalStorageConsumed(userId);
+        const consumedSize = await resourceService.getStorageConsumedByUser(userId);
         const totalSizeToBe = consumedSize + fileSizeInBytes;
+        const maxFileSizeAllowed = hasSubscription?.planDetails?.benefitDetails?.maxSize
 
-        console.log("Consumed size: " + consumedSize)
-        console.log("totalSizeToBe size: " + totalSizeToBe)
-        console.log("fileSizeInBytes size: " + fileSizeInBytes)
+        console.log("hasSubscription " + hasSubscription)
 
-
-        if (!hasStorage) {
-            console.log("User doesn't created storage before")
-            // create free storage
-            await this.createStorageOfAUser(userId);
-
-            if (totalSizeToBe <= TOTAL_FREE_SPACE) return true;
-            return false
-        }
-
-
-        // TODO: this comparison need to be fetched from user enrolled subscription pack
-        if (totalSizeToBe > TOTAL_FREE_SPACE) return false;
-        return true;
+        if (totalSizeToBe < maxFileSizeAllowed) return true;
+        return false;
     }
 
 }

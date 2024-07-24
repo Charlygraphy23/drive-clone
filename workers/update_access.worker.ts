@@ -1,7 +1,16 @@
+import { connectDB } from "@/app/lib/database/db";
 
-(async () => {
-    // DO WORK HERE
+process.on('message', async ({ folder, updateAccessList, deletedUserIds, options }) => {
+    try {
+        await connectDB()
+        // // Perform CPU-intensive operations here
+        // console.log(`Processing folder ${folder._id}`);
+        // // Example: Update or delete access
+        // await service.updateAccess(folder._id, updateAccessList, options);
+        // await service.deleteAccess(folder._id, deletedUserIds, options);
 
-
-    console.log("Running Childprocess ....")
-})();
+        // process.send({ status: 'completed' });
+    } catch (error) {
+        // process.send({ status: 'error', error: error.message });
+    }
+});

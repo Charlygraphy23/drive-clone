@@ -57,19 +57,19 @@ export class AccessService {
         return await Model.create(accessData, options)
     }
 
-    async create(payload: Partial<AccessSchemaType>) {
+    async create(payload: Partial<AccessSchemaType>, options?: SessionOption) {
         const { createdFor, resourceId, accessType, origin = ACCESS_ORIGIN.SELF, rootId = null } = payload
-        return await Model.create({
+        return await Model.create([{
             createdFor,
             accessType,
             resourceId,
             origin,
             rootId
-        })
+        }], options)
     }
 
-    async updateById(id: string, payload: UpdateQuery<Partial<AccessSchemaType>>) {
-        return await Model.findByIdAndUpdate({ _id: new Types.ObjectId(id) }, payload)
+    async updateById(id: string, payload: UpdateQuery<Partial<AccessSchemaType>>, options?: SessionOption) {
+        return await Model.findByIdAndUpdate({ _id: new Types.ObjectId(id) }, payload, options)
     }
 
     async deleteById(id: string) {
