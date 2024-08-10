@@ -1,72 +1,82 @@
+import { authOptions } from "@/app/lib/authConfig";
 import { connectDB } from "@/app/lib/database/db";
-import { ORDER_STATUS } from "@/app/lib/database/interfaces/order.interface";
-import { OrderModel } from "@/app/lib/database/models/order";
-import { PlanModel } from "@/app/lib/database/models/plans";
+import { TRANSACTION_STATUS } from "@/app/lib/database/interfaces/transaction.interface";
+import { PlanService } from "@/app/lib/database/services/plan.service";
 import { SubscriptionService } from "@/app/lib/database/services/subscription.service";
+import { TransactionService } from "@/app/lib/database/services/transaction.service";
+import { ApiResponse } from "@/app/utils/response";
 import mongoose from "mongoose";
-import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
-const sleep = async (sec: number) => {
-    return new Promise((resolve, _) => {
-        setTimeout(() => {
-            resolve(true)
-        }, 1000 * sec)
-    })
-}
-
-export const GET = async () => {
-    const userId = "662cf46427dadd5aab49e7a5";
-    const planId = "669b6ec91b9d15ac184f0e13";
+export const POST = async (req: NextRequest) => {
 
     await connectDB()
     const session = await mongoose.startSession();
-    const subscrionService = new SubscriptionService()
+    const planService = new PlanService()
+    const subscriptionService = new SubscriptionService()
+    const transactionService = new TransactionService()
+    const response = new ApiResponse()
 
     try {
 
         session.startTransaction()
-        const planDetails = await PlanModel.findOne({ _id: new mongoose.Types.ObjectId(planId) }, {}, {
+        const reqSession = await getServerSession(authOptions);
+        const userId = reqSession?.user?._id as string
+
+        const body = await req.json();
+        const { planId } = body
+
+        if (!planId) return response.status(422).send("Invalid planId")
+
+        const planDetails = await planService.getPlanById(planId, {
             session
-        }).populate("benefitId")
+        })
 
         if (!planDetails) throw new Error(`Plan not found`);
 
         if (!planDetails?.isFree) {
-            const [order] = await OrderModel.create([{
-                planId: planDetails?._id,
-                subTotal: planDetails?.price,
-                total: planDetails?.price,
-                tax: 0,
-                orderStatus: ORDER_STATUS.PENDING,
-                transactionId: Date.now().toString(),
-            }], {
+            await transactionService.create({
+                planDetails,
+                status: TRANSACTION_STATUS.PENDING,
+                userId
+            }, {
                 session,
             });
 
-            const orderId = order?._id;
-            await sleep(5);
-
-            console.log("orderId", orderId)
-
-            await OrderModel.findByIdAndUpdate({
-                _id: orderId,
-            }, {
-                orderStatus: ORDER_STATUS.DONE
-            }, {
-                session
-            })
-
-            await subscrionService.activeNewSubscription({
-                userId,
-                orderId,
-                planId
-            }, { session })
-
-
             await session.commitTransaction();
             await session.endSession();
+            revalidateTag("subscription")
             return NextResponse.json("Done")
         }
+
+
+        const transaction = await transactionService.create({
+            planDetails,
+            status: TRANSACTION_STATUS.DONE,
+            userId
+        }, {
+            session,
+        });
+        const transactionId = transaction?._id;
+
+        console.log("transactionId", transactionId)
+
+        // await transactionService.updateStatus(transactionId, TRANSACTION_STATUS.DONE, {
+        //     session
+        // })
+        await subscriptionService.activeNewSubscription({
+            userId,
+            transactionId,
+            planId
+        }, { session })
+
+        await session.commitTransaction();
+        await session.endSession();
+        revalidateTag("plans")
+        return NextResponse.json("Done")
+
 
         // TODO: at the time of expiration
         // TODO:: need to check if there is any subscription active 
@@ -74,11 +84,11 @@ export const GET = async () => {
         // TODO: if free do nothing
         // TODO: if it's pain, then check check how much space user consumed if it's less than free allowed space then active the free subscription or else block the user from accessing the drive.
         // TODO: allow user only to buy a subscription depending on their consumed storage if consumed > 5g then can not buy lower plan than currrent plan.
-        await session.commitTransaction();
-        await session.endSession();
-        return NextResponse.json("This is free subscription")
+        // await session.commitTransaction();
+        // await session.endSession();
+        // return NextResponse.json("This is free subscription")
     }
-    catch (err) {
+    catch (err: any) {
         await session.abortTransaction();
         session.endSession()
         return NextResponse.json(err?.message, {

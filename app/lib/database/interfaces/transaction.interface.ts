@@ -1,20 +1,21 @@
 /* eslint-disable no-unused-vars */
 import { Document, ObjectId } from "mongoose";
 
-export enum ORDER_STATUS {
+export enum TRANSACTION_STATUS {
     PENDING = "pending",
     DONE = "done",
     FAILED = "failed"
 }
 
 
-export interface OrderSchemaType {
+export interface TransactionSchemaType {
     planId: string | ObjectId;
     transactionId?: string;
     total: number;
     subTotal: number;
     tax: number;
-    orderStatus: ORDER_STATUS
+    status: TRANSACTION_STATUS;
+    userId: string | ObjectId;
 }
 
-export interface OrderDocumentType extends OrderSchemaType, Document { }
+export interface TransactionDocumentType extends TransactionSchemaType, Document { }

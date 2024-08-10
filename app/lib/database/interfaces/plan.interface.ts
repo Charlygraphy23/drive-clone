@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { ObjectId } from "mongoose";
+import { BenefitsSchemaType } from "./benefits.interface";
 
 
 export enum PLAN_TYPE {
@@ -14,7 +15,7 @@ export enum RECURRING_TYPE {
     NONE = "NONE",
 }
 
-export interface PlaneSchemaType {
+export interface PlanSchemaType {
     title: string;
     price: number;
     description: string;
@@ -25,4 +26,12 @@ export interface PlaneSchemaType {
     benefitId: string | ObjectId
 }
 
-export interface PlanDocumentType extends PlaneSchemaType, Document { }
+export interface PlanDocumentType extends PlanSchemaType, Document { }
+
+
+export type GetPlanWithBenefitType = {
+    _id: string,
+    benefits: {
+        _id: string
+    } & BenefitsSchemaType
+} & PlanSchemaType

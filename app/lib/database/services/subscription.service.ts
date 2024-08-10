@@ -1,55 +1,57 @@
 import mongoose, { MongooseUpdateQueryOptions, SessionOption } from "mongoose";
-import { ORDER_STATUS } from "../interfaces/order.interface";
 import { RECURRING_TYPE } from "../interfaces/plan.interface";
 import { ActiveNewSubscriptionType } from "../interfaces/subscription.interface";
+import { TRANSACTION_STATUS } from "../interfaces/transaction.interface";
 import { SubscriptionModel } from "../models/subscription";
-import { OrderService } from "./order.service";
 import { PlanService } from "./plan.service";
 import { ResourceService } from "./resource.service";
+import { TransactionService } from "./transaction.service";
 
 const Model = SubscriptionModel
 
 export class SubscriptionService {
     private planService: PlanService
     private resourceService: ResourceService
-    private orderService: OrderService
+    private transactionService: TransactionService
 
 
     constructor() {
         this.planService = new PlanService()
         this.resourceService = new ResourceService()
-        this.orderService = new OrderService()
+        this.transactionService = new TransactionService()
     }
 
-    async activeNewSubscription({ userId, planId, orderId }: ActiveNewSubscriptionType, options?: SessionOption) {
+    async activeNewSubscription({ userId, planId, transactionId }: ActiveNewSubscriptionType, options?: SessionOption) {
         const updateOptions = options as MongooseUpdateQueryOptions
         await Model.updateMany({ userId: new mongoose.Types.ObjectId(userId), isActive: true }, { isActive: false }, updateOptions);
 
-        const [planDetails, userConsumedStorage] = await Promise.all([
+        const [planDetails, userConsumedStorage, transactionDetails, lastTransactionByUser, lastUserSubscription] = await Promise.all([
             this.planService.getPlanById(planId, options),
-            this.resourceService.getStorageConsumedByUser(userId, options)
+            this.resourceService.getStorageConsumedByUser(userId, options),
+            this.transactionService.getDetails(transactionId, options),
+            this.transactionService.lastTransactionByUser(userId, options),
+            this.getUserSubscription(userId, options)
         ]);
 
-        if (!planDetails?.isFree && !orderId) throw new Error("The plan is not purchased yet!")
-
-        if (orderId) {
-            const orderDetails = await this.orderService.getOrderDetails(orderId, options);
-            console.log("orderDetails", orderDetails)
-
-            if (orderDetails?.orderStatus !== ORDER_STATUS.DONE && orderDetails?._id?.toString?.() !== orderId) throw new Error("Invalid order data")
-        }
-
+        if (!transactionId) throw new Error("The plan is not purchased yet!")
+        if (String(transactionDetails?._id) !== String(lastTransactionByUser?._id)) throw new Error("Transaction details mismatched!")
+        if (transactionDetails?.status !== TRANSACTION_STATUS.DONE) throw new Error("Invalid transaction data")
         if (!planDetails) throw new Error("No plan found");
         if (userConsumedStorage > planDetails?.benefits?.maxSize) throw new Error("You can't buy this plan, as you have consumed more storage than current plan.")
+        if (planDetails?.isFree && lastUserSubscription?.planDetails?.isFree) throw new Error("Already activated")
 
-        let endDate = new Date();
+        let endDate = null;
 
-        if (planDetails.recurringType === RECURRING_TYPE.MONTHLY) {
-            endDate = new Date(new Date().setDate(endDate.getDate() + 30))
+        if (!planDetails.isFree) {
+            endDate = new Date();
+            if (planDetails.recurringType === RECURRING_TYPE.MONTHLY) {
+                endDate = new Date(new Date().setDate(endDate.getDate() + 30))
+            }
+            else if (planDetails.recurringType === RECURRING_TYPE.YEARLY) {
+                endDate = new Date(new Date().setFullYear(endDate.getFullYear() + 1))
+            }
         }
-        else if (planDetails.recurringType === RECURRING_TYPE.YEARLY) {
-            endDate = new Date(new Date().setFullYear(endDate.getFullYear() + 1))
-        }
+
 
         const [subscriptionDetails] = await Model.create([{
             isActive: true,
@@ -66,48 +68,15 @@ export class SubscriptionService {
                     downloads: planDetails?.benefits?.downloads,
                 }
             },
-            endDate: !planDetails?.isFree ? endDate : null,
-            orderId: !planDetails?.isFree ? orderId : null,
+            endDate,
+            transactionId,
         }], options)
 
         return subscriptionDetails
     }
 
-    // async subscribeToPlan(userId: string) {
-    //     const subscription = await this.getUserSubscription(userId);
-
-    //     if (subscription) {
-
-
-    //         if (subscription?.isActive) {
-    //             // TODO: 
-    //             return subscription
-    //         }
-    //     }
-
-    //     if (!subscription) throw new Error("Plan not found!")
-    //     // check the eligibility
-
-    //     const storageConsumed = await this.resourceService.getTotalStorageConsumed(userId);
-
-    //     if (storageConsumed <= freeActivePlan?.benefits?.maxSize) {
-    //         // then allow free subscriptions if the user hasn't exceeded the limit of the free subscriptions;
-    //         const plan = {
-    //             planId: freeActivePlan?._id,
-    //             planType: freeActivePlan?.planType,
-    //             recurringType: freeActivePlan?.recurringType,
-    //             isFree: freeActivePlan?.isFree,
-    //             price: freeActivePlan?.price,
-    //             benefitId: freeActivePlan?.benefitId,
-    //             maxSize: freeActivePlan?.benefits?.maxSize,
-    //             downloads: freeActivePlan?.benefits?.downloads,
-    //         } as ActiveNewSubscriptionType["plan"]
-    //         return await this.activeNewSubscription({ userId, plan })
-    //     }
-    // }
-
-    async getUserSubscription(userId: string) {
-        const lastSubscription = await Model.findOne({ userId: new mongoose.Types.ObjectId(userId) }).sort({ createdAt: -1 });
+    async getUserSubscription(userId: string, options?: SessionOption) {
+        const lastSubscription = await Model.findOne({ userId: new mongoose.Types.ObjectId(userId) }, undefined, options).sort({ createdAt: -1 });
         return lastSubscription
     }
 
@@ -129,6 +98,7 @@ export class SubscriptionService {
 
         if (!freePlan) throw new Error("No Plan found!")
 
-        return await this.activeNewSubscription({ userId, planId: freePlan?._id?.toString() }, options)
+        const transaction = await this.transactionService.create({ planDetails: freePlan, status: TRANSACTION_STATUS.DONE, userId }, options)
+        return await this.activeNewSubscription({ userId, planId: freePlan?._id?.toString(), transactionId: transaction?._id?.toString() }, options)
     }
 }

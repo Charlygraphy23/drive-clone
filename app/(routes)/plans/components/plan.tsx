@@ -1,8 +1,11 @@
 "use client"
 
+import { purchaseSubscription } from '@/app/_apis_routes/purchase';
 import ButtonGroup from '@/app/components/buttonGroup';
 import { BenefitsSchemaType } from '@/app/lib/database/interfaces/benefits.interface';
 import { formatBytes } from '@/app/utils/index.utils';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import style from '../style.module.scss';
 
 type Props = {
@@ -12,10 +15,25 @@ type Props = {
     title: string;
     benefits: BenefitsSchemaType,
     description: string,
-    isAuthenticated?: boolean
+    isAuthenticated?: boolean,
+    isFree: boolean;
+    planId: string
 }
 
-const PlanCard = ({ price, title, description, benefits, isActivated, isPopular, isAuthenticated }: Props) => {
+const PlanCard = ({ price, title, description, benefits, isActivated, isPopular, isAuthenticated, isFree, planId }: Props) => {
+    const { mutate, isPending } = useMutation({ mutationFn: purchaseSubscription })
+    const router = useRouter()
+
+    const handleSubscription = () => {
+        if (!isAuthenticated) {
+            router.push("/login")
+            return
+        }
+        // if (isActivated && isAuthenticated) return;
+        mutate(planId)
+    }
+
+
     console.log("isAuthenticated", isAuthenticated)
     return (
         <section className={`${style?.planCard} ${isPopular && style?.popular}`}>
@@ -33,7 +51,12 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
                 {benefits?.displayPoints?.map((benefit, index) => <li key={index}>{benefit}</li>)}
             </ul>
 
-            <ButtonGroup className={`${style?.button} ${isActivated && isAuthenticated && style?.activated}`} submitText={isActivated && isAuthenticated ? "Activated" : "Go Premium"} />
+            <ButtonGroup
+                className={`${style?.button} ${isActivated && isAuthenticated && style?.activated}`}
+                submitText={isActivated && isAuthenticated ? "Activated" : isFree && isAuthenticated ? "Active" : "Go Premium"}
+                handleSubmit={handleSubscription}
+                loading={isPending}
+            />
         </section>
     )
 }

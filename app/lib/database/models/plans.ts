@@ -1,10 +1,10 @@
 import mongoose, { Model } from "mongoose";
-import { PLAN_TYPE, PlaneSchemaType, RECURRING_TYPE } from "../interfaces/plan.interface";
+import { PLAN_TYPE, PlanSchemaType, RECURRING_TYPE } from "../interfaces/plan.interface";
 import { MODEL_NAME as BENEFIT_MODEL_NAME } from "./benefits";
 
 export const MODEL_NAME = "Plan" as const;
 
-const schema = new mongoose.Schema<PlaneSchemaType>({
+const schema = new mongoose.Schema<PlanSchemaType>({
     title: {
         type: String,
     },
@@ -38,4 +38,4 @@ const schema = new mongoose.Schema<PlaneSchemaType>({
     }
 }, { timestamps: true })
 
-export const PlanModel = mongoose.models.Plan as Model<PlaneSchemaType> || mongoose.model<PlaneSchemaType>(MODEL_NAME, schema)
+export const PlanModel = mongoose.models.Plan as Model<PlanSchemaType> || mongoose.model<PlanSchemaType>(MODEL_NAME, schema)

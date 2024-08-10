@@ -2,8 +2,8 @@ import mongoose, { Model } from "mongoose";
 import { PLAN_TYPE, RECURRING_TYPE } from "../interfaces/plan.interface";
 import { SubscriptionDocumentType, SubscriptionSchemaType } from "../interfaces/subscription.interface";
 import { MODEL_NAME as BENEFIT_MODEL_NAME } from "./benefits";
-import { MODEL_NAME as ORDER_MODEL_NAME } from "./order";
 import { MODEL_NAME as PLAN_MODEL_NAME } from "./plans";
+import { MODEL_NAME as TRANSACTION_MODEL_NAME } from "./transaction";
 import { MODEL_NAME as USER_MODEL_NAME } from "./user";
 
 
@@ -61,10 +61,10 @@ const schema = new mongoose.Schema<SubscriptionSchemaType>({
             },
         }
     },
-    orderId: {
+    transactionId: {
         type: mongoose.Schema.Types.ObjectId,
         index: true,
-        ref: ORDER_MODEL_NAME
+        ref: TRANSACTION_MODEL_NAME
     }
 
 
