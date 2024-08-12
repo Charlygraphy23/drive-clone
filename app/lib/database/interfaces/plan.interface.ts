@@ -31,6 +31,7 @@ export interface PlanDocumentType extends PlanSchemaType, Document { }
 
 export type GetPlanWithBenefitType = {
     _id: string,
+    benefitId: string;
     benefits: {
         _id: string
     } & BenefitsSchemaType

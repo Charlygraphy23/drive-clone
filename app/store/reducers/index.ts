@@ -7,6 +7,7 @@ import ModalReducer from "./modal.reducers";
 import networkReducer from "./network.reducer";
 import notificationReducer from "./notification.reducer";
 import profileReducer from "./profile.reduce";
+import planReducer from './plan.reducer'
 
 
 
@@ -19,7 +20,8 @@ const rootReducer = () =>
 		notification: notificationReducer,
 		resourceInfo: resourceInfo,
 		bin: binReducer,
-		network: networkReducer
+		network: networkReducer,
+		plan: planReducer
 	});
 
 export default rootReducer;
