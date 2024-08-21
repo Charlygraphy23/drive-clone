@@ -4,3 +4,10 @@
 - after submited all the details by user razorpay try to resolve the payment either it will be success or failed 
 - we will setup a webhook which will monitor these side effects from razorpay 
 - depending on the side effects db transaction will get updated
+
+
+intregation doc - https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/integration-steps/
+webhook setup - https://razorpay.com/docs/webhooks/setup-edit-payments/
+how the gatway works - https://razorpay.com/docs/payments/payment-gateway/how-it-works/
+payments api - https://razorpay.com/docs/payments/payments/
+intregation steps nodeJs - https://razorpay.com/docs/payments/server-integration/nodejs/integration-steps/
