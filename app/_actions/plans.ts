@@ -1,3 +1,6 @@
+"use server"
+
+
 import { unstable_cache } from "next/cache";
 import { connectDB } from "../lib/database/db";
 import { BenefitsSchemaType } from "../lib/database/interfaces/benefits.interface";
@@ -8,7 +11,6 @@ import { SubscriptionService } from "../lib/database/services/subscription.servi
 
 export const getSubscriptionInfo = unstable_cache(async (userId: string) => {
     "use server"
-
     if (!userId) return null;
 
     await connectDB()

@@ -14,7 +14,8 @@ type Props = {
 
 const PlanList = ({ subscription, user }: Props) => {
     const { data: plans } = useAppSelector(state => state?.plan);
-    const isActivated = (plan: GetPlanWithBenefitType) => {
+    const isActivated = (plan: { isActivated?: boolean } & GetPlanWithBenefitType) => {
+        if (plan?.isActivated) return true
         if (subscription && subscription?.isActive) {
             return String(plan._id) === String(subscription?.planId)
         }

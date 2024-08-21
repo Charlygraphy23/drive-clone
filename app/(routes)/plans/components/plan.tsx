@@ -3,6 +3,8 @@
 import { purchaseSubscription } from '@/app/_apis_routes/purchase';
 import ButtonGroup from '@/app/components/buttonGroup';
 import { BenefitsSchemaType } from '@/app/lib/database/interfaces/benefits.interface';
+import { useAppDispatch } from '@/app/store';
+import { activatePlan } from '@/app/store/actions/plan.actions';
 import { formatBytes } from '@/app/utils/index.utils';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -21,20 +23,23 @@ type Props = {
 }
 
 const PlanCard = ({ price, title, description, benefits, isActivated, isPopular, isAuthenticated, isFree, planId }: Props) => {
-    const { mutate, isPending } = useMutation({ mutationFn: purchaseSubscription })
+    const { mutateAsync, isPending } = useMutation({ mutationFn: purchaseSubscription })
     const router = useRouter()
+    const dispatch = useAppDispatch()
 
-    const handleSubscription = () => {
+    const handleSubscription = async () => {
+
+        if (isActivated) return;
         if (!isAuthenticated) {
             router.push("/login")
             return
         }
         // if (isActivated && isAuthenticated) return;
-        mutate(planId)
+        await mutateAsync(planId)
+        dispatch(activatePlan(planId))
     }
 
 
-    console.log("isAuthenticated", isAuthenticated)
     return (
         <section className={`${style?.planCard} ${isPopular && style?.popular}`}>
             <h1>{title}</h1>

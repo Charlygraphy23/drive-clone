@@ -15,3 +15,4 @@ import { createAction } from "@reduxjs/toolkit";
 // })
 
 export const addPlans = createAction<GetPlanWithBenefitType[]>("addPlans");
+export const activatePlan = createAction<string>("activatePlan");
