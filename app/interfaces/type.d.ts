@@ -13,6 +13,10 @@ declare global {
             OBJECT_SECRET_KEY: string
             OBJECT_SPACE_ENDPOINT: string
             OBJECT_BUCKET_NAME: string
+            RAZORPAY_KEY_ID: string
+            RAZORPAY_SECRET_KEY: string
+            QSTASH_CURRENT_SIGNING_KEY: string
+            QSTASH_NEXT_SIGNING_KEY: string
             // add more environment variables and their types here
         }
     }

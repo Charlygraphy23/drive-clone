@@ -28,6 +28,7 @@
     "nextjs-toploader": "^1.6.12",
     "npm": "^10.7.0",
     "nprogress": "^0.2.0",
+    "razorpay": "^2.9.4",
     "react": "^18",
     "react-dom": "^18",
     "react-loader-spinner": "^6.1.6",

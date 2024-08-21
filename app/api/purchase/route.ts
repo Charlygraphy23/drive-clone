@@ -4,6 +4,7 @@ import { TRANSACTION_STATUS } from "@/app/lib/database/interfaces/transaction.in
 import { PlanService } from "@/app/lib/database/services/plan.service";
 import { SubscriptionService } from "@/app/lib/database/services/subscription.service";
 import { TransactionService } from "@/app/lib/database/services/transaction.service";
+import { RazorPay_App } from "@/app/utils/razorpay";
 import { ApiResponse } from "@/app/utils/response";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
@@ -37,7 +38,7 @@ export const POST = async (req: NextRequest) => {
         if (!planDetails) throw new Error(`Plan not found`);
 
         if (!planDetails?.isFree) {
-            await transactionService.create({
+            const transaction = await transactionService.create({
                 planDetails,
                 status: TRANSACTION_STATUS.PENDING,
                 userId
@@ -45,10 +46,25 @@ export const POST = async (req: NextRequest) => {
                 session,
             });
 
+            const razorpay = await RazorPay_App.server.createOrder({
+                amount: transaction?.total,
+                notes: {
+                    dbTransactionId: transaction?._id?.toString(),
+                    planId,
+                }
+            })
+
             await session.commitTransaction();
             await session.endSession();
             revalidateTag("subscription")
-            return NextResponse.json("Done")
+            return NextResponse.json({
+                message: "Done",
+                data: {
+                    razorpayOrderId: razorpay?.razorpayOrderId,
+                    amount: razorpay?.amount,
+                    currency: razorpay?.currency
+                }
+            })
         }
 
 
@@ -75,7 +91,10 @@ export const POST = async (req: NextRequest) => {
         await session.commitTransaction();
         await session.endSession();
         revalidateTag("plans")
-        return NextResponse.json("Done")
+        return NextResponse.json({
+            message: "Done",
+            data: null
+        })
 
 
         // TODO: at the time of expiration

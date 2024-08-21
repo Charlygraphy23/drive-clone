@@ -22,11 +22,15 @@ export class TransactionService {
     }
 
     async create({ planDetails, status, userId, paymentGatewayTransactionId }: CreateTransactionType, options?: SessionOption) {
+        const price = planDetails?.price;
+        const tax = (price * (18 / 100)) // 18% tax rate;
+        const totalPrice = price + tax
+
         const [transaction] = await TransactionModel.create([{
             planId: planDetails?._id,
             subTotal: planDetails?.price,
-            total: planDetails?.price,
-            tax: 0,
+            total: totalPrice,
+            tax,
             status: status,
             transactionId: paymentGatewayTransactionId,
             userId

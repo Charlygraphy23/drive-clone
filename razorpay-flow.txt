@@ -1,0 +1,6 @@
+- create order with razorpay api (created state)
+- get the orderId and pass it to client side
+- client will now show the checkout screeen with respective amount and user name
+- after submited all the details by user razorpay try to resolve the payment either it will be success or failed 
+- we will setup a webhook which will monitor these side effects from razorpay 
+- depending on the side effects db transaction will get updated
