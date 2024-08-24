@@ -5,6 +5,8 @@ import { SubscriptionService } from "@/app/lib/database/services/subscription.se
 import { ApiResponse } from "@/app/utils/response"
 import { getServerSession } from "next-auth"
 
+export const dynamic = "force-dynamic"
+
 export const GET = async () => {
     const service = new ResourceService()
     const response = new ApiResponse()

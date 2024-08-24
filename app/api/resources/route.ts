@@ -3,6 +3,8 @@ import { ApiResponse } from "@/app/utils/response";
 import { NextRequest } from "next/server";
 import { getResources } from "./_fetch";
 
+export const dynamic = "force-dynamic"
+
 export const GET = async (_req: NextRequest) => {
     const response = new ApiResponse()
 
