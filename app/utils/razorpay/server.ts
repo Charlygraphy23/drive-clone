@@ -1,4 +1,3 @@
-'use server';
 import { CreateOrderRazorpay, VerifyRazorPayPaymentSignature } from '@/app/interfaces/razorpay.interface';
 import Razorpay from 'razorpay';
 import { validatePaymentVerification } from 'razorpay/dist/utils/razorpay-utils';
@@ -7,6 +6,10 @@ export class RazorpayServer {
     instance: Razorpay
 
     constructor() {
+        if (typeof window !== 'undefined') {
+            throw new Error("Can't initialize on client side");
+        }
+
         this.instance = new Razorpay({
             key_id: process.env.RAZORPAY_KEY_ID,
             key_secret: process.env.RAZORPAY_KEY_SECRET

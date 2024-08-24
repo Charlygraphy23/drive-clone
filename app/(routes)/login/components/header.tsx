@@ -7,8 +7,7 @@ const LoginHeader = () => {
     return (
         <div className={style.header}>
             <div>
-                <Image src={Logo} alt="logo" width={40} height={40} />
-                <h4>MyCloud</h4>
+                <Image src={Logo} alt="logo" width={150} height={50} />
             </div>
 
         </div>

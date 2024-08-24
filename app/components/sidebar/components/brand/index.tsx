@@ -1,14 +1,12 @@
-import React from "react";
+import Logo from '@app/assets/logo.png';
+import Image from "next/image";
 import style from "../../style.module.scss";
+
 
 const SidebarBrand = () => {
 	return (
 		<div className={style.sidebar__brand}>
-			<div className={style.brand__logo}>
-				<i className='bi bi-cloud'></i>
-			</div>
-
-			<p className={style.brand__name}>MyCloud</p>
+			<Image src={Logo} alt="logo" width={150} height={50} />
 		</div>
 	);
 };

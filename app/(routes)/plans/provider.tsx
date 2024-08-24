@@ -6,10 +6,11 @@ import { GetPlanWithBenefitType } from '@/app/lib/database/interfaces/plan.inter
 import { useAppStore } from '@/app/store';
 import { addPlans } from '@/app/store/actions/plan.actions';
 import { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
+import { Rings } from 'react-loader-spinner';
 
 const PlanStateProvider = ({ children }: PropsWithChildren) => {
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const initializeData = useRef<boolean>(false);
     const store = useAppStore()
 
@@ -28,9 +29,16 @@ const PlanStateProvider = ({ children }: PropsWithChildren) => {
             initializeData.current = true
         }
     }, [handleInitialDataLoad])
+    console.log("Loading... ", loading)
 
     return (
-        <>{children}</>
+        <>
+            {loading ? <div className="w-100 d-flex justify-content-center align-items-center"><Rings
+                height="50"
+                width="50"
+                color="black"
+            /></div> : <>{children}</>}
+        </>
     )
 }
 

@@ -3,6 +3,7 @@ import { authOptions } from "@/app/lib/authConfig";
 import PageLoader from "@/app/loading";
 import RouteTemplate from "@/app/routeTemplate";
 import { getServerSession } from "next-auth";
+import Script from "next/script";
 import { PropsWithChildren, Suspense } from "react";
 
 const PlanLayout = async ({ children }: PropsWithChildren) => {
@@ -18,7 +19,10 @@ const PlanLayout = async ({ children }: PropsWithChildren) => {
                         <HeaderComponent hideSearch={true} />
                     </div>
                 </header>
-                {children}
+                <main>
+                    {children}
+                </main>
+                <Script src="https://checkout.razorpay.com/v1/checkout.js" />
             </div>
         </RouteTemplate>
     </Suspense >;

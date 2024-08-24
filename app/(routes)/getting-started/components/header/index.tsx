@@ -14,7 +14,7 @@ const GettingStartedHeader = () => {
     return (
         <header className={style.header}>
             <Link href={"/getting-started"}>
-                <Image src={Logo} width={50} height={50} alt="Logo" />
+                <Image src={Logo} width={150} height={50} alt="Logo" />
             </Link>
 
             <button className={`button ${style.helpButton}`} onClick={() => router.push("/login")}>

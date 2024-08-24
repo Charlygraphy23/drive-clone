@@ -6,7 +6,9 @@ import { BenefitsSchemaType } from '@/app/lib/database/interfaces/benefits.inter
 import { useAppDispatch } from '@/app/store';
 import { activatePlan } from '@/app/store/actions/plan.actions';
 import { formatBytes } from '@/app/utils/index.utils';
+import { RazorpayClient } from '@/app/utils/razorpay/client';
 import { useMutation } from '@tanstack/react-query';
+import { User } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import style from '../style.module.scss';
 
@@ -20,9 +22,10 @@ type Props = {
     isAuthenticated?: boolean,
     isFree: boolean;
     planId: string
+    user?: User
 }
 
-const PlanCard = ({ price, title, description, benefits, isActivated, isPopular, isAuthenticated, isFree, planId }: Props) => {
+const PlanCard = ({ price, title, description, benefits, isActivated, isPopular, isAuthenticated, isFree, planId, user }: Props) => {
     const { mutateAsync, isPending } = useMutation({ mutationFn: purchaseSubscription })
     const router = useRouter()
     const dispatch = useAppDispatch()
@@ -34,9 +37,41 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
             router.push("/login")
             return
         }
-        // if (isActivated && isAuthenticated) return;
-        await mutateAsync(planId)
-        dispatch(activatePlan(planId))
+
+        const { data } = await mutateAsync(planId);
+
+        if (isFree) {
+            dispatch(activatePlan(planId))
+            return;
+        }
+
+        const response = data?.data;
+
+        if (!response) throw new Error("Something went wrong!")
+
+        const options = {
+            "amount": String(response?.amount),
+            "currency": "INR",
+            "name": `${user?.firstName} ${user?.lastName}`,
+            "description": "",
+            "image": "",
+            "order_id": response?.razorpayOrderId,
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            "prefill": {
+                "name": `${user?.firstName} ${user?.lastName}`,
+                "email": `${user?.email}`,
+                "contact": ""
+            },
+            "notes": {
+                ...response
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        const razorpayClient = new RazorpayClient(options).instance;
+        razorpayClient.open()
     }
 
 

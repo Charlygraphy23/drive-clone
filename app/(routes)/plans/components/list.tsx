@@ -36,6 +36,7 @@ const PlanList = ({ subscription, user }: Props) => {
                     price={plan?.price}
                     isAuthenticated={!!user}
                     isFree={plan?.isFree}
+                    user={user}
                 />)}
 
             </div></>

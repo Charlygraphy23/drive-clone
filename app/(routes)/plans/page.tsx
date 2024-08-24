@@ -15,7 +15,7 @@ const PlanPage = async () => {
         <PlanStateProvider>
             <main className={style?.wrapper} style={!session?.user ? { height: "100vh" } : {}}>
                 <h1>Our Plans</h1>
-                <p>These are all the plans having it's own benefits</p>
+                <p>These are all the plans having its own benefits</p>
                 <PlanList subscription={subscription} user={user} />
             </main>
         </PlanStateProvider>

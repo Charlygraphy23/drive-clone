@@ -4,7 +4,7 @@ import { TRANSACTION_STATUS } from "@/app/lib/database/interfaces/transaction.in
 import { PlanService } from "@/app/lib/database/services/plan.service";
 import { SubscriptionService } from "@/app/lib/database/services/subscription.service";
 import { TransactionService } from "@/app/lib/database/services/transaction.service";
-import { RazorPay_App } from "@/app/utils/razorpay";
+import { RazorpayServer } from "@/app/utils/razorpay/server";
 import { ApiResponse } from "@/app/utils/response";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
@@ -46,8 +46,8 @@ export const POST = async (req: NextRequest) => {
                 session,
             });
 
-            const razorpay = await RazorPay_App.server.createOrder({
-                amount: transaction?.total,
+            const razorpay = await new RazorpayServer().createOrder({
+                amount: transaction?.total * 100,
                 notes: {
                     dbTransactionId: transaction?._id?.toString(),
                     planId,

@@ -20,6 +20,10 @@ declare global {
             // add more environment variables and their types here
         }
     }
+
+    namespace window {
+        interface Razorpay { }
+    }
 }
 
 declare module 'next-auth' {
