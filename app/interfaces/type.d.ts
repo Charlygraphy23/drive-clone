@@ -21,8 +21,8 @@ declare global {
         }
     }
 
-    namespace window {
-        interface Razorpay { }
+    interface Window {
+        Razorpay: any;
     }
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import videojs from "video.js";
 import Player from "video.js/dist/types/player";
 import 'video.js/dist/video-js.css';
@@ -13,21 +13,6 @@ const VideoPreview = ({ url, isOpen }: Props) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const playerRef = useRef<Player | null>();
     const mountOnce = useRef("")
-
-    const dispose = useCallback(() => {
-        console.log("Is Opening", isOpen)
-        const player = playerRef.current;
-        console.log("Player ", player)
-        // console.log("!player.isDisposed() ", !player.isDisposed())
-
-
-        // if (player && !player.isDisposed() && !isOpen) {
-        //     console.log('Called Dispose ',)
-        //     player.dispose();
-        //     playerRef.current = null;
-        // }
-    }, [isOpen])
-
 
     useEffect(() => {
         console.log("UL==> VIDEO mouted")
@@ -64,7 +49,7 @@ const VideoPreview = ({ url, isOpen }: Props) => {
 
         return () => {
             console.log("UL==>  PLAYER", playerRef.current)
-            console.log("UL==>  player.isDisposed()", playerRef.current.isDisposed())
+            // console.log("UL==>  player.isDisposed()", playerRef.current.isDisposed())
             console.log("UL==>  isOpen", isOpen)
 
 
@@ -78,18 +63,6 @@ const VideoPreview = ({ url, isOpen }: Props) => {
         }
 
     }, [url, isOpen])
-
-
-    // useEffect(() => {
-
-    //     console.log("UL==> Mount")
-
-    //     return () => {
-    //         // dispose()
-    //         console.log("UL==> Un-Mount")
-    //     }
-
-    // }, [dispose]);
 
     return (
         <section className={style.videoWrapper}>
