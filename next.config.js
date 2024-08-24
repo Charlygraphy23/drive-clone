@@ -6,7 +6,7 @@ const { merge } = require("webpack-merge");
 const nextConfig = {
   logging: {
     fetches: {
-      fullUrl: true,
+      fullUrl: false,
     },
   },
   images: {
