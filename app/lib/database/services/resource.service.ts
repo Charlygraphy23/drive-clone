@@ -6,7 +6,7 @@ import { formatBytes } from "@/app/utils/index.utils";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { ReadStream, createReadStream } from "fs";
-import { appendFile, stat, unlink } from "fs/promises";
+import { appendFile, mkdir, stat, statfs, unlink } from "fs/promises";
 import mimeType from "mime-types";
 import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import path from "path";
@@ -29,6 +29,12 @@ export class ResourceService {
                 sizeInMB: 0,
                 size: 0
             };
+        }
+
+        const hasFolder = await statfs(path.resolve(`_chunked`)).then(() => true).catch(() => false);
+
+        if (!hasFolder) {
+            await mkdir(path.resolve(`_chunked`))
         }
 
         const filePath = path.resolve(`_chunked/${name}`);
