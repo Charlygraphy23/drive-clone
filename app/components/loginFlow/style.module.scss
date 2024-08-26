@@ -81,68 +81,86 @@ $themeColor: rgba(color.$primary-color, 0.4);
 		}
 
 		&.emailPassword {
-			.remindPassword {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
+			.wrapper {
+				display: inherit;
+				flex-direction: inherit;
+				justify-content: inherit;
+				align-items: inherit;
 				width: 100%;
+				flex: 1;
 
-				label {
+				.remindPassword {
 					display: flex;
-					color: color.$text-gray-color;
+					justify-content: flex-end;
 					align-items: center;
-					gap: 6px;
-					font-size: 0.8rem;
-					user-select: none;
+					width: 100%;
 
-					span {
-						width: 1.3em;
-						height: 1.3em;
-						border-radius: 50%;
-						border: 1px solid $themeColor;
-						position: relative;
-						overflow: hidden;
-						cursor: pointer;
-
+					label {
 						display: flex;
-						justify-content: center;
+						color: color.$text-gray-color;
 						align-items: center;
-						color: white;
-						line-height: 1.1;
-						transition: 0.1s ease-in-out all;
+						gap: 6px;
+						font-size: 0.8rem;
+						user-select: none;
 
-						&::after {
-							position: absolute;
-							top: 0;
-							left: 0;
-							pointer-events: none;
-							width: 100%;
-							height: 100%;
+						span {
+							width: 1.3em;
+							height: 1.3em;
+							border-radius: 50%;
+							border: 1px solid $themeColor;
+							position: relative;
+							overflow: hidden;
+							cursor: pointer;
+
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							color: white;
+							line-height: 1.1;
+							transition: 0.1s ease-in-out all;
+
+							&::after {
+								position: absolute;
+								top: 0;
+								left: 0;
+								pointer-events: none;
+								width: 100%;
+								height: 100%;
+							}
+
+							i {
+								opacity: 0;
+								font-size: 0.6em;
+							}
 						}
 
-						i {
+						input {
+							display: none;
 							opacity: 0;
-							font-size: 0.6em;
+						}
+
+						input:checked ~ span {
+							background-color: color.$primary-color;
+
+							i {
+								opacity: 1;
+							}
 						}
 					}
 
-					input {
-						display: none;
-						opacity: 0;
-					}
-
-					input:checked ~ span {
-						background-color: color.$primary-color;
-
-						i {
-							opacity: 1;
-						}
+					a {
+						color: black;
+						font-size: 0.9rem;
 					}
 				}
+			}
+
+			.signupLink {
+				padding: 1rem 0rem;
 
 				a {
-					color: black;
-					font-size: 0.9rem;
+					// text-decoration: none;
+					color: color.$black-color;
 				}
 			}
 		}

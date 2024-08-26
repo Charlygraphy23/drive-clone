@@ -4,7 +4,7 @@ import { ErrorHandler } from "@/app/utils/index.utils";
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
-import { ChangeEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, MouseEvent, useState } from 'react';
 import ButtonGroup from '../../buttonGroup';
 import InputGroup from '../../inputGroup';
 import { EmailPasswordPropsType, EmailPasswordSchema, LoginFlowState } from '../interfaces/index.interface';
@@ -32,7 +32,8 @@ const EmailPassword = ({
     const [loading, setLoading] = useState(false)
     const router = useRouter();
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
 
         if (loading) return;
 
@@ -91,35 +92,41 @@ const EmailPassword = ({
 
 
     return (
-        <div className={`${style.emailPassword} ${style.view} ${getViewSlideClass(active, index)}`}>
-            <h4>{title}</h4>
-            <InputGroup
-                value={value?.email}
-                id="email" type='text'
-                icon={<i className="bi bi-person-fill"></i>}
-                onChange={handleChange}
-                errorMessage={errors?.email || ""}
-                placeHolder='your email' />
-            <InputGroup
-                value={value?.password}
-                type='password'
-                id="password"
-                icon={<i className="bi bi-lock-fill"></i>}
-                onChange={handleChange}
-                errorMessage={errors?.password || ""}
-                placeHolder='your password' />
-            {rememberMe && <div className={style.remindPassword}>
-                <label htmlFor="checkbox">
-                    <input hidden id="checkbox" type="checkbox" onChange={e => setState(prev => ({ ...prev, rememberMe: e.target.checked }))} />
-                    <span><i className="bi bi-check2"></i></span>
-                    Remember my choice
-                </label>
-                <Link onClick={handleNextPage} href={"#"}>Forgot Password?</Link>
-            </div>}
+        <form className={`${style.emailPassword} ${style.view} ${getViewSlideClass(active, index)}`}>
+            <div className={style.wrapper}>
+                <h4>{title}</h4>
+                <InputGroup
+                    value={value?.email}
+                    id="email" type='text'
+                    icon={<i className="bi bi-person-fill"></i>}
+                    onChange={handleChange}
+                    errorMessage={errors?.email || ""}
+                    placeHolder='your email' />
+                <InputGroup
+                    value={value?.password}
+                    type='password'
+                    id="password"
+                    icon={<i className="bi bi-lock-fill"></i>}
+                    onChange={handleChange}
+                    errorMessage={errors?.password || ""}
+                    placeHolder='your password' />
+                {rememberMe && <div className={style.remindPassword}>
+                    {/* <label htmlFor="checkbox">
+                        <input hidden id="checkbox" type="checkbox" onChange={e => setState(prev => ({ ...prev, rememberMe: e.target.checked }))} />
+                        <span><i className="bi bi-check2"></i></span>
+                        Remember my choice
+                    </label> */}
+                    <Link onClick={handleNextPage} href={"#"}>Forgot Password?</Link>
+                </div>}
 
-            <ButtonGroup loading={loading} submitText={submitText} handleSubmit={handleSubmit} />
+                <ButtonGroup loading={loading} submitText={submitText} handleSubmit={handleSubmit} type="submit" />
 
-        </div>
+            </div>
+            <div className={style.signupLink}>
+                <Link href={"/getting-started"}>Not have an account ?</Link>
+            </div>
+
+        </form>
     )
 }
 
