@@ -105,7 +105,10 @@ export class LOCAL_S3 {
             "Bucket": this.bucket,
             "Key": this.key
         };
-        const command = new CreateMultipartUploadCommand(input);
+        const command = new CreateMultipartUploadCommand({
+            ...input,
+            // Expires: new Date(new Date().setTime(new Date().getHours() + 1)),
+        });
         const response = await s3Client.send(command);
 
         this.uploadId = response.UploadId

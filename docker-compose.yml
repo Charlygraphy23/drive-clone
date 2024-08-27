@@ -1,0 +1,12 @@
+services:
+  next-app:
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - chunked:/_chunked
+    container_name: next-app
+    env_file: ./.env
+
+volumes:
+  chunked:

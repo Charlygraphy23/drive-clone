@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require("path");
-const { merge } = require("webpack-merge");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   logging: {
     fetches: {
       fullUrl: false,
