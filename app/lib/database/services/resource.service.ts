@@ -6,9 +6,10 @@ import { formatBytes } from "@/app/utils/index.utils";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { ReadStream, createReadStream } from "fs";
-import { appendFile, mkdir, stat, statfs, unlink } from "fs/promises";
+import { appendFile, stat, unlink } from "fs/promises";
 import mimeType from "mime-types";
 import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
+import { tmpdir } from 'os';
 import path from "path";
 import { userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
@@ -31,13 +32,15 @@ export class ResourceService {
             };
         }
 
-        const hasFolder = await statfs(path.resolve(`_chunked`)).then(() => true).catch(() => false);
+        // const hasFolder = await statfs(path.resolve(`_chunked`)).then(() => true).catch(() => false);
 
-        if (!hasFolder) {
-            await mkdir(path.resolve(`_chunked`))
-        }
+        // if (!hasFolder) {
+        //     await mkdir(path.resolve(`_chunked`))
+        // }
 
-        const filePath = path.resolve(`_chunked/${name}`);
+        const tempFolder = tmpdir()
+        console.log("System temp folder is - ", tempFolder)
+        const filePath = path.resolve(`${tempFolder}/${name}`);
         await appendFile(filePath, buffer)
         console.log("Local file appended")
 
