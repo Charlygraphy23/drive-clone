@@ -37,7 +37,7 @@ export class ResourceService {
         // if (!hasFolder) {
         //     await mkdir(path.resolve(`_chunked`))
         // }
-
+        console.log("Getting Temp folder...")
         const tempFolder = tmpdir()
         console.log("System temp folder is - ", tempFolder)
         const filePath = path.resolve(`${tempFolder}/${name}`);
