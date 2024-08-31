@@ -589,7 +589,7 @@ export class ResourceService {
 
             const stream = localFileInfo?.read?.() as ReadStream
 
-            console.log("Uploading Chunk...")
+            console.log("Uploading Chunk... ")
             await s3.uploadPart({
                 file: stream
             }, payload?.chunkIndex)
