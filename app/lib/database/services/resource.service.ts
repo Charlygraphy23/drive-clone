@@ -576,7 +576,7 @@ export class ResourceService {
                 console.log("Found first data as chunk")
                 await s3.createMultipartUpload()
             }
-
+            console.log("handleLocalFileUpload...")
             localFileInfo = await this.handleLocalFileUpload(s3?.uploadId ?? "", payload.file as Buffer, payload.fileName);
 
 
