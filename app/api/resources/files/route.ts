@@ -15,6 +15,7 @@ import { extname } from "path";
 import { UpdateNamePayloadSchema } from "../../_validation/data.validation";
 
 export const POST = async (req: NextRequest) => {
+    console.log("Inside File Upload path...")
     const mongoSession = await startSession()
     const service = new ResourceService();
     const response = new ApiResponse()
