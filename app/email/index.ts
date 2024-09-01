@@ -5,7 +5,6 @@ import { join } from 'path';
 
 export class NodemailerClient {
     private transport: nodemailer.Transporter;
-    private template: HandlebarsTemplateDelegate<any> | undefined
     private html: string = ""
 
     constructor() {
@@ -13,6 +12,7 @@ export class NodemailerClient {
 
         this.transport = nodemailer.createTransport({
             service: "Gmail",
+            host: "smtp.gmail.com",
             auth: {
                 user: "mail.mycloud.storage@gmail.com",
                 pass: "bwuliwhedizauvuy"
@@ -20,19 +20,20 @@ export class NodemailerClient {
         });
     }
 
-    async getTemplate(name: "signup") {
-        const emailTemplateSource = await readFile(join(`../templates/${name}.hbs`), "utf8")
-        this.template = handlebars.compile(emailTemplateSource)
-        return {
-            signup: this.signupTemplate
-        }
+    private async getTemplate(name: "signup") {
+        console.log("process.cwd()", process.cwd())
+        const emailTemplateSource = await readFile(join(process.cwd(), `app/email/templates/${name}.hbs`), "utf8")
+        return handlebars.compile(emailTemplateSource)
     }
 
-    signupTemplate(data: Record<string, any>) {
+    async signupTemplate(data: {
+        name: string,
+        username: string,
+        password: string
+    }) {
+        const template = await this.getTemplate("signup")
 
-        if (!this.template) throw new Error("Please create a template!")
-
-        const templateData = this.template({
+        const templateData = template({
             name: data?.name,
             username: data?.username,
             password: data?.password
@@ -40,11 +41,15 @@ export class NodemailerClient {
 
         this.html = templateData
         return {
-            send: this.send
+            send: (data: {
+                to: string,
+                subject: string,
+
+            }) => this.send(data)
         }
     }
 
-    send({
+    private send({
         to,
         subject,
     }: {
@@ -56,16 +61,20 @@ export class NodemailerClient {
             from: process.env.TO_EMAIL,
             to: to,
             subject: subject,
-            attachment: "{LOCATION TO THE FILE THAT NEEDS TO BE ATTACHED}",
+            // attachment: "{LOCATION TO THE FILE THAT NEEDS TO BE ATTACHED}",
             html: this.html
         }
 
-        this.transport.sendMail(mailOptions, function (error, response) {
-            if (error) {
-                console.log(error)
-            } else {
+        return new Promise((resolve, reject) => {
+            this.transport.sendMail(mailOptions, function (error, response) {
+                if (error) {
+                    console.error(`Error sending email: ${error}`)
+                    return reject(error)
+                }
+
                 console.log("Successfully sent email.")
-            }
+                return resolve(response)
+            })
         })
     }
 }

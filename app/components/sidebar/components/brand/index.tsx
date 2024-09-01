@@ -6,7 +6,7 @@ import style from "../../style.module.scss";
 const SidebarBrand = () => {
 	return (
 		<div className={style.sidebar__brand}>
-			<Image src={Logo} alt="logo" width={150} height={50} />
+			<Image src={Logo} alt="mbox" width={70} height={70} />
 		</div>
 	);
 };

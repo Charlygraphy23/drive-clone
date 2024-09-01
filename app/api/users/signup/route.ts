@@ -1,3 +1,4 @@
+import { NodemailerClient } from "@/app/email";
 import { connectDB } from "@/app/lib/database/db";
 import { SubscriptionService } from "@/app/lib/database/services/subscription.service";
 import { UserService } from "@/app/lib/database/services/user.service";
@@ -30,14 +31,26 @@ export const POST = async (req: Request) => {
 
             if (hasUser) return response.status(400).send("This email is already registered!");
             console.log("hasUser")
-            const [user] = await service.createUserWithoutPass({
+            const [user, generatedPassword] = await service.createUserWithoutPass({
                 email,
                 firstName,
                 lastName,
             }, { session })
             console.log("UserCreated")
 
-            await subscriptionService.activeInitialFreeSubscription(user?._id, { session })
+            await subscriptionService.activeInitialFreeSubscription(String(user?._id), { session })
+
+            const mailClient = new NodemailerClient();
+            const template = await mailClient.signupTemplate({
+                name: `${firstName} ${lastName}`,
+                username: email,
+                password: generatedPassword
+            })
+
+            template.send({
+                to: email,
+                subject: "Congratulations! Successful Login"
+            })
             await session.commitTransaction()
             return response.status(200).send("Done")
 

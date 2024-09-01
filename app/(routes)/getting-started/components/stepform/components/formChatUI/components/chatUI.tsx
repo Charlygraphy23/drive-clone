@@ -14,7 +14,7 @@ const ChatUI = ({ question, answer }: Props) => {
     return (
         <div className={style.chat}>
             <div className={style.sender}>
-                <Image src={Logo} alt="brand" width={30} height={30} />
+                <Image src={Logo} alt="mbox" width={30} height={30} />
                 <p className={style.message}>{question}</p>
             </div>
 

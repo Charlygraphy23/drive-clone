@@ -6,7 +6,7 @@ import { hash } from "bcryptjs";
 import { File } from "buffer";
 import mongoose, { FilterQuery, SessionOption, Types } from "mongoose";
 import { generatePassword, userInfoProjectionAggregationQuery } from "../../lib";
-import { CreateUser, UserSchemaType } from "../interfaces/user.interface";
+import { CreateUser, UserSchemaDocument, UserSchemaType } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
 
 
@@ -20,10 +20,10 @@ export class UserService {
     }
 
 
-    async createUserWithoutPass({ email, firstName, lastName }: CreateUser, options?: SessionOption) {
+    async createUserWithoutPass({ email, firstName, lastName }: CreateUser, options?: SessionOption): Promise<[UserSchemaDocument, string]> {
         const randomString = await generatePassword();
-        console.log("Password-", randomString)
-        return await UserModel.create([{ email, firstName, lastName, password: randomString }], options)
+        const [user] = await UserModel.create([{ email, firstName, lastName, password: randomString }], options)
+        return [user, randomString]
     }
 
 

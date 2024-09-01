@@ -37,7 +37,7 @@ const StepFormChatUI = ({ data }: Props) => {
                 <DoodleUiContainer className={style.chatContainer} >
                     {state.map((val) => <ChatUI key={val?.key} question={val.question} answer={contextState?.data?.[val?.key]} />)}
                 </DoodleUiContainer>
-                <Image className={style.chatImage} src={Logo} alt="Logo" width={40} height={40} />
+                <Image className={style.chatImage} src={Logo} alt="mbox" width={40} height={40} />
             </div>
         </div>
 
