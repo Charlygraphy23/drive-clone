@@ -1,3 +1,5 @@
+export const ROOT_FOLDER = "root"
+
 export const RENAME_MODAL_ID = "rename_modal";
 export const DELETE_CONFIRMATION = "delete_confirm";
 export const MANAGE_ACCESS_MODAL_ID = "manage_access";

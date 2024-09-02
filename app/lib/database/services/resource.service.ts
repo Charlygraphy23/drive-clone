@@ -1,3 +1,4 @@
+import { ROOT_FOLDER } from "@/app/_config/const";
 import { getChildrenAccessListByFolderId, getListOfChildFoldersQuery } from "@/app/api/resources/_fetch";
 import { ResourceDatasetType } from "@/app/components/body/components/resources/interfaces/index.interface";
 import { ResourcePayloadType } from "@/app/interfaces/index.interface";
@@ -230,9 +231,10 @@ export class ResourceService {
             initialQuery.createdBy = { $ne: new Types.ObjectId(userId) }
         }
 
-        if (folderId && !showDeleted) {
+        if (folderId && folderId !== ROOT_FOLDER && !showDeleted) {
             initialQuery["parentFolderId"] = new Types.ObjectId(folderId);
-        } else if (!showDeleted) {
+        }
+        else if (folderId === ROOT_FOLDER && !showDeleted) {
             initialQuery.$expr = {
                 $or: [
                     {
@@ -245,7 +247,8 @@ export class ResourceService {
             }
         }
 
-        if (fileId && resourceType === DATA_TYPE.FILE) {
+
+        if (fileId && fileId !== ROOT_FOLDER && resourceType === DATA_TYPE.FILE) {
             initialQuery["_id"] = new Types.ObjectId(fileId)
         }
 
@@ -321,6 +324,7 @@ export class ResourceService {
 
             {
                 $match: {
+                    isDeleted: false,
                     ...initialQuery,
                     hasAccess: true
                 }

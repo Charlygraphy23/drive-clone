@@ -24,11 +24,12 @@ const ResultComponent = ({ type, title, path, selected = false, mimeType, fileId
     const router = useRouter()
     const url = useMemo(() => {
         if (type === DATA_TYPE.FILE) {
-            if (path) return `q/${path}?file=${fileId}`
+            if (path) return `/q/${path}?file=${fileId}`
             return `/?file=${fileId}`
         }
 
-        if (path) return `q/${path}`
+
+        if (path) return `/q/${path}`
         return "/"
     }, [path])
 

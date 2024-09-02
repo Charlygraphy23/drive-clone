@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchFileData, fetchFolderData } from "@/app/_actions/resource";
-import { FILE_LIMIT } from "@/app/_config/const";
+import { FILE_LIMIT, ROOT_FOLDER } from "@/app/_config/const";
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
 import ResourceLoader from "@/app/components/loader/resourceLoader";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
@@ -114,12 +114,12 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 	const handleInitialDataLoad = useCallback(async () => {
 		const [folders, filesData] = await Promise.all([
 			fetchFolderData({
-				folderId: id ?? "",
+				folderId: id ?? ROOT_FOLDER,
 				userId: String(user?._id),
 				shared: isShared ? "only" : "off"
 			}),
 			fetchFileData({
-				folderId: id ?? "",
+				folderId: id ?? ROOT_FOLDER,
 				userId: String(user?._id),
 				shared: isShared ? "only" : "off",
 				fileId: fileIdFromSearch ?? ""

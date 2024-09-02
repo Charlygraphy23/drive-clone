@@ -8,6 +8,7 @@ import { ResourceService } from "@/app/lib/database/services/resource.service"
 import { PipelineStage, SessionOption, Types } from "mongoose"
 import { getServerSession } from "next-auth"
 import { MongoIdSchemaValidation } from "../_validation/data.validation"
+import { ROOT_FOLDER } from "@/app/_config/const"
 
 
 
@@ -28,7 +29,7 @@ export const getResources = async ({
 
         await connectDB();
 
-        if (folderId) {
+        if (folderId && folderId !== ROOT_FOLDER) {
             const isValidId = MongoIdSchemaValidation.isValid(folderId)
 
             if (!isValidId) return { message: "Invalid folderId", status: 422 };

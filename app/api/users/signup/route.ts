@@ -41,10 +41,14 @@ export const POST = async (req: Request) => {
             await subscriptionService.activeInitialFreeSubscription(String(user?._id), { session })
 
             const mailClient = new NodemailerClient();
+            const origin = new URL(req.url).origin
             const template = await mailClient.signupTemplate({
                 name: `${firstName} ${lastName}`,
                 username: email,
-                password: generatedPassword
+                password: generatedPassword,
+                origin,
+                logoImage: `${origin}/logo.png`,
+                backgroundImage: `${origin}/email-background.jpg`,
             })
 
             template.send({

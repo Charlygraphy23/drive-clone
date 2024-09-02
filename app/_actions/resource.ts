@@ -16,6 +16,7 @@ export const fetchFolderData = unstable_cache(async ({ resourceType = DATA_TYPE.
     const dataset = await getResources({
         resourceType, ...rest
     });
+    console.log("Data", dataset)
 
     if (dataset?.status === 200) {
         const response = JSON.parse(JSON.stringify(dataset?.data))
