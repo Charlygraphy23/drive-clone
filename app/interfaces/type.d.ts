@@ -17,6 +17,9 @@ declare global {
             RAZORPAY_SECRET_KEY: string
             QSTASH_CURRENT_SIGNING_KEY: string
             QSTASH_NEXT_SIGNING_KEY: string
+            JWT_SECRET: string
+            CRYPTO_KEY: string
+            CRYPTO_IV: string
             // add more environment variables and their types here
         }
     }

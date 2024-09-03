@@ -1,8 +1,8 @@
-import LoginHeader from '../login/components/header'
-import PasswordChangeForm from './components/passwordChangeForm'
-import style from './style.module.scss'
+import LoginHeader from '../../login/components/header'
+import PasswordChangeForm from '../components/passwordChangeForm'
+import style from '../style.module.scss'
 
-const ResetPassword = () => {
+const index = () => {
     return (
         <div className={style.resetPassword}>
             <div className={style.container}>
@@ -17,4 +17,4 @@ const ResetPassword = () => {
     )
 }
 
-export default ResetPassword
+export default index

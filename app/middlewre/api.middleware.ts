@@ -1,7 +1,7 @@
 import { JWT } from "next-auth";
 import { NextRequest } from "next/server";
 
-const publicPaths = ["/signup", "/jobs", "/path", "/plans", "/ping"]
+const publicPaths = ["/signup", "/jobs", "/path", "/plans", "/ping", "/forgot-password"]
 
 export const checkAuthForApiRoute = async (request: NextRequest, token: JWT | null) => {
     const url = new URL(request.url);

@@ -31,8 +31,6 @@ export class NodemailerClient {
         username: string,
         password: string
         origin: string
-        logoImage: string,
-        backgroundImage: string
     }) {
         const template = await this.getTemplate("signup")
 
@@ -40,7 +38,7 @@ export class NodemailerClient {
             name: data?.name,
             username: data?.username,
             password: data?.password,
-            origin: data?.origin
+            origin: data?.origin,
         })
 
         this.html = templateData

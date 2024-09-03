@@ -47,8 +47,6 @@ export const POST = async (req: Request) => {
                 username: email,
                 password: generatedPassword,
                 origin,
-                logoImage: `${origin}/logo.png`,
-                backgroundImage: `${origin}/email-background.jpg`,
             })
 
             template.send({

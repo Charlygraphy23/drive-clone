@@ -5,7 +5,9 @@ import { LOCAL_S3 } from "@/app/utils/s3";
 import { hash } from "bcryptjs";
 import { File } from "buffer";
 import mongoose, { FilterQuery, SessionOption, Types } from "mongoose";
+import { User } from "next-auth";
 import { generatePassword, userInfoProjectionAggregationQuery } from "../../lib";
+import { CryptoHandler, JWTHandler } from "../helper/user.helper";
 import { CreateUser, UserSchemaDocument, UserSchemaType } from "../interfaces/user.interface";
 import { UserModel } from "../models/user";
 
@@ -111,5 +113,13 @@ export class UserService {
         const body = data?.Body as ReadableStream
         if (!body) throw new Error("No Content")
         return body
+    }
+
+    generateForgotPasswordLink(user: User) {
+        const jwtToken = JWTHandler.sign({
+            userId: String(user?._id),
+            email: user?.email ?? ""
+        })
+        return CryptoHandler.encrypt(jwtToken)
     }
 }

@@ -5,3 +5,8 @@ export const SignupSchemaValidator = object().shape({
     lastName: string().matches(/^[a-zA-Z]+$/, 'Field must contain only alphabetic characters').required("Please provide your last name"),
     email: string().email("Please provide a valid email").required("Please provide your email address")
 })
+
+
+export const ForgotPasswordSchemaValidator = object().shape({
+    email: string().email("Please provide a valid email").required("Please provide your email address")
+})
