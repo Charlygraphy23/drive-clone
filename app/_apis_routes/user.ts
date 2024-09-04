@@ -29,3 +29,7 @@ export const updateImageApi = async (formData: FormData) => {
         }
     })
 }
+
+export const forgotPasswordApi = async (email: string) => {
+    return await axiosInstance.post(`/users/forgot-password`, { email })
+}

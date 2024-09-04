@@ -1,3 +1,4 @@
+import { NodemailerClient } from "@/app/email";
 import { connectDB } from "@/app/lib/database/db";
 import { UserService } from "@/app/lib/database/services/user.service";
 import { ApiResponse } from "@/app/utils/response";
@@ -24,7 +25,20 @@ export const POST = async (req: Request) => {
 
             const hash = service.generateForgotPasswordLink(hasUser);
             const origin = new URL(req?.url).origin;
-            const url = `${origin}/reset-password/${hash}`;
+            const url = new URL(`${origin}/reset-password/${hash}`);
+
+            const mailClient = new NodemailerClient()
+            const template = await mailClient.forgotTemplate({
+                emailExpiredTime: 3,
+                origin,
+                resetLink: url.toString(),
+            })
+
+            template.send({
+                to: email,
+                subject: "Reset Your Password"
+            })
+
             return response.status(200).send({
                 message: "Email sent successfully",
                 data: url

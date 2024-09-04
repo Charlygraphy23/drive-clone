@@ -20,7 +20,7 @@ export class NodemailerClient {
         });
     }
 
-    private async getTemplate(name: "signup") {
+    private async getTemplate(name: "signup" | "forgot") {
         console.log("process.cwd()", process.cwd())
         const emailTemplateSource = await readFile(join(process.cwd(), `app/email/templates/${name}.hbs`), "utf8")
         return handlebars.compile(emailTemplateSource)
@@ -40,6 +40,26 @@ export class NodemailerClient {
             password: data?.password,
             origin: data?.origin,
         })
+
+        this.html = templateData
+        return {
+            send: (data: {
+                to: string,
+                subject: string,
+
+            }) => this.send(data)
+        }
+    }
+
+
+    async forgotTemplate(data: {
+        origin: string,
+        emailExpiredTime: number,
+        resetLink: string,
+    }) {
+        const template = await this.getTemplate("forgot")
+
+        const templateData = template(data)
 
         this.html = templateData
         return {

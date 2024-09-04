@@ -1,4 +1,6 @@
+import { forgotPasswordApi } from '@/app/_apis_routes/user'
 import { ErrorHandler } from '@/app/utils/index.utils'
+import { useMutation } from '@tanstack/react-query'
 import { ChangeEvent, useState } from 'react'
 import ButtonGroup from '../../buttonGroup'
 import InputGroup from '../../inputGroup'
@@ -19,6 +21,8 @@ const ForgotPassword = ({
     setState
 }: Props) => {
 
+    const mutation = useMutation({ mutationFn: forgotPasswordApi })
+
     const [errors, setErrors] = useState({
         email: "",
     })
@@ -33,13 +37,13 @@ const ForgotPassword = ({
     }
 
     const handleSubmit = async () => {
+        if (mutation?.isPending) return;
+
         setErrors({ email: "" })
         try {
             await ForgotPasswordSchema.validate(value, { abortEarly: false })
+            await mutation.mutateAsync(value.email)
             onNext && onNext()
-
-            // TODO forget password logic with API
-            // TODO: redirect to success page
         }
         catch (err: any) {
             const errors = ErrorHandler(err) as { email: string } & Record<string, string>
@@ -69,8 +73,9 @@ const ForgotPassword = ({
                 value={value?.email}
                 errorMessage={errors?.email}
                 onChange={handleChange}
+                disabled={mutation?.isPending}
             />
-            <ButtonGroup submitText={submitText} handleSubmit={handleSubmit} />
+            <ButtonGroup submitText={submitText} handleSubmit={handleSubmit} disabled={mutation?.isPending} />
 
         </div>
     )

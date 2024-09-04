@@ -12,9 +12,10 @@ type Props = {
     id?: string;
     placeHolder?: string;
     name?: string
+    disabled?: boolean;
 }
 
-const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMessage = "", id, placeHolder, name }: Props, ref: Ref<HTMLInputElement>) => {
+const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMessage = "", id, placeHolder, name, disabled = false }: Props, ref: Ref<HTMLInputElement>) => {
     return (
         <div className={style.inputGroup}>
             {errorMessage && <div className={style.errorMessage}>
@@ -31,6 +32,7 @@ const InputGroup = ({ icon, type, value = "", onChange, className = "", errorMes
                     onChange={onChange}
                     placeholder={placeHolder}
                     ref={ref}
+                    disabled={disabled}
                 />
             </div>
         </div>

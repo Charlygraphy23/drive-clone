@@ -17,6 +17,12 @@ export const JWTHandler = {
         return jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: expiresInSeconds
         });
+    },
+    verify: <T>(token: string) => {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+        if (!decoded) return false;
+        return decoded as T & jwt.JwtPayload
     }
 }
 
