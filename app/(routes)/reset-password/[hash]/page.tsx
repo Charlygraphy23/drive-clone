@@ -7,14 +7,15 @@ import style from '../style.module.scss'
 const index = (props: {
     params: { hash: string }
 }) => {
-
     const hash = props?.params?.hash;
-
 
     if (!hash) return redirect("/");
 
+    const decodedString = decodeURIComponent(hash)
+    let name = ""
+
     try {
-        const decryptedText = CryptoHandler.decrypt(hash);
+        const decryptedText = CryptoHandler.decrypt(decodedString);
         console.log("decryptedText", decryptedText)
 
         if (!decryptedText) throw "No decryptedText!"
@@ -22,9 +23,12 @@ const index = (props: {
         const isValid = JWTHandler.verify<{
             userId: string;
             email: string;
+            firstName: string
         } | boolean>(decryptedText)
 
         if (!isValid) throw "Not valid token!"
+
+        name = isValid?.firstName
     }
     catch (error) {
         console.error(error);
@@ -37,7 +41,7 @@ const index = (props: {
                 <LoginHeader />
 
                 <div className={style.wrapper}>
-                    <PasswordChangeForm />
+                    <PasswordChangeForm name={name ?? "Buddy"} hash={hash} />
                 </div>
             </div>
 

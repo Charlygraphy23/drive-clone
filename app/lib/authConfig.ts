@@ -34,6 +34,7 @@ export const authOptions: AuthOptions = {
                     const user = userObj?.toObject()
 
                     const matchedPassword = await comparePasswordWithHash(password, user?.password ?? "")
+                    console.log("matchedPassword", matchedPassword)
                     if (!matchedPassword) return null;
 
                     return {

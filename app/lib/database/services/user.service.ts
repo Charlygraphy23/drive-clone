@@ -118,8 +118,9 @@ export class UserService {
     generateForgotPasswordLink(user: User) {
         const jwtToken = JWTHandler.sign({
             userId: String(user?._id),
-            email: user?.email ?? ""
-        })
+            email: user?.email ?? "",
+            firstName: user?.firstName ?? ""
+        }, 60 * 3)
         return CryptoHandler.encrypt(jwtToken)
     }
 }

@@ -33,3 +33,9 @@ export const updateImageApi = async (formData: FormData) => {
 export const forgotPasswordApi = async (email: string) => {
     return await axiosInstance.post(`/users/forgot-password`, { email })
 }
+
+export const resetPasswordApi = async ({ newPassword, confirmPassword, hash }: { newPassword: string, confirmPassword: string, hash: string }) => {
+    const data = await axiosInstance.post(`/users/reset`, { newPassword, confirmPassword, hash })
+    console.log("data ", data)
+    return data
+}

@@ -75,7 +75,7 @@ const ForgotPassword = ({
                 onChange={handleChange}
                 disabled={mutation?.isPending}
             />
-            <ButtonGroup submitText={submitText} handleSubmit={handleSubmit} disabled={mutation?.isPending} />
+            <ButtonGroup submitText={submitText} handleSubmit={handleSubmit} disabled={mutation?.isPending} loading={mutation?.isPending} />
 
         </div>
     )
