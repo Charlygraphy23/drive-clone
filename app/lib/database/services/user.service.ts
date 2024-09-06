@@ -17,8 +17,8 @@ export class UserService {
         return await UserModel.findOne({ email }, {}, options).select(select)
     }
 
-    async findById(userId: string) {
-        return UserModel.findOne({ _id: new mongoose.Types.ObjectId(userId) })
+    async findById(userId: string, options?: SessionOption) {
+        return UserModel.findOne({ _id: new mongoose.Types.ObjectId(userId) }, undefined, options)
     }
 
 
@@ -61,9 +61,9 @@ export class UserService {
         return response.status(200).send("Updated")
     }
 
-    async updatePassword(userId: string, password: string) {
+    async updatePassword(userId: string, password: string, options?: SessionOption) {
         const hashedPassword = await hash(password, APP_CONFIG.BCRYPT_SALT);
-        return await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, { password: hashedPassword });
+        return await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, { password: hashedPassword }, options);
     }
 
     async updateProfileImage(file: File, userId: string) {

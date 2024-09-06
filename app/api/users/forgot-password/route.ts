@@ -1,5 +1,6 @@
 import { NodemailerClient } from "@/app/email";
 import { connectDB } from "@/app/lib/database/db";
+import { ResetToken } from "@/app/lib/database/models/reset-token";
 import { UserService } from "@/app/lib/database/services/user.service";
 import { ApiResponse } from "@/app/utils/response";
 import { ForgotPasswordSchemaValidator } from "../../_validation/user.validation";
@@ -26,6 +27,15 @@ export const POST = async (req: Request) => {
             const hash = service.generateForgotPasswordLink(hasUser);
             const origin = new URL(req?.url).origin;
             const url = new URL(`${origin}/reset-password/${hash}`);
+
+            const expiry = new Date() // add 3 min
+            await ResetToken.findOneAndUpdate({
+                userId: hasUser?._id
+            }, {
+                hash,
+                expiry,
+                userId: hasUser?._id
+            }, { upsert: true })
 
             const mailClient = new NodemailerClient()
             const template = await mailClient.forgotTemplate({
