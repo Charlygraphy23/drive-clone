@@ -1,10 +1,26 @@
+import { connectDB } from '@/app/lib/database/db'
 import { CryptoHandler, JWTHandler } from '@/app/lib/database/helper/user.helper'
+import { ResetTokenService } from '@/app/lib/database/services/resetToken.service'
 import { redirect } from 'next/navigation'
 import LoginHeader from '../../login/components/header'
 import PasswordChangeForm from '../components/passwordChangeForm'
 import style from '../style.module.scss'
 
-const index = (props: {
+
+const isThisActiveHash = async (userId: string) => {
+    try {
+        await connectDB();
+        const resetTokenService = new ResetTokenService();
+        const token = await resetTokenService.getByUserId(userId)
+        return token?.isActive ?? false
+    }
+    catch (error: any) {
+        console.log("Error from isThisActiveHash", error)
+    }
+    return false
+}
+
+const index = async (props: {
     params: { hash: string }
 }) => {
     const hash = props?.params?.hash;
@@ -28,6 +44,9 @@ const index = (props: {
 
         if (!isValid) throw "Not valid token!"
 
+        const isActive = await isThisActiveHash(isValid?.userId);
+        if (!isActive) throw "Session Expired!"
+
         name = isValid?.firstName
     }
     catch (error) {
@@ -49,4 +68,4 @@ const index = (props: {
     )
 }
 
-export default index
+export default index;

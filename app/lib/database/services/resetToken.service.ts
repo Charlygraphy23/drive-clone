@@ -1,10 +1,9 @@
 
 import mongoose, { SessionOption } from "mongoose"
 import { ResetTokenSchemaType } from "../interfaces/reset-token.interface"
-import { JobModel } from "../models/jobs"
+import { ResetToken } from "../models/reset-token"
 
-const Model = JobModel
-
+const Model = ResetToken
 
 export class ResetTokenService {
 

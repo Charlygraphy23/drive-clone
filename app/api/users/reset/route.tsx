@@ -1,6 +1,6 @@
 import { connectDB } from "@/app/lib/database/db";
 import { CryptoHandler, JWTHandler } from "@/app/lib/database/helper/user.helper";
-import { ResetToken } from "@/app/lib/database/models/reset-token";
+import { ResetTokenService } from "@/app/lib/database/services/resetToken.service";
 import { UserService } from "@/app/lib/database/services/user.service";
 import { ApiResponse } from "@/app/utils/response";
 import mongoose from "mongoose";
@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
             session.startTransaction();
             const data = await req.json();
             const service = new UserService()
-            // const resetToeknService = new ResetTokenService
+            const resetTokenService = new ResetTokenService()
             const isValid = await ResetPasswordSchemaValidator.isValid(data)
 
             if (!isValid) return response.status(422).send("Invalid email")
@@ -40,19 +40,13 @@ export const POST = async (req: Request) => {
             const hasUser = await service.findById(userId, { session })
             if (!hasUser) return response.status(400).send("Your not registered!");
 
-            const hasToken = await ResetToken.findOne({
-                userId: hasUser?._id
-            }, undefined, { session });
+            const hasToken = await resetTokenService.getByUserId(hasUser?._id, { session })
 
             if (!hasToken || !hasToken?.isActive) return response.status(400).send("Session has expired! Please try again!")
+            if (!hasToken?.isActive) return response.status(400).send("Session has expired! Please try again!")
 
             await service.updatePassword(userId, confirmPassword, { session })
-            await ResetToken.findOneAndUpdate({
-                userId: hasUser?._id
-            }, {
-                isActive: false
-            }, { session })
-
+            await resetTokenService.update({ userId: hasUser?._id }, { isActive: false }, { session })
             await session.commitTransaction()
             return response.status(200).send("Done")
         }
