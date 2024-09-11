@@ -14,6 +14,7 @@ const LoginFlow = () => {
 
     const onNext = () => {
         setActivePage(prev => prev + 1)
+        setState({} as LoginFlowState)
     }
 
     const goBack = (number: number) => {

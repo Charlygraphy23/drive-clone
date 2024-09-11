@@ -32,7 +32,6 @@ const index = async (props: {
 
     try {
         const decryptedText = CryptoHandler.decrypt(decodedString);
-        console.log("decryptedText", decryptedText)
 
         if (!decryptedText) throw "No decryptedText!"
 
@@ -45,7 +44,9 @@ const index = async (props: {
         if (!isValid) throw "Not valid token!"
 
         const isActive = await isThisActiveHash(isValid?.userId);
-        if (!isActive) throw "Session Expired!"
+        if (!isActive) {
+            throw "Session Expired!"
+        }
 
         name = isValid?.firstName
     }
