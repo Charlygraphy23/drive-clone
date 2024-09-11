@@ -3,6 +3,7 @@
 import { resetPasswordApi } from '@/app/_apis_routes/user'
 import ButtonGroup from '@/app/components/buttonGroup'
 import InputGroup from '@/app/components/inputGroup'
+import useToast from '@/app/hooks/useToast'
 import { PasswordChangeFormErrorStatType, PasswordChangeFormSchema, PasswordChangeFormStateType } from '@/app/interfaces/index.interface'
 import { ErrorHandler } from '@/app/utils/index.utils'
 import { useMutation } from '@tanstack/react-query'
@@ -24,6 +25,7 @@ const PasswordChangeForm = ({ name, hash }: Props) => {
     });
 
     const [resetSuccess, setResetSuccess] = useState(false)
+    const Toast = useToast()
 
     const [errors, setErrors] = useState<PasswordChangeFormErrorStatType>({
         newPassword: "",
@@ -52,6 +54,8 @@ const PasswordChangeForm = ({ name, hash }: Props) => {
             const errors = ErrorHandler(err) as Record<string, string>
             if (errors?._validationError) {
                 setErrors(errors as PasswordChangeFormErrorStatType)
+            } else {
+                Toast.error(String(err))
             }
             console.error(err)
 

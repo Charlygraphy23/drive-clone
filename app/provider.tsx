@@ -7,6 +7,7 @@ import { ConfigProvider } from "antd";
 import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
+import { Toaster } from 'sonner';
 import Notifications from "./components/notification";
 import { EffectiveConnectionType } from "./interfaces/index.interface";
 import { addNetworkQuality } from "./store/actions/network.actions";
@@ -32,6 +33,14 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 				<StoreProvider>
 					<ConfigProvider theme={{ token: { zIndexPopupBase: 1090 } }}>
 						{children}
+						<Toaster
+							position="bottom-center"
+							visibleToasts={2}
+							closeButton={true}
+							toastOptions={{
+								className: "toast-message"
+							}} duration={10000}
+						/>
 					</ConfigProvider>
 					<Notifications />
 					<NetworkSpeedMonitor />

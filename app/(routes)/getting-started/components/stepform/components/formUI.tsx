@@ -1,7 +1,7 @@
 "use client"
 
 import { signupApi } from '@/app/_apis_routes/user'
-import useNotification from '@/app/_hooks/useNotification'
+import useToast from '@/app/hooks/useToast'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { useContext } from 'react'
@@ -17,7 +17,7 @@ type Props = {
 const StepFormUI = ({ data }: Props) => {
     const { state: { activePage, data: formData }, setPage } = useContext(GetStartedContext)
     const { mutateAsync, isPending } = useMutation({ mutationFn: signupApi })
-    const { sendNotification } = useNotification()
+    const Toast = useToast()
 
     const onBackEvent = () => {
         if (activePage === -1) setPage(-1);
@@ -36,7 +36,8 @@ const StepFormUI = ({ data }: Props) => {
             }).then(() => setPage(activePage + 1))
                 .catch((err: unknown) => {
                     const error = err as AxiosError<{ message: string }>
-                    sendNotification(error?.response?.data?.message)
+                    const message = error?.response?.data?.message || error?.message
+                    Toast.error(message)
                 })
         }
         else setPage(activePage + 1)

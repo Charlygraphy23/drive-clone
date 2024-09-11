@@ -1,5 +1,6 @@
 "use client"
 
+import useToast from "@/app/hooks/useToast";
 import { ErrorHandler } from "@/app/utils/index.utils";
 import { signIn } from "next-auth/react";
 import Link from 'next/link';
@@ -31,6 +32,7 @@ const EmailPassword = ({
     } as Record<keyof LoginFlowState, string>)
     const [loading, setLoading] = useState(false)
     const router = useRouter();
+    const Toast = useToast()
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -51,6 +53,7 @@ const EmailPassword = ({
                 redirect: false
             })
 
+
             if (!response?.ok) {
                 setLoading(false)
                 setErrors(prev => ({
@@ -58,6 +61,7 @@ const EmailPassword = ({
                     email: "",
                     password: ""
                 }))
+                Toast.error("Invalid credentials!")
                 return;
             }
 
@@ -70,6 +74,9 @@ const EmailPassword = ({
             const errors = ErrorHandler(err) as Record<string, string>
             if (errors?._validationError) {
                 setErrors(errors)
+            }
+            else {
+                Toast.error(String(err))
             }
             console.error(err)
             setLoading(false)

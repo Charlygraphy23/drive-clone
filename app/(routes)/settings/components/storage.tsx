@@ -1,6 +1,7 @@
 "use client";
 
 import { getStorageApi } from "@/app/_apis_routes/storage";
+import useToast from "@/app/hooks/useToast";
 import { formatBytes } from "@/app/utils/index.utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ import { StorageLoader } from "./loader";
 const StorageComponent = () => {
 	const router = useRouter()
 
-	const { data, isFetching } = useQuery({ queryFn: getStorageApi, queryKey: ["getStorage"], staleTime: 30000 })
+	const { data, isFetching, isError, error } = useQuery({ queryFn: getStorageApi, queryKey: ["getStorage"], staleTime: 30000 })
 	const totalStorage = data?.data?.total ?? 0
 	const usedStorage = data?.data?.used ?? 0
 	const usedStorageLabel = useMemo(() => formatBytes(usedStorage), [usedStorage])
@@ -20,9 +21,14 @@ const StorageComponent = () => {
 		if (!totalStorage) return 0
 		return Math.floor((usedStorage / totalStorage) * 100)
 	}, [totalStorage, usedStorage])
+	const Toast = useToast()
 
 	const handleClick = () => {
 		router.push("/plans")
+	}
+
+	if (isError) {
+		Toast.error(String(error?.message))
 	}
 
 	return (

@@ -3,6 +3,7 @@
 import { updateProfileApi } from "@/app/_apis_routes/user";
 import { SignupSchemaValidator } from "@/app/api/_validation/user.validation";
 import ButtonGroup from "@/app/components/buttonGroup";
+import useToast from "@/app/hooks/useToast";
 import { RootState } from "@/app/store";
 import { ProfileStateType } from "@/app/store/reducers/profile.reduce";
 import { ErrorHandler } from "@/app/utils/index.utils";
@@ -26,6 +27,7 @@ const ProfileForm = () => {
 		lastName: "",
 	})
 	const { update, data: sessionData } = useSession()
+	const Toast = useToast()
 
 	const handleEdit = () => {
 		setIsEditable(true);
@@ -63,6 +65,9 @@ const ProfileForm = () => {
 			const err = ErrorHandler(error) as Record<string, string>
 			if (err?._validationError) {
 				setErrors(err)
+			}
+			else {
+				Toast.error(String(err))
 			}
 			console.log(err)
 		}

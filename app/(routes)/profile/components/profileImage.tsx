@@ -3,7 +3,9 @@
 import { updateImageApi } from "@/app/_apis_routes/user";
 import { DEFAULT_IMAGE } from "@/app/_config";
 import LocalImage from "@/app/components/LocalImage";
+import useToast from "@/app/hooks/useToast";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import style from "../style.module.scss";
@@ -14,6 +16,7 @@ const ProfileImageComponent = () => {
 	const user = data?.user
 
 	const mutation = useMutation({ mutationFn: updateImageApi })
+	const Toast = useToast()
 
 	const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		try {
@@ -41,8 +44,11 @@ const ProfileImageComponent = () => {
 				}
 			})
 		}
-		catch (err) {
+		catch (err: any) {
 			console.error("Error while getting file ", err)
+			const error = err as AxiosError<{ message: string }>
+			const message = error?.response?.data?.message || error?.message
+			Toast.error(message)
 		}
 
 	}

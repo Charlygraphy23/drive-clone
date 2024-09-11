@@ -7,6 +7,7 @@ import useDebounceValue from "@/app/_hooks/useDebounce";
 import AvatarComponent from "@/app/components/avatar";
 import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
+import useToast from "@/app/hooks/useToast";
 import { SelectedAccessType } from "@/app/interfaces/index.interface";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -14,6 +15,7 @@ import {
     toggleModal as toggleModalState
 } from "@/app/store/actions";
 import { AccessList, updateInfoByFolderId } from "@/app/store/actions/info.actions";
+import { ErrorHandler } from "@/app/utils/index.utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Divider, Select, SelectProps, Space } from "antd";
 import { User } from "next-auth";
@@ -37,6 +39,7 @@ const ManageAccess = () => {
     const [deletedUserIds, setDeletedUserIds] = useState<string[]>([])
     const [selectEmails, setSelectEmails] = useState<string[]>([])
     const debounceSearchValue = useDebounceValue(search)
+    const Toast = useToast()
 
     const { data, isFetching } = useQuery({
         queryFn: () => getUsersByEmail(debounceSearchValue),
@@ -111,25 +114,34 @@ const ManageAccess = () => {
         if (!resourceId) return;
 
         setIsLoading(true)
-        const formatData = selectedAccess.map(access => ({
-            accessId: access?._id,
-            createdFor: access?.userInfo?._id,
-            accessType: access?.accessType,
-            userInfo: access?.userInfo
-        }))
+        try {
+            const formatData = selectedAccess.map(access => ({
+                accessId: access?._id,
+                createdFor: access?.userInfo?._id,
+                accessType: access?.accessType,
+                userInfo: access?.userInfo
+            }))
 
-        await mutation.mutateAsync({
-            accessList: formatData,
-            resourceId,
-            deletedUserIds
-        })
-        toggleModal();
+            await mutation.mutateAsync({
+                accessList: formatData,
+                resourceId,
+                deletedUserIds
+            })
+            toggleModal();
 
-        dispatch(updateInfoByFolderId({
-            resourceId,
-            accesses: formatData,
-        }))
-        setIsLoading(false)
+            dispatch(updateInfoByFolderId({
+                resourceId,
+                accesses: formatData,
+            }))
+            setIsLoading(false)
+        }
+        catch (err) {
+            const errors = ErrorHandler(err) as { email: string } & Record<string, string>
+            Toast.error(String(errors))
+            setIsLoading(false)
+            console.error(errors)
+        }
+
 
     }
 

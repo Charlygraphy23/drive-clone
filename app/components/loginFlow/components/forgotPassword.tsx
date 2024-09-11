@@ -1,4 +1,5 @@
 import { forgotPasswordApi } from '@/app/_apis_routes/user'
+import useToast from '@/app/hooks/useToast'
 import { ErrorHandler } from '@/app/utils/index.utils'
 import { useMutation } from '@tanstack/react-query'
 import { ChangeEvent, useState } from 'react'
@@ -22,10 +23,10 @@ const ForgotPassword = ({
 }: Props) => {
 
     const mutation = useMutation({ mutationFn: forgotPasswordApi })
-
     const [errors, setErrors] = useState({
         email: "",
     })
+    const Toast = useToast()
 
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +50,9 @@ const ForgotPassword = ({
             const errors = ErrorHandler(err) as { email: string } & Record<string, string>
             if (errors?._validationError) {
                 setErrors(errors)
+            }
+            else {
+                Toast.error(String(errors))
             }
             console.error(err)
         }

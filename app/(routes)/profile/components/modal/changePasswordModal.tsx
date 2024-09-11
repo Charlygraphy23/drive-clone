@@ -4,6 +4,7 @@ import { changePasswordApi } from "@/app/_apis_routes/user";
 import { CHANGE_PASSWORD_MODAL } from "@/app/_config/const";
 import ButtonGroup from "@/app/components/buttonGroup";
 import ModalComponent, { ButtonClose } from "@/app/components/modal";
+import useToast from "@/app/hooks/useToast";
 import { PasswordChangeFormErrorStatType, PasswordChangeFormSchema } from "@/app/interfaces/index.interface";
 import { toggleModal as toggleModalState } from "@/app/store/actions";
 import { ErrorHandler } from "@/app/utils/index.utils";
@@ -32,6 +33,7 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 		mutationFn: changePasswordApi,
 	});
 	const dispatch = useDispatch();
+	const Toast = useToast()
 
 
 	const toggleModal = useCallback((isOpen?: boolean) => {
@@ -59,6 +61,8 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 			const errors = ErrorHandler(err) as Record<string, string>
 			if (errors?._validationError) {
 				setErrors(errors as PasswordChangeFormErrorStatType)
+			} else {
+				Toast.error(String(err))
 			}
 			console.error(err)
 
