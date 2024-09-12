@@ -6,11 +6,11 @@ import { publicAppRoutes } from "./app/middlewre/app.middleware";
 async function middleware(request: NextRequestWithAuth) {
     const url = new URL(request.url);
     const path = url?.pathname
-    const inPublicPath = publicAppRoutes.find(p => path.startsWith(p) && !path.startsWith("/plans"))
-    console.log('inPublicPath', inPublicPath, path)
+    const shouldRedirectToHome = publicAppRoutes.find(p => path.startsWith(p) && !path.startsWith("/plans") && !path.startsWith("/terms-and-conditions"))
+    console.log('inPublicPath', shouldRedirectToHome, path)
     const isApiRoute = path.startsWith("/api")
 
-    if (request?.nextauth?.token && inPublicPath && !isApiRoute) {
+    if (request?.nextauth?.token && shouldRedirectToHome && !isApiRoute) {
         const url = request.nextUrl.clone()
         url.pathname = '/'
         return NextResponse.rewrite(url)
