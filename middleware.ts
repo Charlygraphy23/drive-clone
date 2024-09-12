@@ -6,7 +6,8 @@ import { publicAppRoutes } from "./app/middlewre/app.middleware";
 async function middleware(request: NextRequestWithAuth) {
     const url = new URL(request.url);
     const path = url?.pathname
-    const shouldRedirectToHome = publicAppRoutes.find(p => path.startsWith(p) && !path.startsWith("/plans") && !path.startsWith("/terms-and-conditions"))
+    const urlThatWillNotGetRedirected = ["/plans", "/terms-and-conditions", "/privacy-policy"]
+    const shouldRedirectToHome = publicAppRoutes.find(p => path.startsWith(p) && !urlThatWillNotGetRedirected.find(u => path.startsWith(u)))
     console.log('inPublicPath', shouldRedirectToHome, path)
     const isApiRoute = path.startsWith("/api")
 
