@@ -17,24 +17,44 @@ const nextConfig = {
     ],
   },
 
-  // webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-  //   if (isServer && config.name === "server") {
-  //     return merge(config, {
-  //       entry() {
-  //         return config.entry().then((entry) => {
-  //           return Object.assign({}, entry, {
-  //             "update_access.worker": path.resolve(
-  //               process.cwd(),
-  //               "workers/update_access.worker.ts"
-  //             ),
-  //           });
-  //         });
-  //       },
-  //     });
-  //   } else {
-  //     return config;
-  //   }
-  // },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+        ],
+      },
+      {
+        source: '/sw.js',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/javascript; charset=utf-8',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self'",
+          },
+        ],
+      },
+    ]
+  },
 };
 
 module.exports = nextConfig;
