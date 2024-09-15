@@ -32,9 +32,8 @@
 // }
 
 
-import type { MetadataRoute } from 'next'
 
-export default function manifest(): MetadataRoute.Manifest {
+export default function manifest(): any {
 	return {
 		name: 'MBOX',
 		short_name: 'MBOX',
@@ -75,21 +74,18 @@ export default function manifest(): MetadataRoute.Manifest {
 				"src": "https://github.com/user-attachments/assets/97213643-42ed-461c-8bff-4dbf41039431",
 				"sizes": "3360x1786",
 				"type": "image/png",
-				"description": "A file storage app",
 				"form_factor": "wide"
 			},
 			{
 				"src": "https://github.com/user-attachments/assets/1b86563b-8ec8-4c9b-bbac-e90aa7aecec0",
 				"sizes": "3360x1786",
 				"type": "image/png",
-				"description": "A file storage app",
 				"form_factor": "wide"
 			},
 			{
 				"src": "https://github.com/user-attachments/assets/45c8a158-88ca-4476-85d5-55cb861d5a40",
 				"sizes": "782x1684",
 				"type": "image/png",
-				"description": "A file storage app",
 				"form_factor": "narrow"
 			}
 		]
