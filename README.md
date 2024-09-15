@@ -23,3 +23,13 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 Theme Desktop: [https://dribbble.com/shots/13944002-JenxCloud-File-Management-Dashboard](https://dribbble.com/shots/13944002-JenxCloud-File-Management-Dashboard)
 
 Theme Mobile: [https://dribbble.com/shots/13957659-Cloud-Drive-App](https://dribbble.com/shots/13957659-Cloud-Drive-App)
+
+
+## Preview - 
+
+<img width="1680" alt="Screenshot 2024-09-15 at 2 50 24 PM" src="https://github.com/user-attachments/assets/97213643-42ed-461c-8bff-4dbf41039431">
+<img width="1680" alt="image" src="https://github.com/user-attachments/assets/1b86563b-8ec8-4c9b-bbac-e90aa7aecec0">
+<img width="391" alt="image" src="https://github.com/user-attachments/assets/45c8a158-88ca-4476-85d5-55cb861d5a40">
+
+
+
