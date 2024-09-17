@@ -1,20 +1,23 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "nprogress/nprogress.css";
 import TopBarLoader from "./components/loader/topbarLoader";
 import "./globals.scss";
 import AppClientProvider from "./provider";
 
-
-export const metadata: Metadata = {
-	title: "MBOX (A file storage)",
-	description: "Free file storage",
+export const viewport: Viewport = {
 	themeColor: [
 		{ media: "(prefers-color-scheme: dark)", color: "#6a29ff" },
 		{ media: "(prefers-color-scheme: light)", color: "#6a29ff" }
 	],
 	colorScheme: "light",
+}
+
+
+export const metadata: Metadata = {
+	title: "MBOX (A file storage)",
+	description: "Free file storage",
 	creator: "Dipta Biswas",
 	publisher: "Dipta Biswas",
 	icons: [
