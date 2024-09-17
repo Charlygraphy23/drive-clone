@@ -42,7 +42,7 @@ const LoginFlow = () => {
                 active={activePage}
                 title='Login'
                 rememberMe
-                submitText='Login'
+                submitText='Submit'
                 setState={setState}
                 value={state} />
             <ForgotPassword

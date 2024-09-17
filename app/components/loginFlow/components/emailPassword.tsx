@@ -103,6 +103,7 @@ const EmailPassword = ({
             <div className={style.wrapper}>
                 <h4>{title}</h4>
                 <InputGroup
+                    className="mb-2"
                     value={value?.email}
                     id="email" type='text'
                     icon={<i className="bi bi-person-fill"></i>}
@@ -130,7 +131,7 @@ const EmailPassword = ({
 
             </div>
             <div className={style.signupLink}>
-                <Link href={"/getting-started"}>Not have an account ?</Link>
+                <Link href={"/getting-started"}>Don't have an account?</Link>
             </div>
 
         </form>

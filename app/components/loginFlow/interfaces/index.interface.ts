@@ -37,7 +37,7 @@ export const passwordYupValidation = string().required("Please enter password").
 
 export const EmailPasswordSchema = object().shape({
     email: EmailValidationSchema,
-    password: passwordYupValidation,
+    password: string().required("Please enter a valid password"),
 })
 
 export const ForgotPasswordSchema = object().shape({

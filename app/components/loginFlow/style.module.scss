@@ -4,177 +4,220 @@
 $themeColor: rgba(color.$primary-color, 0.4);
 
 .loginFlow {
-	width: 100%;
-	max-width: 450px;
-	height: 100%;
-	max-height: 520px;
-	color: color.$black-color;
-	border: 1px solid $themeColor;
-	border-radius: 20px;
-	background-color: white;
-	box-shadow: 0px 0px 100px rgba(color.$light-gray-color, 1);
+  width: 100%;
+  min-width: 400px;
+  max-width: 450px;
+  height: 100%;
+  max-height: 520px;
+  color: color.$black-color;
+  border: 1px solid $themeColor;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0px 0px 100px rgba(color.$light-gray-color, 1);
 
-	position: relative;
-	overflow: hidden;
+  position: relative;
+  overflow: hidden;
 
-	.view {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-items: center;
+  .view {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 
-		position: absolute;
-		top: 0;
-		left: -100%;
-		width: 100%;
-		height: 20%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		opacity: 0;
-		pointer-events: none;
-		transition: 0.4s;
-		transition-property: transform, left, opacity, width, height, top;
-		transition-timing-function: ease-out;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 20%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.4s;
+    transition-property: transform, left, opacity, width, height, top;
+    transition-timing-function: ease-out;
 
-		h4 {
-			user-select: none;
-		}
+    h4 {
+      user-select: none;
+    }
 
-		&.left {
-			left: -100%;
-		}
+    &.left {
+      left: -100%;
+      opacity: 0;
+    }
 
-		&.right {
-			left: 120%;
-			transform: translate(-50%, -50%) scale(1.4);
-			transition-timing-function: ease-in;
-			height: 120%;
-		}
+    &.right {
+      left: 120%;
+      transform: translate(-50%, -50%) scale(1.4);
+      transition-timing-function: ease-in;
+      height: 120%;
+      opacity: 0;
+    }
 
-		&.active {
-			left: 50%;
-			opacity: 1;
-			pointer-events: all;
-			transform: translate(-50%, -50%) scale(1);
-			width: 80%;
-			height: 100%;
-		}
+    &.active {
+      left: 50%;
+      opacity: 1;
+      pointer-events: all;
+      transform: translate(-50%, -50%) scale(1);
+      width: 80%;
+      height: 100%;
+    }
 
-		&.success {
-			justify-content: center;
-			gap: 50px;
-			text-align: center;
-			max-width: 400px;
+    &.success {
+      justify-content: center;
+      gap: 50px;
+      text-align: center;
+      max-width: 400px;
 
-			& > div {
-				line-height: 0.2;
+      & > div {
+        line-height: 0.2;
 
-				span {
-					color: color.$gray-color;
-					font-size: 0.8rem;
-				}
-			}
+        span {
+          color: color.$gray-color;
+          font-size: 0.8rem;
+        }
+      }
 
-			button {
-				@extend .button;
-			}
-		}
+      button {
+        @extend .button;
+      }
+    }
 
-		&.emailPassword {
-			.wrapper {
-				display: inherit;
-				flex-direction: inherit;
-				justify-content: inherit;
-				align-items: inherit;
-				width: 100%;
-				flex: 1;
+    &.emailPassword {
+      .wrapper {
+        display: inherit;
+        flex-direction: inherit;
+        justify-content: inherit;
+        align-items: inherit;
+        width: 100%;
+        flex: 1;
 
-				.remindPassword {
-					display: flex;
-					justify-content: flex-end;
-					align-items: center;
-					width: 100%;
+        .remindPassword {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          width: 100%;
 
-					label {
-						display: flex;
-						color: color.$text-gray-color;
-						align-items: center;
-						gap: 6px;
-						font-size: 0.8rem;
-						user-select: none;
+          label {
+            display: flex;
+            color: color.$text-gray-color;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            user-select: none;
 
-						span {
-							width: 1.3em;
-							height: 1.3em;
-							border-radius: 50%;
-							border: 1px solid $themeColor;
-							position: relative;
-							overflow: hidden;
-							cursor: pointer;
+            span {
+              width: 1.3em;
+              height: 1.3em;
+              border-radius: 50%;
+              border: 1px solid $themeColor;
+              position: relative;
+              overflow: hidden;
+              cursor: pointer;
 
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							color: white;
-							line-height: 1.1;
-							transition: 0.1s ease-in-out all;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              color: white;
+              line-height: 1.1;
+              transition: 0.1s ease-in-out all;
 
-							&::after {
-								position: absolute;
-								top: 0;
-								left: 0;
-								pointer-events: none;
-								width: 100%;
-								height: 100%;
-							}
+              &::after {
+                position: absolute;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+                width: 100%;
+                height: 100%;
+              }
 
-							i {
-								opacity: 0;
-								font-size: 0.6em;
-							}
-						}
+              i {
+                opacity: 0;
+                font-size: 0.6em;
+              }
+            }
 
-						input {
-							display: none;
-							opacity: 0;
-						}
+            input {
+              display: none;
+              opacity: 0;
+            }
 
-						input:checked ~ span {
-							background-color: color.$primary-color;
+            input:checked ~ span {
+              background-color: color.$primary-color;
 
-							i {
-								opacity: 1;
-							}
-						}
-					}
+              i {
+                opacity: 1;
+              }
+            }
+          }
 
-					a {
-						color: black;
-						font-size: 0.9rem;
-					}
-				}
-			}
+          a {
+            color: black;
+            font-size: 0.9rem;
+          }
+        }
+      }
 
-			.signupLink {
-				padding: 1rem 0rem;
+      .signupLink {
+        padding: 1rem 0rem;
 
-				a {
-					// text-decoration: none;
-					color: color.$black-color;
-				}
-			}
-		}
-	}
+        a {
+          // text-decoration: none;
+          color: color.$black-color;
+        }
+      }
+    }
+  }
 }
 
 .button {
-	width: 100%;
-	border-radius: 10px;
-	padding: 0.5rem;
-	background-color: black;
-	color: white;
+  width: 100%;
+  border-radius: 10px;
+  padding: 0.5rem;
+  background-color: black;
+  color: white;
 
-	&:is(:active) {
-		background-color: rgba(black, 0.8);
-	}
+  &:is(:active) {
+    background-color: rgba(black, 0.8);
+  }
+}
+
+@media screen and (max-width: 899px) {
+  .loginFlow {
+    border: none;
+  }
+}
+
+@media screen and (max-width: color.$mobile-large) {
+  .loginFlow {
+    min-width: unset;
+    width: 100%;
+    max-width: unset;
+    height: 100%;
+    box-shadow: 0px -10px 30px rgba(color.$primary-color, 0.1);
+    border-radius: 0px;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+
+    .view {
+      &.active {
+        width: 90%;
+      }
+
+      &.emailPassword {
+        .wrapper {
+          h4 {
+            padding-top: 2rem;
+          }
+        }
+
+        .remindPassword {
+          margin: 1rem 0rem;
+        }
+        .signupLink {
+          padding: 3rem 0rem;
+        }
+      }
+    }
+  }
 }

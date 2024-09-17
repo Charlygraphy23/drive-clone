@@ -46,8 +46,11 @@
 
 body {
   background-color: color.$secondary-color;
-  min-height: 100vh;
+  height: 100svh;
+  height: 100vh;
+  min-height: 300px;
   min-height: 100svh;
+  min-width: 250px;
 
   & > * {
     font-family: "Roboto", sans-serif;
