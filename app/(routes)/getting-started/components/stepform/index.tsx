@@ -17,7 +17,7 @@ const data = [
     },
     {
         title: "Last Name",
-        buttonText: "Next",
+        buttonText: "Submit",
         dataIndex: "lastName",
         botQuestion: "Your last name?"
     }

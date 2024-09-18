@@ -1,4 +1,5 @@
 @use "/app/styles/variable.scss" as color;
+@use "/app/styles/screen.scss" as screen;
 
 %commonStyle {
   content: "";
@@ -151,7 +152,7 @@
   }
 }
 
-@media screen and (max-width: color.$mobile-large) {
+@media screen and (max-width: screen.$mobile-large) {
   .loginPage {
     // padding: 0rem 1rem;
     .container {
@@ -170,5 +171,9 @@
         }
       }
     }
+  }
+
+  .header {
+    padding: 1.5rem 2rem;
   }
 }

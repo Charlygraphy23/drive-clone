@@ -1,5 +1,6 @@
 @use "/app/styles/variable.scss" as color;
 @use "/app/styles/mixins.scss" as methods;
+@use "/app/styles/screen.scss" as screen;
 
 $themeColor: rgba(color.$primary-color, 0.4);
 
@@ -188,7 +189,7 @@ $themeColor: rgba(color.$primary-color, 0.4);
   }
 }
 
-@media screen and (max-width: color.$mobile-large) {
+@media screen and (max-width: screen.$mobile-large) {
   .loginFlow {
     min-width: unset;
     width: 100%;

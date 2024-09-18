@@ -131,7 +131,7 @@ const EmailPassword = ({
 
             </div>
             <div className={style.signupLink}>
-                <Link href={"/getting-started"}>Don't have an account?</Link>
+                <Link href={"/getting-started"}>Don&#39;t have an account?</Link>
             </div>
 
         </form>

@@ -21,9 +21,9 @@ const useDeviceWidth = () => {
 
     return {
         width,
-        isTablet: width <= 1024,
-        isLargeMobile: width <= 430,
-        isSmallMobile: width <= 375
+        isTablet: width <= 786,
+        isLargeMobile: width <= 425,
+        isSmallMobile: width <= 320
     }
 }
 

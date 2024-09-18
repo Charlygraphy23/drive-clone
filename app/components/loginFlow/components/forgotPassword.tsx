@@ -65,10 +65,16 @@ const ForgotPassword = ({
 
     return (
         <div className={`${style.view} ${getViewSlideClass(active, index)}`}>
-            <div className="d-flex align-items-center w-100">
-                <i onClick={handleBack} className="bi bi-chevron-left" style={{ cursor: "pointer" }}></i>
-                <h4 className="flex-fill text-center">{title}</h4>
+            <div className="d-flex flex-column w-100">
+                <div className="d-flex align-items-center w-100">
+                    <i onClick={handleBack} className="bi bi-chevron-left" style={{ cursor: "pointer" }}></i>
+                    <h4 className="flex-fill text-center">{title}</h4>
+                </div>
+
+                <p className="mt-5 mb-0">No problem! Just enter the email address associated with your account, and we&#39;ll send you a link to reset your password.</p>
             </div>
+
+
             <InputGroup
                 name='email'
                 className={errors?.email && style.error || ""}
@@ -78,6 +84,7 @@ const ForgotPassword = ({
                 errorMessage={errors?.email}
                 onChange={handleChange}
                 disabled={mutation?.isPending}
+                placeHolder='enter your email'
             />
             <ButtonGroup submitText={submitText} handleSubmit={handleSubmit} disabled={mutation?.isPending} loading={mutation?.isPending} />
 

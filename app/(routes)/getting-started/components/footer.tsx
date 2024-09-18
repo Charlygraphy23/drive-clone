@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import style from '../style.module.scss'
 
 const FooterComponent = () => {
@@ -6,8 +7,8 @@ const FooterComponent = () => {
             <p>© {new Date().getFullYear()} Copyright</p>
 
             <p>
-                <span>Terms & Conditions</span>
-                <span>Privacy</span>
+                <Link href="/terms-and-conditions">Terms & Conditions</Link>
+                <Link href="/privacy-policy">Privacy</Link>
             </p>
         </div>
     )
