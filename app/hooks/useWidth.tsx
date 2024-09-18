@@ -4,10 +4,12 @@ import { useLayoutEffect, useState } from 'react';
 
 
 const useDeviceWidth = () => {
-    const [width, setWidth] = useState(window.innerWidth);
+    const [width, setWidth] = useState(0);
 
 
     useLayoutEffect(() => {
+        setWidth(window?.innerWidth)
+
         const handleResize = () => {
             setWidth(window.innerWidth);
         }
@@ -18,12 +20,13 @@ const useDeviceWidth = () => {
             window.removeEventListener('resize', handleResize);
         }
     }, [])
+    console.log("width ", width)
 
     return {
         width,
-        isTablet: width <= 786,
-        isLargeMobile: width <= 425,
-        isSmallMobile: width <= 320
+        isTablet: width && width <= 768,
+        isLargeMobile: width && width <= 425,
+        isSmallMobile: width && width <= 320
     }
 }
 

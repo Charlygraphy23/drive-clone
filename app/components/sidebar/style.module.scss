@@ -32,26 +32,30 @@
 
 .tablet {
   position: fixed;
-  left: 0;
+  left: -110%;
   top: 0;
   height: 100%;
   z-index: 11;
-  width: 0px;
+  width: 300px;
+  transition: 0.3s ease-out;
+  transition-property: opacity, left;
+  pointer-events: none;
 
   &.active {
-    width: 300px;
-
-    .backdrop {
-      display: block;
+    pointer-events: all;
+    left: 0%;
+    ~ .backdrop {
+      opacity: 1;
+      pointer-events: none;
     }
   }
 
-  &:not(.active) {
-    .sidebar {
-      padding: 0px;
-      overflow: hidden;
-    }
-  }
+  // &:not(.active) {
+  //   .sidebar {
+  //     padding: 0px;
+  //     overflow: hidden;
+  //   }
+  // }
 
   .sidebar {
     background-color: white;
@@ -60,16 +64,16 @@
     z-index: 11;
     border-top-right-radius: 40px;
   }
+}
 
-  .backdrop {
-    position: fixed;
-    background-color: rgba(black, 0.4);
-    height: 100%;
-    width: 100%;
-    z-index: -1;
-    pointer-events: none;
-    top: 0;
-    left: 0;
-    display: none;
-  }
+.backdrop {
+  position: fixed;
+  background-color: rgba(black, 0.4);
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: 0.1s opacity ease-in-out;
 }
