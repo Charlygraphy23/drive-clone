@@ -1,7 +1,9 @@
 "use client"
 
 import useDeviceWidth from "@/app/hooks/useWidth";
-import { useEffect, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import { toggleSidebar } from "@/app/store/actions/config.action";
+import { useEffect, useRef } from "react";
 import SidebarBrand from "./components/brand";
 import SidebarNavigation from "./components/navigations";
 import style from "./style.module.scss";
@@ -9,15 +11,20 @@ import style from "./style.module.scss";
 const Sidebar = () => {
 	const ref = useRef<HTMLElement>(null);
 	const { isTablet } = useDeviceWidth()
-	const [state, setState] = useState(true)
-
+	const { app: { showSideBar } } = useAppSelector(state => state?.config)
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		function checkClick(e: MouseEvent) {
 			const target = e.target as Node
+			const toggleButton = document.getElementById("sidebar-toggle")
+
+			if (toggleButton?.contains(target)) return;
+
 			if ((ref.current && !ref.current?.contains(target))) {
 				console.log("Clicked Outside")
-				setState(false)
+				// setState(false)
+				dispatch(toggleSidebar({ showSidebar: false }))
 			}
 		}
 
@@ -25,7 +32,7 @@ const Sidebar = () => {
 		return () => {
 			document.removeEventListener("click", checkClick)
 		}
-	}, [])
+	}, [dispatch])
 
 	return (
 		<>
@@ -36,7 +43,7 @@ const Sidebar = () => {
 
 
 			{isTablet && <>
-				<aside className={`${style.tablet} ${state && style.active}`}>
+				<aside className={`${style.tablet} ${showSideBar && style.active}`}>
 					<section ref={ref} className={`${style.sidebar}`}>
 						<SidebarBrand />
 						<SidebarNavigation />
