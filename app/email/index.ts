@@ -77,10 +77,9 @@ export class NodemailerClient {
     }: {
         to: string,
         subject: string,
-
     }) {
         const mailOptions = {
-            from: process.env.TO_EMAIL,
+            from: process.env.FROM_EMAIL,
             to: to,
             subject: subject,
             // attachment: "{LOCATION TO THE FILE THAT NEEDS TO BE ATTACHED}",

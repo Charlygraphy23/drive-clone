@@ -20,6 +20,7 @@ declare global {
             JWT_SECRET: string
             CRYPTO_KEY: string
             CRYPTO_IV: string
+            FROM_EMAIL: string
             // add more environment variables and their types here
         }
     }
