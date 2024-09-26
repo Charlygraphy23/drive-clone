@@ -44,6 +44,15 @@ const HeroSection = () => {
                 <Image src={FolderImage} alt="icons" width={30} height={30} />
             </div>
 
+            <div className={style.textWrapper}>
+                <div className={style.container}>
+                    <p>a file storage</p>
+                </div>
+                <div className={style.container}>
+                    <h1>STORAGE . FILES . SHARE</h1>
+                </div>
+            </div>
+
 
             <div className={style.placeholderWrapper}>
                 <PlaceHolderUI />

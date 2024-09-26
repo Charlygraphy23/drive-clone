@@ -22,6 +22,8 @@ const GettingStartedHeader = ({ user }: Props) => {
                 <Image src={Logo} width={50} height={50} alt="mbox" />
             </Link>
 
+
+
             {!user
                 && <button className={`button ${style.helpButton}`} onClick={() => router.push("/login")}>
                     Log in

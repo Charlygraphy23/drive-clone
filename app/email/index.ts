@@ -21,7 +21,6 @@ export class NodemailerClient {
     }
 
     private async getTemplate(name: "signup" | "forgot") {
-        console.log("process.cwd()", process.cwd())
         const emailTemplateSource = await readFile(join(process.cwd(), `app/email/templates/${name}.hbs`), "utf8")
         return handlebars.compile(emailTemplateSource)
     }

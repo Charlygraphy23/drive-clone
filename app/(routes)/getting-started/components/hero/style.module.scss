@@ -1,230 +1,292 @@
 @use "/app/styles/variable.scss" as color;
 
 $sizes: 1 max(10%, 0vh) min(17%, 25vw), 2 max(72%, 40vh) max(10%, 0vw),
-  3 max(10%, 10vh) max(80%, 10vw), 4 max(92%, 5vh) max(85%, 50vw);
+	3 max(10%, 10vh) max(80%, 10vw), 4 max(92%, 5vh) max(85%, 50vw);
 
 .hero {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  overflow: hidden;
-  flex: 1;
-  position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	overflow: hidden;
+	flex: 1;
+	position: relative;
 
-  .icons {
-    border-radius: 50%;
-    overflow: hidden;
-    padding: 0.5rem;
-    background-color: rgba(color.$gray-color, 0.1);
-    position: absolute;
-    z-index: 1;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transform-origin: center center;
-    pointer-events: none;
-    opacity: 0;
+	.icons {
+		border-radius: 50%;
+		overflow: hidden;
+		padding: 0.5rem;
+		background-color: rgba(color.$gray-color, 0.1);
+		position: absolute;
+		z-index: 1;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		transform-origin: center center;
+		pointer-events: none;
+		opacity: 0;
 
-    @each $key, $top, $left in $sizes {
-      &:nth-child(#{$key}) {
-        @keyframes zoom-#{$key} {
-          0% {
-            top: 50%;
-            left: 50%;
-          }
+		@each $key, $top, $left in $sizes {
+			&:nth-child(#{$key}) {
+				@keyframes zoom-#{$key} {
+					0% {
+						top: 50%;
+						left: 50%;
+					}
 
-          100% {
-            top: $top;
-            left: $left;
-            opacity: 0.8;
-          }
-        }
+					100% {
+						top: $top;
+						left: $left;
+						opacity: 0.8;
+					}
+				}
 
-        animation: zoom-#{$key} 0.8s ease-out forwards;
-        animation-delay: 0.5s;
-      }
-    }
-  }
+				animation: zoom-#{$key} 0.8s ease-out forwards;
+				animation-delay: 0.5s;
+			}
+		}
+	}
 
-  .placeholderWrapper {
-    width: 100%;
-    flex: 1;
-    position: relative;
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 1rem;
-    overflow: hidden;
+	.textWrapper {
+		// position: absolute;
+		// top: 20%;
+		// left: 50%;
+		// transform: translate(-50%, -50%);
+		flex: 1;
+		text-align: center;
+		color: color.$primary-color;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		z-index: 10;
 
-    & > div {
-      transform: translateY(100%) scale(0);
+		.container {
+			position: relative;
+			overflow: hidden;
+			animation-delay: 1.3s;
+			// container-type: inline-size;
 
-      @keyframes pop {
-        0% {
-          transform: translateY(100%) scale(0);
-        }
+			// @container (max-size: )
 
-        50% {
-          transform: translateY(0%) scale(1.1);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      animation: pop 1s ease-in-out forwards;
-    }
+			p {
+				$height: 2em;
+				font-size: min(5vw, 1.2rem);
+				color: black;
+				margin-bottom: 0.3rem;
+				transform: translateY($height);
+				animation: textAnimation 0.3s ease-out forwards;
+				animation-delay: 1.2s;
 
-    &::after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      background: linear-gradient(
-        0deg,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 0.6) 29%,
-        rgba(255, 255, 255, 0) 100%
-      );
-    }
-  }
+				@keyframes textAnimation {
+					from {
+						transform: translateY($height);
+						opacity: 0;
+					}
+					to {
+						transform: translateY(0px);
+						opacity: 1;
+					}
+				}
+			}
 
-  .placeHolder {
-    $color: rgba(color.$gray-color1, 0.5);
+			h1 {
+				$height: 3em;
+				font-weight: 900;
+				transform: translateY($height);
+				animation: textAnimation 0.3s ease-out forwards;
+				animation-delay: inherit;
+				font-size: min(5vw, 2rem);
 
-    aside {
-      display: flex;
-      flex-direction: column;
-      padding-right: 0.5rem;
-      border-right: 1px solid $color;
-      margin-right: 0.5rem;
+				@keyframes textAnimation {
+					from {
+						transform: translateY($height);
+					}
+					to {
+						transform: translateY(0px);
+					}
+				}
+			}
+		}
+	}
 
-      div {
-        height: 10px;
-        border-radius: 8px;
-        width: 30px;
-        background-color: $color;
-        margin-bottom: 0.5rem;
-      }
-    }
+	.placeholderWrapper {
+		width: 100%;
+		position: relative;
+		margin-bottom: 1rem;
+		display: flex;
+		justify-content: center;
+		align-items: flex-end;
+		padding: 1rem;
+		overflow: hidden;
+		margin-top: 5vh;
 
-    main {
-      width: 100%;
+		& > div {
+			transform: translateY(100%) scale(0);
 
-      span {
-        font-size: 0.7rem;
-        font-weight: 500;
-      }
+			@keyframes pop {
+				0% {
+					transform: translateY(100%) scale(0);
+				}
 
-      .folder {
-        display: flex;
-        gap: 5px;
-        margin: 0.4rem 0rem;
-        flex-wrap: wrap;
+				50% {
+					transform: translateY(0%) scale(1.1);
+				}
+				100% {
+					transform: scale(1);
+				}
+			}
+			animation: pop 1s ease-in-out forwards;
+		}
 
-        div {
-          height: 10px;
-          background-color: $color;
-          border-radius: 5px;
-          flex-basis: 30px;
-          flex-grow: 1;
-        }
-      }
+		&::after {
+			content: "";
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			background: linear-gradient(
+				0deg,
+				rgba(255, 255, 255, 1) 0%,
+				rgba(255, 255, 255, 0.6) 29%,
+				rgba(255, 255, 255, 0) 100%
+			);
+		}
+	}
 
-      .files {
-        width: 100%;
-        border-spacing: 50px;
+	.placeHolder {
+		$color: rgba(color.$gray-color1, 0.5);
 
-        tbody {
-          tr {
-            td {
-              div {
-                height: 12px;
-                background-color: $color;
-                border-radius: 5px;
-              }
-            }
-          }
-        }
-      }
-    }
+		aside {
+			display: flex;
+			flex-direction: column;
+			padding-right: 0.5rem;
+			border-right: 1px solid $color;
+			margin-right: 0.5rem;
 
-    .download {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background-color: color.$primary-color;
-      color: white;
+			div {
+				height: 10px;
+				border-radius: 8px;
+				width: 30px;
+				background-color: $color;
+				margin-bottom: 0.5rem;
+			}
+		}
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
-      right: 20px;
-      bottom: 15px;
-      box-shadow: 0px 0px 0px 10px rgba(black, 0.1);
-    }
-  }
+		main {
+			width: 100%;
 
-  .form {
-    input {
-      &[type="text"] {
-        width: 100%;
-      }
-    }
+			span {
+				font-size: 0.7rem;
+				font-weight: 500;
+			}
 
-    p {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-      text-align: center;
+			.folder {
+				display: flex;
+				gap: 5px;
+				margin: 0.4rem 0rem;
+				flex-wrap: wrap;
 
-      input {
-        align-self: flex-start;
-      }
+				div {
+					height: 10px;
+					background-color: $color;
+					border-radius: 5px;
+					flex-basis: 30px;
+					flex-grow: 1;
+				}
+			}
 
-      span {
-        color: color.$gray-color;
-        font-size: 0.8rem;
-        line-height: 1em;
-        width: fit-content;
-      }
-    }
-  }
+			.files {
+				width: 100%;
+				border-spacing: 50px;
+
+				tbody {
+					tr {
+						td {
+							div {
+								height: 12px;
+								background-color: $color;
+								border-radius: 5px;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.download {
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			background-color: color.$primary-color;
+			color: white;
+
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: absolute;
+			right: 20px;
+			bottom: 15px;
+			box-shadow: 0px 0px 0px 10px rgba(black, 0.1);
+		}
+	}
+
+	.form {
+		input {
+			&[type="text"] {
+				width: 100%;
+			}
+		}
+
+		p {
+			display: flex;
+			gap: 4px;
+			align-items: center;
+			text-align: center;
+
+			input {
+				align-self: flex-start;
+			}
+
+			span {
+				color: color.$gray-color;
+				font-size: 0.8rem;
+				line-height: 1em;
+				width: fit-content;
+			}
+		}
+	}
 }
 
 @container (max-width: 330px) {
-  .hero {
-    .form {
-      h4 {
-        font-size: 1rem;
-      }
+	.hero {
+		.form {
+			h4 {
+				font-size: 1rem;
+			}
 
-      input {
-        font-size: 1.5rem;
-      }
+			input {
+				font-size: 1.5rem;
+			}
 
-      p {
-        max-width: 250px;
-        span {
-          font-size: 0.7rem;
-        }
-      }
+			p {
+				max-width: 250px;
+				span {
+					font-size: 0.7rem;
+				}
+			}
 
-      button {
-        font-size: 0.8rem;
-      }
-    }
-  }
+			button {
+				font-size: 0.8rem;
+			}
+		}
+	}
 }
 
 @container (max-width: 548px) {
-  .hero {
-    .icons {
-      display: none;
-    }
-  }
+	.hero {
+		.icons {
+			display: none;
+		}
+	}
 }

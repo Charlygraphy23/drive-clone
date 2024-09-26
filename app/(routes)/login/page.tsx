@@ -19,7 +19,9 @@ const LoginPage = async () => {
                 <LoginHeader />
                 <div className={style.flowWrapper}>
                     <LoginFlow />
-                    <Image src={LoginIllustration} alt='LoginIllustration' />
+                    <div className={style.imageWrapper}>
+                        <Image fill src={LoginIllustration} alt='LoginIllustration' />
+                    </div>
                 </div>
             </div>
         </section>
