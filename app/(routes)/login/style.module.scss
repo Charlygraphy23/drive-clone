@@ -29,7 +29,7 @@
 
 .loginPage {
 	width: 100%;
-	//   height: 100vh;
+	height: 100vh;
 	height: 100dvh;
 	overflow: hidden;
 
@@ -100,10 +100,12 @@
 				position: relative;
 				width: 100%;
 				height: 100%;
+				display: flex;
+				justify-content: center;
 
 				img {
-					margin-left: -75px;
 					z-index: -1;
+					max-width: 550px;
 				}
 			}
 		}
@@ -139,7 +141,7 @@
 	}
 }
 
-@media screen and (max-width: 899px) {
+@media screen and (max-width: screen.$tablet) {
 	.loginPage {
 		&::before {
 			@extend %commonStyle;
@@ -176,10 +178,6 @@
 					display: block;
 					height: 40%;
 					margin: 0px;
-
-					img {
-						left: auto !important;
-					}
 				}
 			}
 		}
