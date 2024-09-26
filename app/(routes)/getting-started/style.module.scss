@@ -35,28 +35,6 @@
 		.doodleContainer {
 			@include doodleContainer;
 		}
-
-		.footer {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			font-size: 0.8rem;
-			color: rgba(color.$gray-color, 0.4);
-			padding: 1.5rem 0.5rem;
-
-			p {
-				margin: 0;
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				gap: 20px;
-
-				a {
-					text-decoration: none;
-					color: inherit;
-				}
-			}
-		}
 	}
 }
 
@@ -75,17 +53,17 @@
 				max-width: 200px;
 			}
 
-			.footer {
-				font-size: 0.7rem;
-			}
+			// .footer {
+			// 	font-size: 0.7rem;
+			// }
 		}
 	}
 }
 
-@container (max-width: 330px) {
+@container (max-width: 375px) {
 	.gettingStarted {
 		.wrapper {
-			width: calc(100% - 2%);
+			width: 100%;
 		}
 	}
 }

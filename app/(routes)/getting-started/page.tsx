@@ -13,8 +13,7 @@ const GettingStarted = () => {
                 <div className={style.wrapper}>
                     <GettingStartedHeader />
                     <HeroSection />
-                    <FooterComponent />
-                    <a hidden href="https://www.freepik.com/search?format=search&last_filter=query&last_value=storage&query=storage&type=icon">Icon by Freepik</a>
+                    <FooterComponent hidePlans />
                 </div>
             </section>
         </GetStartedProvider>

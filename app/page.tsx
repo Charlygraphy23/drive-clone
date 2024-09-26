@@ -9,8 +9,10 @@ type Props = {
 export default function Home({ folderId }: Props) {
 
 	return (
-		<RouteTemplate>
-			<BodyComponent folderId={folderId} />
-		</RouteTemplate>
+		<main className="fullwidth">
+			<RouteTemplate>
+				<BodyComponent folderId={folderId} />
+			</RouteTemplate>
+		</main>
 	);
 }

@@ -7,19 +7,21 @@ import style from "./style.module.scss";
 
 const page = async () => {
 	return (
-		<section className={style.bin}>
-			<header className='d-flex justify-content-between align-items-center'>
-				<h1>Bin</h1>
-				<div className="d-flex align-items-center">
-					<ResourceInfo style={{ marginRight: "10px" }} />
-					<HeaderComponent hideSearch={true} />
-				</div>
-			</header>
+		<main className="fullwidth">
+			<section className={style.bin}>
+				<header className='d-flex justify-content-between align-items-center'>
+					<h1>Bin</h1>
+					<div className="d-flex align-items-center">
+						<ResourceInfo style={{ marginRight: "10px" }} />
+						<HeaderComponent hideSearch={true} />
+					</div>
+				</header>
 
-			<Suspense fallback={<FileLoader />}>
-				<BinPage />
-			</Suspense>
-		</section>
+				<Suspense fallback={<FileLoader />}>
+					<BinPage />
+				</Suspense>
+			</section>
+		</main>
 	);
 };
 

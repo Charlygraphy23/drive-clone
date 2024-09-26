@@ -45,7 +45,7 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 					<Notifications />
 					<NetworkSpeedMonitor />
 				</StoreProvider>
-				<ReactQueryDevtools initialIsOpen={true} />
+				<ReactQueryDevtools initialIsOpen={false} />
 			</QueryClientProvider>
 			<BootstrapClient />
 		</SessionProvider>

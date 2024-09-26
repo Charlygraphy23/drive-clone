@@ -1,7 +1,11 @@
 import Link from 'next/link'
-import style from '../style.module.scss'
+import style from './style.module.scss'
 
-const FooterComponent = () => {
+type Props = {
+    hidePlans?: boolean
+}
+
+const FooterComponent = ({ hidePlans }: Props) => {
     return (
         <div className={style.footer}>
             <p>© {new Date().getFullYear()} Copyright</p>
@@ -9,8 +13,7 @@ const FooterComponent = () => {
             <p>
                 <Link href="/terms-and-conditions">Terms & Conditions</Link>
                 <Link href="/privacy-policy">Privacy</Link>
-                <Link href="/plans">Plans</Link>
-
+                {!hidePlans && <Link href="/plans">Plans</Link>}
             </p>
         </div>
     )
