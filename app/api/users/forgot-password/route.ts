@@ -47,6 +47,8 @@ export const POST = async (req: Request) => {
             template.send({
                 to: email,
                 subject: "Reset Your Password"
+            }).catch(err => {
+                console.log("Error in sending email ", err)
             })
 
             return response.status(200).send({

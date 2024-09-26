@@ -14,8 +14,8 @@ export class NodemailerClient {
             service: "Gmail",
             host: "smtp.gmail.com",
             auth: {
-                user: "mail.mycloud.storage@gmail.com",
-                pass: "bwuliwhedizauvuy"
+                user: process.env.FROM_EMAIL,
+                pass: process.env.EMAIL_PASSWORD
             }
         });
     }
@@ -78,6 +78,7 @@ export class NodemailerClient {
         to: string,
         subject: string,
     }) {
+        console.log("Sending email to ", to)
         const mailOptions = {
             from: process.env.FROM_EMAIL,
             to: to,
