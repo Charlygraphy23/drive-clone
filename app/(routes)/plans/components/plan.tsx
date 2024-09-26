@@ -78,7 +78,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
     return (
         <section className={`${style?.planCard} ${isPopular && style?.popular}`}>
             <h1>{title}</h1>
-            <p><strong>$ {price}</strong> /month</p>
+            <p><strong>&#8377; {price}</strong> /month</p>
             <span>{description}</span>
             {isPopular && <p className={style?.popular}>Popular</p>}
 
@@ -93,7 +93,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
 
             <ButtonGroup
                 className={`${style?.button} ${isActivated && isAuthenticated && style?.activated}`}
-                submitText={isActivated && isAuthenticated ? "Activated" : isFree && isAuthenticated ? "Active" : "Go Premium"}
+                submitText={isActivated && isAuthenticated ? "Activated" : isFree && isAuthenticated ? "Active" : isFree ? "Join" : "Go Premium"}
                 handleSubmit={handleSubscription}
                 loading={isPending}
             />

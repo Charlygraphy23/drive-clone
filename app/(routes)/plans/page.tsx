@@ -1,6 +1,7 @@
 import { getSubscriptionInfo } from "@/app/_actions/plans";
 import { authOptions } from "@/app/lib/authConfig";
 import { getServerSession, User } from "next-auth";
+import GettingStartedHeader from "../getting-started/components/header";
 import PlanList from "./components/list";
 import PlanStateProvider from "./provider";
 import style from "./style.module.scss";
@@ -13,7 +14,12 @@ const PlanPage = async () => {
 
     return (
         <PlanStateProvider>
+
             <main className={style?.wrapper} style={!session?.user ? { height: "100vh" } : {}}>
+                <div className={style.header}>
+                    <GettingStartedHeader user={user} />
+                </div>
+
                 <h1>Our Plans</h1>
                 <p>These are all the plans having its own benefits</p>
                 <PlanList subscription={subscription} user={user} />

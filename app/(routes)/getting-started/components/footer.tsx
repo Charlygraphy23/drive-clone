@@ -9,6 +9,8 @@ const FooterComponent = () => {
             <p>
                 <Link href="/terms-and-conditions">Terms & Conditions</Link>
                 <Link href="/privacy-policy">Privacy</Link>
+                <Link href="/plans">Plans</Link>
+
             </p>
         </div>
     )
