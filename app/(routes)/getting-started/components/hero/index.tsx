@@ -48,6 +48,10 @@ const HeroSection = () => {
                 <div className={style.container}>
                     <p>a file storage</p>
                 </div>
+
+                <div className={style.container}>
+                    <p>DIPTA BISWAS</p>
+                </div>
                 <div className={style.container}>
                     <h1>STORAGE . FILES . SHARE</h1>
                 </div>

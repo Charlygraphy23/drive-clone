@@ -13,6 +13,7 @@ const FooterComponent = ({ hidePlans }: Props) => {
             <p>
                 <Link href="/terms-and-conditions">Terms & Conditions</Link>
                 <Link href="/privacy-policy">Privacy</Link>
+                <Link href="/refund-policy">Refund</Link>
                 {!hidePlans && <Link href="/plans">Plans</Link>}
             </p>
         </div>
