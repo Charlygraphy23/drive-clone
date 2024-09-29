@@ -15,17 +15,17 @@ const PlanPage = async () => {
 
     return (
         <PlanStateProvider>
-            <main className={`${style?.wrapper} fullwidth`} style={!session?.user ? { height: "100vh" } : {}}>
-                <div className={style.header}>
+            <section className={`${style?.wrapper}`} style={!session?.user ? { height: "100vh" } : {}}>
+                {!user && <div className={style.header}>
                     <GettingStartedHeader user={user} hidePrice />
-                </div>
+                </div>}
 
                 <h1>Our Plans</h1>
                 <p>These are all the plans having its own benefits</p>
                 <PlanList subscription={subscription} user={user} />
 
                 <FooterComponent hidePlans />
-            </main>
+            </section>
         </PlanStateProvider>
     )
 }

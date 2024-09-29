@@ -1,110 +1,118 @@
 @use "/app/styles/variable.scss" as color;
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 
-  .notification__wrapper {
-    margin-right: 2.5vw;
-    $layoutPadding: 0.4rem 1rem;
+	.wrapper {
+		& > a {
+			color: color.$primary-color;
+			text-decoration: none;
+			margin: 0rem 2rem;
+		}
+	}
 
-    .bellIcon {
-      font-size: 1.5rem;
-      color: color.$text-gray-color;
-      position: relative;
+	.notification__wrapper {
+		margin-right: 2.5vw;
+		$layoutPadding: 0.4rem 1rem;
 
-      &::after {
-        content: "";
-        position: absolute;
-        top: 5%;
-        width: 10px;
-        height: 10px;
-        background-color: color.$primary-color;
-        border-radius: 50%;
-        right: 0;
-        border: 1px solid white;
-      }
-    }
-    .notificationBody {
-      min-width: 400px;
-      max-height: 300px;
-      padding: 0.5rem 0rem;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
+		.bellIcon {
+			font-size: 1.5rem;
+			color: color.$text-gray-color;
+			position: relative;
 
-      .notificationHead {
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid rgba(color.$gray-color, 0.1);
-        padding: $layoutPadding;
+			&::after {
+				content: "";
+				position: absolute;
+				top: 5%;
+				width: 10px;
+				height: 10px;
+				background-color: color.$primary-color;
+				border-radius: 50%;
+				right: 0;
+				border: 1px solid white;
+			}
+		}
+		.notificationBody {
+			min-width: 400px;
+			max-height: 300px;
+			padding: 0.5rem 0rem;
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			height: 100%;
 
-        h4 {
-          font-size: 1.2rem;
-          margin-bottom: 0;
-          font-weight: bold;
-        }
+			.notificationHead {
+				display: flex;
+				align-items: center;
+				border-bottom: 1px solid rgba(color.$gray-color, 0.1);
+				padding: $layoutPadding;
 
-        span {
-          display: inline-block;
-          margin: 0.5rem;
-          background-color: color.$primary-color;
-          color: white;
-          border-radius: 50%;
-          width: 1.5em;
-          height: 1.5em;
-          text-align: center;
-          line-height: 1.5em;
-          font-weight: light;
-        }
-      }
+				h4 {
+					font-size: 1.2rem;
+					margin-bottom: 0;
+					font-weight: bold;
+				}
 
-      .notifications {
-        width: 100%;
-        overflow: auto;
+				span {
+					display: inline-block;
+					margin: 0.5rem;
+					background-color: color.$primary-color;
+					color: white;
+					border-radius: 50%;
+					width: 1.5em;
+					height: 1.5em;
+					text-align: center;
+					line-height: 1.5em;
+					font-weight: light;
+				}
+			}
 
-        .messages {
-          width: 100%;
-          padding: $layoutPadding;
-          display: flex;
-          align-items: center;
-          gap: 10px;
+			.notifications {
+				width: 100%;
+				overflow: auto;
 
-          span {
-            font-size: 0.8rem;
-            color: color.$gray-color1;
-          }
+				.messages {
+					width: 100%;
+					padding: $layoutPadding;
+					display: flex;
+					align-items: center;
+					gap: 10px;
 
-          .description {
-            font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            p {
-              margin-bottom: 0;
-              font-weight: 500;
-            }
-          }
+					span {
+						font-size: 0.8rem;
+						color: color.$gray-color1;
+					}
 
-          .action {
-            display: flex;
-            flex-direction: column;
+					.description {
+						font-size: 0.9rem;
+						display: flex;
+						flex-direction: column;
+						flex: 1;
+						p {
+							margin-bottom: 0;
+							font-weight: 500;
+						}
+					}
 
-            i {
-              align-self: flex-end;
-              font-size: 1.3rem;
-            }
-          }
-        }
-      }
+					.action {
+						display: flex;
+						flex-direction: column;
 
-      .notificationFooter {
-        text-align: center;
-        text-decoration: underline;
-        color: color.$primary-color;
-      }
-    }
-  }
+						i {
+							align-self: flex-end;
+							font-size: 1.3rem;
+						}
+					}
+				}
+			}
+
+			.notificationFooter {
+				text-align: center;
+				text-decoration: underline;
+				color: color.$primary-color;
+			}
+		}
+	}
 }

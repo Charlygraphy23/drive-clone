@@ -16,12 +16,10 @@ const PlanLayout = async ({ children }: PropsWithChildren) => {
             <div className="d-flex flex-column h-100">
                 <header className='d-flex justify-content-end align-items-center mb-3'>
                     <div className="d-flex align-items-center">
-                        <HeaderComponent hideSearch={true} />
+                        <HeaderComponent hideSearch showContactUs />
                     </div>
                 </header>
-                <main>
-                    {children}
-                </main>
+                {children}
                 <Script src="https://checkout.razorpay.com/v1/checkout.js" />
             </div>
         </RouteTemplate>
