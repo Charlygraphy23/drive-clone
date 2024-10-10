@@ -1,6 +1,6 @@
 import { CreateOrderRazorpay, VerifyRazorPayPaymentSignature } from '@/app/interfaces/razorpay.interface';
 import Razorpay from 'razorpay';
-import { validatePaymentVerification } from 'razorpay/dist/utils/razorpay-utils';
+import { validatePaymentVerification, validateWebhookSignature } from 'razorpay/dist/utils/razorpay-utils';
 
 export class RazorpayServer {
     instance: Razorpay
@@ -12,7 +12,7 @@ export class RazorpayServer {
 
         this.instance = new Razorpay({
             key_id: process.env.RAZORPAY_KEY_ID,
-            key_secret: process.env.RAZORPAY_KEY_SECRET
+            key_secret: process.env.RAZORPAY_SECRET_KEY
         })
     }
 
@@ -38,5 +38,9 @@ export class RazorpayServer {
             order_id: razorpay_order_id,
             payment_id: razorpay_payment_id
         }, razorpay_signature, process.env.RAZORPAY_SECRET_KEY)
+    }
+
+    async verifyWebhookSignature(body: string, signature: string) {
+        return validateWebhookSignature(body, signature, process.env.RAZORPAY_WEBHOOK_SECRET)
     }
 }

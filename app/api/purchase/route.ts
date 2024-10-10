@@ -57,6 +57,7 @@ export const POST = async (req: NextRequest) => {
             await session.commitTransaction();
             await session.endSession();
             revalidateTag("subscription")
+
             return NextResponse.json({
                 message: "Done",
                 data: {
@@ -66,7 +67,6 @@ export const POST = async (req: NextRequest) => {
                 }
             })
         }
-
 
         const transaction = await transactionService.create({
             planDetails,

@@ -56,7 +56,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
             "description": "",
             "image": "",
             "order_id": response?.razorpayOrderId,
-            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            "callback_url": "",
             "prefill": {
                 "name": `${user?.firstName} ${user?.lastName}`,
                 "email": `${user?.email}`,

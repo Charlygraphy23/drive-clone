@@ -15,6 +15,7 @@ declare global {
             OBJECT_BUCKET_NAME: string
             RAZORPAY_KEY_ID: string
             RAZORPAY_SECRET_KEY: string
+            RAZORPAY_WEBHOOK_SECRET: string
             QSTASH_CURRENT_SIGNING_KEY: string
             QSTASH_NEXT_SIGNING_KEY: string
             JWT_SECRET: string
