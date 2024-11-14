@@ -31,11 +31,30 @@ export const POST = async (req: NextRequest) => {
 
         if (!planId) return response.status(422).send("Invalid planId")
 
-        const planDetails = await planService.getPlanById(planId, {
-            session
-        })
+        const [planDetails, subscriptionDetails] = await Promise.all([
+            planService.getPlanById(planId, {
+                session
+            }),
+            subscriptionService.getActiveSubscription(userId, { session })
+        ])
 
         if (!planDetails) throw new Error(`Plan not found`);
+
+        if (subscriptionDetails && !subscriptionDetails?.planDetails?.isFree) {
+            return NextResponse.json({
+                message: "Customer already has a subscription which is baught by the customer can not active free subscription!",
+                data: null
+            }, {
+                status: 400
+            })
+        }
+
+        // if(subscriptionDetails && subscriptionDetails?.planId.toString() === planDetails?._id?.toString()) {
+        //     return NextResponse.json({
+        //         message: "Customer can not purchase subscription ",
+        //         data: null
+        //     })
+        // }
 
         if (!planDetails?.isFree) {
             const transaction = await transactionService.create({
@@ -63,7 +82,8 @@ export const POST = async (req: NextRequest) => {
                 data: {
                     razorpayOrderId: razorpay?.razorpayOrderId,
                     amount: razorpay?.amount,
-                    currency: razorpay?.currency
+                    currency: razorpay?.currency,
+                    userId
                 }
             })
         }

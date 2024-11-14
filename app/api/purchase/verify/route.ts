@@ -1,5 +1,9 @@
-import { RazorpayNotes } from "@/app/interfaces/razorpay.interface";
+import { TRANSACTION_STATUS } from "@/app/lib/database/interfaces/transaction.interface";
+import { SubscriptionService } from "@/app/lib/database/services/subscription.service";
+import { TransactionService } from "@/app/lib/database/services/transaction.service";
 import { RazorpayServer } from "@/app/utils/razorpay/server";
+import mongoose from "mongoose";
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 // export const config = {
@@ -11,9 +15,10 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest) => {
 
     try {
+        const transactionService = new TransactionService()
+        const subscriptionService = new SubscriptionService()
 
         const signature = req.headers.get("x-razorpay-signature");
-        console.log("Signature", signature)
         if (!signature) return new NextResponse(JSON.stringify({
             message: "Invalid signature",
             success: false
@@ -38,32 +43,73 @@ export const POST = async (req: NextRequest) => {
         })
 
 
-        const data = body as {
+        const result = body as {
+            entity: 'event',
             account_id: string,
-            event: 'payment.authorized' | 'payment.captured',
-            payment: {
-                entity: {
-                    id: string,
-                    entity: 'payment',
-                    amount: number,
-                    currency: 'INR',
-                    status: 'captured' | 'authorized',
-                    order_id: string,
-                    captured: boolean,
-                    notes: RazorpayNotes,
-                }
+            event: 'payment.captured' | 'payment.failed' | "payment.authorized",
+            contains: ['payment'],
+            payload: { payment: { entity: any } },
+            created_at: number
+        }
 
+
+        if (result?.event === "payment.authorized") {
+            console.log("authorized event", result)
+            return NextResponse.json(result)
+        }
+
+
+        if (result?.event === "payment.captured") {
+            console.log("authorized event", result)
+            console.log("captured event", result.payload.payment)
+
+            const session = await mongoose.startSession();
+            try {
+
+                session.startTransaction();
+                const entity = result.payload.payment?.entity
+                await transactionService.updateTransactionWithPayload({
+                    transactionId: entity?.notes?.dbTransactionId,
+                    errorCode: entity?.error_code,
+                    errorDescription: entity?.error_description,
+                    orderId: entity?.order_id,
+                    paymentId: entity?.id,
+                    paymentSource: entity?.error_source,
+                    acquirerData: entity?.acquirer_data
+                }, TRANSACTION_STATUS.DONE, { session })
+
+                await subscriptionService.activeNewSubscription({
+                    userId: entity?.notes?.userId,
+                    planId: entity?.notes?.planId,
+                    transactionId: entity?.notes?.dbTransactionId
+                }, { session })
+
+                await session.commitTransaction();
+                revalidateTag("plans")
             }
+
+            catch (err) {
+                console.log("Error while updating transaction", err)
+                await session.abortTransaction();
+            }
+            finally {
+                await session.endSession()
+            }
+            return NextResponse.json({})
         }
 
 
-        if (data?.event === "payment.authorized") {
-            console.log("authorized event", data)
-            return NextResponse.json(data)
-        }
-
-        console.log("Captured event", data)
-        return NextResponse.json(data)
+        const entity = result.payload.payment?.entity
+        await transactionService.updateTransactionWithPayload({
+            transactionId: entity?.notes?.dbTransactionId,
+            errorCode: entity?.error_code,
+            errorDescription: entity?.error_description,
+            orderId: entity?.order_id,
+            paymentId: entity?.id,
+            paymentSource: entity?.error_source
+        }, TRANSACTION_STATUS.FAILED)
+        revalidateTag("plans")
+        return NextResponse.json(result)
     }
     catch (err: any) {
         return NextResponse.json(err?.message, {

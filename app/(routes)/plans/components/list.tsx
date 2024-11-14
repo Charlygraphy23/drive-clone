@@ -22,22 +22,29 @@ const PlanList = ({ subscription, user }: Props) => {
         return false
     }
 
+    console.log("plans", subscription)
+
     return (
         <>
             <div className={style?.plans}>
-                {plans?.map(plan => <PlanCard
-                    key={plan._id}
-                    planId={plan._id}
-                    benefits={plan.benefits}
-                    description={plan.description}
-                    isActivated={isActivated(plan)}
-                    isPopular={plan.isPopular}
-                    title={plan?.title}
-                    price={plan?.price}
-                    isAuthenticated={!!user}
-                    isFree={plan?.isFree}
-                    user={user}
-                />)}
+                {plans?.map(plan => {
+
+                    const active = isActivated(plan)
+                    return <PlanCard
+                        key={plan._id}
+                        planId={plan._id}
+                        benefits={plan.benefits}
+                        description={plan.description}
+                        isActivated={active}
+                        isPopular={plan.isPopular}
+                        title={plan?.title}
+                        price={plan?.price}
+                        isAuthenticated={!!user}
+                        isFree={plan?.isFree}
+                        user={user}
+                        disabled={plan.isFree && subscription?.isActive && !subscription?.planDetails.isFree}
+                    />
+                })}
 
             </div></>
     )

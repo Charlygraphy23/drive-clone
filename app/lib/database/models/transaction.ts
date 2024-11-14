@@ -38,6 +38,15 @@ const schema = new mongoose.Schema<TransactionSchemaType>({
         type: Types.ObjectId,
         ref: USER_MODEL,
         index: true,
+    },
+
+    razorpayInfo: {
+        orderId: String,
+        errorCode: String,
+        errorDescription: String,
+        paymentSource: String,
+        transactionId: String,
+        acquirer_data: Object
     }
 }, { timestamps: true })
 

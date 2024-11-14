@@ -23,9 +23,10 @@ type Props = {
     isFree: boolean;
     planId: string
     user?: User
+    disabled?: boolean
 }
 
-const PlanCard = ({ price, title, description, benefits, isActivated, isPopular, isAuthenticated, isFree, planId, user }: Props) => {
+const PlanCard = ({ price, title, description, benefits, isActivated, isPopular, isAuthenticated, isFree, planId, user, disabled }: Props) => {
     const { mutateAsync, isPending } = useMutation({ mutationFn: purchaseSubscription })
     const router = useRouter()
     const dispatch = useAppDispatch()
@@ -33,6 +34,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
     const handleSubscription = async () => {
 
         if (isActivated) return;
+        if (disabled) return
         if (!isAuthenticated) {
             router.push("/login")
             return
@@ -46,6 +48,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
         }
 
         const response = data?.data;
+        console.log("response", data)
 
         if (!response) throw new Error("Something went wrong!")
 
@@ -96,6 +99,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
                 submitText={isActivated && isAuthenticated ? "Activated" : isFree && isAuthenticated ? "Active" : isFree ? "Join" : "Go Premium"}
                 handleSubmit={handleSubscription}
                 loading={isPending}
+                disabled={disabled}
             />
         </section>
     )

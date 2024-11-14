@@ -101,4 +101,9 @@ export class SubscriptionService {
         const transaction = await this.transactionService.create({ planDetails: freePlan, status: TRANSACTION_STATUS.DONE, userId }, options)
         return await this.activeNewSubscription({ userId, planId: freePlan?._id?.toString(), transactionId: transaction?._id?.toString() }, options)
     }
+
+    async getActiveSubscription(userId: string, options?: SessionOption) {
+        const lastSubscription = await Model.findOne({ userId: new mongoose.Types.ObjectId(userId), isActive: true }, undefined, options);
+        return lastSubscription
+    }
 }

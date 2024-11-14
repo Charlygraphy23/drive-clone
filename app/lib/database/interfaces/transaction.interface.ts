@@ -16,6 +16,14 @@ export interface TransactionSchemaType {
     tax: number;
     status: TRANSACTION_STATUS;
     userId: string | ObjectId;
+    razorpayInfo?: {
+        orderId?: string,
+        errorCode?: string,
+        errorDescription?: string,
+        paymentSource?: string,
+        paymentId?: string
+        acquirer_data?: Record<string, any>
+    }
 }
 
 export interface TransactionDocumentType extends TransactionSchemaType, Document { }

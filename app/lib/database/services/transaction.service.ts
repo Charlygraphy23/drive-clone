@@ -46,4 +46,29 @@ export class TransactionService {
             status: status
         }, options)
     }
+
+
+    updateTransactionWithPayload(payload: {
+        transactionId: string,
+        orderId?: string,
+        errorCode?: string,
+        errorDescription?: string,
+        paymentSource?: string,
+        paymentId?: string
+        acquirerData?: Record<string, string>
+    }, status: TRANSACTION_STATUS, options?: SessionOption) {
+        return TransactionModel.findByIdAndUpdate({
+            _id: new mongoose.Types.ObjectId(payload?.transactionId),
+        }, {
+            status: status,
+            razorpayInfo: {
+                orderId: payload?.orderId,
+                errorCode: payload?.errorCode ?? "",
+                errorDescription: payload?.errorDescription ?? "",
+                paymentSource: payload?.paymentSource ?? "",
+                paymentId: payload?.paymentId ?? "",
+                acquirerData: payload?.acquirerData
+            }
+        }, options)
+    }
 }
