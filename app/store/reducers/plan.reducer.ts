@@ -17,6 +17,8 @@ export default createReducer(initialState, (builder) => {
             state.data = state.data?.map((plan) => {
                 if (plan._id === planId) {
                     plan.isActivated = true
+                } else {
+                    plan.isActivated = false
                 }
 
                 return plan

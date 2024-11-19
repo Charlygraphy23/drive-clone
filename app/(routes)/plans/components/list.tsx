@@ -4,6 +4,7 @@ import { GetPlanWithBenefitType } from "@/app/lib/database/interfaces/plan.inter
 import { SubscriptionSchemaType } from "@/app/lib/database/interfaces/subscription.interface";
 import { useAppSelector } from "@/app/store";
 import { User } from "next-auth";
+import { useMemo } from "react";
 import style from "../style.module.scss";
 import PlanCard from "./plan";
 
@@ -14,6 +15,7 @@ type Props = {
 
 const PlanList = ({ subscription, user }: Props) => {
     const { data: plans } = useAppSelector(state => state?.plan);
+    const anyActivePlan = useMemo(() => plans?.find(plan => plan.isActivated), [plans])
     const isActivated = (plan: { isActivated?: boolean } & GetPlanWithBenefitType) => {
         if (plan?.isActivated) return true
         if (subscription && subscription?.isActive) {
@@ -21,6 +23,7 @@ const PlanList = ({ subscription, user }: Props) => {
         }
         return false
     }
+
 
     console.log("plans", subscription)
 
@@ -42,7 +45,7 @@ const PlanList = ({ subscription, user }: Props) => {
                         isAuthenticated={!!user}
                         isFree={plan?.isFree}
                         user={user}
-                        disabled={plan.isFree && subscription?.isActive && !subscription?.planDetails.isFree}
+                        disabled={plan.isFree && ((subscription?.isActive && !subscription?.planDetails.isFree) || !!anyActivePlan)}
                     />
                 })}
 

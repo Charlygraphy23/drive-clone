@@ -6,8 +6,14 @@
 
 import { connectDB } from "@/app/lib/database/db";
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
+import { TRANSACTION_STATUS } from "@/app/lib/database/interfaces/transaction.interface";
 import { AccessModal } from "@/app/lib/database/models/access";
 import { FilesAndFolderModel } from "@/app/lib/database/models/filesAndFolders";
+import { SubscriptionModel } from "@/app/lib/database/models/subscription";
+import { PlanService } from "@/app/lib/database/services/plan.service";
+import { ResourceService } from "@/app/lib/database/services/resource.service";
+import { SubscriptionService } from "@/app/lib/database/services/subscription.service";
+import { TransactionService } from "@/app/lib/database/services/transaction.service";
 import { CRYPTO } from "@/app/utils/crypto";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
@@ -111,6 +117,67 @@ const handleFileDelete = async () => {
     return
 }
 
+
+const handleSubscription = async () => {
+    const session = await mongoose.startSession();
+    const service = new ResourceService()
+    const planService = new PlanService()
+    const subscriptionService = new SubscriptionService()
+    const transactionService = new TransactionService()
+
+    try {
+
+        session.startTransaction()
+
+        const [expiredSubscription, freePlan] = await Promise.all([
+            SubscriptionModel.find({
+                endDate: { $gt: new Date(), $ne: null },
+                "planDetails.isFree": false
+            }, undefined, { session }).limit(50),
+            planService.getFreePlan({ session })
+        ]);
+
+        for await (const subscription of expiredSubscription) {
+            const consumedStorage = await service.getStorageConsumedByUser(String(subscription?.userId), { session })
+
+            if (freePlan?.benefits?.maxSize > consumedStorage) {
+                // This means user has consumed less storage than the free plan so we will active free plan
+
+                const transaction = await transactionService.create({
+                    planDetails: freePlan,
+                    status: TRANSACTION_STATUS.DONE,
+                    userId: String(subscription?.userId)
+                }, {
+                    session,
+                });
+                const transactionId = transaction?._id;
+
+                console.log("transactionId", transactionId)
+                await subscriptionService.activeNewSubscription({ planId: freePlan?._id, transactionId, userId: String(subscription?.userId) }, { session })
+            }
+            else {
+                await SubscriptionModel.updateMany({
+                    userId: subscription?.userId,
+                    isActive: true
+                }, { isActive: false }, { session })
+            }
+        }
+
+
+
+        await session.commitTransaction();
+    }
+    catch (err) {
+        console.error(err)
+        await session.abortTransaction()
+        throw err
+    }
+    finally {
+        await session.endSession()
+    }
+    return
+}
+
 async function handler() {
     try {
         console.log("Trigger handler")
@@ -121,15 +188,12 @@ async function handler() {
             console.error("Error while deleting resource", err)
         })
 
-        // const jobService = new JobService();
-
-        const result = "Helo, World! This is CRON route."
-        console.log("Cron Triggered")
-
-        // TODO fetch job by 50 batch jobs 
-        // TODO excute them one by one
-
-        return Response.json({ data: result })
+        handleSubscription().then(() => {
+            console.log("Subscription details updated")
+        }).catch(err => {
+            console.error("Error while Subscription update", err)
+        })
+        return Response.json("Done")
     }
     catch (err: any) {
         const error = err?.message

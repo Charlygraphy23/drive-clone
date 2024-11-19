@@ -58,4 +58,24 @@ export class PlanService {
         ], option);
         return planArr?.[0] as GetPlanWithBenefitType
     }
+
+    async getFreePlan(option?: SessionOption): Promise<{ _id: string, benefits: { _id: string } & BenefitsSchemaType } & PlanSchemaType> {
+        const planArr = await Model.aggregate([
+            {
+                $match: {
+                    isFree: true
+                }
+            },
+            ...this.benefitQuery,
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            },
+            {
+                $limit: 1
+            }
+        ], option);
+        return planArr?.[0] as GetPlanWithBenefitType
+    }
 }

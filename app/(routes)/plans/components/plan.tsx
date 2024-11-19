@@ -70,11 +70,29 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
             },
             "theme": {
                 "color": "#3399cc"
+            },
+            "handler": function (response: any) {
+                console.log("Success Response", response)
+                // alert("Payment Success");
+                // alert(`response.razorpay_payment_id ${response.razorpay_payment_id}`);
+                // alert(`response.razorpay_order_id ${response.razorpay_order_id}`);
+                // alert(`response.razorpay_signature ${response.razorpay_signature}`)
+                dispatch(activatePlan(planId))
             }
         };
 
         const razorpayClient = new RazorpayClient(options).instance;
         razorpayClient.open()
+        razorpayClient.on('payment.failed', function (response: any) {
+            console.log("Payment Failed");
+            console.log(`response.error.code ${response.error.code}`);
+            console.log(`response.error.description ${response.error.description}`);
+            console.log(`response.error.source ${response.error.source}`);
+            console.log(`response.error.step ${response.error.step}`);
+            console.log(`response.error.reason ${response.error.reason}`);
+            console.log(`response.error.metadata.order_id ${response.error.metadata.order_id}`);
+            console.log(`response.error.metadata.payment_id ${response.error.metadata.payment_id}`);
+        })
     }
 
 
