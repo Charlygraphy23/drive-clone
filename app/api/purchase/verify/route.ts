@@ -86,6 +86,8 @@ export const POST = async (req: NextRequest) => {
 
                 await session.commitTransaction();
                 revalidateTag("plans")
+                revalidateTag("subscription")
+
             }
 
             catch (err) {
@@ -109,6 +111,7 @@ export const POST = async (req: NextRequest) => {
             paymentSource: entity?.error_source
         }, TRANSACTION_STATUS.FAILED)
         revalidateTag("plans")
+        revalidateTag("subscription")
         return NextResponse.json(result)
     }
     catch (err: any) {
