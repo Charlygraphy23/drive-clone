@@ -126,16 +126,15 @@ const handleSubscription = async () => {
     const transactionService = new TransactionService()
 
     try {
-
         session.startTransaction()
+        const expiredSubscription = await SubscriptionModel.find({
+            endDate: { $lt: new Date(), $ne: null },
+            "planDetails.isFree": false
+        }, undefined, { session }).limit(50)
 
-        const [expiredSubscription, freePlan] = await Promise.all([
-            SubscriptionModel.find({
-                endDate: { $gt: new Date(), $ne: null },
-                "planDetails.isFree": false
-            }, undefined, { session }).limit(50),
-            planService.getFreePlan({ session })
-        ]);
+        const freePlan = await planService.getFreePlan({ session })
+
+        console.log("Expired subscriptions", expiredSubscription?.length)
 
         for await (const subscription of expiredSubscription) {
             const consumedStorage = await service.getStorageConsumedByUser(String(subscription?.userId), { session })
@@ -162,9 +161,6 @@ const handleSubscription = async () => {
                 }, { isActive: false }, { session })
             }
         }
-
-
-
         await session.commitTransaction();
     }
     catch (err) {
@@ -182,16 +178,18 @@ async function handler() {
     try {
         console.log("Trigger handler")
         await connectDB()
-        handleFileDelete().then(() => {
-            console.log("Resource deleted")
-        }).catch(err => {
-            console.error("Error while deleting resource", err)
-        })
+
 
         handleSubscription().then(() => {
             console.log("Subscription details updated")
         }).catch(err => {
             console.error("Error while Subscription update", err)
+        })
+
+        handleFileDelete().then(() => {
+            console.log("Resource deleted")
+        }).catch(err => {
+            console.error("Error while deleting resource", err)
         })
         return Response.json("Done")
     }

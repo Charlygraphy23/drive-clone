@@ -46,7 +46,8 @@ const schema = new mongoose.Schema<TransactionSchemaType>({
         errorDescription: String,
         paymentSource: String,
         transactionId: String,
-        acquirer_data: Object
+        acquirerData: Object,
+        paymentId: String
     }
 }, { timestamps: true })
 
