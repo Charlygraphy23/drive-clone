@@ -1,6 +1,6 @@
 "use client";
 
-import makeStore, { AppStore, useAppDispatch } from "@app/store";
+import store, { AppStore, useAppDispatch } from "@app/store";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ConfigProvider } from "antd";
@@ -8,6 +8,7 @@ import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
 import { Toaster } from 'sonner';
+import AlertModal from "./components/alert";
 import Notifications from "./components/notification";
 import { EffectiveConnectionType } from "./interfaces/index.interface";
 import { addNetworkQuality } from "./store/actions/network.actions";
@@ -19,7 +20,7 @@ export function StoreProvider({ children }: PropsWithChildren) {
 	const storeRef = useRef<AppStore>();
 	if (!storeRef.current) {
 		// Create the store instance the first time this renders
-		storeRef.current = makeStore();
+		storeRef.current = store;
 	}
 
 	return <Provider store={storeRef.current}>{children}</Provider>;
@@ -43,6 +44,7 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 						/>
 					</ConfigProvider>
 					<Notifications />
+					<AlertModal />
 					<NetworkSpeedMonitor />
 				</StoreProvider>
 				<ReactQueryDevtools initialIsOpen={false} />

@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import alertReducer from "./alert.reducer";
 import binReducer from "./bin.reducer";
 import configReducer from './config.reducer';
 import filesReducer from "./files.reducers";
@@ -9,6 +10,7 @@ import networkReducer from "./network.reducer";
 import notificationReducer from "./notification.reducer";
 import planReducer from './plan.reducer';
 import profileReducer from "./profile.reduce";
+
 
 
 
@@ -24,6 +26,7 @@ const rootReducer = () =>
 		network: networkReducer,
 		plan: planReducer,
 		config: configReducer,
+		alertState: alertReducer
 	});
 
 export default rootReducer;
