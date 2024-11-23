@@ -22,8 +22,6 @@ const Sidebar = () => {
 			if (toggleButton?.contains(target)) return;
 
 			if ((ref.current && !ref.current?.contains(target))) {
-				console.log("Clicked Outside")
-				// setState(false)
 				dispatch(toggleSidebar({ showSidebar: false }))
 			}
 		}
@@ -49,7 +47,7 @@ const Sidebar = () => {
 						<SidebarNavigation />
 					</section>
 				</aside>
-				<div className={style.backdrop}></div>
+				<div className="backdrop"></div>
 			</>}
 
 

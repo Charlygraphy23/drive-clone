@@ -1,9 +1,11 @@
+@use "./screen.module.scss" as screens;
+
 // screen sizes
 
 $extraLarge: 1023px;
 $Large: 891px;
 
-$tablet: 786px;
-$mobile-large: 425px;
+$tablet: #{screens.$tablet-start}px;
+$mobile-large: #{screens.$large-mobile-start}px;
 $mobile-medium: 375px;
-$mobile-small: 320px;
+$mobile-small: #{screens.$small-mobile-start}px;

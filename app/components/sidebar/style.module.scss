@@ -1,81 +1,69 @@
 @use "../../styles/variable.scss" as color;
 
 .sidebar {
-  padding: 2rem 1rem;
+	padding: 2rem 1rem;
 
-  .sidebar__brand {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 4rem;
-    font-size: 1.2rem;
+	.sidebar__brand {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		margin-bottom: 4rem;
+		font-size: 1.2rem;
 
-    .brand__logo {
-      background-color: color.$primary-color;
-      color: color.$secondary-color;
-      width: 2em;
-      height: 2em;
-      border-radius: 10px;
+		.brand__logo {
+			background-color: color.$primary-color;
+			color: color.$secondary-color;
+			width: 2em;
+			height: 2em;
+			border-radius: 10px;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 
-    .brand__name {
-      margin: 0;
-      font-weight: bold;
-      margin-left: 0.6rem;
-    }
-  }
+		.brand__name {
+			margin: 0;
+			font-weight: bold;
+			margin-left: 0.6rem;
+		}
+	}
 }
 
 .tablet {
-  position: fixed;
-  left: -110%;
-  top: 0;
-  height: 100%;
-  z-index: 11;
-  width: 300px;
-  transition: 0.3s ease-out;
-  transition-property: opacity, left;
-  pointer-events: none;
+	position: fixed;
+	left: -110%;
+	top: 0;
+	height: 100%;
+	z-index: 11;
+	width: 300px;
+	transition: 0.3s ease-out;
+	transition-property: opacity, left;
+	pointer-events: none;
 
-  &.active {
-    pointer-events: all;
-    left: 0%;
+	&.active {
+		pointer-events: all;
+		left: 0%;
 
-    ~ .backdrop {
-      opacity: 1;
-      pointer-events: none;
-      z-index: 10;
-    }
-  }
+		~ :global(.backdrop) {
+			opacity: 1;
+			pointer-events: none;
+			z-index: 10;
+		}
+	}
 
-  // &:not(.active) {
-  //   .sidebar {
-  //     padding: 0px;
-  //     overflow: hidden;
-  //   }
-  // }
+	// &:not(.active) {
+	//   .sidebar {
+	//     padding: 0px;
+	//     overflow: hidden;
+	//   }
+	// }
 
-  .sidebar {
-    background-color: white;
-    height: 100%;
-    pointer-events: all;
-    z-index: 11;
-    border-top-right-radius: 40px;
-  }
-}
-
-.backdrop {
-  position: fixed;
-  background-color: rgba(black, 0.4);
-  height: 100%;
-  width: 100%;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  transition: 0.1s opacity ease-in-out;
+	.sidebar {
+		background-color: white;
+		height: 100%;
+		pointer-events: all;
+		z-index: 11;
+		border-top-right-radius: 40px;
+	}
 }

@@ -1,5 +1,6 @@
 "use strict";
 
+import screen from '@app/styles/screen.module.scss';
 import { useLayoutEffect, useState } from 'react';
 
 
@@ -20,13 +21,12 @@ const useDeviceWidth = () => {
             window.removeEventListener('resize', handleResize);
         }
     }, [])
-    console.log("width ", width)
 
     return {
         width,
-        isTablet: width && width <= 768,
-        isLargeMobile: width && width <= 425,
-        isSmallMobile: width && width <= 320
+        isTablet: width && width <= Number(screen?.tabletStart),
+        isLargeMobile: width && width <= Number(screen?.argeMobileStart),
+        isSmallMobile: width && width <= Number(screen?.smallMobileStart)
     }
 }
 

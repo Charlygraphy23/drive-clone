@@ -39,8 +39,9 @@ export default createReducer(initialState, (builder) => {
             state.selectedResourceId = ""
             return state;
         })
-        .addCase(toggleInfo, (state) => {
-            state.show = !state.show;
+        .addCase(toggleInfo, (state, action) => {
+            const payload = action.payload
+            state.show = typeof payload === "boolean" ? payload : !state.show;
             return state;
         })
         .addCase(invalidateCache, (state) => {

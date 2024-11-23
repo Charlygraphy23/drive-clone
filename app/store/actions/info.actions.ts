@@ -32,7 +32,7 @@ export type UpdateInfoActionType = {
     data: Partial<ResourceInfoDataType>
 }
 
-export const toggleInfo = createAction("showInfo")
+export const toggleInfo = createAction<boolean | undefined>("showInfo")
 export const clearSelectedFolderId = createAction("clearSelectedFolderId")
 export const invalidateCacheById = createAction<string>("invalidateCacheById")
 export const updateInfoByFolderId = createAction<UpdateInfoByFolderIdType>("updateInfoByFolderId")

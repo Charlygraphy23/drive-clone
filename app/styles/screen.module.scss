@@ -1,0 +1,9 @@
+$tablet-start: 768;
+$large-mobile-start: 425;
+$small-mobile-start: 320;
+
+:export {
+	tabletStart: $tablet-start;
+	largeMobileStart: $large-mobile-start;
+	smallMobileStart: $small-mobile-start;
+}

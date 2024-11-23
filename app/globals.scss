@@ -227,3 +227,16 @@ input {
 		}
 	}
 }
+
+.backdrop {
+	position: fixed;
+	background-color: rgba(black, 0.4);
+	height: 100%;
+	width: 100%;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	transition: 0.1s opacity ease-in-out;
+	pointer-events: none;
+}

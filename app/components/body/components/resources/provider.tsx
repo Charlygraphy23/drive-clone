@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector, useAppStore } from "@/app/store";
 import { addBulkFiles, addBulkFolder, appendBulkFiles, removeAccessFromFileAsync, removeAccessFromFolderAsync, toggleModal } from "@/app/store/actions";
 import { clearSelectedFolderId } from "@/app/store/actions/info.actions";
 import { ModalDataType } from "@/app/store/reducers/modal.reducers";
+import { disabledClick } from "@/app/utils/index.utils";
 import { Session } from "next-auth";
 import { useSearchParams } from "next/navigation";
 import { Children, PropsWithChildren, cloneElement, memo, useCallback, useEffect, useRef, useState } from "react";
@@ -52,39 +53,10 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 	const fileIdFromSearch = searchParams.get('file')
 
 
-	const disabledClick = useCallback((target: Node) => {
-		const IDs = ["resource-info-button", "resource-info", "more-option", "more-option-file"]
-		const classes = [".ant-select-dropdown", ".selectAccessType", ".selectAccessList"]
-		const hasElementWithId = IDs.reduce((prev, Id) => {
-			const element = document.getElementById(Id)
-			const isContains = element?.contains(target)
-			if (isContains) return true;
-			if (prev) return prev;
-
-			return false;
-		}, false)
-
-		const hasElementWithClass = classes.reduce((prev, Id) => {
-			const element = document.querySelector(Id)
-			const isContains = element?.contains(target)
-			if (isContains) return true;
-			if (prev) return prev;
-
-			return false;
-		}, false)
-
-
-
-		return hasElementWithId || hasElementWithClass
-	}, [])
-
 	const withParentElement = useCallback((target: Node) => {
 		const myFolder = document.getElementById("my_folder")
 		const myTable = document.getElementById("my_table")
-
-
 		const isDisabled = disabledClick(target)
-		console.log("isDisabled", isDisabled)
 
 		//? If there is any element that has
 		if (isDisabled) {
