@@ -1,5 +1,6 @@
 @use "/app/styles/variable.scss" as color;
 @use "/app/styles/mixins.scss" as mixins;
+@use "/app/styles/screen.scss" as screen;
 
 .search {
 	position: relative;
@@ -154,7 +155,7 @@
 									flex: 1;
 									overflow: hidden;
 									text-overflow: ellipsis;
-									white-space: nowrap;
+									// white-space: nowrap;
 									// line-height: 2.2em;
 								}
 							}
@@ -171,5 +172,19 @@
 				}
 			}
 		}
+	}
+}
+
+@media screen and (max-width: screen.$semi-tablet) {
+	.searchModal {
+		:global(.modal-dialog) {
+			margin: 10px auto;
+			max-width: min(750px, calc(100% - 10%));
+		}
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.searchModal {
 	}
 }

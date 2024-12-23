@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import { ModalDataType, ModalStateType } from "../reducers/modal.reducers";
 
-type ToggleModal = {
+export type ToggleModalType = {
 	isOpen: boolean;
 	data?: ModalDataType | null;
 	name: keyof Pick<
@@ -10,4 +10,4 @@ type ToggleModal = {
 	>;
 };
 
-export const toggleModal = createAction<ToggleModal>("toggleModal");
+export const toggleModal = createAction<ToggleModalType>("toggleModal");

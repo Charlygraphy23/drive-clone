@@ -106,7 +106,6 @@ const SearchModal = ({ user }: Props) => {
         }
     }, [state?.isOpen, totalLengthOfData])
 
-    console.log("debounceValue", debounceValue)
     return <div className={style.wrapper}>
         <div className={style.inputGroup}>
             <input type="text" placeholder='Search..' value={state?.search ?? ""} onChange={(e) => dispatch(handleSearch(e.target.value))} />

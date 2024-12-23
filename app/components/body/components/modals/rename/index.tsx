@@ -40,7 +40,7 @@ const RenameModal = ({ isOpen, data }: Props) => {
 		dispatch(
 			toggleModalState({
 				isOpen: !!isOpen,
-				name: "renameModal",
+				name: RENAME_MODAL_ID,
 			})
 		);
 
@@ -80,7 +80,7 @@ const RenameModal = ({ isOpen, data }: Props) => {
 	}, [data?.value]);
 
 	return (
-		<ModalComponent id={RENAME_MODAL_ID} isOpen={isOpen} toggle={toggleModal}>
+		<ModalComponent id={RENAME_MODAL_ID} isOpen={isOpen}>
 			<form onSubmit={handleModalSubmit} className={style.renameModal}>
 				<h5>
 					<span>Rename</span>

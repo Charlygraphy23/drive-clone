@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { ValidationError } from "yup";
+import { MANAGE_ACCESS_MODAL_ID } from "../_config/const";
 import { EffectiveConnectionType } from "../interfaces/index.interface";
 
 export const BootstrapMethods = {
@@ -127,7 +128,7 @@ export async function getImageQuality() {
 export const disabledClick = (target: Node) => {
     if (typeof window === "undefined") throw new Error("disabledClick can only be used by client")
 
-    const IDs = ["manage_access", "resource-info-button", "resource-info", "more-option", "more-option-file", "resource-info-button"]
+    const IDs = [MANAGE_ACCESS_MODAL_ID, "resource-info-button", "resource-info", "more-option", "more-option-file", "resource-info-button"]
     const classes = [".ant-select-dropdown", ".selectAccessType", ".selectAccessList"]
     const hasElementWithId = IDs.reduce((prev, Id) => {
         const element = document.getElementById(Id)

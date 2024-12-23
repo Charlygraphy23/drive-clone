@@ -23,7 +23,7 @@ const SearchLayout = ({ children }: PropsWithChildren) => {
                 <i className='bi bi-search'></i>
                 <p>Search File..</p>
             </button >
-            <Modal centered={false} isOpen={state?.isOpen} id={SEARCH_MODAL} size="xl">
+            <Modal centered={false} isOpen={state?.isOpen} id={SEARCH_MODAL} size="xl" className={style.searchModal}>
                 <ButtonClose className={style.modalClose} onClick={() => dispatch(toggleSearchModal())} />
                 {children}
             </Modal>

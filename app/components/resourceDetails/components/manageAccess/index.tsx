@@ -11,16 +11,13 @@ import useToast from "@/app/hooks/useToast";
 import { SelectedAccessType } from "@/app/interfaces/index.interface";
 import { ACCESS_TYPE } from "@/app/lib/database/interfaces/access.interface";
 import { useAppDispatch, useAppSelector } from "@/app/store";
-import {
-    toggleModal as toggleModalState
-} from "@/app/store/actions";
 import { AccessList, updateInfoByFolderId } from "@/app/store/actions/info.actions";
 import { ErrorHandler } from "@/app/utils/index.utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Divider, Select, SelectProps, Space } from "antd";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import style from "./style.module.scss";
 
 
@@ -70,16 +67,6 @@ const ManageAccess = () => {
         setSelectEmails([])
     }
 
-    const toggleModal = useCallback((isOpen?: boolean) => {
-        dispatch(
-            toggleModalState({
-                isOpen: !!isOpen,
-                name: "manageAccessModal",
-            })
-        );
-        clearState()
-    }, [dispatch]);
-
     const handleSearch = (value: string) => {
         setSearch(value)
     };
@@ -92,8 +79,6 @@ const ManageAccess = () => {
             const hasPermission = selectedAccess?.find(access => access?.userInfo?._id === userInfo?._id);
             return !hasPermission
         })
-
-        console.log("AIG: filterSelectedValues", filterSelectedValues)
 
         const contractData = filterSelectedValues?.map((value) => {
             const data = JSON.parse(value) as User
@@ -127,7 +112,7 @@ const ManageAccess = () => {
                 resourceId,
                 deletedUserIds
             })
-            toggleModal();
+            clearState();
 
             dispatch(updateInfoByFolderId({
                 resourceId,
@@ -194,7 +179,7 @@ const ManageAccess = () => {
 
 
     return (
-        <ModalComponent id={MANAGE_ACCESS_MODAL_ID} isOpen={manageAccessModal} toggle={toggleModal}>
+        <ModalComponent id={MANAGE_ACCESS_MODAL_ID} isOpen={manageAccessModal}>
             <div className={style.manageAccess}>
                 <div className={style.header}>
                     <p>Share <strong><small>{resourceInfoById?.name}</small></strong></p>

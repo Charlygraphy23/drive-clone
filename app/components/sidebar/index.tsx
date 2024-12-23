@@ -21,7 +21,7 @@ const Sidebar = () => {
 
 			if (toggleButton?.contains(target)) return;
 
-			if ((ref.current && !ref.current?.contains(target))) {
+			if ((ref.current && !ref.current?.contains(target) && showSideBar)) {
 				dispatch(toggleSidebar({ showSidebar: false }))
 			}
 		}
@@ -30,7 +30,7 @@ const Sidebar = () => {
 		return () => {
 			document.removeEventListener("click", checkClick)
 		}
-	}, [dispatch])
+	}, [dispatch, showSideBar])
 
 	return (
 		<>

@@ -14,7 +14,7 @@
 	margin-left: -10%;
 
 	&.show {
-		width: 400px;
+		width: 500px;
 		height: auto;
 		padding: 1rem;
 		margin-left: 0;
@@ -69,11 +69,13 @@
 		align-items: center;
 		gap: 8px;
 		margin-top: 2rem;
+		flex-wrap: wrap;
 
 		button {
 			padding: 0.3em 2em;
 			border: none;
 			border-radius: 4px;
+			flex: 1;
 
 			&:first-child {
 				background-color: transparent;

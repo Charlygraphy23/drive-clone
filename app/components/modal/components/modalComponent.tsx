@@ -11,9 +11,10 @@ type Props = {
 	centered?: boolean
 	size?: ModalSize,
 	blockHide?: boolean
+	className?: string;
 } & PropsWithChildren;
 
-const ModalComponent = ({ id, children, centered = true, size, blockHide = false }: Props) => {
+const ModalComponent = ({ id, children, centered = true, size, blockHide = false, className = "" }: Props) => {
 	const modalSize = useMemo(() => getModalSize(size), [size])
 	const ref = useRef<string>("")
 
@@ -37,7 +38,7 @@ const ModalComponent = ({ id, children, centered = true, size, blockHide = false
 	}, [blockHide, id])
 
 	return (
-		<div id={id} className={`${style.modal} ${modalSize} modal fade`} tabIndex={-1}>
+		<div id={id} className={`${style.modal} ${modalSize} modal fade ${className}`} tabIndex={-1}>
 			<div className={` modal-dialog ${style.dialog} ${centered ? 'modal-dialog-centered' : ''}`}>
 				<div className={` modal-content ${style.content}`}>
 					<div className={` modal-body ${style.body}`}>

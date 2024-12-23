@@ -36,7 +36,7 @@ const ResourceDetails = () => {
             const isDisabled = disabledClick(target);
             if (isDisabled) return;
 
-            if ((ref.current && !ref.current?.contains(target))) {
+            if ((ref.current && !ref.current?.contains(target) && show)) {
                 dispatch(toggleInfo(false))
             }
         }

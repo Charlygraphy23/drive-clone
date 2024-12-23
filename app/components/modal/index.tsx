@@ -1,9 +1,11 @@
 "use client";
 
+import { useAppDispatch } from "@/app/store";
+import { toggleModal, ToggleModalType } from "@/app/store/actions";
 import { BootstrapMethods } from "@/app/utils/index.utils";
 import {
-	PropsWithChildren,
 	memo,
+	PropsWithChildren,
 	useCallback,
 	useEffect,
 	useRef,
@@ -15,15 +17,16 @@ import { ModalSize } from "./interfaces/index.interface";
 type Props = {
 	id: string;
 	isOpen?: boolean;
-	toggle?: (_isOpen?: boolean) => void;
 	centered?: boolean
 	size?: ModalSize,
-	blockHide?: boolean
+	blockHide?: boolean,
+	className?: string
 } & PropsWithChildren;
 
 const Modal = (props: Props) => {
-	const { id, isOpen, toggle, children, centered, size, blockHide } = props;
+	const { id, isOpen, children, centered, size, blockHide, className = "" } = props;
 	const instance = useRef<any>(null);
+	const dispatch = useAppDispatch()
 
 	const getInstance = useCallback(() => {
 		if (!instance.current) {
@@ -32,6 +35,18 @@ const Modal = (props: Props) => {
 		}
 	}, [id]);
 
+	const toggle = useCallback(() => {
+
+		if (!id) return;
+
+		dispatch(
+			toggleModal({
+				isOpen: false,
+				name: id as ToggleModalType["name"],
+			})
+		);
+	}, [dispatch, id])
+
 	useEffect(() => {
 		getInstance();
 
@@ -39,25 +54,25 @@ const Modal = (props: Props) => {
 
 			if (instance.current) {
 				instance.current.hide()
-				if (toggle && isOpen) toggle(false);
+				toggle()
 				// instance.current.dispose()
 				// instance.current = null
 			}
 		}
-	}, [getInstance, isOpen, toggle]);
+	}, [getInstance, toggle]);
 
 	useEffect(() => {
 		if (!instance?.current) return;
 
 		isOpen ? instance?.current?.show() : instance?.current?.hide();
-	}, [isOpen]);
+	}, [isOpen, id]);
 
 
 	useEffect(() => {
-		if (!instance?.current) return;
+		if (!instance?.current && !id) return;
 
 		const handleHidden = () => {
-			if (toggle && isOpen) toggle(false);
+			toggle()
 		};
 
 		const modal = document.getElementById(id);
@@ -68,14 +83,15 @@ const Modal = (props: Props) => {
 		// );
 
 		return () => {
+			if (!id) return;
+
 			const modal = document.getElementById(id);
 			modal?.removeEventListener("hidden.bs.modal", handleHidden)
-
 		};
-	}, [toggle, isOpen, id]);
+	}, [id, toggle]);
 
 	return (
-		<ModalComponent centered={centered} isOpen={isOpen} id={id} size={size} blockHide={blockHide}>
+		<ModalComponent centered={centered} isOpen={isOpen} id={id} size={size} blockHide={blockHide} className={className}>
 			{children}
 		</ModalComponent>
 	);

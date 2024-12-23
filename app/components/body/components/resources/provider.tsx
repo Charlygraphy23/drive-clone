@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchFileData, fetchFolderData } from "@/app/_actions/resource";
-import { FILE_LIMIT, ROOT_FOLDER } from "@/app/_config/const";
+import { FILE_LIMIT, MANAGE_ACCESS_MODAL_ID, ROOT_FOLDER } from "@/app/_config/const";
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
 import ResourceLoader from "@/app/components/loader/resourceLoader";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
@@ -68,7 +68,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 			return true
 		}
 		else false
-	}, [disabledClick])
+	}, [])
 
 	const onClear = useCallback(() => {
 		if (selectedResourceId)
@@ -77,7 +77,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 		if (manageAccessModal) {
 			dispatch(toggleModal({
 				isOpen: false,
-				name: "manageAccessModal",
+				name: MANAGE_ACCESS_MODAL_ID,
 			}))
 		}
 
@@ -134,6 +134,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 			const target = e.target as Node
 			const hasElement = withParentElement(target)
 			if (!hasElement) {
+				console.log("DEBUG: hasElement")
 				onClear()
 			}
 		}

@@ -1,20 +1,19 @@
 "use client"
 
-import { DatePicker, SelectProps } from 'antd';
+import { SelectProps } from 'antd';
 import { Dayjs } from 'dayjs';
 import { useContext, useEffect, useState } from 'react';
 import { FilterStateType } from '../../interfaces/index.interface';
 import { submitFilters } from '../../store/actions';
 import { SearchContext } from '../../store/context';
+import FilterDatePicker from './components/filterDatePicker';
 import FilterSelect from './components/filterSelect';
 import FilterWrapper from './components/filterWrapper';
 import style from './style.module.scss';
 import { CONTENT_TYPE, getContentType } from './utils/index.utils';
 
 
-const { RangePicker } = DatePicker;
 const typeOptions: SelectProps['options'] = getContentType(CONTENT_TYPE)
-// const hashtagsOptions: SelectProps['options'] = getTagsForSearch(HASHTAGS)
 
 
 const SearchFilters = () => {
@@ -58,12 +57,9 @@ const SearchFilters = () => {
 
             <div className={style.wrapper}>
                 <FilterWrapper label='By Upload Date'>
-                    <RangePicker
-                        value={state?.createdAt as any}
-                        allowClear
-                        popupClassName="antd__appTheme"
-                        className="antd__appTheme"
-                        onChange={(dates) => onChange(dates, "createdAt")}
+                    <FilterDatePicker
+                        createdAt={state?.createdAt as any}
+                        onChange={onChange}
                     />
                 </FilterWrapper>
 

@@ -36,7 +36,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 		dispatch(
 			toggleModalState({
 				isOpen: !!isOpen,
-				name: "newFolderModal",
+				name: NEW_FOLDER_MODAL_ID,
 			})
 		);
 	}, [dispatch]);
@@ -77,7 +77,7 @@ const NewFolderModal = ({ isOpen }: Props) => {
 		<ModalComponent
 			id={NEW_FOLDER_MODAL_ID}
 			isOpen={isOpen}
-			toggle={toggleModal}>
+		>
 			<form onSubmit={handleModalSubmit} className={style.newfolderModal}>
 				<h5>
 					<span>New Folder</span>

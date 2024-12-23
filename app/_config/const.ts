@@ -1,14 +1,14 @@
 export const ROOT_FOLDER = "root"
 
-export const RENAME_MODAL_ID = "rename_modal";
-export const DELETE_CONFIRMATION = "delete_confirm";
-export const MANAGE_ACCESS_MODAL_ID = "manage_access";
-export const NEW_FOLDER_MODAL_ID = "newfolder_modal";
-export const CONFIRM_MODAL_ID = "confirm_modal";
-export const CHANGE_PASSWORD_MODAL = "change_password_modal";
+export const RENAME_MODAL_ID = "renameModal";
+export const DELETE_CONFIRMATION = "deleteModal";
+export const MANAGE_ACCESS_MODAL_ID = "manageAccessModal";
+export const NEW_FOLDER_MODAL_ID = "newFolderModal";
+export const CONFIRM_MODAL_ID = "confirmModal";
+export const CHANGE_PASSWORD_MODAL = "changePasswordModal";
 export const SEARCH_MODAL = "search_modal";
-export const FILE_UPLOAD = "file_upload";
-export const PREVIEW_MODAL = "preview_modal";
+export const FILE_UPLOAD = "fileUpload";
+export const PREVIEW_MODAL = "previewModal";
 export const ALERT_MODAL = "alertModal";
 
 

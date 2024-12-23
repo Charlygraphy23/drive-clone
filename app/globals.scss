@@ -240,3 +240,19 @@ input {
 	transition: 0.1s opacity ease-in-out;
 	pointer-events: none;
 }
+
+@media screen and (max-width: 700px) {
+	.modal {
+		.modal-dialog {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin: 0 !important;
+			transform: translate(0, 100px) !important;
+		}
+
+		&.show {
+			display: flex !important;
+			flex-direction: column-reverse;
+		}
+	}
+}

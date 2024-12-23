@@ -52,7 +52,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
         dispatch(
             toggleModalState({
                 isOpen: !!isOpen,
-                name: "fileUpload",
+                name: FILE_UPLOAD,
             })
         );
 
@@ -254,7 +254,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
         <ModalComponent
             id={FILE_UPLOAD}
             isOpen={isOpen}
-            toggle={toggleModal} size="lg" blockHide>
+            size="lg" blockHide={!!files?.length}>
             <section className={style.wrapper}>
                 {!uploading && <label
                     htmlFor="upload-files"
