@@ -53,7 +53,7 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 	const fileIdFromSearch = searchParams.get('file')
 
 
-	const withParentElement = useCallback((target: Node) => {
+	const withParentElement = useCallback((target: Element) => {
 		const myFolder = document.getElementById("my_folder")
 		const myTable = document.getElementById("my_table")
 		const isDisabled = disabledClick(target)
@@ -131,10 +131,9 @@ const FileAndFolderStateProvider = ({ children, id, user, isShared }: Props) => 
 	useEffect(() => {
 
 		function checkClick(e: MouseEvent) {
-			const target = e.target as Node
+			const target = e.target as Element
 			const hasElement = withParentElement(target)
 			if (!hasElement) {
-				console.log("DEBUG: hasElement")
 				onClear()
 			}
 		}

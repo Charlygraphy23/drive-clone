@@ -3,14 +3,14 @@ import { FilterStateType, SearchReducerStateType } from "../interfaces/index.int
 import { CLEAR_FILTER_BY_NAME, INVALIDATE_SEARCH, ON_SEARCH_CHANGE, SUBMIT_FILTERS, TOGGLE_FILTER_VIEW, TOGGLE_SEARCH_MODAL } from "./actions";
 
 
-const initialState = {
+export const SearchReducerInitialState = {
     search: "",
     filters: {},
     isFilterShown: false,
-    isOpen: false
+    isOpen: false,
 } as SearchReducerStateType
 
-const searchReducer = (state = initialState, action: ActionType) => {
+const searchReducer = (state = SearchReducerInitialState, action: ActionType) => {
 
     const { payload, type } = action;
     const newState = Object.assign({}, state)
@@ -23,9 +23,9 @@ const searchReducer = (state = initialState, action: ActionType) => {
         case TOGGLE_SEARCH_MODAL:
 
             if (newState.isOpen) {
-                return initialState
+                return SearchReducerInitialState
             }
-            newState.isOpen = !newState.isOpen
+            newState.isOpen = typeof payload !== "undefined" ? payload : !newState.isOpen
             return newState
 
         case ON_SEARCH_CHANGE:
@@ -38,10 +38,10 @@ const searchReducer = (state = initialState, action: ActionType) => {
             return newState
 
         case TOGGLE_FILTER_VIEW:
-            newState.isFilterShown = !newState.isFilterShown
+            newState.isFilterShown = typeof payload !== "undefined" ? payload : !newState.isFilterShown
             return newState
 
-        case INVALIDATE_SEARCH: return initialState;
+        case INVALIDATE_SEARCH: return SearchReducerInitialState;
         default:
             return newState
     }

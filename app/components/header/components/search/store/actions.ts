@@ -9,18 +9,18 @@ export const ON_SEARCH_CHANGE = "ON_SEARCH_CHANGE";
 export const TOGGLE_SEARCH_MODAL = "TOGGLE_SEARCH_MODAL";
 
 
-export const toggleSearchModal = (): ActionType => {
+export const toggleSearchModal = (payload?: boolean): ActionType => {
     return {
         type: TOGGLE_SEARCH_MODAL,
-        payload: {}
+        payload: payload
     }
 }
 
 
-export const toggleFilterView = (): ActionType => {
+export const toggleFilterView = (payload?: boolean): ActionType => {
     return {
         type: TOGGLE_FILTER_VIEW,
-        payload: {}
+        payload: payload
     }
 }
 

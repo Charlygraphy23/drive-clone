@@ -1,6 +1,7 @@
 "use client"
 
 import { fetchFileData, fetchFolderData } from '@/app/_actions/resource';
+import { FILTER_BUTTON_ID } from '@/app/_config/const';
 import useDebounceValue from '@/app/_hooks/useDebounce';
 import { ResourceDatasetType } from '@/app/components/body/components/resources/interfaces/index.interface';
 import { DATA_TYPE } from '@/app/lib/database/interfaces/files.interfaces';
@@ -52,7 +53,6 @@ const SearchModal = ({ user }: Props) => {
         return !!state?.isOpen && (!!debounceValue || !!Object.keys(state?.filters ?? {})?.length)
     }, [state?.isOpen, debounceValue, state?.filters])
 
-    console.log("enableSearch", enableSearch)
 
     const [selectedIdx, setSelectedIndex] = useState(-1)
     const { isFetched, data = {} as {
@@ -109,7 +109,7 @@ const SearchModal = ({ user }: Props) => {
     return <div className={style.wrapper}>
         <div className={style.inputGroup}>
             <input type="text" placeholder='Search..' value={state?.search ?? ""} onChange={(e) => dispatch(handleSearch(e.target.value))} />
-            <button className="button" onClick={() => dispatch(toggleFilterView())}>Filter</button>
+            <button id={FILTER_BUTTON_ID} className="button" onClick={() => dispatch(toggleFilterView())}>Filter</button>
         </div>
 
 

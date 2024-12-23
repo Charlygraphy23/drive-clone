@@ -13,6 +13,7 @@ const initialState = {
 	deleteModal: false,
 	fileUpload: false,
 	previewModal: false,
+	filterModal: true,
 	data: {} as ModalDataType,
 };
 

@@ -125,28 +125,26 @@ export async function getImageQuality() {
 }
 
 
-export const disabledClick = (target: Node) => {
+export const disabledClick = (target?: Element | null) => {
     if (typeof window === "undefined") throw new Error("disabledClick can only be used by client")
 
+    if (!target) return false;
+
     const IDs = [MANAGE_ACCESS_MODAL_ID, "resource-info-button", "resource-info", "more-option", "more-option-file", "resource-info-button"]
-    const classes = [".ant-select-dropdown", ".selectAccessType", ".selectAccessList"]
+    const classes = [".ant-select-dropdown", ".selectAccessType", ".selectAccessList", ".ant-select-item", ".ant-picker", ".ant-picker-dropdown"]
     const hasElementWithId = IDs.reduce((prev, Id) => {
         const element = document.getElementById(Id)
         const isContains = element?.contains(target)
         if (isContains) return true;
-        if (prev) return prev;
-
-        return false;
+        return prev;
     }, false)
 
     const hasElementWithClass = classes.reduce((prev, Id) => {
-        const element = document.querySelector(Id)
-        const isContains = element?.contains(target)
+        const isContains = !!target?.closest(Id)
         if (isContains) return true;
-        if (prev) return prev;
-
-        return false;
+        return prev;
     }, false)
+
 
     return hasElementWithId || hasElementWithClass
 }

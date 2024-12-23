@@ -5,7 +5,7 @@ import Modal, { ButtonClose } from "@/app/components/modal"
 import useDeviceWidth from "@/app/hooks/useWidth"
 import { useAppDispatch } from "@/app/store"
 import { toggleSidebar } from "@/app/store/actions/config.action"
-import { PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, useCallback, useContext } from "react"
 import { toggleSearchModal } from "../store/actions"
 import { SearchContext } from "../store/context"
 import style from '../style.module.scss'
@@ -13,18 +13,23 @@ import style from '../style.module.scss'
 
 const SearchLayout = ({ children }: PropsWithChildren) => {
     const { dispatch, state } = useContext(SearchContext);
-    const { isTablet } = useDeviceWidth()
+    const { isTablet, width } = useDeviceWidth()
     const stateDispatch = useAppDispatch()
+
+    const toggleModal = useCallback((isOpen?: boolean) => {
+        dispatch(toggleSearchModal(isOpen || false))
+    }, [])
+
 
     return (
         <div className={style.wrapper}>
-            {isTablet && <i id="sidebar-toggle" className="bi bi-list" onClick={() => stateDispatch(toggleSidebar())}></i>}
-            <button onClick={() => dispatch(toggleSearchModal())}>
+            {isTablet && <i id="sidebar-toggle" className="bi bi-list" onClick={() => stateDispatch(toggleSidebar())}></i> || null}
+            <button onClick={() => toggleModal(true)}>
                 <i className='bi bi-search'></i>
                 <p>Search File..</p>
             </button >
-            <Modal centered={false} isOpen={state?.isOpen} id={SEARCH_MODAL} size="xl" className={style.searchModal}>
-                <ButtonClose className={style.modalClose} onClick={() => dispatch(toggleSearchModal())} />
+            <Modal centered={false} isOpen={state?.isOpen} id={SEARCH_MODAL} size="xl" className={style.searchModal} toggleHandler={toggleModal}>
+                {width > 700 && <ButtonClose className={style.modalClose} onClick={toggleModal} /> || null}
                 {children}
             </Modal>
         </div>

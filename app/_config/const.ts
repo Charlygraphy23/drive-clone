@@ -10,6 +10,10 @@ export const SEARCH_MODAL = "search_modal";
 export const FILE_UPLOAD = "fileUpload";
 export const PREVIEW_MODAL = "previewModal";
 export const ALERT_MODAL = "alertModal";
+export const FILTER_MODAL_ID = "filterModal";
+export const FILTER_BUTTON_ID = "filter_button";
+
+
 
 
 export const TOTAL_FREE_SPACE = 1024 ** 2 * 10 * 2// 1GB
