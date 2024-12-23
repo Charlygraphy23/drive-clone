@@ -1,3 +1,4 @@
+import Hamburger from "@/app/components/hamburger";
 import HeaderComponent from "@/app/components/header";
 import { authOptions } from "@/app/lib/authConfig";
 import PageLoader from "@/app/loading";
@@ -14,7 +15,8 @@ const PlanLayout = async ({ children }: PropsWithChildren) => {
     return <Suspense fallback={<PageLoader />}>
         <RouteTemplate>
             <div className="d-flex flex-column h-100">
-                <header className='d-flex justify-content-end align-items-center mb-3'>
+                <header className='d-flex justify-content-between align-items-center mb-3'>
+                    <div>{session?.user ? <Hamburger /> : null}</div>
                     <div className="d-flex align-items-center">
                         <HeaderComponent hideSearch showContactUs />
                     </div>

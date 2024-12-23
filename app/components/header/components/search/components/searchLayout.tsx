@@ -1,10 +1,9 @@
 "use client"
 
 import { SEARCH_MODAL } from "@/app/_config/const"
+import Hamburger from "@/app/components/hamburger"
 import Modal, { ButtonClose } from "@/app/components/modal"
 import useDeviceWidth from "@/app/hooks/useWidth"
-import { useAppDispatch } from "@/app/store"
-import { toggleSidebar } from "@/app/store/actions/config.action"
 import { PropsWithChildren, useCallback, useContext } from "react"
 import { toggleSearchModal } from "../store/actions"
 import { SearchContext } from "../store/context"
@@ -13,8 +12,8 @@ import style from '../style.module.scss'
 
 const SearchLayout = ({ children }: PropsWithChildren) => {
     const { dispatch, state } = useContext(SearchContext);
-    const { isTablet, width } = useDeviceWidth()
-    const stateDispatch = useAppDispatch()
+    const { width } = useDeviceWidth()
+
 
     const toggleModal = useCallback((isOpen?: boolean) => {
         dispatch(toggleSearchModal(isOpen || false))
@@ -23,7 +22,7 @@ const SearchLayout = ({ children }: PropsWithChildren) => {
 
     return (
         <div className={style.wrapper}>
-            {isTablet && <i id="sidebar-toggle" className="bi bi-list" onClick={() => stateDispatch(toggleSidebar())}></i> || null}
+            <Hamburger />
             <button onClick={() => toggleModal(true)}>
                 <i className='bi bi-search'></i>
                 <p>Search File..</p>
