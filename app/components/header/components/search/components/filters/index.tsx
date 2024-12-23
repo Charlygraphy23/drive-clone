@@ -2,7 +2,6 @@
 
 import { FILTER_BUTTON_ID } from '@/app/_config/const'
 import useDeviceWidth from '@/app/hooks/useWidth'
-import { useAppSelector } from '@/app/store'
 import { disabledClick } from '@/app/utils/index.utils'
 import { useContext, useEffect, useRef } from 'react'
 import { toggleFilterView } from '../../store/actions'
@@ -12,10 +11,6 @@ import style from './style.module.scss'
 
 const FilterLayout = () => {
     const { width } = useDeviceWidth()
-    const {
-        filterModal,
-        data: modalState,
-    } = useAppSelector((state) => state.modals);
     const { state: contextState, dispatch } = useContext(SearchContext)
     const ref = useRef<HTMLDivElement>(null)
 
