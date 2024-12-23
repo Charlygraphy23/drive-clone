@@ -25,7 +25,7 @@ const AlertModal = () => {
     }, [dispatch])
 
     return (
-        <ModalComponent id={ALERT_MODAL} isOpen={isOpen} toggle={toggleModal}>
+        <ModalComponent id={ALERT_MODAL} isOpen={isOpen} toggleHandler={toggleModal}>
             <div className={style.alert}>
                 <div className={`${style.icon} ${type}`}>
                     {type === ALERT_MODAL_TYPE.SUCCESS && <i className="bi bi-check-lg"></i>}

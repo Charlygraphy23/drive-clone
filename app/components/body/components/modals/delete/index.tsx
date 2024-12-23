@@ -27,7 +27,7 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
         dispatch(
             toggleModalState({
                 isOpen: !!isOpen,
-                name: "deleteModal",
+                name: DELETE_CONFIRMATION,
             })
         );
 
@@ -67,7 +67,7 @@ const DeleteConfirmationModal = ({ isOpen }: Props) => {
     };
 
     return (
-        <ModalComponent id={DELETE_CONFIRMATION} isOpen={isOpen} toggle={toggleModal}>
+        <ModalComponent id={DELETE_CONFIRMATION} isOpen={isOpen}>
             <form onSubmit={handleModalSubmit} className={style.deleteModal}>
                 <h5>
                     <span>Delete <i>{data?.value}</i></span>

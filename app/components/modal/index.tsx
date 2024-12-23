@@ -20,11 +20,12 @@ type Props = {
 	centered?: boolean
 	size?: ModalSize,
 	blockHide?: boolean,
-	className?: string
+	className?: string,
+	toggleHandler?: () => void
 } & PropsWithChildren;
 
 const Modal = (props: Props) => {
-	const { id, isOpen, children, centered, size, blockHide, className = "" } = props;
+	const { id, isOpen, children, centered, size, blockHide, className = "", toggleHandler } = props;
 	const instance = useRef<any>(null);
 	const dispatch = useAppDispatch()
 
@@ -39,13 +40,15 @@ const Modal = (props: Props) => {
 
 		if (!id) return;
 
+		if (toggleHandler) return toggleHandler()
+
 		dispatch(
 			toggleModal({
 				isOpen: false,
 				name: id as ToggleModalType["name"],
 			})
 		);
-	}, [dispatch, id])
+	}, [dispatch, id, toggleHandler])
 
 	useEffect(() => {
 		getInstance();

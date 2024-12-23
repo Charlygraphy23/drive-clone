@@ -26,7 +26,7 @@ const ConfirmationModalComponent = ({ onSubmit, message, isLoading = false }: Pr
 		dispatch(
 			toggleModalState({
 				isOpen: !!isOpen,
-				name: "confirmModal",
+				name: CONFIRM_MODAL_ID,
 			})
 		);
 	}, [dispatch]);
@@ -40,7 +40,7 @@ const ConfirmationModalComponent = ({ onSubmit, message, isLoading = false }: Pr
 		<ModalComponent
 			id={CONFIRM_MODAL_ID}
 			isOpen={confirmModal}
-			toggle={toggleModal}>
+		>
 			<form onSubmit={handleModalSubmit} className={style.confirmModal}>
 				<h5>
 					<span>Confirm</span>

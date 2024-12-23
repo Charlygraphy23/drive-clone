@@ -92,7 +92,7 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 		<ModalComponent
 			id={CHANGE_PASSWORD_MODAL}
 			isOpen={isOpen}
-			toggle={toggleModal}>
+		>
 			<form onSubmit={handleModalSubmit} className={style.changePassword}>
 				<h5>
 					<p className="m-0 w-100">
