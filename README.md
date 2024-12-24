@@ -26,6 +26,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Storage management
 - Subscription model
 - UI Enhancement
+- Progressive Web App
 
 ### Integration
 - NextJs for Backend and Frontend (App router)
@@ -66,7 +67,9 @@ Theme Mobile: [https://dribbble.com/shots/13957659-Cloud-Drive-App](https://drib
 <img width="1680" alt="Screenshot 2024-09-15 at 2 50 24 PM" src="https://github.com/user-attachments/assets/97213643-42ed-461c-8bff-4dbf41039431">
 <img width="1680" alt="image" src="https://github.com/user-attachments/assets/1b86563b-8ec8-4c9b-bbac-e90aa7aecec0">
 <img width="1680" alt="image" src="https://github.com/user-attachments/assets/0ba57f31-c39b-409c-988a-11632a9e1e76">
+<img width="1680" alt="image" src="https://github.com/user-attachments/assets/b6fff576-8044-4f4c-8119-5d489313d4d1">
 <img width="391" alt="image" src="https://github.com/user-attachments/assets/45c8a158-88ca-4476-85d5-55cb861d5a40">
+
 
 
 
