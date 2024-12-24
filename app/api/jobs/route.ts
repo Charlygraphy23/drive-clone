@@ -129,7 +129,8 @@ const handleSubscription = async () => {
         session.startTransaction()
         const expiredSubscription = await SubscriptionModel.find({
             endDate: { $lt: new Date(), $ne: null },
-            "planDetails.isFree": false
+            "planDetails.isFree": false,
+            isActive: true
         }, undefined, { session }).limit(50)
 
         const freePlan = await planService.getFreePlan({ session })

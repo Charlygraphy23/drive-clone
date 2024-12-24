@@ -45,7 +45,7 @@ export class SubscriptionService {
         if (!planDetails.isFree) {
             endDate = new Date();
             if (planDetails.recurringType === RECURRING_TYPE.MONTHLY) {
-                endDate = new Date(new Date().setHours(endDate.getHours() + 3))
+                endDate = new Date(new Date().setHours(endDate.getHours() + 3)) // TODO: this needs to be month not date
             }
             else if (planDetails.recurringType === RECURRING_TYPE.YEARLY) {
                 endDate = new Date(new Date().setFullYear(endDate.getFullYear() + 1))
