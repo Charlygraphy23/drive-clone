@@ -71,7 +71,7 @@ export const POST = async (req: NextRequest) => {
             })
 
             const buffer = Buffer.from(await file.arrayBuffer())
-            const hasFile = await service.findResourceByName(fileName, folderId, { session: mongoSession })
+            const hasFile = await service.findResourceByName(fileName, folderId, String(user?._id), { session: mongoSession })
 
             if (hasFile) {
                 const ext = extname(fileName);

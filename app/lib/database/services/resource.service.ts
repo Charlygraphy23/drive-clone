@@ -152,10 +152,11 @@ export class ResourceService {
 
     }
 
-    async findResourceByName(name: string, parentFolderId: string, options?: SessionOption) {
+    async findResourceByName(name: string, parentFolderId: string, userId: string, options?: SessionOption) {
         return await Model.findOne({
             name: name,
-            parentFolderId: parentFolderId || null
+            parentFolderId: parentFolderId || null,
+            createdBy: new mongoose.Types.ObjectId(userId)
         }, null, options)
     }
 
