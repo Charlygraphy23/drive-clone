@@ -252,6 +252,15 @@ input {
 			width: 100% !important;
 			max-width: 100% !important;
 			margin: 0 !important;
+
+			&.modal-dialog-centered {
+				min-height: auto;
+
+				.modal-content {
+					border-bottom-left-radius: 0px;
+					border-bottom-right-radius: 0px;
+				}
+			}
 		}
 
 		&.show {

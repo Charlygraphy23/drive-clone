@@ -25,7 +25,7 @@ const PrivacyPolicy = async () => {
                 <p>If we ask for your personal information for a secondary reason, like marketing, we will either ask you directly for your expressed consent, or provide you with an opportunity to say no.</p>
 
                 <p><strong>How do I withdraw my consent?</strong></p>
-                <p>If after you opt-in, you change your mind, you may withdraw your consent for us to contact you, for the continued collection, use or disclosure of your information, at anytime, by contacting us at <a href={`mailto:${process.env.FROM_EMAIL}`}>MBOX</a> or mailing us at: Bidhannagar, Sector V, 700091</p>
+                <p>If after you opt-in, you change your mind, you may withdraw your consent for us to contact you, for the continued collection, use or disclosure of your information, at anytime, by contacting us at <a href={`mailto:${process.env.FROM_EMAIL}`}>MBOX</a> or mailing us at: Test address</p>
 
                 <h2>SECTION 3 - DISCLOSURE</h2>
                 <p>We may disclose your personal information if we are required by law to do so or if you violate our Terms of Service.</p>

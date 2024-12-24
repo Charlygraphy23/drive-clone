@@ -99,9 +99,6 @@ export const POST = async (req: NextRequest) => {
 
         console.log("transactionId", transactionId)
 
-        // await transactionService.updateStatus(transactionId, TRANSACTION_STATUS.DONE, {
-        //     session
-        // })
         await subscriptionService.activeNewSubscription({
             userId,
             transactionId,
@@ -115,17 +112,6 @@ export const POST = async (req: NextRequest) => {
             message: "Done",
             data: null
         })
-
-
-        // TODO: at the time of expiration
-        // TODO:: need to check if there is any subscription active 
-        // TODO: if yes then check is it free subscrion or paid
-        // TODO: if free do nothing
-        // TODO: if it's pain, then check check how much space user consumed if it's less than free allowed space then active the free subscription or else block the user from accessing the drive.
-        // TODO: allow user only to buy a subscription depending on their consumed storage if consumed > 5g then can not buy lower plan than currrent plan.
-        // await session.commitTransaction();
-        // await session.endSession();
-        // return NextResponse.json("This is free subscription")
     }
     catch (err: any) {
         await session.abortTransaction();

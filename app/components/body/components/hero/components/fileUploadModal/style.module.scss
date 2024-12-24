@@ -1,4 +1,5 @@
 @use "/app/styles/variable.scss" as color;
+@use "/app/styles/screen.module.scss" as screen;
 
 .wrapper {
 	display: flex;
@@ -82,9 +83,58 @@
 		padding: 1rem 0.3rem;
 	}
 
-	.submit {
-		width: 100%;
-		max-width: 100px;
-		min-height: 40px;
+	.buttonGroup {
+		margin-top: 1.5rem;
+		margin-bottom: 0.5rem;
+
+		.submit {
+			width: 100%;
+			max-width: 100px;
+			min-height: 40px;
+		}
+	}
+}
+
+@media screen and (max-width: #{screen.$large-mobile-start}px) {
+	.wrapper {
+		.upload {
+			padding: 0px 0.4rem;
+			&.dragging {
+				background-color: rgba(black, 0.1);
+			}
+
+			// &:hover {
+			// 	background-color: rgba(black, 0.1);
+			// }
+
+			input {
+				display: none;
+			}
+
+			& > p {
+				font-size: 0.7rem;
+			}
+
+			& > span {
+				font-size: 0.7rem;
+			}
+		}
+
+		.list {
+			margin: 1rem 0rem;
+			max-height: 200px;
+			overflow-y: auto;
+			overflow-x: hidden;
+			padding: 0.5rem 0.3rem;
+		}
+
+		.buttonGroup {
+			margin: 0;
+
+			.submit {
+				font-size: 0.8rem;
+				min-height: auto;
+			}
+		}
 	}
 }

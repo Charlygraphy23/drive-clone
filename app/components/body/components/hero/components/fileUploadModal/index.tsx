@@ -278,7 +278,7 @@ const FileUploadModal = ({ isOpen }: Props) => {
                     {files?.length && files?.map((file, index) => <FileListItem className="mb-2" uploading={uploading} key={file.file?.name} media={file} index={index} onDelete={handleFileDelete} />) || null}
                 </div> || null}
 
-                <div className='d-flex justify-content-end align-items-center mt-4 mb-2'>
+                <div className={`d-flex justify-content-end align-items-center ${style.buttonGroup}`}>
                     {!hasUploaded && <ButtonGroup handleSubmit={handleCancel} submitText="cancel" className={`cancel me-4`} />}
                     <ButtonGroup
                         type="submit"

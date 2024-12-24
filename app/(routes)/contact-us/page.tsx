@@ -22,7 +22,7 @@ const ContactUs = () => {
                 <div className={style.wrapper}>
                     <div className={style.description}>
                         <p className={style.head}>Phone</p>
-                        <span>+91 8918940615</span>
+                        <span>+91 123456789</span>
                     </div>
 
                     <div className={style.description}>
@@ -32,7 +32,7 @@ const ContactUs = () => {
 
                     <div className={style.description}>
                         <p className={style.head}>Location</p>
-                        <span>Sector V, Kolkata, 700091</span>
+                        <span>Test address, Test, 100020</span>
                     </div>
                 </div>
 

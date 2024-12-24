@@ -17,8 +17,6 @@ const RouteTemplate = ({ children }: PropsWithChildren) => {
 						<ResourceDetails />
 					</aside>
 				</div>
-
-
 			</div>
 		</main>
 	);

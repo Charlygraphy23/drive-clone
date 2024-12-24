@@ -1,4 +1,5 @@
 @use "../../styles/variable.scss" as color;
+@use "../../styles/screen.module.scss" as screen;
 
 .sidebar {
 	padding: 2rem 1rem;
@@ -65,5 +66,21 @@
 		pointer-events: all;
 		z-index: 11;
 		border-top-right-radius: 40px;
+	}
+}
+
+@media screen and (max-width: #{screen.$large-mobile-start}px) {
+	.tablet {
+		width: 230px;
+		.sidebar {
+			.sidebar__brand {
+				font-size: 1rem;
+
+				img {
+					width: 3.5rem;
+					height: 3.5rem;
+				}
+			}
+		}
 	}
 }

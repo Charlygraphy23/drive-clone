@@ -1,3 +1,5 @@
+@use "/app/styles/screen.module.scss" as screen;
+
 .modal {
 	.dialog {
 		.content {
@@ -19,4 +21,21 @@
 	border: none;
 	width: 100%;
 	background-color: transparent;
+}
+
+@media screen and (max-width: #{screen.$large-mobile-start}px) {
+	.modal {
+		.dialog {
+			.content {
+				.body {
+					padding: 1rem 1.5rem;
+
+					.submit {
+						width: 100%;
+						max-width: 70px;
+					}
+				}
+			}
+		}
+	}
 }
