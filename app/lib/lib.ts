@@ -19,7 +19,7 @@ export const generatePassword = async (length: number = 8) => {
         const pickIndex = Math.floor(Math.random() * passwordTypes.length)
         const str = passwordTypes[pickIndex]
         const pickOneChar = str.charAt(Math.floor(Math.random() * str.length))
-        password = password + pickOneChar
+        password = password + pickOneChar + "Mb0&"
     }
 
     return password

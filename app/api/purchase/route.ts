@@ -49,13 +49,6 @@ export const POST = async (req: NextRequest) => {
             })
         }
 
-        // if(subscriptionDetails && subscriptionDetails?.planId.toString() === planDetails?._id?.toString()) {
-        //     return NextResponse.json({
-        //         message: "Customer can not purchase subscription ",
-        //         data: null
-        //     })
-        // }
-
         if (!planDetails?.isFree) {
             const transaction = await transactionService.create({
                 planDetails,
