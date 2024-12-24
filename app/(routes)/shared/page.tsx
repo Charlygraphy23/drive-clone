@@ -11,8 +11,12 @@ const page = async () => {
 		<main className="fullwidth">
 			<section className={style.shared}>
 				<header className='d-flex justify-content-between align-items-center'>
-					<Hamburger />
-					<h1>Shared with me</h1>
+
+
+					<div className="d-flex align-items-center">
+						<Hamburger />
+						<h1 className="m-0 ms-2">Shared with me</h1>
+					</div>
 					<div className="d-flex align-items-center">
 						<ResourceInfo style={{ marginRight: "10px" }} />
 						<HeaderComponent hideSearch={true} />

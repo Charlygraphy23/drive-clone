@@ -1,4 +1,6 @@
 @use "./styles/variable.scss" as color;
+@use "./styles/screen.module.scss" as screen;
+
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
 
 :root {
@@ -255,6 +257,19 @@ input {
 		&.show {
 			display: flex !important;
 			flex-direction: column-reverse;
+		}
+	}
+}
+
+@media screen and (max-width: #{screen.$large-mobile-start}px) {
+	:root {
+		body {
+			h1 {
+				font-size: 1.5rem;
+			}
+			p {
+				font-size: 0.9rem;
+			}
 		}
 	}
 }

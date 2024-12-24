@@ -1,5 +1,5 @@
 @use "/app/styles/variable.scss" as colors;
-@use "/app/styles/screen.scss" as screen;
+@use "/app/styles/screen.module.scss" as screen;
 
 .resourceInfo {
 	height: 100%;
@@ -121,7 +121,7 @@
 	}
 }
 
-@media screen and (max-width: screen.$tablet) {
+@media screen and (max-width: #{screen.$tablet-start}px) {
 	.resourceInfo {
 		position: fixed;
 		right: -110%;
@@ -149,6 +149,49 @@
 		.body {
 			border-top-right-radius: 0px;
 			border-bottom-right-radius: 0px;
+		}
+	}
+}
+
+@media screen and (max-width: #{screen.$large-mobile-start}px) {
+	.resourceInfo {
+		.body {
+			.scrollable {
+				.preview {
+					height: 200px;
+					margin: 2rem 0rem;
+
+					img {
+						width: 2.5rem;
+						height: 2.5rem;
+					}
+				}
+
+				.access {
+					.accessWrapper {
+						.avatar {
+							& > div {
+								font-size: 0.6rem;
+							}
+						}
+					}
+
+					.manageAccess {
+						margin-bottom: 0rem;
+						font-size: 0.7rem;
+					}
+				}
+
+				.details {
+					display: flex;
+					flex-direction: column;
+					margin-top: 1rem;
+
+					& > div {
+						margin-bottom: 1rem;
+					}
+				}
+			}
 		}
 	}
 }

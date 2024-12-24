@@ -1,4 +1,5 @@
 @use "/app/styles/variable.scss" as color;
+@use "/app/styles/screen.module.scss" as screen;
 @use "/app/components/body/components/modals/rename/style.module.scss" as
 	renameModalStyle;
 
@@ -74,7 +75,7 @@
 	.profileForm {
 		height: 100%;
 		overflow: auto;
-		padding: 0rem 0.5rem;
+		padding: 0.4rem 0.5rem;
 
 		.body {
 			display: flex;
@@ -212,6 +213,79 @@
 			width: fit-content;
 			width: 100px;
 			height: 2.5rem;
+		}
+	}
+}
+
+@media screen and (max-width: #{screen.$large-mobile-start}px) {
+	.layout {
+		.profileImage {
+			.image {
+				width: 150px !important;
+				height: 150px !important;
+			}
+
+			label {
+				font-size: 1rem;
+				width: 1.5em;
+				left: 60%;
+				height: 1.5em;
+				bottom: 20px;
+			}
+		}
+
+		.profileForm {
+			.body {
+				padding: 1rem;
+				border-radius: 8px;
+
+				.inputGroup {
+					margin-bottom: 1rem;
+					.wrapper {
+						span {
+							font-size: 0.6rem;
+						}
+
+						input {
+							font-size: 0.8rem;
+						}
+					}
+
+					p {
+						font-size: 1rem;
+					}
+
+					label {
+						font-size: 0.8rem;
+					}
+				}
+
+				.inputPasswordGroup {
+					p {
+						font-size: 1rem;
+					}
+
+					label {
+						font-size: 0.8rem;
+					}
+
+					button {
+						font-size: 0.6rem;
+					}
+				}
+			}
+
+			.buttonGroup {
+				button {
+					&:nth-child(2) {
+						background-color: color.$primary-color;
+						color: white;
+						font-size: 0.6rem;
+						border-radius: 10px;
+						max-width: 100px;
+					}
+				}
+			}
 		}
 	}
 }

@@ -14,12 +14,12 @@ const ProfilePage = async () => {
 	const user = await getUserSessionInfo()
 
 	return (
-		<main className="fullwidth">
+		<>
 			<ProfileProvider userInfo={user}>
 				<ProfileImageComponent />
 				<ProfileForm />
 			</ProfileProvider>
-		</main>
+		</>
 
 	);
 };
