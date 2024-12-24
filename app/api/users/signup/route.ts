@@ -49,7 +49,7 @@ export const POST = async (req: Request) => {
                 origin,
             })
 
-            template.send({
+            await template.send({
                 to: email,
                 subject: "Congratulations! Successful Login"
             })
