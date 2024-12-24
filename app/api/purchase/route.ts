@@ -40,7 +40,7 @@ export const POST = async (req: NextRequest) => {
 
         if (!planDetails) throw new Error(`Plan not found`);
 
-        if (subscriptionDetails && !subscriptionDetails?.planDetails?.isFree) {
+        if (subscriptionDetails && !subscriptionDetails?.planDetails?.isFree && planDetails.isFree) {
             return NextResponse.json({
                 message: "Customer already has a subscription which is baught by the customer can not active free subscription!",
                 data: null
@@ -107,6 +107,7 @@ export const POST = async (req: NextRequest) => {
         })
     }
     catch (err: any) {
+        console.error("Error in purchase", err)
         await session.abortTransaction();
         session.endSession()
         return NextResponse.json(err?.message, {
