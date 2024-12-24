@@ -1,6 +1,8 @@
 'use server';
 
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
+
+let cachedConnection = null as Mongoose | null
 
 const MONGODB_CONNECTION_STATES = {
     disconnected: 0,
@@ -10,14 +12,26 @@ const MONGODB_CONNECTION_STATES = {
 }
 
 const connect = async () => {
-    return await mongoose.connect(process.env.MONGO_URL).then(() => {
+    return await mongoose.connect(process.env.MONGO_URL, {
+        maxPoolSize: 1,
+    }).then((conn) => {
         console.log("Connected to DB")
-    }).catch(err => { throw err })
+        return conn
+    }).catch(err => {
+        cachedConnection = null
+        throw err
+    })
 }
 
 export const connectDB = async () => {
     console.log("Let's Connect to DB")
     try {
+
+        if (cachedConnection) {
+            console.log("Found connection in cache")
+            Promise.resolve(cachedConnection)
+        }
+
         if (mongoose.connection.readyState === MONGODB_CONNECTION_STATES.disconnecting) {
             console.log("Disconnecting")
         }
@@ -32,7 +46,7 @@ export const connectDB = async () => {
             return await mongoose.connection.asPromise()
         }
 
-        await connect()
+        cachedConnection = await connect()
     }
     catch (err) {
         console.log("Error while connecting with mongodb", err)
