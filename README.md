@@ -57,6 +57,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Demo
 Link - [Here](https://drive-clone-ecru.vercel.app/)
+username: mbox.test@yopmail.com
+password: Abcd@1234
 
 Theme Desktop: [https://dribbble.com/shots/13944002-JenxCloud-File-Management-Dashboard](https://dribbble.com/shots/13944002-JenxCloud-File-Management-Dashboard)
 Theme Mobile: [https://dribbble.com/shots/13957659-Cloud-Drive-App](https://dribbble.com/shots/13957659-Cloud-Drive-App)
