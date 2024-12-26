@@ -11,6 +11,9 @@ import style from '../../../style.module.scss';
 import OwnerSection from "../../ownerSection";
 import FileAction from "../components/fileAction";
 
+import relativeTimePlugin from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTimePlugin);
+
 type Props = {
 	isShared?: boolean
 }
@@ -35,7 +38,7 @@ const useFileColumns = ({ isShared }: Props) => {
 		{
 			title: "Last Modified",
 			dataIndex: "lastModified",
-			render: ({ value }) => dayjs(value as string).fromNow()
+			render: ({ value }) => dayjs(new Date(value as string)).fromNow()
 		},
 
 		{
