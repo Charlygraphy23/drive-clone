@@ -1,17 +1,14 @@
-import { getServerSession, User } from "next-auth";
+import { User } from "next-auth";
 import { unstable_cache } from "next/cache";
-import { authOptions } from "../lib/authConfig";
 import { connectDB } from "../lib/database/db";
 import { UserService } from "../lib/database/services/user.service";
 
-export const getUserInfo = unstable_cache(async () => {
+export const getUserInfo = unstable_cache(async (userId: string) => {
     "use server"
 
-    await connectDB()
+    if (!userId) return null
 
-    const session = await getServerSession(authOptions)
-    if (!session) return null
-    const userId = String(session.user?._id)
+    await connectDB()
 
     const service = new UserService();
     const user = await service.findById(userId)

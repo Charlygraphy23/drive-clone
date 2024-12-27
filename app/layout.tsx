@@ -1,10 +1,12 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import type { Metadata, Viewport } from "next";
+import { getServerSession } from "next-auth";
 import "nprogress/nprogress.css";
 import { getUserInfo } from "./_actions/user";
 import TopBarLoader from "./components/loader/topbarLoader";
 import "./globals.scss";
+import { authOptions } from "./lib/authConfig";
 import { ProfileProvider } from "./profileProvider";
 import AppClientProvider from "./provider";
 
@@ -34,8 +36,9 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const user = await getUserInfo()
-	console.log("User Data", user)
+	const session = await getServerSession(authOptions)
+	const userId = session ? String(session.user?._id) : ""
+	const user = await getUserInfo(userId)
 
 	return (
 		<html lang='en'>

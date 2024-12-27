@@ -13,7 +13,6 @@ const TopBarAvatar = () => {
 	const pathname = usePathname();
 	const isProfileRoute = /^\/profile/.test(pathname);
 	const { data } = useAppSelector(state => state.profile)
-	console.log('data', data)
 
 	const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
 		e.preventDefault();
