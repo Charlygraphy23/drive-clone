@@ -25,6 +25,7 @@ const ProfileForm = () => {
 		email: "",
 		firstName: "",
 		lastName: "",
+		imageUrl: ""
 	})
 	const { update, data: sessionData } = useSession()
 	const Toast = useToast()

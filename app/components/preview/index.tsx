@@ -134,7 +134,6 @@ function RenderPreview({ fileInfo, isMounted, downloadUrl, isLoadingFile, toggle
     const isImage = fileInfo?.mimeType?.startsWith?.("image")
     const isVideo = fileInfo?.mimeType?.startsWith?.("video")
     const isText = fileInfo?.mimeType?.startsWith?.("text") || fileInfo?.mimeType?.startsWith?.("application/json") || fileInfo?.mimeType?.startsWith?.("application/javascript")
-    console.log("fileInfo?.mimeType", fileInfo?.mimeType)
 
     if (isImage) {
         return <ImagePreview isOpen={isMounted} isLoading={isLoadingFile} toggle={toggleFileLoading} url={fileUrl} />

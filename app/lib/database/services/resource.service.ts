@@ -33,11 +33,6 @@ export class ResourceService {
             };
         }
 
-        // const hasFolder = await statfs(path.resolve(`_chunked`)).then(() => true).catch(() => false);
-
-        // if (!hasFolder) {
-        //     await mkdir(path.resolve(`_chunked`))
-        // }
         console.log("Getting Temp folder...")
         const tempFolder = tmpdir()
         console.log("System temp folder is - ", tempFolder)

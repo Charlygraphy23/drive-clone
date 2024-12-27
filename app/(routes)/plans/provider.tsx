@@ -29,7 +29,6 @@ const PlanStateProvider = ({ children }: PropsWithChildren) => {
             initializeData.current = true
         }
     }, [handleInitialDataLoad])
-    console.log("Loading... ", loading)
 
     return (
         <>

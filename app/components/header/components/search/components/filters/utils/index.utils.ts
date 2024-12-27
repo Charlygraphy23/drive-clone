@@ -22,7 +22,6 @@ export const searchDebounce = (fn: (..._args: unknown[]) => void) => {
         }
 
         timer = setTimeout(() => {
-            console.log("CALL APU")
             fn(...args)
         }, 1000)
     }

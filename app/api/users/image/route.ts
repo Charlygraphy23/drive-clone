@@ -22,6 +22,11 @@ export const POST = async (req: NextRequest) => {
             return response.status(400).send("No files received.")
         }
 
+
+        if (file.size > 4500000) {
+            return response.status(400).send("Image size is too big!")
+        }
+
         await connectDB()
 
         await service.updateProfileImage(file, String(user?._id));

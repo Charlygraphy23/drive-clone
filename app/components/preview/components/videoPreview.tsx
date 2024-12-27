@@ -15,7 +15,6 @@ const VideoPreview = ({ url, isOpen }: Props) => {
     const mountOnce = useRef("")
 
     useEffect(() => {
-        console.log("UL==> VIDEO mouted")
         if (!url) return;
         if (!videoRef.current) return;
 
@@ -48,16 +47,12 @@ const VideoPreview = ({ url, isOpen }: Props) => {
 
 
         return () => {
-            console.log("UL==>  PLAYER", playerRef.current)
             // console.log("UL==>  player.isDisposed()", playerRef.current.isDisposed())
-            console.log("UL==>  isOpen", isOpen)
 
 
             if (playerRef.current && !playerRef.current.isDisposed() && !isOpen) {
-                console.log('UL==> Called Dispose ',)
                 playerRef.current.dispose();
                 playerRef.current = null;
-                console.log('UL==> player is unmounted')
 
             }
         }

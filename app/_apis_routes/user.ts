@@ -36,6 +36,5 @@ export const forgotPasswordApi = async (email: string) => {
 
 export const resetPasswordApi = async ({ newPassword, confirmPassword, hash }: { newPassword: string, confirmPassword: string, hash: string }) => {
     const data = await axiosInstance.post(`/users/reset`, { newPassword, confirmPassword, hash })
-    console.log("data ", data)
     return data
 }

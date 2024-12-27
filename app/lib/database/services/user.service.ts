@@ -57,8 +57,7 @@ export class UserService {
             return response.status(422).send("User already exist with the email ")
         }
 
-        await UserModel.findOneAndUpdate({ _id: new Types.ObjectId(userId) }, { ...info });
-        return response.status(200).send("Updated")
+        return await UserModel.findOneAndUpdate({ _id: new Types.ObjectId(userId) }, { ...info });
     }
 
     async updatePassword(userId: string, password: string, options?: SessionOption) {
@@ -90,7 +89,7 @@ export class UserService {
         })
 
         await s3.put()
-        await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, {
+        return await UserModel.findByIdAndUpdate({ _id: new Types.ObjectId(userId) }, {
             imageUrl: encryptedKey
         })
     }

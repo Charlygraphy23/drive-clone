@@ -55,7 +55,6 @@ const ChangePasswordModal = ({ isOpen }: Props) => {
 			await PasswordChangeFormSchema.validate(state, { abortEarly: false })
 			await mutateAsync(state);
 			toggleModal(false);
-			console.log("Password change")
 		}
 		catch (err: unknown) {
 			const errors = ErrorHandler(err) as Record<string, string>

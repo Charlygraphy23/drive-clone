@@ -20,14 +20,12 @@ type Props = {
 const useInfiniteLoop = ({ api, limit = 10, startPage = 1, triggerOnMount, hasNext = false, isFetching = false, showDeleted, user }: Props) => {
     const dispatch = useAppDispatch()
     const initialMount = useRef<boolean>()
-    console.log("StartPage ", startPage)
 
 
     const params = useParams<{ folderId: string }>()
     const lastItemRef = useRef(null);
     const scrollRef = useRef(null);
     const [page, setPage] = useState(startPage)
-    console.log("Page outside", page)
 
 
     const API = useMemo(() => api({

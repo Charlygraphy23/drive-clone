@@ -8,7 +8,7 @@ import { PropsWithChildren, useRef } from "react";
 import { useSelector } from "react-redux";
 import ChangePasswordModal from "./components/modal/changePasswordModal";
 
-type Props = { userInfo: User } & PropsWithChildren
+type Props = { userInfo: User | null } & PropsWithChildren
 
 export const ProfileProvider = ({ children, userInfo }: Props) => {
 	const initialRef = useRef<boolean>(false)
@@ -20,9 +20,11 @@ export const ProfileProvider = ({ children, userInfo }: Props) => {
 
 	if (!initialRef?.current) {
 		dispatch(addProfileData({
+			_id: String(userInfo?._id) ?? "",
 			firstName: userInfo?.firstName ?? "",
 			lastName: userInfo?.lastName ?? "",
 			email: userInfo?.email ?? "",
+			imageUrl: userInfo?.imageUrl ?? "",
 		}))
 		initialRef.current = true
 	}

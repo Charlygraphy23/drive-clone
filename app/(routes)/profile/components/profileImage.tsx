@@ -3,22 +3,27 @@
 import { updateImageApi } from "@/app/_apis_routes/user";
 import { DEFAULT_IMAGE } from "@/app/_config";
 import LocalImage from "@/app/components/LocalImage";
-import useToast from "@/app/hooks/useToast";
+import { RootState } from "@/app/store";
+import { ProfileStateType } from "@/app/store/reducers/profile.reduce";
 import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import style from "../style.module.scss";
 
 const ProfileImageComponent = () => {
 	const [imageUrl, setImageUrl] = useState(DEFAULT_IMAGE)
-	const { data, update } = useSession();
-	const user = data?.user
+	const { update } = useSession();
+	const { data } = useSelector<RootState, ProfileStateType>(
+		(state) => state.profile
+	);
+	const [isError, setError] = useState(false)
 
 	const mutation = useMutation({ mutationFn: updateImageApi })
-	const Toast = useToast()
+	// const Toast = useToast()
 
 	const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+		setError(false)
 		try {
 			const files = e.target.files;
 			const file = files?.[0];
@@ -39,16 +44,17 @@ const ProfileImageComponent = () => {
 			await mutation.mutateAsync(formData)
 			update({
 				user: {
-					...data?.user,
-					imageUrl: `/api/users/image/${data?.user?._id}?time=${Date.now()}`
+					...data,
+					imageUrl: `/api/users/image/${data?._id}?time=${Date.now()}`
 				}
 			})
 		}
 		catch (err: any) {
 			console.error("Error while getting file ", err)
-			const error = err as AxiosError<{ message: string }>
-			const message = error?.response?.data?.message || error?.message
-			Toast.error(message)
+			// const error = err as AxiosError<{ message: string }>
+			// const message = error?.response?.data?.message || error?.message
+			// Toast.error(message)
+			setError(true)
 		}
 
 	}
@@ -61,14 +67,14 @@ const ProfileImageComponent = () => {
 	}
 
 	useEffect(() => {
-		if (!user?.imageUrl) return;
-		setImageUrl(user?.imageUrl ?? "")
-	}, [user?.imageUrl])
+		if (!data?.imageUrl) return;
+		setImageUrl(data?.imageUrl ?? "")
+	}, [data?.imageUrl])
 
 	return (
 		<div className={style.profileImage}>
 			<LocalImage
-				className={style.image}
+				className={`${style.image} ${isError ? style.error : ""}`}
 				src={imageUrl ?? ""}
 				alt='profile'
 				fill

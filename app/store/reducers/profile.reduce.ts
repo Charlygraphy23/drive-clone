@@ -2,9 +2,11 @@ import { createReducer } from "@reduxjs/toolkit";
 import { addProfileData, changeProfileData } from "../actions";
 
 export type ProfileDataType = {
+	_id: string;
 	firstName: string;
 	lastName: string;
 	email: string;
+	imageUrl?: string
 };
 
 const initialState = {
