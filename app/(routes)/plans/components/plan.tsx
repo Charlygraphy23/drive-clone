@@ -70,7 +70,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
             "theme": {
                 "color": "#3399cc"
             },
-            "handler": function (response: any) {
+            "handler": function (_: any) {
                 // alert("Payment Success");
                 // alert(`response.razorpay_payment_id ${response.razorpay_payment_id}`);
                 // alert(`response.razorpay_order_id ${response.razorpay_order_id}`);

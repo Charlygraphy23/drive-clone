@@ -15,17 +15,18 @@ import style from "../style.module.scss";
 import ProfileInputGroup from "./inputGroup";
 import ProfilePasswordChange from "./passwordChange";
 
+type ErrorStateType = Record<Partial<keyof ProfileStateType["data"]> & string, string>
+
 const ProfileForm = () => {
 	const { data } = useSelector<RootState, ProfileStateType>(
 		(state) => state.profile
 	);
 	const [isEditable, setIsEditable] = useState(false)
 	const mutation = useMutation({ mutationFn: updateProfileApi })
-	const [errors, setErrors] = useState<Record<Partial<keyof ProfileStateType["data"]>, string>>({
+	const [errors, setErrors] = useState<Omit<ErrorStateType, "_id" | "imageUrl">>({
 		email: "",
 		firstName: "",
 		lastName: "",
-		imageUrl: ""
 	})
 	const { update, data: sessionData } = useSession()
 	const Toast = useToast()
@@ -65,7 +66,7 @@ const ProfileForm = () => {
 		catch (error) {
 			const err = ErrorHandler(error) as Record<string, string>
 			if (err?._validationError) {
-				setErrors(err)
+				setErrors(err as Omit<ErrorStateType, "_id" | "imageUrl">)
 			}
 			else {
 				Toast.error(String(err))
