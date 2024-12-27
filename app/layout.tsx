@@ -2,8 +2,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import type { Metadata, Viewport } from "next";
 import "nprogress/nprogress.css";
+import { getUserInfo } from "./_actions/user";
 import TopBarLoader from "./components/loader/topbarLoader";
 import "./globals.scss";
+import { ProfileProvider } from "./profileProvider";
 import AppClientProvider from "./provider";
 
 export const viewport: Viewport = {
@@ -27,19 +29,23 @@ export const metadata: Metadata = {
 	]
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	const user = await getUserInfo()
+
 	return (
 		<html lang='en'>
-
 			<body suppressHydrationWarning={true}>
 				<TopBarLoader />
 				{/* <NextTopLoader color="#6a29ff" /> */}
 				<AppClientProvider>
-					{children}
+					<ProfileProvider userInfo={user}>
+
+						{children}
+					</ProfileProvider>
 				</AppClientProvider>
 			</body>
 		</html>

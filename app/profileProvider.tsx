@@ -4,21 +4,19 @@ import { RootState, useAppDispatch } from "@/app/store";
 import { addProfileData } from "@/app/store/actions";
 import { ModalStateType } from "@/app/store/reducers/modal.reducers";
 import { User } from "next-auth";
-import { PropsWithChildren, useRef } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { useSelector } from "react-redux";
-import ChangePasswordModal from "./components/modal/changePasswordModal";
+import ChangePasswordModal from "./(routes)/profile/components/modal/changePasswordModal";
 
 type Props = { userInfo: User | null } & PropsWithChildren
 
 export const ProfileProvider = ({ children, userInfo }: Props) => {
-	const initialRef = useRef<boolean>(false)
 	const { changePasswordModal } = useSelector<RootState, ModalStateType>(
 		(state) => state.modals
 	);
 	const dispatch = useAppDispatch()
 
-
-	if (!initialRef?.current) {
+	useEffect(() => {
 		dispatch(addProfileData({
 			_id: String(userInfo?._id) ?? "",
 			firstName: userInfo?.firstName ?? "",
@@ -26,8 +24,7 @@ export const ProfileProvider = ({ children, userInfo }: Props) => {
 			email: userInfo?.email ?? "",
 			imageUrl: userInfo?.imageUrl ?? "",
 		}))
-		initialRef.current = true
-	}
+	}, [dispatch, userInfo?._id, userInfo?.email, userInfo?.firstName, userInfo?.imageUrl, userInfo?.lastName])
 
 	return (
 		<>

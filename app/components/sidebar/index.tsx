@@ -8,7 +8,11 @@ import SidebarBrand from "./components/brand";
 import SidebarNavigation from "./components/navigations";
 import style from "./style.module.scss";
 
-const Sidebar = () => {
+type Props = {
+	isMobile: boolean
+}
+
+const Sidebar = ({ isMobile }: Props) => {
 	const ref = useRef<HTMLElement>(null);
 	const { isTablet } = useDeviceWidth()
 	const { app: { showSideBar } } = useAppSelector(state => state?.config)
@@ -34,13 +38,13 @@ const Sidebar = () => {
 
 	return (
 		<>
-			{!isTablet && <section className={style.sidebar}>
+			{(!isTablet && !isMobile) && <section className={style.sidebar}>
 				<SidebarBrand />
 				<SidebarNavigation />
-			</section>}
+			</section> || null}
 
 
-			{isTablet && <>
+			{(isTablet && isMobile) && <>
 				<aside className={`${style.tablet} ${showSideBar && style.active}`}>
 					<section ref={ref} className={`${style.sidebar}`}>
 						<SidebarBrand />
@@ -48,7 +52,7 @@ const Sidebar = () => {
 					</section>
 				</aside>
 				<div className="backdrop"></div>
-			</>}
+			</> || null}
 
 
 

@@ -1,4 +1,4 @@
-"use strict";
+"use client";
 
 import screen from '@app/styles/screen.module.scss';
 import { useLayoutEffect, useState } from 'react';
