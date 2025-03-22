@@ -47,7 +47,6 @@ export default async function RootLayout({
 				{/* <NextTopLoader color="#6a29ff" /> */}
 				<AppClientProvider>
 					<ProfileProvider userInfo={user}>
-
 						{children}
 					</ProfileProvider>
 				</AppClientProvider>

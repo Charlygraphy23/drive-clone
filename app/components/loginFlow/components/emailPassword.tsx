@@ -1,8 +1,10 @@
 "use client"
 
 import useToast from "@/app/hooks/useToast";
+import { useAppDispatch } from "@/app/store";
+import { addProfileData } from "@/app/store/actions";
 import { ErrorHandler } from "@/app/utils/index.utils";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, MouseEvent, useState } from 'react';
@@ -33,6 +35,7 @@ const EmailPassword = ({
     const [loading, setLoading] = useState(false)
     const router = useRouter();
     const Toast = useToast()
+    const dispatch = useAppDispatch()
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -65,8 +68,14 @@ const EmailPassword = ({
                 return;
             }
 
-
-            console.log(response)
+            const session = await getSession()
+            dispatch(addProfileData({
+                email: session?.user?.email as string,
+                firstName: session?.user?.firstName as string,
+                lastName: session?.user?.lastName as string,
+                imageUrl: session?.user?.imageUrl as string,
+                _id: session?.user?._id as string
+            }))
             router.push("/")
             setLoading(false)
         }
