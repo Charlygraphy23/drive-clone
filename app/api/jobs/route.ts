@@ -181,13 +181,13 @@ async function handler() {
         await connectDB()
 
 
-        handleSubscription().then(() => {
+        await handleSubscription().then(() => {
             console.log("Subscription details updated")
         }).catch(err => {
             console.error("Error while Subscription update", err)
         })
 
-        handleFileDelete().then(() => {
+        await handleFileDelete().then(() => {
             console.log("Resource deleted")
         }).catch(err => {
             console.error("Error while deleting resource", err)
