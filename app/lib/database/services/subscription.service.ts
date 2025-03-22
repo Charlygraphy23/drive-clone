@@ -61,7 +61,7 @@ export class SubscriptionService {
                 planType: planDetails?.planType,
                 recurringType: planDetails?.recurringType,
                 isFree: planDetails?.isFree,
-                price: planDetails?.isFree,
+                price: planDetails?.price,
                 benefitId: planDetails?.benefitId,
                 benefitDetails: {
                     maxSize: planDetails?.benefits?.maxSize,
